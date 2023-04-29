@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import Layout from "../hocs/Layout";
 import { Navigate, useParams } from "react-router-dom";
-import { verify } from "../actions/auth";
+import { activate } from "../rtk/user";
 const Activate = () => {
   const [verified, setVerified] = useState(false);
   const params = useParams();
   const verify_account = (e) => {
     const uid = params.uid;
     const token = params.token;
-    verify(uid, token);
+    activate({uid, token});
     setVerified(true);
   };
   // check if verified -> redirect to homepage
