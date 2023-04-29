@@ -6,7 +6,7 @@ logs
 **/yarn-error.log*
 **/pnpm-debug.log*
 **/lerna-debug.log*
-
+**/.sqlite3
 **/node_modules
 **/dist
 **/dist-ssr
