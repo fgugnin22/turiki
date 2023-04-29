@@ -6,11 +6,11 @@ const Home = () => {
   const { isAuthenticated, user } = useSelector((state) => state.user);
   return (
     <Layout>
-      <div className="container">
-        <div className="p-5 mb-4 bg-success bg-gradient rounded-3 mt-5">
-          <div className="container-fluid py-5">
-            <h1 className="display-5 fw-bold">Auth system</h1>
-            <p className="col-md-8 fs-4">
+      <div className="">
+        <div className="">
+          <div className="">
+            <h1 className="">Auth system</h1>
+            <p className="">
               I will probably replace bootstrap jumbotron here with native
               css(probably!!...)
             </p>
@@ -19,7 +19,7 @@ const Home = () => {
               {user !== null ? (
                 user.email
               ) : (
-                <button className="btn btn-primary btn-lg" type="button">
+                <button className="" type="button">
                   Login
                 </button>
               )}

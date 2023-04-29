@@ -23,12 +23,12 @@ const ResetPassword = () => {
   }
   return (
     <Layout>
-      <div className="container mt-5">
+      <div className="">
         <h1>Request password reset:</h1>
         <form onSubmit={(e) => onSubmit(e)}>
-          <div className="form-group">
+          <div className="">
             <input
-              className="form-control"
+              className=""
               type="email"
               placeholder="Email"
               name="email"
@@ -37,8 +37,8 @@ const ResetPassword = () => {
               required
             />
           </div>
-          <div className="form-group"></div>
-          <button className="btn btn-primary mt-3" type="submit">
+          <div className=""></div>
+          <button className="" type="submit">
             Reset Password
           </button>
         </form>

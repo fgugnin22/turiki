@@ -37,13 +37,13 @@ const Signup = () => {
   }
   return (
     <Layout>
-      <div className="container mt-5">
+      <div className="">
         <h1>Sign Up</h1>
         <p>crreate dese nuts fr</p>
         <form onSubmit={(e) => onSubmit(e)}>
-          <div className="form-group">
+          <div className="">
             <input
-              className="form-control"
+              className=""
               type="text"
               placeholder="Name"
               name="name"
@@ -52,9 +52,9 @@ const Signup = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="">
             <input
-              className="form-control"
+              className=""
               type="email"
               placeholder="Email*"
               name="email"
@@ -63,9 +63,9 @@ const Signup = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="">
             <input
-              className="form-control"
+              className=""
               type="password"
               placeholder="Password*"
               name="password"
@@ -75,9 +75,9 @@ const Signup = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="">
             <input
-              className="form-control"
+              className=""
               type="password"
               placeholder="Confirm password*"
               name="re_password"
@@ -87,14 +87,14 @@ const Signup = () => {
               required
             />
           </div>
-          <button className="btn btn-primary" type="submit">
+          <button className="" type="submit">
             Register
           </button>
         </form>
-        <button className="btn btn-danger mt-3" onClick={continueWithGoogle}>
+        <button className="" onClick={continueWithGoogle}>
           Sign In With Google
         </button>
-        <p className="mt-3">
+        <p className="">
           Already have an account? <Link to="/login">Sign In</Link>
         </p>
       </div>

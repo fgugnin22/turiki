@@ -47,11 +47,11 @@ const Login = () => {
   }
   return (
     <Layout>
-      <div className="container mt-5">
+      <div className="">
         <h1>Sign In</h1>
         <p>Sign into your Account</p>
         <form onSubmit={(e) => onSubmit(e)}>
-          <div className="form-group">
+          <div className="">
             <input
               className="form-control"
               type="email"
@@ -62,9 +62,9 @@ const Login = () => {
               required
             />
           </div>
-          <div className="form-group">
+          <div className="">
             <input
-              className="form-control"
+              className=""
               type="password"
               placeholder="Password"
               name="password"
@@ -74,17 +74,17 @@ const Login = () => {
               required
             />
           </div>
-          <button className="btn btn-primary" type="submit">
+          <button className="" type="submit">
             Login
           </button>
         </form>
-        <button className="btn btn-danger mt-3" onClick={continueWithGoogle}>
+        <button className="" onClick={continueWithGoogle}>
           Continue With Google
         </button>
-        <p className="mt-3">
+        <p className="">
           Don't have an account? <Link to="/signup">Sign Up</Link>
         </p>
-        <p className="mt-3">
+        <p className="">
           Forgot you password? <Link to="/reset-password">Reset Password</Link>
         </p>
       </div>

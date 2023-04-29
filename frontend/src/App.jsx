@@ -6,7 +6,7 @@ import ResetPassword from "./pages/ResetPassword";
 import ResetPasswordConfirm from "./pages/ResetPasswordConfirm";
 import Activate from "./pages/Activate";
 import { Provider } from "react-redux";
-import {store} from './rtk/store'
+import { store } from "./rtk/store";
 function App() {
   return (
     <Provider store={store}>

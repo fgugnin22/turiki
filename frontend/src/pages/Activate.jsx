@@ -20,16 +20,13 @@ const Activate = () => {
   }
   return (
     <Layout>
-      <div className="container">
-        <div
-          className="d-flex flex-column justify-content-center align-items-center "
-          style={{ marginTop: "200px" }}
-        >
+      <div className="">
+        <div className="" style={{ marginTop: "200px" }}>
           <h1>Verify your account:</h1>
           <button
             onClick={verify_account}
             type="button"
-            className="btn btn-primary"
+            className=""
             style={{
               marginTop: "50px",
             }}
