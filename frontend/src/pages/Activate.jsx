@@ -2,13 +2,16 @@ import React, { useState } from "react";
 import Layout from "../hocs/Layout";
 import { Navigate, useParams } from "react-router-dom";
 import { activate } from "../rtk/user";
+import { useDispatch } from "react-redux";
 const Activate = () => {
+  const dispatch = useDispatch();
+
   const [verified, setVerified] = useState(false);
   const params = useParams();
   const verify_account = (e) => {
     const uid = params.uid;
     const token = params.token;
-    activate({uid, token});
+    dispatch(activate({ uid, token }));
     setVerified(true);
   };
   // check if verified -> redirect to homepage

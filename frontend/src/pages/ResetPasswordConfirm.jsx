@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Layout from "../hocs/Layout";
 import { Navigate, useParams } from "react-router-dom";
-import { connect } from "react-redux";
-import {  reset_password_confirm } from "../actions/auth";
-
-const ResetPasswordConfirm = ({ reset_password_confirm }) => {
-  const params = useParams()
+import { resetPasswordConfirm } from "../rtk/user";
+import { useDispatch } from "react-redux";
+const ResetPasswordConfirm = () => {
+  const dispatch = useDispatch();
+  const params = useParams();
   const [requestSent, setRequestSent] = useState(false);
   const [formData, setFormData] = useState({
     new_password: "",
@@ -18,7 +18,9 @@ const ResetPasswordConfirm = ({ reset_password_confirm }) => {
     e.preventDefault();
     const uid = params.uid;
     const token = params.token;
-    reset_password_confirm(uid, token, new_password, re_new_password);
+    dispatch(
+      resetPasswordConfirm({ uid, token, new_password, re_new_password })
+    );
     setRequestSent(true);
   };
   if (requestSent) {
@@ -60,4 +62,4 @@ const ResetPasswordConfirm = ({ reset_password_confirm }) => {
   );
 };
 
-export default connect(null, { reset_password_confirm })(ResetPasswordConfirm);
+export default ResetPasswordConfirm;

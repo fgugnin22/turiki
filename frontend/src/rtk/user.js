@@ -5,7 +5,9 @@ const server_URL = import.meta.env.VITE_API_URL;
 export const googleAuthenticate = createAsyncThunk(
   "users/googleAuth",
   async ({ state, code }, thunkAPI) => {
+    console.log(1);
     if (state && code && !localStorage.getItem("access")) {
+      console.log(2);
       const details = {
         state,
         code,
@@ -27,8 +29,8 @@ export const googleAuthenticate = createAsyncThunk(
           }
         );
         const data = await res.json();
-        console.log(data);
-        if (res.status === 200) {
+        console.log(data, res);
+        if (res.status === 201) {
           const { dispatch } = thunkAPI;
           const { access } = data;
           localStorage.setItem("access", access);
@@ -36,11 +38,14 @@ export const googleAuthenticate = createAsyncThunk(
 
           return data;
         } else {
-          return thunkAPI.rejectWithValue(data);
+          return thunkAPI.rejectWithValue("google auth failed!");
         }
       } catch (err) {
         return thunkAPI.rejectWithValue(err.response.data);
       }
+    } else {
+      console.log(3);
+      return thunkAPI.rejectWithValue("google auth cancelled!!");
     }
   }
 );
@@ -95,12 +100,9 @@ export const getUser = createAsyncThunk(
         return data;
       } else {
         localStorage.removeItem("access");
-        console.log(1);
-
         return thunkAPI.rejectWithValue(data);
       }
     } catch (err) {
-      console.log(err);
       return thunkAPI.rejectWithValue(err.response.data);
     }
   }
@@ -133,31 +135,100 @@ export const login = createAsyncThunk(
         return data;
       } else {
         localStorage.removeItem("access");
-        console.log(3);
-
         return thunkAPI.rejectWithValue(data);
       }
     } catch (err) {
       localStorage.removeItem("access");
-      console.log(4);
-
       return thunkAPI.rejectWithValue(err.response.data);
     }
   }
 );
-
+export const activate = createAsyncThunk(
+  "users/activate",
+  async ({ uid, token }, thunkAPI) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const body = JSON.stringify({ uid, token });
+    try {
+      const res = await axios.post(
+        `${server_URL}/auth/users/activation/`,
+        body,
+        config
+      );
+      if (res.status === 204) {
+        thunkAPI.fulfillWithValue("activation succeeded");
+      }
+    } catch (err) {
+      thunkAPI.rejectWithValue(err);
+    }
+  }
+);
+export const resetPassword = createAsyncThunk(
+  "users/reset_password",
+  async (email, thunkAPI) => {
+    try {
+      const body = JSON.stringify({ email });
+      const res = await fetch(`${server_URL}/auth/users/reset_password/`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body,
+      });
+      if (res.status === 204) {
+        return thunkAPI.fulfillWithValue("password_reset_email_sent");
+      } else {
+        return thunkAPI.rejectWithValue("password_reset_server_error");
+      }
+    } catch (err) {
+      return thunkAPI.rejectWithValue("password_reset_aborted");
+    }
+  }
+);
+export const resetPasswordConfirm = createAsyncThunk(
+  "users/reset_password",
+  async ({ uid, token, new_password, re_new_password }, thunkAPI) => {
+    try {
+      const body = JSON.stringify({
+        uid,
+        token,
+        new_password,
+        re_new_password,
+      });
+      const res = await fetch(
+        `${server_URL}/auth/users/reset_password_confirm/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body,
+        }
+      );
+      if (res.status === 204) {
+        return thunkAPI.fulfillWithValue("password_reset_confirmed");
+      } else {
+        return thunkAPI.rejectWithValue("password_reset_confirm_server_error");
+      }
+    } catch (err) {
+      return thunkAPI.rejectWithValue("password_reset_confirm_aborted");
+    }
+  }
+);
 export const checkAuth = createAsyncThunk(
   "users/verify",
   async (token, thunkAPI) => {
     try {
       const body = JSON.stringify({ token: token });
-      console.log(body);
+
       const res = await fetch(`${server_URL}/auth/jwt/verify/`, {
         method: "POST",
         headers: {
           Accept: "application/json",
           "Content-Type": "application/json",
-          // Authorization: `JWT ${token}`,
         },
         body,
       });
@@ -172,14 +243,10 @@ export const checkAuth = createAsyncThunk(
         return data;
       } else {
         localStorage.removeItem("access");
-        console.log(5);
-
         return thunkAPI.rejectWithValue(data);
       }
     } catch (err) {
       localStorage.removeItem("access");
-      console.log(6);
-
       return thunkAPI.rejectWithValue(err.response.data);
     }
   }
@@ -201,7 +268,7 @@ export const checkAuth = createAsyncThunk(
 
 //       if (res.status === 200) {
 //         localStorage.removeItem("access");
-//         console.log(7);
+//         ;
 //         return data;
 //       } else {
 //         return thunkAPI.rejectWithValue(data);
@@ -217,6 +284,7 @@ const initialState = {
   user: null,
   loading: false,
   registered: false,
+  activated: false,
 };
 
 const userSlice = createSlice({
@@ -273,6 +341,16 @@ const userSlice = createSlice({
       })
       .addCase(checkAuth.rejected, (state) => {
         state.loading = false;
+      })
+      .addCase(activate.fulfilled, (state) => {
+        state.activated = true;
+      })
+      .addCase(activate.rejected, (state) => {
+        state.activated = false;
+      })
+      .addCase(googleAuthenticate.fulfilled, (state) => {
+        state.loading = false;
+        state.isAuthenticated = true;
       });
     // .addCase(logout.pending, (state) => {
     //   state.loading = true;

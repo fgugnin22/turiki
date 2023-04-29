@@ -1,7 +1,9 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
 const Home = () => {
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   return (
     <Layout>
       <div className="container">
@@ -14,9 +16,13 @@ const Home = () => {
             </p>
 
             <Link to="/login">
-              <button className="btn btn-primary btn-lg" type="button">
-                Login
-              </button>
+              {user !== null ? (
+                user.email
+              ) : (
+                <button className="btn btn-primary btn-lg" type="button">
+                  Login
+                </button>
+              )}
             </Link>
           </div>
         </div>

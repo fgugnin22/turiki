@@ -7,4 +7,5 @@ User = get_user_model()
 class UserCreateSerializer1(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
-        fields = ('id', 'email', 'name', 'password')
+        # СЮДА ДОБАВЛЯТЬ ПОЛЯ КОТОРЫЕ ПОТОМ ОТСЫЛАЕМ НА КЛИЕНТ
+        fields = ('id', 'email', 'name', 'password', 'is_active')

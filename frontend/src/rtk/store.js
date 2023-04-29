@@ -5,6 +5,6 @@ export const store = configureStore({
 	reducer: {
 		user: userReducer,
 	},
-	// middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
+	middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(logger),
 	devTools: import.meta.env.VITE_NODE_ENV !== 'production',
 });

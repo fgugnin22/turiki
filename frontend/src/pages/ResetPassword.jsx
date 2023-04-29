@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import Layout from "../hocs/Layout";
 import { Navigate } from "react-router-dom";
-import { connect } from "react-redux";
-import { reset_password } from "../actions/auth";
-
-const ResetPassword = ({ reset_password }) => {
+import { resetPassword } from "../rtk/user";
+import { useDispatch } from "react-redux";
+const ResetPassword = () => {
+  const dispatch = useDispatch();
   const [requestSent, setRequestSent] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -14,7 +14,7 @@ const ResetPassword = ({ reset_password }) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   const onSubmit = (e) => {
     e.preventDefault();
-    reset_password(email);
+    dispatch(resetPassword(email));
     setRequestSent(true);
   };
   // check if authenticated -> redirect to homepage
@@ -47,4 +47,4 @@ const ResetPassword = ({ reset_password }) => {
   );
 };
 
-export default connect(null, { reset_password })(ResetPassword);
+export default ResetPassword;
