@@ -12,7 +12,7 @@ const Login = () => {
   const { loading, isAuthenticated, registered, loginFail } = useSelector(
     (state) => state.user
   );
-  let inputBorderColor = loginFail ? "border-red-600" : "border-slate-300";
+  let inputBorderColor = loginFail ? "border-red-600" : "border-slate-300 focus:border-blue-400";
   useEffect(() => {
     if (registered) dispatch(resetRegistered());
   }, [registered]);
@@ -53,7 +53,7 @@ const Login = () => {
           <form onSubmit={(e) => onSubmit(e)}>
             <div className="relative mb-3">
               <input
-                className={`peer block min-h-[auto] w-full rounded border-2 ${inputBorderColor} bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-400`}
+                className={`peer block min-h-[auto] w-full rounded border-2 ${inputBorderColor} bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear`}
                 type="email"
                 placeholder="Email"
                 name="email"
@@ -64,7 +64,7 @@ const Login = () => {
             </div>
             <div className="relative mb-3">
               <input
-                className={`peer block min-h-[auto] w-full rounded border-2 ${inputBorderColor} bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-400 dark:text-neutral-200`}
+                className={`peer block min-h-[auto] w-full rounded border-2 ${inputBorderColor} bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear dark:text-neutral-200`}
                 type="password"
                 placeholder="Password"
                 name="password"

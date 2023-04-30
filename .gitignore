@@ -12,9 +12,6 @@ logs
 **/dist-ssr
 *.local
 **/venv
-
-**/.sqlite3
-
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
@@ -25,4 +22,4 @@ logs
 *.njsproj
 *.sln
 *.sw?
-backend/db.sqlite3
+backend/**/*.sqlite3
