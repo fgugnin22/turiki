@@ -20,13 +20,13 @@ const Activate = () => {
   }
   return (
     <Layout>
-      <div className="">
-        <div className="" style={{ marginTop: "200px" }}>
+      <div className="flex justify-center text-2xl mt-[5%]">
+        <div className="">
           <h1>Verify your account:</h1>
           <button
+            className="py-12 px-24 rounded-xl bg-green-600 "
             onClick={verify_account}
             type="button"
-            className=""
             style={{
               marginTop: "50px",
             }}

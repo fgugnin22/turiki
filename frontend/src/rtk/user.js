@@ -252,39 +252,13 @@ export const checkAuth = createAsyncThunk(
   }
 );
 
-// export const logout = createAsyncThunk(
-//   "users/logout",
-//   async (access, thunkAPI) => {
-//     try {
-//       const res = await fetch(`${server_URL}/auth/users/logout/`, {
-//         method: "GET",
-//         headers: {
-//           Accept: "application/json",
-//           Authorization: `JWT ${access}`,
-//         },
-//       });
-
-//       const data = await res.json();
-
-//       if (res.status === 200) {
-//         localStorage.removeItem("access");
-//         ;
-//         return data;
-//       } else {
-//         return thunkAPI.rejectWithValue(data);
-//       }
-//     } catch (err) {
-//       return thunkAPI.rejectWithValue(err.response.data);
-//     }
-//   }
-// );
-
 const initialState = {
   isAuthenticated: false,
   user: null,
   loading: false,
   registered: false,
   activated: false,
+  loginFail: false,
 };
 
 const userSlice = createSlice({
@@ -314,6 +288,7 @@ const userSlice = createSlice({
       })
       .addCase(login.pending, (state) => {
         state.loading = true;
+        state.loginFail = false;
       })
       .addCase(login.fulfilled, (state) => {
         state.loading = false;
@@ -321,6 +296,7 @@ const userSlice = createSlice({
       })
       .addCase(login.rejected, (state) => {
         state.loading = false;
+        state.loginFail = true;
       })
       .addCase(getUser.pending, (state) => {
         state.loading = true;
@@ -352,17 +328,6 @@ const userSlice = createSlice({
         state.loading = false;
         state.isAuthenticated = true;
       });
-    // .addCase(logout.pending, (state) => {
-    //   state.loading = true;
-    // })
-    // .addCase(logout.fulfilled, (state) => {
-    //   state.loading = false;
-    //   state.isAuthenticated = false;
-    //   state.user = null;
-    // })
-    // .addCase(logout.rejected, (state) => {
-    //   state.loading = false;
-    // });
   },
 });
 

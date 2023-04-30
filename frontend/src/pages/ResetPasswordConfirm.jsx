@@ -4,6 +4,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { resetPasswordConfirm } from "../rtk/user";
 import { useDispatch } from "react-redux";
 const ResetPasswordConfirm = () => {
+  const inputClasses = `block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-400`;
   const dispatch = useDispatch();
   const params = useParams();
   const [requestSent, setRequestSent] = useState(false);
@@ -28,35 +29,45 @@ const ResetPasswordConfirm = () => {
   }
   return (
     <Layout>
-      <div className="">
-        <form onSubmit={(e) => onSubmit(e)}>
-          <div className="">
-            <input
-              className=""
-              type="new_password"
-              placeholder="New Password"
-              name="new_password"
-              value={new_password}
-              onChange={(e) => onChange(e)}
-              minLength={6}
-              required
-            />
-            <input
-              className=""
-              type="re_new_password"
-              placeholder="Confirm New Password"
-              name="re_new_password"
-              value={re_new_password}
-              onChange={(e) => onChange(e)}
-              minLength={6}
-              required
-            />
-          </div>
-          <div className=""></div>
-          <button className="" type="submit">
-            Reset Password
-          </button>
-        </form>
+      <div className="flex justify-center my-[5%]">
+        <div className="w-[450px]">
+          <p className="text-center mb-1 font-semibold text-2xl">
+            Reset Password via email
+          </p>
+          <form onSubmit={(e) => onSubmit(e)}>
+            <div className="relative mb-3">
+              <input
+                className={inputClasses}
+                type="new_password"
+                placeholder="New Password"
+                name="new_password"
+                value={new_password}
+                onChange={(e) => onChange(e)}
+                minLength={6}
+                required
+              />
+            </div>
+            <div className="relative mb-3">
+              <input
+                className={inputClasses}
+                type="re_new_password"
+                placeholder="Confirm New Password"
+                name="re_new_password"
+                value={re_new_password}
+                onChange={(e) => onChange(e)}
+                minLength={6}
+                required
+              />
+            </div>
+            <div className=""></div>
+            <button
+              className="py-2 px-2 w-full bg-green-400 hover:bg-green-500 transition duration-300 rounded"
+              type="submit"
+            >
+              Reset Password
+            </button>
+          </form>
+        </div>
       </div>
     </Layout>
   );

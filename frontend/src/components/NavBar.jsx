@@ -14,7 +14,7 @@ const NavBar = () => {
         </Link>
 
         <Link
-          className="py-2 px-3 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 hover:text-yellow-800 rounded transition duration-300"
+          className="py-2 px-3 bg-yellow-400 hover:bg-yellow-300 rounded transition duration-300"
           to="/signup"
         >
           Sign Up
