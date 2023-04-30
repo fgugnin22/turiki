@@ -38,21 +38,23 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="">
-      <div className="">
-        <Link className="" to="/">
-          Turiki emae
-        </Link>
+    <nav className="bg-gray-800">
+      <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+        <div className="relative flex h-16 items-center justify-between">
+          <Link className="" to="/">
+            Turiki emae
+          </Link>
 
-        <div className="" id="navbarSupportedContent">
-          <ul className="">
-            <li className="">
-              <Link className="" aria-current="page" to="/">
-                Home
-              </Link>
-            </li>
-            {isAuthenticated ? authLinks() : guestLinks()}
-          </ul>
+          <div className="" id="navbarSupportedContent">
+            <ul className="">
+              <li className="">
+                <Link className="" aria-current="page" to="/">
+                  Home
+                </Link>
+              </li>
+              {isAuthenticated ? authLinks() : guestLinks()}
+            </ul>
+          </div>
         </div>
       </div>
     </nav>
