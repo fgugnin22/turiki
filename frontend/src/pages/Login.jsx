@@ -48,12 +48,10 @@ const Login = () => {
   return (
     <Layout>
       <div className="">
-        <h1>Sign In</h1>
-        <p>Sign into your Account</p>
         <form onSubmit={(e) => onSubmit(e)}>
-          <div className="">
+          <div className="relative mb-3">
             <input
-              className="form-control"
+              className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary"
               type="email"
               placeholder="Email"
               name="email"
@@ -62,9 +60,9 @@ const Login = () => {
               required
             />
           </div>
-          <div className="">
+          <div className="relative mb-3">
             <input
-              className=""
+              className="peer block min-h-[auto] w-full rounded border-0 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:placeholder:opacity-100 peer-focus:text-primary motion-reduce:transition-none dark:text-neutral-200 dark:placeholder:text-neutral-200 dark:peer-focus:text-primary"
               type="password"
               placeholder="Password"
               name="password"
@@ -74,7 +72,7 @@ const Login = () => {
               required
             />
           </div>
-          <button className="" type="submit">
+          <button className="py-2 px-3 bg-yellow-400 hover:bg-yellow-300 text-yellow-900 hover:text-yellow-800 rounded transition duration-300" type="submit">
             Login
           </button>
         </form>
