@@ -26,7 +26,7 @@ const Layout = (props) => {
   }, [location, isAuthenticated]);
 
   return (
-    <div>
+    <div className="grid grid-cols-1 min-h-screen">
       <NavBar />
       {props.children}
       <Footer />
