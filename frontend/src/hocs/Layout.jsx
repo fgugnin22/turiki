@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import NavBar from "../components/NavBar";
+import Footer from "../components/Footer";
 import { getParameterByName } from "../helpers/getParameterByName";
 import { checkAuth, googleAuthenticate } from "../rtk/user";
 import { useDispatch, useSelector } from "react-redux";
@@ -28,6 +29,7 @@ const Layout = (props) => {
     <div>
       <NavBar />
       {props.children}
+      <Footer />
     </div>
   );
 };
