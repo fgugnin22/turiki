@@ -36,11 +36,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',  # ЭТО СУПЕР ВАЖНО ДЛЯ КОРСА!!! ИНАЧЕ НИЧЕ РАБОТАТЬ НЕ БУДЕТ!
-    'accounts',
+    'turiki',
     'djoser',
     'social_django',
     'rest_framework_simplejwt',
-    'rest_framework_simplejwt.token_blacklist'
+    'rest_framework_simplejwt.token_blacklist',
 ]
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',  # for localhost (REACT Default)
@@ -120,7 +120,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
@@ -139,7 +139,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'accounts.UserAccount'
+AUTH_USER_MODEL = 'turiki.UserAccount'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
@@ -185,9 +185,9 @@ DJOSER = {
     'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000', 'http://localhost:5173'],
     'SERIALIZERS': {
-        'user_create': 'accounts.serializers.UserCreateSerializer1',
-        'user': 'accounts.serializers.UserCreateSerializer1',
-        'current_user': 'accounts.serializers.UserCreateSerializer1',
+        'user_create': 'turiki.serializers.UserCreateSerializer1',
+        'user': 'turiki.serializers.UserCreateSerializer1',
+        'current_user': 'turiki.serializers.UserCreateSerializer1',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     }
 }

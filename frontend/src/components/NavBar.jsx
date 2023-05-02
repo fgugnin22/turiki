@@ -8,7 +8,7 @@ const NavBar = () => {
   const { isAuthenticated } = useSelector((state) => state.user);
   const guestLinks = () => {
     return (
-      <div className="hidden md:flex items-center space-x-1">
+      <div className="md:flex items-center space-x-1">
         <Link className="py-5 px-3" to="/login">
           Login
         </Link>
@@ -38,7 +38,7 @@ const NavBar = () => {
   };
 
   return (
-    <nav className="bg-gray-200">
+    <nav className="bg-gray-200 max-h-[65px]">
       <div className="max-w-6xl mx-auto px-4">
         <div className="relative flex h-16 items-center justify-between">
           <div>

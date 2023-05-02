@@ -23,3 +23,7 @@ logs
 *.sln
 *.sw?
 backend/**/*.sqlite3
+backend/**/*/migrations
+backend/**/*/__pycache__
+startfrontendtestserver.ps1
+.gitignore

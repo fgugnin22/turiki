@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from accounts.models import UserAccount, Team, Tournament, Match
+from turiki.models import UserAccount, Team, Tournament, Match
 
 # Register your models here.
 admin.site.register(UserAccount)

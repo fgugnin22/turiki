@@ -17,6 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
+from turiki.views import TournamentAPIView
+from rest_framework.routers import DefaultRouter
+
+router = DefaultRouter()
+router.register(r'api/tournament', TournamentAPIView, basename='tournament')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,5 +30,5 @@ urlpatterns = [
     path('auth/', include('djoser.social.urls')),
 
 ]
-
+urlpatterns += router.urls
 urlpatterns += [re_path(r'^.*', TemplateView.as_view(template_name='index.html'))]
