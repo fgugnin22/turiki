@@ -64,7 +64,7 @@ class Tournament(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=255, default="none")
-    tournaments = models.ManyToManyField(Tournament, related_name="team")
+    tournaments = models.ManyToManyField(Tournament, related_name="teams")
 
     def __str__(self):
         return self.name
@@ -81,6 +81,12 @@ class Match(models.Model):
 
     def __str__(self):
         return f"{self.tournament.name}_match_id_{self.id}"
+
+    def __repr__(self):  # пока что не нужен
+        return {"teams": self.teams, "is_active": self.is_active, "is_played": self.is_played,
+                "starts": self.starts,
+                "tournament": self.tournament,
+                }
 
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):

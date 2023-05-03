@@ -15,19 +15,26 @@ class UserCreateSerializer1(UserCreateSerializer):
 
 
 class TournamentSerializer(serializers.ModelSerializer):
+    teams = serializers.StringRelatedField(many=True)
+
     class Meta:
+        depth = 1
         model = Tournament
-        fields = ('name', 'prize', "registration_opened", "starts", "active", "played", "matches")
+        fields = ('name', 'prize', "registration_opened", "starts", "active", "played", "matches", "teams")
 
 
 class MatchSerializer(serializers.ModelSerializer):
+    # teams = serializers.StringRelatedField(many=True)
+
     class Meta:
+        depth = 1
         model = Match
         fields = ("teams", "is_active", "is_played", "starts", "tournament", "teams")
 
 
 class TeamSerializer(serializers.ModelSerializer):
     class Meta:
+        depth = 1
         model = Team
         fields = "__all__"
         extra_fields = ["players", "matches"]

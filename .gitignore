@@ -25,5 +25,6 @@ logs
 backend/**/*.sqlite3
 backend/**/*/migrations
 backend/**/*/__pycache__
+backend/**/*.pyc
 startfrontendtestserver.ps1
 .gitignore
