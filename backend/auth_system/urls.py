@@ -34,6 +34,7 @@ urlpatterns = [
     path('auth/', include('djoser.social.urls')),
 
 ]
+
 urlpatterns += tournamentRouter.urls
 urlpatterns += matchRouter.urls
 urlpatterns += teamRouter.urls
