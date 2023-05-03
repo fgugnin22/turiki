@@ -64,7 +64,7 @@ class Tournament(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=255, default="none")
-    tournaments = models.ManyToManyField(Tournament)
+    tournaments = models.ManyToManyField(Tournament, related_name="team")
 
     def __str__(self):
         return self.name
@@ -73,11 +73,11 @@ class Team(models.Model):
 #
 #
 class Match(models.Model):
-    teams = models.ManyToManyField(Team)
+    teams = models.ManyToManyField(Team, related_name="matches")
     is_active = models.BooleanField(default=False)
     is_played = models.BooleanField(default=False)
     starts = models.DateTimeField(auto_now_add=True)
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, default="none")
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, default="none", related_name="matches")
 
     def __str__(self):
         return f"{self.tournament.name}_match_id_{self.id}"
@@ -89,7 +89,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     objects = UserAccountManager()
-    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True)
+    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name="players")
     USERNAME_FIELD = 'email'  # что является логином
     REQUIRED_FIELDS = ['name']  # обязательные поля
 
