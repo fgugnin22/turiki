@@ -33,7 +33,7 @@ const Footer = () => {
             <p className="">
               <a href="#!" className=" text-neutral-600 dark:text-neutral-200">
                 <svg
-                  className="mx-auto md:mx-0"
+                  className="mx-auto my-4 md:mx-0"
                   xmlns="http://www.w3.org/2000/svg"
                   width="32"
                   height="32"

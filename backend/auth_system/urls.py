@@ -26,7 +26,7 @@ matchRouter = DefaultRouter()
 matchRouter.register(r'api/match', MatchAPIView, basename='match')
 teamRouter = DefaultRouter()
 teamRouter.register(r'api/team', TeamAPIView, basename='team')
-
+# Я НЕ ЗНАЮ КАК ОБЪЯСНИТЬ НО ПОРЯДОК URL ОЧЕНЬ ВАЖЕН, ЕСЛИ ПЕРЕСТАВИТЬ МОЖЕТ ВСЁ СЛОМАТЬСЯ НАХЕР!
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),
@@ -34,8 +34,7 @@ urlpatterns = [
     path('auth/', include('djoser.social.urls')),
 
 ]
-
+urlpatterns += [re_path(r'^((?!api).)*$', TemplateView.as_view(template_name='index.html'))]
 urlpatterns += tournamentRouter.urls
 urlpatterns += matchRouter.urls
 urlpatterns += teamRouter.urls
-urlpatterns += [re_path(r'^.*', TemplateView.as_view(template_name='index.html'))]

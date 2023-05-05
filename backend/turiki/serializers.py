@@ -24,12 +24,12 @@ class TournamentSerializer(serializers.ModelSerializer):
 
 
 class MatchSerializer(serializers.ModelSerializer):
-    # teams = serializers.StringRelatedField(many=True)
+    teams = serializers.StringRelatedField(many=True)
 
     class Meta:
         depth = 1
         model = Match
-        fields = ("teams", "is_active", "is_played", "starts", "tournament", "teams")
+        fields = ("teams", "is_active", "is_played", "starts", "tournament", "teams", "next_match")
 
 
 class TeamSerializer(serializers.ModelSerializer):

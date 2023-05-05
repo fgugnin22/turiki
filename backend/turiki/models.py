@@ -73,14 +73,25 @@ class Team(models.Model):
 #
 #
 class Match(models.Model):
-    teams = models.ManyToManyField(Team, related_name="matches")
-    is_active = models.BooleanField(default=False)
-    is_played = models.BooleanField(default=False)
+    teams = models.ManyToManyField(Team, related_name="matches", null=True, blank=True)
+    next_match = models.ForeignKey('Match', unique=False, on_delete=models.CASCADE, related_name='previous_match',
+                                   null=True, blank=True)
+    status = models.CharField(max_length=31, null=True, blank=True)
     starts = models.DateTimeField(auto_now_add=True)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, default="none", related_name="matches")
 
+    def get_participants(self):
+        arr = list(self.teams.values())
+        print(arr)
+        if len(arr) == 0:
+            return ""
+        elif len(arr) == 1:
+            return f"{arr[0]['name']}"
+        elif len(arr) == 2:
+            return f"_{arr[0]['name']}_{arr[1]['name']}"
+
     def __str__(self):
-        return f"{self.tournament.name}_match_id_{self.id}"
+        return f"{self.tournament.name}_match_id_{self.id}{self.get_participants()}"
 
     def __repr__(self):  # пока что не нужен
         return {"teams": self.teams, "is_active": self.is_active, "is_played": self.is_played,
