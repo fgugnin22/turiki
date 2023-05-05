@@ -7,7 +7,6 @@ export const tournamentAPI = createApi({
         prepareHeaders: (headers) => {
             // By default, if we have a token in the store, let's use that for authenticated requests
             const access = localStorage.getItem("access");
-            console.log(access);
             if (access) {
                 headers.set("Authorization", `JWT ${access}`);
             }

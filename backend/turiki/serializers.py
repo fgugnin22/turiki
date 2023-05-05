@@ -18,7 +18,7 @@ class TournamentSerializer(serializers.ModelSerializer):
     teams = serializers.StringRelatedField(many=True)
 
     class Meta:
-        depth = 1
+        depth = 2
         model = Tournament
         fields = ('name', 'prize', "registration_opened", "starts", "active", "played", "matches", "teams")
 

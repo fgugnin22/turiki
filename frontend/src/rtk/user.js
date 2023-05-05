@@ -5,9 +5,7 @@ const server_URL = import.meta.env.VITE_API_URL;
 export const googleAuthenticate = createAsyncThunk(
   "users/googleAuth",
   async ({ state, code }, thunkAPI) => {
-    console.log(1);
     if (state && code && !localStorage.getItem("access")) {
-      console.log(2);
       const details = {
         state,
         code,
@@ -29,7 +27,6 @@ export const googleAuthenticate = createAsyncThunk(
           }
         );
         const data = await res.json();
-        console.log(data, res);
         if (res.status === 201) {
           const { dispatch } = thunkAPI;
           const { access } = data;
@@ -44,7 +41,6 @@ export const googleAuthenticate = createAsyncThunk(
         return thunkAPI.rejectWithValue(err.response.data);
       }
     } else {
-      console.log(3);
       return thunkAPI.rejectWithValue("google auth cancelled!!");
     }
   }
@@ -303,7 +299,6 @@ const userSlice = createSlice({
         state.loading = true;
       })
       .addCase(getUser.fulfilled, (state, action) => {
-        console.log(action)
         state.loading = false;
         state.user = action.payload;
       })

@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { login, resetRegistered } from "../rtk/user";
 import { Navigate } from "react-router-dom";
+import { continueWithGoogle } from "../helpers/continueWithGoogle";
 import axios from "axios";
 
 const Login = () => {
@@ -26,19 +27,6 @@ const Login = () => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(login({ email, password }));
-  };
-  const continueWithGoogle = async () => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/auth/o/google-oauth2/?redirect_uri=${
-          import.meta.env.VITE_API_URL
-        }`
-      );
-      console.log(res.data.authorization_url);
-      window.location.replace(res.data.authorization_url);
-    } catch (err) {
-      console.log("Google Auth error");
-    }
   };
   // check if authenticated -> redirect to homepage
 
