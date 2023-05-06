@@ -10,6 +10,8 @@ import { store } from "./rtk/store";
 import Team from "./pages/Team";
 import Match from "./pages/Match";
 import Tournament from "./pages/Tournament";
+import TournamentRegisterTeam from "./pages/TournamentRegisterTeam";
+import NoMatch from "./pages/NoMatch"
 function App() {
     return (
         <Provider store={store}>
@@ -36,6 +38,8 @@ function App() {
                         path="/tournament/:id"
                         element={<Tournament />}
                     ></Route>
+                    <Route path="/tournament/:id/register" element={<TournamentRegisterTeam/>}></Route>
+                    <Route path="*" element={<NoMatch />} />
                 </Routes>
             </BrowserRouter>
         </Provider>
