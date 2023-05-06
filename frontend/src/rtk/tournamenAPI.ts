@@ -15,6 +15,7 @@ export const tournamentAPI = createApi({
         },
     }),
     refetchOnFocus: true,
+    tagTypes: ['Team', ''],
     endpoints: (build) => ({
         getMatchById: build.query({
             query: (search) => {
@@ -24,6 +25,24 @@ export const tournamentAPI = createApi({
         getTournamentById: build.query({
             query: (search) => {
                 return { url: `tournament/${search.id}/` };
+            },
+        }),
+        registerTeamOnTournament: build.mutation({
+            query: ({tournamentId, team}) => {
+                return {
+                    url: `tounament/${tournamentId}/`,
+                    method: "PATCH",
+                    body: team,
+                };
+            },
+        }),
+        createTeam: build.mutation({
+            query: (team) => {
+                return {
+                    url: `team/`,
+                    method: "POST",
+                    body: team,
+                };
             },
         }),
     }),
