@@ -1,7 +1,7 @@
-import { useParams } from "react-router-dom";
 import useWindowSize from "../hooks/useWindowSize";
 import { tournamentAPI } from "../rtk/tournamenAPI";
 import transformMatches from "../helpers/transformMatches.js";
+import Layout from "../hocs/Layout.jsx";
 import {
     SingleEliminationBracket,
     Match,
@@ -172,39 +172,49 @@ export const Tournament = () => {
         tournamentAPI.useGetTournamentByIdQuery({
             id: "1",
         });
-    let matches:IMatch[] = [];
+    let matches: IMatch[] = [];
     if (isSuccess) {
         matches = transformMatches(data);
-        console.log(matches)
+        console.log(matches);
     }
     const windowSize = useWindowSize();
+    const width = Math.max(500, windowSize.width);
+    const height = Math.max(500, windowSize.height);
     return (
-        <>
+        <Layout>
             <button
                 className="p-6 bg-green-600"
                 onClick={() => alert("amongus balls!")}
             >
                 SHOW DESE NUTS
             </button>
-            {isSuccess ? <SingleEliminationBracket
-                theme={GlootTheme}
-                matches={matches}
-                matchComponent={Match}
-                svgWrapper={({ children, ...props }) => (
-                    <SVGViewer
-                        width={windowSize.width}
-                        height={windowSize.height}
-                        background="rgb(11, 13, 19)"
-                        SVGBackground="rgb(11, 13, 19)"
-                        {...props}
-                    >
-                        {children}
-                    </SVGViewer>
+            <div className="flex justify-center">
+                <div className="w-full bg-slate-400"></div>
+                {isSuccess ? (
+                    <SingleEliminationBracket
+                        theme={GlootTheme}
+                        matches={matches}
+                        matchComponent={Match}
+                        svgWrapper={({ children, ...props }) => (
+                            <SVGViewer
+                                width={width}
+                                height={height}
+                                background="rgb(11, 13, 19)"
+                                SVGBackground="rgb(11, 13, 19)"
+                                {...props}
+                            >
+                                {children}
+                            </SVGViewer>
+                        )}
+                        onMatchClick={(match) => console.log(match)}
+                        onPartyClick={(match) => console.log(match)}
+                    />
+                ) : (
+                    <p>Error....!</p>
                 )}
-                onMatchClick={(match) => console.log(match)}
-                onPartyClick={(match) => console.log(match)}
-            />: <p>Error....!</p>}
-        </>
+                <div className="w-full bg-slate-400"></div>
+            </div>
+        </Layout>
     );
 };
 
