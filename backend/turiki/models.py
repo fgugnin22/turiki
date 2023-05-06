@@ -63,7 +63,8 @@ class Tournament(models.Model):
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=255, null=True, blank=True, )
+    objects = TeamManager()
+    name = models.CharField(max_length=255, null=True, blank=True, unique=True)
     tournaments = models.ManyToManyField(Tournament, related_name="teams", null=True, blank=True, )
 
     def __str__(self):
@@ -123,6 +124,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     objects = UserAccountManager()
+    is_captain = models.BooleanField(default=False)
     team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name="players")
     USERNAME_FIELD = 'email'  # что является логином
     REQUIRED_FIELDS = ['name']  # обязательные поля

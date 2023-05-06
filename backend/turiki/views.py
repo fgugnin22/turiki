@@ -19,10 +19,6 @@ class MatchAPIView(ModelViewSet):
 
 
 class TeamAPIView(ModelViewSet):
-    def __init__(self, *args, **kwargs):
-        super(*args)
-        print("working")
-
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     permission_classes = [AllowAny]  # [IsAdminUserOrReadOnly]
