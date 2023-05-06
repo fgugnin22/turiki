@@ -63,8 +63,8 @@ class Tournament(models.Model):
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=255, default="none")
-    tournaments = models.ManyToManyField(Tournament, related_name="teams")
+    name = models.CharField(max_length=255, null=True, blank=True, )
+    tournaments = models.ManyToManyField(Tournament, related_name="teams", null=True, blank=True, )
 
     def __str__(self):
         return self.name
@@ -72,13 +72,19 @@ class Team(models.Model):
 
 #
 #
+
+
 class Match(models.Model):
-    teams = models.ManyToManyField(Team, related_name="matches", null=True, blank=True)
-    next_match = models.ForeignKey('Match', unique=False, on_delete=models.CASCADE, related_name='previous_match',
+    teams = models.ManyToManyField(Team, related_name="matches", null=True, blank=True, through="Participant")
+    next_match = models.ForeignKey('Match', unique=False, on_delete=models.SET_NULL, related_name='previous_match',
                                    null=True, blank=True)
-    status = models.CharField(max_length=31, null=True, blank=True)
-    starts = models.DateTimeField(auto_now_add=True)
-    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, default="none", related_name="matches")
+    name = models.CharField(max_length=127, blank=True, null=True)
+    round_text = models.CharField(max_length=31, blank=True, null=True)  # ПОРЯДОК СЛЕДОВАНИЯ МАТЧЕЙ
+    # В ТУРНИРЕ, Т.Е. 1 - ПЕРВЫЕ МАТЧИ В ТУРНИРЕ, 2 - ВТОРЫЕ И ТД. п.с. на самом деле это не обязательно, просто рекомендация)))
+    state = models.CharField(max_length=31, null=True, blank=True)
+    starts = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="matches",
+                                   null=True, blank=True, )
 
     def get_participants(self):
         arr = list(self.teams.values())
@@ -86,18 +92,29 @@ class Match(models.Model):
         if len(arr) == 0:
             return ""
         elif len(arr) == 1:
-            return f"{arr[0]['name']}"
+            return f"{arr[0]['name']}_VS_"
         elif len(arr) == 2:
-            return f"_{arr[0]['name']}_{arr[1]['name']}"
+            return f"_{arr[0]['name']}_VS_{arr[1]['name']}"
 
     def __str__(self):
-        return f"{self.tournament.name}_match_id_{self.id}{self.get_participants()}"
+        return f"{self.tournament.name}_match_id_{self.id}_{self.get_participants()}"
 
     def __repr__(self):  # пока что не нужен
         return {"teams": self.teams, "is_active": self.is_active, "is_played": self.is_played,
                 "starts": self.starts,
                 "tournament": self.tournament,
                 }
+
+
+class Participant(models.Model):
+    Team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True)
+    Match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name="participants", blank=True, null=True)
+    status = models.CharField(max_length=31, null=True, blank=True)
+    is_winner = models.BooleanField(null=True, blank=True)
+    result_text = models.CharField(max_length=31, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.Team}_{self.Match}"
 
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):

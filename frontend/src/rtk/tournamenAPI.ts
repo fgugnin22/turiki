@@ -17,9 +17,14 @@ export const tournamentAPI = createApi({
     refetchOnFocus: true,
     endpoints: (build) => ({
         getMatchById: build.query({
-            query: (search) => ({
-                url: `match/${search.id}/`,
-            }),
+            query: (search) => {
+                return { url: `match/${search.id}/` };
+            },
+        }),
+        getTournamentById: build.query({
+            query: (search) => {
+                return { url: `tournament/${search.id}/` };
+            },
         }),
     }),
 });
