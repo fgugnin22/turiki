@@ -12,9 +12,9 @@ const Layout = (props) => {
   const state = getParameterByName("state");
   const code = getParameterByName("code"); //get code and state from google oauth2
   useEffect(() => {
-    if (isAuthenticated) {
-      navigate("/")
-    }
+    // if (isAuthenticated) {
+    //   navigate("/")
+    // }
     if (state && code) {
       dispatch(googleAuthenticate({ state, code }));
     } else {
