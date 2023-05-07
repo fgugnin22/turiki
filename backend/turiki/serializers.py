@@ -40,9 +40,9 @@ class PlayerSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    players = PlayerSerializer(many=True)
-    tournaments = TournamentSerializer(many=True)
-    matches = MatchSerializer(many=True)
+    players = PlayerSerializer(many=True, read_only=True)
+    tournaments = TournamentSerializer(many=True, read_only=True)
+    matches = MatchSerializer(many=True, read_only=True)
 
     def create(self, validated_data):
         data = dict(validated_data)
