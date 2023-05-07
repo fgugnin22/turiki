@@ -13,6 +13,7 @@ import Tournament from "./pages/Tournament";
 import TournamentRegisterTeam from "./pages/TournamentRegisterTeam";
 import NoMatch from "./pages/NoMatch"
 import TeamCreate from "./pages/TeamCreate"
+import TournmanetList from "./pages/TournamentList"
 function App() {
     return (
         <Provider store={store}>
@@ -42,6 +43,7 @@ function App() {
                     <Route path="/tournament/:id/register" element={<TournamentRegisterTeam/>}></Route>
                     <Route path="*" element={<NoMatch />} />
                     <Route path="/team/create" element={<TeamCreate/>}></Route>
+                    <Route path="/tournaments" element={<TournmanetList/>}></Route>
                 </Routes>
             </BrowserRouter>
         </Provider>

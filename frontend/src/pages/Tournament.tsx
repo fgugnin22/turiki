@@ -190,7 +190,7 @@ export const Tournament = () => {
             </button>
             <div className="flex justify-center">
                 <div className="w-full bg-slate-400"></div>
-                {isSuccess ? (
+                {isSuccess && data?.length > 0 ? (
                     <SingleEliminationBracket
                         theme={GlootTheme}
                         matches={matches}
@@ -210,7 +210,7 @@ export const Tournament = () => {
                         onPartyClick={(match) => console.log(match)}
                     />
                 ) : (
-                    <p>Error....!</p>
+                    <p className="py-full text-center w-[20%] bg-red-600 text-xl">Error....!</p>
                 )}
                 <div className="w-full bg-slate-400"></div>
             </div>

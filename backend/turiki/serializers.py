@@ -11,7 +11,7 @@ class UserCreateSerializer1(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
         # СЮДА ДОБАВЛЯТЬ ПОЛЯ КОТОРЫЕ ПОТОМ ОТСЫЛАЕМ НА КЛИЕНТ
-        fields = ('id', 'email', 'name', 'password', 'is_active', 'team')
+        fields = ('id', 'email', 'name', 'password', 'is_active', 'team', "is_captain")
 
 
 class MatchSerializer(serializers.ModelSerializer):
@@ -36,7 +36,7 @@ class TournamentSerializer(serializers.ModelSerializer):
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ["name", "id"]
+        fields = ["name", "id", "is_captain"]
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -53,11 +53,12 @@ class TeamSerializer(serializers.ModelSerializer):
         if User.objects.filter(name=captain["name"]).exists():
             if User.objects.get(name=captain["name"]).team is not None:
                 raise ValueError('User already created a team')
-            print("working1")
             team = Team(**validated_data)
-            print("working2")
+            captain = User.objects.get(name=captain["name"])
+            captain.is_captain = True
+            captain.save()
             team.save()
-            team.players.set([User.objects.get(name=captain["name"])])
+            team.players.set([captain])
             return team
         else:
             raise ValueError('USER DOES NOT EXIST')

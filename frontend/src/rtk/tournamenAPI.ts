@@ -27,6 +27,11 @@ export const tournamentAPI = createApi({
                 return { url: `tournament/${search.id}/` };
             },
         }),
+        getAllTournaments: build.query({
+            query: () => {
+                return { url: `tournament/` };
+            },
+        }),
         registerTeamOnTournament: build.mutation({
             query: ({ tournamentId, team }) => {
                 return {
