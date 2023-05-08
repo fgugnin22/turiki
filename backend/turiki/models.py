@@ -125,9 +125,18 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     objects = UserAccountManager()
     is_captain = models.BooleanField(default=False)
-    team = models.ForeignKey(Team, on_delete=models.SET_NULL, null=True, related_name="players")
+    team = models.ManyToManyField(Team, null=True, through='Player')
     USERNAME_FIELD = 'email'  # что является логином
     REQUIRED_FIELDS = ['name']  # обязательные поля
 
     def __str__(self):
-        return self.email
+        return self.name
+
+
+class Player(models.Model):
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="teams")
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="players")
+    status = models.CharField(max_length=63)
+
+    def __str__(self):
+        return f"{self.user}_{self.team}_{self.status}"

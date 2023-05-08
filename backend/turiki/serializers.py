@@ -2,7 +2,7 @@ from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 
-from turiki.models import Tournament, Match, Team
+from turiki.models import *
 
 User = get_user_model()
 
@@ -34,36 +34,52 @@ class TournamentSerializer(serializers.ModelSerializer):
 
 
 class PlayerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = User
-        fields = ["name", "id", "is_captain"]
-
-
-class TeamSerializer(serializers.ModelSerializer):
-    players = PlayerSerializer(many=True, read_only=True)
-    tournaments = TournamentSerializer(many=True, read_only=True)
-    matches = MatchSerializer(many=True, read_only=True)
-
-    def create(self, validated_data):
-        data = dict(validated_data)
-        captain = dict(data["players"][0])
-        validated_data.pop("players")
-        validated_data.pop("matches")
-        validated_data.pop("tournaments")
-        if User.objects.filter(name=captain["name"]).exists():
-            if User.objects.get(name=captain["name"]).team is not None:
-                raise ValueError('User already created a team')
-            team = Team(**validated_data)
-            captain = User.objects.get(name=captain["name"])
-            captain.is_captain = True
-            captain.save()
-            team.save()
-            team.players.set([captain])
-            return team
-        else:
-            raise ValueError('USER DOES NOT EXIST')
+    team = serializers.StringRelatedField()
+    user_id = serializers.IntegerField()
+    # id = serializers.IntegerField()
+    status = serializers.CharField(default='PENDING')
 
     class Meta:
         depth = 1
+        model = Player
+        fields = ["team", "user_id", "id", "status"]
+
+
+class TeamSerializer(serializers.ModelSerializer):
+    players = PlayerSerializer(many=True)
+
+    class Meta:
         model = Team
-        fields = ["players", "matches", "id", "name", "tournaments"]
+        fields = "__all__"
+        extra_fields = ("players",)
+
+    def create(self, validated_data):
+        if len(validated_data.get("players")) > 1:
+            raise ValueError("Access denied")
+        captain_id = validated_data.pop("players")[0]["user_id"]
+
+        captain = User.objects.get(pk=captain_id)
+        teams = list(captain.teams.values())
+        for x in teams:
+            if x["status"] == "CAPTAIN" or x["status"] == "ACTIVE":
+                raise ValueError("User is already in a team")
+        team = Team.objects.create(**validated_data)
+        player = Player.objects.create(team=team, user=captain, status="CAPTAIN")
+        player.save()
+        # team.players.set([captain])
+        team.save()
+        return team
+
+    def update(self, instance, validated_data):
+        new_player_id = validated_data.get("players")[0]["user_id"]
+        user = User.objects.get(pk=new_player_id)
+        players = instance.players
+        for p in players.values():
+            if p["user_id"] == new_player_id:
+                raise ValueError("user is already in this team")
+        new_player = Player.objects.create(user=user, team=instance, status="PENDING")
+
+        players.add(new_player)
+        new_player.save()
+        instance.save()
+        return instance
