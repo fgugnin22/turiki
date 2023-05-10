@@ -1,7 +1,7 @@
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-
+from .services import add_team_player, change_team_name, change_players_status, is_user_in_team
 from turiki.models import *
 
 User = get_user_model()
@@ -33,53 +33,42 @@ class TournamentSerializer(serializers.ModelSerializer):
         fields = ('name', 'prize', "registration_opened", "starts", "active", "played", "matches", "teams")
 
 
-class PlayerSerializer(serializers.ModelSerializer):
-    team = serializers.StringRelatedField()
-    user_id = serializers.IntegerField()
-    # id = serializers.IntegerField()
-    status = serializers.CharField(default='PENDING')
-
-    class Meta:
-        depth = 1
-        model = Player
-        fields = ["team", "user_id", "id", "status"]
-
-
 class TeamSerializer(serializers.ModelSerializer):
+    games = serializers.StringRelatedField(many=True, read_only=True)
+
+    class PlayerSerializer(serializers.ModelSerializer):
+        name = serializers.CharField()
+        id = serializers.IntegerField(read_only=True)
+
+        class Meta:
+            model = User
+
+            fields = ["team_status", "id", "name"]
+
     players = PlayerSerializer(many=True)
 
     class Meta:
+        depth = 1
         model = Team
         fields = "__all__"
-        extra_fields = ("players",)
 
     def create(self, validated_data):
-        if len(validated_data.get("players")) > 1:
-            raise ValueError("Access denied")
-        captain_id = validated_data.pop("players")[0]["user_id"]
-
-        captain = User.objects.get(pk=captain_id)
-        teams = list(captain.teams.values())
-        for x in teams:
-            if x["status"] == "CAPTAIN" or x["status"] == "ACTIVE":
-                raise ValueError("User is already in a team")
+        validated_data.pop("players")
+        user_name = validated_data.get("next_member")
+        is_user_in_team(user_name)
         team = Team.objects.create(**validated_data)
-        player = Player.objects.create(team=team, user=captain, status="CAPTAIN")
-        player.save()
-        # team.players.set([captain])
-        team.save()
+
+        team = add_team_player(team, user_name, "CAPTAIN")
+
         return team
 
     def update(self, instance, validated_data):
-        new_player_id = validated_data.get("players")[0]["user_id"]
-        user = User.objects.get(pk=new_player_id)
-        players = instance.players
-        for p in players.values():
-            if p["user_id"] == new_player_id:
-                raise ValueError("user is already in this team")
-        new_player = Player.objects.create(user=user, team=instance, status="PENDING")
-
-        players.add(new_player)
-        new_player.save()
-        instance.save()
-        return instance
+        user_name = validated_data.get("next_member")
+        players = validated_data.get("players")
+        print(validated_data)
+        team_name = validated_data.get("name")
+        team = change_team_name(instance, user_name, team_name)
+        team = add_team_player(team, user_name)
+        team = change_players_status(team, players, user_name)
+        team.save()
+        return team

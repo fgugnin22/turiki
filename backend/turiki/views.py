@@ -26,10 +26,19 @@ class TeamAPIView(ModelViewSet):
     permission_classes = [AllowAny]  # [IsAdminUserOrReadOnly]
 
     def create(self, request, *args, **kwargs):
-        user_id = request.data["players"][0]["user_id"]
-        if user_id != UserAccount.objects.get(name=request.user).id:
-            return Response(status=status.HTTP_403_FORBIDDEN)
+        request.data["next_member"] = request.user.name
+        request.data["players"] = []
+        print(request.data)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        request.data["next_member"] = request.user.name
+        instance = self.get_object()
+        serializer = self.serializer_class(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
         return Response(serializer.data)

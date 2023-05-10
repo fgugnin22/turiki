@@ -32,40 +32,22 @@ class UserAccountManager(BaseUserManager):
         return user
 
 
-class TournamentManager(models.Manager):
-    def create_tournament(self, name, **extra_fields):
-        if not name:
-            raise ValueError('name required!')
-        tournament = self.model(name=name, **extra_fields)
-        tournament.save()
-        return tournament
-
-
-class MatchManager(models.Manager):
-    pass
-
-
-class TeamManager(models.Manager):
-    pass
-
-
 class Tournament(models.Model):
-    name = models.CharField(max_length=255, default="balls")
+    name = models.CharField(max_length=255, default="Tournament")
     prize = models.IntegerField(default=0)
     registration_opened = models.BooleanField(default=True)
     starts = models.DateTimeField(auto_now_add=True)
     active = models.BooleanField(default=False)
     played = models.BooleanField(default=False)
-    objects = TournamentManager()
 
     def __str__(self):
         return self.name
 
 
 class Team(models.Model):
-    objects = TeamManager()
     name = models.CharField(max_length=255, null=True, blank=True, unique=True)
     tournaments = models.ManyToManyField(Tournament, related_name="teams", null=True, blank=True, )
+    next_member = models.CharField(null=True, blank=True, max_length=255)
 
     def __str__(self):
         return self.name
@@ -108,7 +90,7 @@ class Match(models.Model):
 
 
 class Participant(models.Model):
-    Team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True)
+    Team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True, related_name="games")
     Match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name="participants", blank=True, null=True)
     status = models.CharField(max_length=31, null=True, blank=True)
     is_winner = models.BooleanField(null=True, blank=True)
@@ -120,23 +102,15 @@ class Participant(models.Model):
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     objects = UserAccountManager()
     is_captain = models.BooleanField(default=False)
-    team = models.ManyToManyField(Team, null=True, through='Player')
+    team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.SET_NULL, related_name="players")
+    team_status = models.CharField(max_length=31, null=True, blank=True)
     USERNAME_FIELD = 'email'  # что является логином
     REQUIRED_FIELDS = ['name']  # обязательные поля
 
     def __str__(self):
         return self.name
-
-
-class Player(models.Model):
-    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE, related_name="teams")
-    team = models.ForeignKey(Team, on_delete=models.CASCADE, related_name="players")
-    status = models.CharField(max_length=63)
-
-    def __str__(self):
-        return f"{self.user}_{self.team}_{self.status}"

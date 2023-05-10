@@ -13,6 +13,7 @@ import Tournament from "./pages/Tournament";
 import TournamentRegisterTeam from "./pages/TournamentRegisterTeam";
 import NoMatch from "./pages/NoMatch"
 import TeamCreate from "./pages/TeamCreate"
+import TeamList from "./pages/TeamList"
 import TournmanetList from "./pages/TournamentList"
 function App() {
     return (
@@ -43,6 +44,7 @@ function App() {
                     <Route path="/tournament/:id/register" element={<TournamentRegisterTeam/>}></Route>
                     <Route path="*" element={<NoMatch />} />
                     <Route path="/team/create" element={<TeamCreate/>}></Route>
+                    <Route path="/team" element={<TeamList/>}></Route>
                     <Route path="/tournaments" element={<TournmanetList/>}></Route>
                 </Routes>
             </BrowserRouter>
