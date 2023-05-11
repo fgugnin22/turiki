@@ -35,10 +35,10 @@ class UserAccountManager(BaseUserManager):
 class Tournament(models.Model):
     name = models.CharField(max_length=255, default="Tournament")
     prize = models.IntegerField(default=0)
-    registration_opened = models.BooleanField(default=True)
-    starts = models.DateTimeField(auto_now_add=True)
-    active = models.BooleanField(default=False)
-    played = models.BooleanField(default=False)
+    status = models.CharField(default="REGISTRATION OPENED", max_length=255)
+    starts = models.CharField(max_length=255, default="15.05.2023")
+    # teams = models.ManyToManyField("Team", through="IDK KAK BUDET NAZIVATSYA") <-- TODO: SDELAT'
+    max_rounds = models.IntegerField(default=1)
 
     def __str__(self):
         return self.name
@@ -83,21 +83,18 @@ class Match(models.Model):
         return f"{self.tournament.name}_match_id_{self.id}_{self.get_participants()}"
 
     def __repr__(self):  # пока что не нужен
-        return {"teams": self.teams, "is_active": self.is_active, "is_played": self.is_played,
-                "starts": self.starts,
-                "tournament": self.tournament,
-                }
+        return f"{self.teams, self.state, self.starts, self.tournament}"
 
 
 class Participant(models.Model):
-    Team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True, related_name="games")
-    Match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name="participants", blank=True, null=True)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, blank=True, null=True, related_name="games")
+    match = models.ForeignKey(Match, on_delete=models.CASCADE, related_name="participants", blank=True, null=True)
     status = models.CharField(max_length=31, null=True, blank=True)
     is_winner = models.BooleanField(null=True, blank=True)
     result_text = models.CharField(max_length=31, null=True, blank=True)
 
     def __str__(self):
-        return f"{self.Team}_{self.Match}"
+        return f"{self.team}_{self.match}"
 
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):

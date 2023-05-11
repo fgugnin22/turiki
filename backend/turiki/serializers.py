@@ -1,7 +1,8 @@
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .services import add_team_player, change_team_name, change_players_status, is_user_in_team
+from .services import add_team_player, change_team_name, change_players_status, is_user_in_team, create_bracket, \
+    set_initial_matches, set_tournament_status
 from turiki.models import *
 
 User = get_user_model()
@@ -18,7 +19,7 @@ class MatchSerializer(serializers.ModelSerializer):
     # participants = serializers.StringRelatedField(many=True)
 
     class Meta:
-        depth = 2
+        depth = 1
         model = Match
         fields = ("id", "state", "round_text", "starts", "tournament", "participants", "next_match", "name")
 
@@ -30,7 +31,25 @@ class TournamentSerializer(serializers.ModelSerializer):
     class Meta:
         depth = 2
         model = Tournament
-        fields = ('name', 'prize', "registration_opened", "starts", "active", "played", "matches", "teams")
+        fields = (
+            'name', 'prize', "starts", "matches", "teams", "max_rounds", "status")
+
+    def create(self, validated_data):
+        validated_data.pop("matches")
+        validated_data.pop("teams")
+        rounds = validated_data.get("max_rounds", 1)
+        tourn = Tournament.objects.create(**validated_data)
+        tourn = create_bracket(tourn, rounds)
+        return tourn
+
+    def update(self, instance, validated_data):
+        status = validated_data.pop("status")
+        set_tournament_status(instance, status)
+        if status == "REGISTRATION_CLOSED":
+            set_initial_matches(instance)
+        else:
+            print(status)
+        return instance
 
 
 class TeamSerializer(serializers.ModelSerializer):

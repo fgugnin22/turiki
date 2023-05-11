@@ -13,11 +13,36 @@ class TournamentAPIView(ModelViewSet):
     serializer_class = TournamentSerializer
     permission_classes = [IsAdminUserOrReadOnly]
 
+    def create(self, request, *args, **kwargs):
+        request.data["matches"] = []
+        request.data["teams"] = []
+        print(request.data, request.user)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        instance = self.get_object()
+        request.data["teams"] = []
+        request.data["matches"] = []
+        serializer = self.serializer_class(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+
+        return Response(serializer.data)
+
 
 class MatchAPIView(ModelViewSet):
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
-    permission_classes = [IsAdminUserOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def create(self, request, *args, **kwargs):
+        pass
+
+    def update(self, request, *args, **kwargs):
+        pass
 
 
 class TeamAPIView(ModelViewSet):
