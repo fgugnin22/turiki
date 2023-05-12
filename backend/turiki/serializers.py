@@ -2,7 +2,7 @@ from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .services import add_team_player, change_team_name, change_players_status, is_user_in_team, create_bracket, \
-    set_initial_matches, set_tournament_status
+    set_initial_matches, set_tournament_status, end_match, set_match_winner
 from turiki.models import *
 
 User = get_user_model()
@@ -22,6 +22,11 @@ class MatchSerializer(serializers.ModelSerializer):
         depth = 1
         model = Match
         fields = ("id", "state", "round_text", "starts", "tournament", "participants", "next_match", "name")
+
+    def update(self, instance, validated_data):
+        # set_match_winner(instance)
+        end_match(instance)
+        return instance
 
 
 class TournamentSerializer(serializers.ModelSerializer):

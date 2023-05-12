@@ -100,9 +100,63 @@ def change_players_status(team, new_players, user_name):
 # from turiki.services import end_match
 # match = Match.objects.get(pk=26)
 # end_match(match)
+# participant2 = Participant.objects.create(team=team2, match=m, status="NO_SHOW", result_text="TBD")
+def update_next_match(next_match, winner):
+    print(winner.team)
+    next_participant = Participant.objects.create(team=winner.team, match=next_match, status="NO_SHOW",
+                                                  result_text="TBD")
+    next_match.participants.add(next_participant)
+
+
+def check_captain(data, user) -> bool:
+    participant = Participant.objects.get(pk=data["participants"][0]["id"])
+    if user.team_status == "CAPTAIN" and user.team.id == participant.team.id:
+        return True
+    return False
+
 
 def end_match(match):
-    [team1, team2] = list(match.participants.values())
-    team1 = Participant.objects.get(pk=team1["id"])
-    team2 = Participant.objects.get(pk=team2["id"])
-    print(team1, team2)
+    [p1, p2] = list(match.participants.values())
+    p1 = Participant.objects.get(pk=p1["id"])
+    p2 = Participant.objects.get(pk=p2["id"])
+    next_match = match.next_match
+    print(p1.is_winner, p2.is_winner)
+
+    if p1.is_winner and p2.is_winner == False or p1.is_winner == False and p2.is_winner:
+        pass
+    else:
+        print("compromised results!!!".upper())
+        return
+    match.state = "SCORE_DONE"
+
+    match.save()
+    if next_match is None:
+        return
+    if p1.is_winner:
+        p1.result_text = "WON"
+        p2.result_text = "LOST"
+        p1.status = "PLAYED"
+        p2.status = "PLAYED"
+        p1.save()
+        p2.save()
+        update_next_match(next_match, p1)
+        return
+    p2.result_text = "WON"
+    p1.result_text = "LOST"
+    p1.status = "PLAYED"
+    p2.status = "PLAYED"
+    p1.save()
+    p2.save()
+    update_next_match(next_match, p2)
+
+
+def set_match_winner(match, data):
+    [p1, p2] = list(match.participants.values())
+    p1 = Participant.objects.get(pk=p1["id"])
+    p2 = Participant.objects.get(pk=p2["id"])
+    if data["participants"][0]["id"] == p1.id:
+        p1.is_winner = data["participants"][0]["is_winner"]
+        p1.save()
+        return
+    p2.is_winner = data["participants"][0]["is_winner"]
+    p2.save()

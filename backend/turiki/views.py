@@ -6,6 +6,8 @@ from turiki.Permissons import IsAdminUserOrReadOnly
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 
+from turiki.services import check_captain, set_match_winner
+
 
 # Create your views here.
 class TournamentAPIView(ModelViewSet):
@@ -42,7 +44,15 @@ class MatchAPIView(ModelViewSet):
         pass
 
     def update(self, request, *args, **kwargs):
-        pass
+        instance = self.get_object()
+        user = request.user
+        if check_captain(request.data, user):
+            set_match_winner(instance, request.data)
+            serializer = self.serializer_class(instance, data=request.data)
+            serializer.is_valid(raise_exception=True)
+            self.perform_update(serializer)
+            return Response(serializer.data)
+        return Response(status=status.HTTP_403_FORBIDDEN)
 
 
 class TeamAPIView(ModelViewSet):
