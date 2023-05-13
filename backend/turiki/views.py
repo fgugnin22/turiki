@@ -1,12 +1,11 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from turiki.models import *
-from turiki.serializers import TournamentSerializer, MatchSerializer, TeamSerializer
+from turiki.serializers import TournamentSerializer, MatchSerializer, TeamSerializer, ChatSerializer
 from turiki.Permissons import IsAdminUserOrReadOnly
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
-
-from turiki.services import check_captain, set_match_winner
+from turiki.services import check_captain, set_match_winner, create_message
 
 
 # Create your views here.
@@ -58,7 +57,7 @@ class MatchAPIView(ModelViewSet):
 class TeamAPIView(ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-    permission_classes = [AllowAny]  # [IsAdminUserOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
         request.data["next_member"] = request.user.name
@@ -76,4 +75,20 @@ class TeamAPIView(ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
 
+        return Response(serializer.data)
+
+
+class ChatAPIView(ModelViewSet):
+    queryset = Chat.objects.all()
+    serializer_class = ChatSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def update(self, request, *args, **kwargs):
+        request.data["messages"] = []
+        user = request.user
+        instance = self.get_object()
+        msg = create_message(user, instance, request.data["content"])
+        serializer = self.serializer_class(instance, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
         return Response(serializer.data)

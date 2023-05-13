@@ -1,4 +1,4 @@
-from .models import UserAccount, Match, Tournament, Team, Participant
+from .models import UserAccount, Match, Tournament, Team, Participant, Lobby, Chat, Message
 from rest_framework import serializers
 import random
 
@@ -26,7 +26,6 @@ def set_initial_matches(tournament):
         participant2 = Participant.objects.create(team=team2, match=m, status="NO_SHOW", result_text="TBD")
         m.participants.add(participant1)
         m.participants.add(participant2)
-        print(m.participants.values())
 
 
 def create_match(next_round_count, rounds, tournament, next_match=None):
@@ -102,7 +101,6 @@ def change_players_status(team, new_players, user_name):
 # end_match(match)
 # participant2 = Participant.objects.create(team=team2, match=m, status="NO_SHOW", result_text="TBD")
 def update_next_match(next_match, winner):
-    print(winner.team)
     next_participant = Participant.objects.create(team=winner.team, match=next_match, status="NO_SHOW",
                                                   result_text="TBD")
     next_match.participants.add(next_participant)
@@ -115,13 +113,32 @@ def check_captain(data, user) -> bool:
     return False
 
 
+# chat
+# user
+# content
+def create_message(user, chat, content):
+    return Message.objects.create(user=user, chat=chat, content=content)
+
+
+def create_lobby(match):
+    if not (len(match.participants.values()) == 2 and (not ("DONE" in match.state))):
+        return
+    if match.lobby is not None:
+        print("lobby already created")
+        return
+    chat = Chat.objects.create()
+    lobby = Lobby.objects.create(match=match, chat=chat)
+    chat.lobby = lobby
+    chat.save()
+    print("LOBBY CREATED")
+    return
+
+
 def end_match(match):
     [p1, p2] = list(match.participants.values())
     p1 = Participant.objects.get(pk=p1["id"])
     p2 = Participant.objects.get(pk=p2["id"])
     next_match = match.next_match
-    print(p1.is_winner, p2.is_winner)
-
     if p1.is_winner and p2.is_winner == False or p1.is_winner == False and p2.is_winner:
         pass
     else:

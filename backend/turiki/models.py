@@ -111,3 +111,27 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.name
+
+
+class Lobby(models.Model):
+    match = models.OneToOneField(Match, on_delete=models.CASCADE, related_name="lobby")
+    chat = models.OneToOneField("Chat", on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.match}"
+
+
+class Chat(models.Model):
+    def __str__(self):
+        return f"{self.lobby}"
+
+
+class Message(models.Model):
+    chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    content = models.CharField(max_length=255, blank=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    # file = models.FileField(verbose_name="Файл")
+    def __str__(self):
+        return f"{self.user}_{self.content}_at_{self.created_at}_{self.chat}"

@@ -2,7 +2,7 @@ from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .services import add_team_player, change_team_name, change_players_status, is_user_in_team, create_bracket, \
-    set_initial_matches, set_tournament_status, end_match, set_match_winner
+    set_initial_matches, set_tournament_status, end_match, create_lobby
 from turiki.models import *
 
 User = get_user_model()
@@ -21,10 +21,11 @@ class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         depth = 1
         model = Match
-        fields = ("id", "state", "round_text", "starts", "tournament", "participants", "next_match", "name")
+        fields = ("id", "state", "round_text", "starts", "tournament", "participants", "next_match", "name", "lobby")
 
     def update(self, instance, validated_data):
         # set_match_winner(instance)
+        create_lobby(instance)
         end_match(instance)
         return instance
 
@@ -96,3 +97,27 @@ class TeamSerializer(serializers.ModelSerializer):
         team = change_players_status(team, players, user_name)
         team.save()
         return team
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Message
+        fields = "__all__"
+
+
+class ChatSerializer(serializers.ModelSerializer):
+    messages = MessageSerializer(many=True)
+
+    class Meta:
+        model = Chat
+        fields = "__all__"
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        return instance
+
+    def __delete__(self, instance):
+        pass
+# class LobbySerializer(serializers.ModelSerializer):

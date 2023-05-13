@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'social_django',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'drf_yasg',
 ]
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',  # for localhost (REACT Default)
