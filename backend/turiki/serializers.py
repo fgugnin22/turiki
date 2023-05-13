@@ -12,7 +12,7 @@ class UserCreateSerializer1(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
         # СЮДА ДОБАВЛЯТЬ ПОЛЯ КОТОРЫЕ ПОТОМ ОТСЫЛАЕМ НА КЛИЕНТ
-        fields = ('id', 'email', 'name', 'password', 'is_active', 'team', "is_captain")
+        fields = ('id', 'email', 'name', 'password', 'is_active', 'team')
 
 
 class MatchSerializer(serializers.ModelSerializer):

@@ -103,7 +103,6 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     objects = UserAccountManager()
-    is_captain = models.BooleanField(default=False)
     team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.SET_NULL, related_name="players")
     team_status = models.CharField(max_length=31, null=True, blank=True)
     USERNAME_FIELD = 'email'  # что является логином

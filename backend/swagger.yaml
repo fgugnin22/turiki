@@ -1,0 +1,1227 @@
+swagger: '2.0'
+info:
+  title: Auth and Tournaments API
+  description: Тут можно посмотреть как авторизовываться и управлять турнирами, матчами
+    и т.д.
+  version: v1
+host: localhost:8000
+schemes:
+  - http
+basePath: /
+consumes:
+  - application/json
+produces:
+  - application/json
+securityDefinitions:
+  Basic:
+    type: basic
+security:
+  - Basic: []
+paths:
+  /api/chat/:
+    get:
+      operationId: api_chat_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Chat'
+      tags:
+        - api
+    parameters: []
+  /api/chat/{id}/:
+    get:
+      operationId: api_chat_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Chat'
+      tags:
+        - api
+    put:
+      operationId: api_chat_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Chat'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Chat'
+      tags:
+        - api
+    patch:
+      operationId: api_chat_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Chat'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Chat'
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this chat.
+        required: true
+        type: integer
+  /api/match/:
+    get:
+      operationId: api_match_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Match'
+      tags:
+        - api
+    parameters: []
+  /api/match/{id}/:
+    get:
+      operationId: api_match_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Match'
+      tags:
+        - api
+    put:
+      operationId: api_match_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Match'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Match'
+      tags:
+        - api
+    patch:
+      operationId: api_match_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Match'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Match'
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this match.
+        required: true
+        type: integer
+  /api/team/:
+    get:
+      operationId: api_team_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Team'
+      tags:
+        - api
+    post:
+      operationId: api_team_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Team'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Team'
+      tags:
+        - api
+    parameters: []
+  /api/team/{id}/:
+    get:
+      operationId: api_team_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Team'
+      tags:
+        - api
+    put:
+      operationId: api_team_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Team'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Team'
+      tags:
+        - api
+    patch:
+      operationId: api_team_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Team'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Team'
+      tags:
+        - api
+    delete:
+      operationId: api_team_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this team.
+        required: true
+        type: integer
+  /api/tournament/:
+    get:
+      operationId: api_tournament_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Tournament'
+      tags:
+        - api
+    post:
+      operationId: api_tournament_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Tournament'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Tournament'
+      tags:
+        - api
+    parameters: []
+  /api/tournament/{id}/:
+    get:
+      operationId: api_tournament_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Tournament'
+      tags:
+        - api
+    put:
+      operationId: api_tournament_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Tournament'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Tournament'
+      tags:
+        - api
+    patch:
+      operationId: api_tournament_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Tournament'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/Tournament'
+      tags:
+        - api
+    delete:
+      operationId: api_tournament_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - api
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this tournament.
+        required: true
+        type: integer
+  /auth/jwt/create/:
+    post:
+      operationId: auth_jwt_create_create
+      description: |-
+        Takes a set of user credentials and returns an access and refresh JSON web
+        token pair to prove the authentication of those credentials.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TokenObtainPair'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenObtainPair'
+      tags:
+        - auth
+    parameters: []
+  /auth/jwt/refresh/:
+    post:
+      operationId: auth_jwt_refresh_create
+      description: |-
+        Takes a refresh type JSON web token and returns an access type JSON web
+        token if the refresh token is valid.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TokenRefresh'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenRefresh'
+      tags:
+        - auth
+    parameters: []
+  /auth/jwt/verify/:
+    post:
+      operationId: auth_jwt_verify_create
+      description: |-
+        Takes a token and indicates if it is valid.  This view provides no
+        information about a token's fitness for a particular use.
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/TokenVerify'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/TokenVerify'
+      tags:
+        - auth
+    parameters: []
+  /auth/o/{provider}/:
+    get:
+      operationId: auth_o_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/ProviderAuth'
+      tags:
+        - auth
+    post:
+      operationId: auth_o_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/ProviderAuth'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/ProviderAuth'
+      tags:
+        - auth
+    parameters:
+      - name: provider
+        in: path
+        required: true
+        type: string
+  /auth/users/:
+    get:
+      operationId: auth_users_list
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserCreateSerializer1'
+      tags:
+        - auth
+    post:
+      operationId: auth_users_create
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserCreatePasswordRetype'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserCreatePasswordRetype'
+      tags:
+        - auth
+    parameters: []
+  /auth/users/activation/:
+    post:
+      operationId: auth_users_activation
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/Activation'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/Activation'
+      tags:
+        - auth
+    parameters: []
+  /auth/users/me/:
+    get:
+      operationId: auth_users_me_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/UserCreateSerializer1'
+      tags:
+        - auth
+    put:
+      operationId: auth_users_me_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserCreateSerializer1'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserCreateSerializer1'
+      tags:
+        - auth
+    patch:
+      operationId: auth_users_me_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserCreateSerializer1'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserCreateSerializer1'
+      tags:
+        - auth
+    delete:
+      operationId: auth_users_me_delete
+      description: ''
+      parameters: []
+      responses:
+        '204':
+          description: ''
+      tags:
+        - auth
+    parameters: []
+  /auth/users/resend_activation/:
+    post:
+      operationId: auth_users_resend_activation
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SendEmailReset'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SendEmailReset'
+      tags:
+        - auth
+    parameters: []
+  /auth/users/reset_email/:
+    post:
+      operationId: auth_users_reset_username
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SendEmailReset'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SendEmailReset'
+      tags:
+        - auth
+    parameters: []
+  /auth/users/reset_email_confirm/:
+    post:
+      operationId: auth_users_reset_username_confirm
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UsernameResetConfirm'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/UsernameResetConfirm'
+      tags:
+        - auth
+    parameters: []
+  /auth/users/reset_password/:
+    post:
+      operationId: auth_users_reset_password
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SendEmailReset'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SendEmailReset'
+      tags:
+        - auth
+    parameters: []
+  /auth/users/reset_password_confirm/:
+    post:
+      operationId: auth_users_reset_password_confirm
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/PasswordResetConfirmRetype'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/PasswordResetConfirmRetype'
+      tags:
+        - auth
+    parameters: []
+  /auth/users/set_email/:
+    post:
+      operationId: auth_users_set_username
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SetUsernameRetype'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SetUsernameRetype'
+      tags:
+        - auth
+    parameters: []
+  /auth/users/set_password/:
+    post:
+      operationId: auth_users_set_password
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/SetPasswordRetype'
+      responses:
+        '201':
+          description: ''
+          schema:
+            $ref: '#/definitions/SetPasswordRetype'
+      tags:
+        - auth
+    parameters: []
+  /auth/users/{id}/:
+    get:
+      operationId: auth_users_read
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserCreateSerializer1'
+      tags:
+        - auth
+    put:
+      operationId: auth_users_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserCreateSerializer1'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserCreateSerializer1'
+      tags:
+        - auth
+    patch:
+      operationId: auth_users_partial_update
+      description: ''
+      parameters:
+        - name: data
+          in: body
+          required: true
+          schema:
+            $ref: '#/definitions/UserCreateSerializer1'
+      responses:
+        '200':
+          description: ''
+          schema:
+            $ref: '#/definitions/UserCreateSerializer1'
+      tags:
+        - auth
+    parameters:
+      - name: id
+        in: path
+        description: A unique integer value identifying this user account.
+        required: true
+        type: integer
+definitions:
+  Message:
+    required:
+      - content
+      - chat
+      - user
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      content:
+        title: Content
+        type: string
+        maxLength: 255
+        minLength: 1
+      created_at:
+        title: Created at
+        type: string
+        format: date-time
+        readOnly: true
+      chat:
+        title: Chat
+        type: integer
+      user:
+        title: User
+        type: integer
+  Chat:
+    required:
+      - messages
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      messages:
+        type: array
+        items:
+          $ref: '#/definitions/Message'
+  Match:
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      state:
+        title: State
+        type: string
+        maxLength: 31
+        x-nullable: true
+      round_text:
+        title: Round text
+        type: string
+        maxLength: 31
+        x-nullable: true
+      starts:
+        title: Starts
+        type: string
+        format: date-time
+        readOnly: true
+        x-nullable: true
+      tournament:
+        type: object
+        properties:
+          id:
+            title: ID
+            type: integer
+            readOnly: true
+          name:
+            title: Name
+            type: string
+            maxLength: 255
+            minLength: 1
+          prize:
+            title: Prize
+            type: integer
+          status:
+            title: Status
+            type: string
+            maxLength: 255
+            minLength: 1
+          starts:
+            title: Starts
+            type: string
+            maxLength: 255
+            minLength: 1
+          max_rounds:
+            title: Max rounds
+            type: integer
+        readOnly: true
+      participants:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              title: ID
+              type: integer
+              readOnly: true
+            status:
+              title: Status
+              type: string
+              maxLength: 31
+              x-nullable: true
+            is_winner:
+              title: Is winner
+              type: boolean
+              x-nullable: true
+            result_text:
+              title: Result text
+              type: string
+              maxLength: 31
+              x-nullable: true
+            team:
+              title: Team
+              type: integer
+              x-nullable: true
+            match:
+              title: Match
+              type: integer
+              x-nullable: true
+        readOnly: true
+      next_match:
+        type: object
+        properties:
+          id:
+            title: ID
+            type: integer
+            readOnly: true
+          name:
+            title: Name
+            type: string
+            maxLength: 127
+            x-nullable: true
+          round_text:
+            title: Round text
+            type: string
+            maxLength: 31
+            x-nullable: true
+          state:
+            title: State
+            type: string
+            maxLength: 31
+            x-nullable: true
+          starts:
+            title: Starts
+            type: string
+            format: date-time
+            readOnly: true
+            x-nullable: true
+          next_match:
+            title: Next match
+            type: integer
+            x-nullable: true
+          tournament:
+            title: Tournament
+            type: integer
+            x-nullable: true
+          teams:
+            type: array
+            items:
+              type: integer
+              x-nullable: true
+            readOnly: true
+            uniqueItems: true
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        maxLength: 127
+        x-nullable: true
+      lobby:
+        required:
+          - match
+          - chat
+        type: object
+        properties:
+          id:
+            title: ID
+            type: integer
+            readOnly: true
+          match:
+            title: Match
+            type: integer
+          chat:
+            title: Chat
+            type: integer
+        readOnly: true
+  Player:
+    required:
+      - name
+    type: object
+    properties:
+      team_status:
+        title: Team status
+        type: string
+        maxLength: 31
+        x-nullable: true
+      id:
+        title: Id
+        type: integer
+        readOnly: true
+      name:
+        title: Name
+        type: string
+        minLength: 1
+  Team:
+    required:
+      - players
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      games:
+        type: array
+        items:
+          type: string
+        readOnly: true
+        uniqueItems: true
+      players:
+        type: array
+        items:
+          $ref: '#/definitions/Player'
+      name:
+        title: Name
+        type: string
+        maxLength: 255
+        x-nullable: true
+      next_member:
+        title: Next member
+        type: string
+        maxLength: 255
+        x-nullable: true
+      tournaments:
+        type: array
+        items:
+          type: object
+          properties:
+            id:
+              title: ID
+              type: integer
+              readOnly: true
+            name:
+              title: Name
+              type: string
+              maxLength: 255
+              minLength: 1
+            prize:
+              title: Prize
+              type: integer
+            status:
+              title: Status
+              type: string
+              maxLength: 255
+              minLength: 1
+            starts:
+              title: Starts
+              type: string
+              maxLength: 255
+              minLength: 1
+            max_rounds:
+              title: Max rounds
+              type: integer
+        readOnly: true
+  Tournament:
+    required:
+      - matches
+      - teams
+    type: object
+    properties:
+      name:
+        title: Name
+        type: string
+        maxLength: 255
+        minLength: 1
+      prize:
+        title: Prize
+        type: integer
+      starts:
+        title: Starts
+        type: string
+        maxLength: 255
+        minLength: 1
+      matches:
+        type: array
+        items:
+          $ref: '#/definitions/Match'
+      teams:
+        type: array
+        items:
+          type: string
+        uniqueItems: true
+      max_rounds:
+        title: Max rounds
+        type: integer
+      status:
+        title: Status
+        type: string
+        maxLength: 255
+        minLength: 1
+  TokenObtainPair:
+    required:
+      - email
+      - password
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+  TokenRefresh:
+    required:
+      - refresh
+    type: object
+    properties:
+      refresh:
+        title: Refresh
+        type: string
+        minLength: 1
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
+  TokenVerify:
+    required:
+      - token
+    type: object
+    properties:
+      token:
+        title: Token
+        type: string
+        minLength: 1
+  ProviderAuth:
+    type: object
+    properties:
+      access:
+        title: Access
+        type: string
+        readOnly: true
+        minLength: 1
+      refresh:
+        title: Refresh
+        type: string
+        readOnly: true
+        minLength: 1
+      user:
+        title: User
+        type: string
+        readOnly: true
+        minLength: 1
+  UserCreateSerializer1:
+    required:
+      - email
+      - name
+      - password
+    type: object
+    properties:
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 255
+        minLength: 1
+      name:
+        title: Name
+        type: string
+        maxLength: 255
+        minLength: 1
+      password:
+        title: Password
+        type: string
+        minLength: 1
+      is_active:
+        title: Is active
+        type: boolean
+      team:
+        title: Team
+        type: integer
+        x-nullable: true
+  UserCreatePasswordRetype:
+    required:
+      - name
+      - email
+      - password
+      - re_password
+    type: object
+    properties:
+      name:
+        title: Name
+        type: string
+        maxLength: 255
+        minLength: 1
+      email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 255
+        minLength: 1
+      id:
+        title: ID
+        type: integer
+        readOnly: true
+      password:
+        title: Password
+        type: string
+        minLength: 1
+      re_password:
+        title: Re password
+        type: string
+        minLength: 1
+  Activation:
+    required:
+      - uid
+      - token
+    type: object
+    properties:
+      uid:
+        title: Uid
+        type: string
+        minLength: 1
+      token:
+        title: Token
+        type: string
+        minLength: 1
+  SendEmailReset:
+    required:
+      - email
+    type: object
+    properties:
+      email:
+        title: Email
+        type: string
+        format: email
+        minLength: 1
+  UsernameResetConfirm:
+    required:
+      - new_email
+    type: object
+    properties:
+      new_email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 255
+        minLength: 1
+  PasswordResetConfirmRetype:
+    required:
+      - uid
+      - token
+      - new_password
+      - re_new_password
+    type: object
+    properties:
+      uid:
+        title: Uid
+        type: string
+        minLength: 1
+      token:
+        title: Token
+        type: string
+        minLength: 1
+      new_password:
+        title: New password
+        type: string
+        minLength: 1
+      re_new_password:
+        title: Re new password
+        type: string
+        minLength: 1
+  SetUsernameRetype:
+    required:
+      - current_password
+      - new_email
+      - re_new_email
+    type: object
+    properties:
+      current_password:
+        title: Current password
+        type: string
+        minLength: 1
+      new_email:
+        title: Email
+        type: string
+        format: email
+        maxLength: 255
+        minLength: 1
+      re_new_email:
+        title: Re new email
+        type: string
+        minLength: 1
+  SetPasswordRetype:
+    required:
+      - new_password
+      - re_new_password
+      - current_password
+    type: object
+    properties:
+      new_password:
+        title: New password
+        type: string
+        minLength: 1
+      re_new_password:
+        title: Re new password
+        type: string
+        minLength: 1
+      current_password:
+        title: Current password
+        type: string
+        minLength: 1
