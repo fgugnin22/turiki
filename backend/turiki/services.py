@@ -11,6 +11,8 @@ def set_tournament_status(tournament, status):
 def set_initial_matches(tournament):
     matches = list(tournament.matches.values())
     teams = list(tournament.teams.values())
+    if len(teams) == 0:
+        return
     random.shuffle(teams)
     initial_matches = []
     for match in matches:
@@ -62,7 +64,7 @@ def is_user_in_team(user_name):
 def add_team_player(team, user_name, status="PENDING"):
     player = UserAccount.objects.get(name=user_name)
     if player.team_status is not None or player.team_status == "REJECTED":
-        print("denied", 123421, player.team_status)
+        print("denied", player.name, player.team_status)
         return team
     player.team_status = status
     team.players.add(player)

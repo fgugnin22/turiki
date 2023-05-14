@@ -38,7 +38,7 @@ class TournamentSerializer(serializers.ModelSerializer):
         depth = 2
         model = Tournament
         fields = (
-            'name', 'prize', "starts", "matches", "teams", "max_rounds", "status")
+            'id', 'name', 'prize', "starts", "matches", "teams", "max_rounds", "status")
 
     def create(self, validated_data):
         validated_data.pop("matches")
