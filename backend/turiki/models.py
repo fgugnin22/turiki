@@ -1,5 +1,5 @@
 from django.db import models
-
+import random
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
 
@@ -33,7 +33,7 @@ class UserAccountManager(BaseUserManager):
 
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=255, default="Tournament")
+    name = models.CharField(max_length=255, default=f"test_tournament{random.random()}")
     prize = models.IntegerField(default=0)
     status = models.CharField(default="REGISTRATION OPENED", max_length=255)
     starts = models.CharField(max_length=255, default="15.05.2023")
