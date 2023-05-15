@@ -35,7 +35,7 @@ export const tournamentAPI = createApi({
         registerTeamOnTournament: build.mutation({
             query: ({ tournamentId, team }) => {
                 return {
-                    url: `tounament/${tournamentId}/`,
+                    url: `tournament/${tournamentId}/`,
                     method: "PATCH",
                     body: team,
                 };
