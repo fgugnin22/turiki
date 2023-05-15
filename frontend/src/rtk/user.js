@@ -271,7 +271,6 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
-
     builder
       .addCase(register.pending, (state) => {
         state.loading = true;
