@@ -11,6 +11,7 @@
   "dependencies": {
     "@g-loot/react-tournament-brackets": "^1.0.28",
     "@reduxjs/toolkit": "^1.9.5",
+    "@tanstack/react-query": "^4.29.7",
     "axios": "^1.3.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

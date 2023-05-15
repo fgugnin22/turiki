@@ -4,17 +4,12 @@ import Footer from "../components/Footer";
 import { getParameterByName } from "../helpers/getParameterByName";
 import { checkAuth, googleAuthenticate } from "../rtk/user";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 const Layout = (props) => {
-  const navigate = useNavigate()
   const { isAuthenticated } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const state = getParameterByName("state");
   const code = getParameterByName("code"); //get code and state from google oauth2
   useEffect(() => {
-    // if (isAuthenticated) {
-    //   navigate("/")
-    // }
     if (state && code) {
       dispatch(googleAuthenticate({ state, code }));
     } else {
