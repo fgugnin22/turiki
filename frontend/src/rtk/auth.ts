@@ -32,6 +32,7 @@ export const authAPI = createApi({
                     state,
                     code,
                 };
+
                 const formBody = Object.keys(details)
                     .map(
                         (key) =>
@@ -52,6 +53,7 @@ export const authAPI = createApi({
         login: build.mutation({
             query: ({ email, password }) => ({
                 url: `jwt/create/`,
+                method: "POST",
                 body: {
                     email,
                     password,
@@ -76,9 +78,10 @@ export const authAPI = createApi({
             query: ({ access }) => ({
                 url: `jwt/verify/`,
                 method: "POST",
-                headers: {
-                    Authorization: `JWT ${access}`,
+                body: {
+                    token: access,
                 },
+                
             }),
         }),
         getUser: build.query({
