@@ -19,7 +19,7 @@ class MatchSerializer(serializers.ModelSerializer):
     # participants = serializers.StringRelatedField(many=True)
 
     class Meta:
-        depth = 1
+        depth = 2
         model = Match
         fields = ("id", "state", "round_text", "starts", "tournament", "participants", "next_match", "name", "lobby")
 

@@ -10,7 +10,7 @@ export const store = configureStore({
         user: userReducer,
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(tournamentAPI.middleware).concat(logger),
+        getDefaultMiddleware().concat(tournamentAPI.middleware),//.concat(logger),
     devTools: import.meta.env.VITE_NODE_ENV !== "production",
 });
 setupListeners(store.dispatch);

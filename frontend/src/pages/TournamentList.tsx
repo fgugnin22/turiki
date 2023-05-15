@@ -15,7 +15,7 @@ const TournamentList = () => {
                     <Link
                         key={index}
                         className="p-3 text-center my-1 bg-slate-300"
-                        to={`/tournament/${index + 1}`}
+                        to={`/tournament/${data[index]["id"]}`}
                     >
                         {tourn.name}; prize: {tourn.prize} teams: {tourn.teams.length}
                     </Link>

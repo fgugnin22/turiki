@@ -8,6 +8,7 @@ import {
     SVGViewer,
     createTheme,
 } from "@g-loot/react-tournament-brackets";
+import { useParams } from "react-router-dom";
 export interface ITeam {
     id: string;
     resultText: string | null;
@@ -168,14 +169,15 @@ export const simpleSmallBracket: IMatch[] = [
     },
 ];
 export const Tournament = () => {
+    const params = useParams()
+    const tournId = params["id"]
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetTournamentByIdQuery({
-            id: "1",
+            id: tournId,
         });
     let matches: IMatch[] = [];
     if (isSuccess) {
         matches = transformMatches(data);
-        console.log(matches);
     }
     const windowSize = useWindowSize();
     const width = Math.max(500, windowSize.width);
@@ -190,7 +192,7 @@ export const Tournament = () => {
             </button>
             <div className="flex justify-center">
                 <div className="w-full bg-slate-400"></div>
-                {isSuccess && data?.length > 0 ? (
+                {isSuccess && Object.keys(data).length > 0 ? (
                     <SingleEliminationBracket
                         theme={GlootTheme}
                         matches={matches}

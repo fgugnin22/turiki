@@ -36,8 +36,8 @@ export interface Participant {
     status: any;
     is_winner: any;
     result_text: any;
-    Team: Team;
-    Match: Match2;
+    team: Team;
+    match: Match2;
 }
 
 export interface Team {
@@ -79,9 +79,11 @@ export interface Tournament2 {
 }
 
 export default function transformMatches(tournamentObject: Root):IMatch[] {
+    
     const matches = tournamentObject.matches;
     const resultMatches = [];
     for (let match of matches) {
+        
         const resultMatch: any = {};
         resultMatch.id = match.id;
         resultMatch.name = match.name;
@@ -89,7 +91,7 @@ export default function transformMatches(tournamentObject: Root):IMatch[] {
             match.participants.length !== 0 &&
             Object.keys(match.participants[0]).length !== 0
         ) {
-            resultMatch.nextMatchId = match.participants[0].Match.next_match;
+            resultMatch.nextMatchId = match.participants[0].match.next_match;
         } else {
             resultMatch.nextMatchId = null;
         }
@@ -103,7 +105,7 @@ export default function transformMatches(tournamentObject: Root):IMatch[] {
             participant.resultText = p.result_text;
             participant.isWinner = p.is_winner;
             participant.status = p.status;
-            participant.name = p.Team.name;
+            participant.name = p.team.name;
             resultMatch.participants.push(participant);
         }
         resultMatches.push(resultMatch);
