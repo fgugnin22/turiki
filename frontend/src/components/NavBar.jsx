@@ -5,7 +5,7 @@ import { logout } from "../rtk/user";
 const NavBar = () => {
     const dispatch = useDispatch();
     const access = localStorage.getItem("access");
-    const { isAuthenticated } = useSelector((state) => state.user);
+    const { isAuthenticated, user } = useSelector((state) => state.user);
     const guestLinks = () => {
         return (
             <div className="md:flex items-center space-x-1">
@@ -34,9 +34,9 @@ const NavBar = () => {
                 >
                     Logout
                 </a>
-                <Link className="py-2 mx-4 rounded-md px-3 bg-slate-300" to="/team/create">
+                {user && !user.team ? <Link className="py-2 mx-4 rounded-md px-3 bg-slate-300" to="/team/create">
                     Create Team
-                </Link>
+                </Link> : <Link className="py-2 mx-4 rounded-md px-3 bg-green-600" to={`/team/${user?.team}`}>My team</Link>}
             </div>
         );
     };

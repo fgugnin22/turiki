@@ -59,5 +59,12 @@ export const tournamentAPI = createApi({
                 };
             },
         }),
+        getTeamById: build.query({
+            query: (id) => {
+                return {
+                    url: `team/${id}/`
+                }
+            }
+        })
     }),
 });

@@ -28,7 +28,7 @@ export const authAPI = createApi({
         }),
         googleAuth: build.mutation({
             query: ({ state, code }) => {
-                const details = {
+                const details: any = {
                     state,
                     code,
                 };

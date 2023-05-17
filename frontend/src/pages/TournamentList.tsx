@@ -11,7 +11,7 @@ const TournamentList = () => {
         <Layout>
             <div>TournamentList</div>
             {data?.length > 0 ? (
-                data.map((tourn, index) => (
+                data.map((tourn: any, index: number) => (
                     <Link
                         key={index}
                         className="p-3 text-center my-1 bg-slate-300"
