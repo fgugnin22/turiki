@@ -67,7 +67,6 @@ class TeamSerializer(serializers.ModelSerializer):
 
         class Meta:
             model = User
-
             fields = ["team_status", "id", "name"]
 
     players = PlayerSerializer(many=True)
@@ -82,9 +81,7 @@ class TeamSerializer(serializers.ModelSerializer):
         user_name = validated_data.get("next_member")
         is_user_in_team(user_name)
         team = Team.objects.create(**validated_data)
-
         team = add_team_player(team, user_name, "CAPTAIN")
-
         return team
 
     def update(self, instance, validated_data):
@@ -93,7 +90,8 @@ class TeamSerializer(serializers.ModelSerializer):
         print(validated_data)
         team_name = validated_data.get("name")
         team = change_team_name(instance, user_name, team_name)
-        team = add_team_player(team, user_name)
+        if len(players) == 1 and players[0]["team_status"] == "PENDING":
+            team = add_team_player(team, user_name)
         team = change_players_status(team, players, user_name)
         team.save()
         return team
