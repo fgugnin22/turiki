@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Layout from "../hocs/Layout";
 import { useSelector } from "react-redux";
-import { tournamentAPI } from "../rtk/tournamenAPI";
+import { tournamentAPI } from "../rtk/tournamentAPI";
 import { Navigate } from "react-router-dom";
 const TeamCreate = () => {
     const [createTeam, creationResult] = tournamentAPI.useCreateTeamMutation();

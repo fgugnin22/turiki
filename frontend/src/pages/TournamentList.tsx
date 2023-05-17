@@ -1,5 +1,5 @@
 import React from "react";
-import { tournamentAPI } from "../rtk/tournamenAPI";
+import { tournamentAPI } from "../rtk/tournamentAPI";
 import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
 const TournamentList = () => {

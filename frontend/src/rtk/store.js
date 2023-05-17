@@ -3,7 +3,7 @@ import logger from "redux-logger";
 import { setupListeners } from '@reduxjs/toolkit/query'
 
 import userReducer from "../rtk/user";
-import { tournamentAPI } from "./tournamenAPI";
+import { tournamentAPI } from "./tournamentAPI";
 import {authAPI} from "./auth"
 export const store = configureStore({
     reducer: {

@@ -1,5 +1,5 @@
 import useWindowSize from "../hooks/useWindowSize";
-import { tournamentAPI } from "../rtk/tournamenAPI";
+import { tournamentAPI } from "../rtk/tournamentAPI";
 import transformMatches from "../helpers/transformMatches.js";
 import Layout from "../hocs/Layout.jsx";
 import {

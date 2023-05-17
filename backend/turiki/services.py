@@ -88,12 +88,37 @@ def change_team_name(team, user_name, team_name):
 def change_players_status(team, new_players, user_name):
     players = team.players.values()
     for p in players:
+        if p["name"] == user_name and p["team_status"] == "PENDING":
+            for obj in new_players:
+                obj = dict(obj)
+                player = UserAccount.objects.get(name=obj["name"])
+                if player.name == user_name and obj["team_status"] == "REJECTED":
+                    player.team_status = None
+                    player.team = None
+                    player.save()
+                    break
+            break
         if p["name"] == user_name and p["team_status"] == "CAPTAIN":
             for obj in new_players:
                 obj = dict(obj)
                 player = UserAccount.objects.get(name=obj["name"])
-                player.team_status = obj["team_status"]
-                player.save()
+                if str(player.team_id) == str(p["team_id"]):
+                    player.team_status = obj["team_status"]
+                    player.save()
+                    if obj["team_status"] == "REJECTED":
+                        player.team_status = None
+                        player.team = None
+                        player.save()
+                        if team.players.last() is not None:
+                            next_cap = team.players.last()
+                            next_cap.team_status = "CAPTAIN"
+                            next_cap.save()
+                        break
+                    if player.name == user_name and obj["team_status"] == "REJECTED":
+                        player.team_status = None
+                        player.team = None
+                        player.save()
+                        break
             break
     return team
 

@@ -62,9 +62,67 @@ export const tournamentAPI = createApi({
         getTeamById: build.query({
             query: (id) => {
                 return {
-                    url: `team/${id}/`
-                }
-            }
-        })
+                    url: `team/${id}/`,
+                };
+            },
+            providesTags: ['Team']
+        }),
+        applyForTeam: build.mutation({
+            query: ({ teamId, userId, userName }) => {
+                const body = {
+                    players: [
+                        {
+                            id: userId,
+                            name: userName,
+                            team_status: "PENDING",
+                        },
+                    ],
+                };
+                return {
+                    method: "PUT",
+                    url: `team/${teamId}/`,
+                    body,
+                };
+            },
+            invalidatesTags: ['Team']
+        }),
+        updateTeamMemberStatus: build.mutation({
+            query: ({ teamId, userId, userName, status }) => {
+                const body = {
+                    players: [
+                        {
+                            id: userId,
+                            name: userName,
+                            team_status: status,
+                        },
+                    ],
+                };
+                return {
+                    method: "PUT",
+                    url: `team/${teamId}/`,
+                    body,
+                };
+            },
+            invalidatesTags: ['Team']
+        }),
+        leaveFromTeam: build.mutation({
+            query: ({ teamId, userId, userName }) => {
+                const body = {
+                    players: [
+                        {
+                            id: userId,
+                            name: userName,
+                            team_status: "REJECTED",
+                        },
+                    ],
+                };
+                return {
+                    method: "PUT",
+                    url: `team/${teamId}/`,
+                    body,
+                };
+            },
+            invalidatesTags: ['Team']
+        }),
     }),
 });

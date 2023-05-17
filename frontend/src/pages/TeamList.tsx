@@ -1,6 +1,6 @@
 import React from "react";
 import Layout from "../hocs/Layout";
-import { tournamentAPI } from "../rtk/tournamenAPI";
+import { tournamentAPI } from "../rtk/tournamentAPI";
 import { Link } from "react-router-dom";
 
 const TeamList = () => {
