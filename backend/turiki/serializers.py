@@ -90,7 +90,9 @@ class TournamentSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         status = validated_data.pop("status")
         set_tournament_status(instance, status)
-        if status == "REGISTRATION_CLOSED":
+
+        if status == "REGISTRATION_CLOSED" and len(instance.matches.values()) == 0:
+            instance = create_bracket(instance, instance.max_rounds)
             set_initial_matches(instance)
         else:
             print(status)
