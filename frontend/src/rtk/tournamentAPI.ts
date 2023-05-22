@@ -15,31 +15,34 @@ export const tournamentAPI = createApi({
         },
     }),
     refetchOnFocus: true,
-    tagTypes: ["Team", ""],
+    tagTypes: ["Team", "Tournament", "Match", ""],
     endpoints: (build) => ({
         getMatchById: build.query({
             query: (search) => {
                 return { url: `match/${search.id}/` };
             },
+            providesTags: ["Match"],
         }),
         getTournamentById: build.query({
             query: (search) => {
                 return { url: `tournament/${search.id}/` };
             },
+            providesTags: ["Tournament"],
         }),
         getAllTournaments: build.query({
             query: () => {
                 return { url: `tournament/` };
             },
+            providesTags: ["Tournament"],
         }),
         registerTeamOnTournament: build.mutation({
-            query: ({ tournamentId, team }) => {
+            query: (tournamentId) => {
                 return {
                     url: `tournament/${tournamentId}/`,
-                    method: "PATCH",
-                    body: team,
+                    method: "PUT",
                 };
             },
+            invalidatesTags: ["Tournament"],
         }),
         createTeam: build.mutation({
             query: (team) => {
@@ -58,6 +61,7 @@ export const tournamentAPI = createApi({
                     url: `team/`,
                 };
             },
+            providesTags: ["Team"],
         }),
         getTeamById: build.query({
             query: (id) => {
@@ -65,7 +69,7 @@ export const tournamentAPI = createApi({
                     url: `team/${id}/`,
                 };
             },
-            providesTags: ['Team']
+            providesTags: ["Team"],
         }),
         applyForTeam: build.mutation({
             query: ({ teamId, userId, userName }) => {
@@ -84,7 +88,7 @@ export const tournamentAPI = createApi({
                     body,
                 };
             },
-            invalidatesTags: ['Team']
+            invalidatesTags: ["Team"],
         }),
         updateTeamMemberStatus: build.mutation({
             query: ({ teamId, userId, userName, status }) => {
@@ -103,7 +107,7 @@ export const tournamentAPI = createApi({
                     body,
                 };
             },
-            invalidatesTags: ['Team']
+            invalidatesTags: ["Team"],
         }),
         leaveFromTeam: build.mutation({
             query: ({ teamId, userId, userName }) => {
@@ -122,7 +126,7 @@ export const tournamentAPI = createApi({
                     body,
                 };
             },
-            invalidatesTags: ['Team']
+            invalidatesTags: ["Team"],
         }),
     }),
 });

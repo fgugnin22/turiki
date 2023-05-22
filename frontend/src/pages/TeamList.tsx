@@ -16,7 +16,7 @@ const TeamList = () => {
             {isSuccess ? (
                 teamList.map((team: any, i: number) => (
                     <div key={i} className="p-3 bg-slate-300">
-                        {team.name}
+                        <Link to={`/team/${team.id}`}>{team.name}</Link>
                     </div>
                 ))
             ) : (

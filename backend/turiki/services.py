@@ -8,6 +8,11 @@ def set_tournament_status(tournament, status):
     tournament.save()
 
 
+def register_team(tournament, team):
+    tournament.teams.add(team)
+    tournament.save()
+
+
 def set_initial_matches(tournament):
     matches = list(tournament.matches.values())
     teams = list(tournament.teams.values())

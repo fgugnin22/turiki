@@ -19,18 +19,19 @@ import Layout from "../hocs/Layout";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import { useSelector } from "react-redux";
 const Team = () => {
-    const { user } = useSelector((state) => state.user);
+    const { user, isAuthenticated } = useSelector((state: any) => state.user);
     const params = useParams();
     const [updateStatus] = tournamentAPI.useUpdateTeamMemberStatusMutation();
     const [applyForTeam] = tournamentAPI.useApplyForTeamMutation();
     const { data, isLoading, isError, isSuccess } =
         tournamentAPI.useGetTeamByIdQuery(params.id);
-    // teamId, userId, userName
+
     return (
         <Layout>
             {data?.name}
+
             {isSuccess ? (
-                !user?.team_status ? (
+                isAuthenticated && !user?.team_status ? (
                     <button
                         onClick={() =>
                             applyForTeam({
@@ -52,11 +53,7 @@ const Team = () => {
                 data.players.map((player: any, i: number) => {
                     if (player.team_status == "PENDING") {
                         return (
-                            <p
-                                key={i}
-                                className="p-2 bg-lime-300 text-center"
-                                key={i}
-                            >
+                            <p key={i} className="p-2 bg-lime-300 text-center">
                                 {player.name}
                                 <button
                                     // teamId, userId, userName, status
@@ -75,16 +72,10 @@ const Team = () => {
                             </p>
                         );
                     } else {
-                        console.log(player.name, player.team_status);
                         return (
-                            <p
-                                key={i}
-                                className="p-2 bg-slate-300 text-center"
-                                key={i}
-                            >
+                            <p key={i} className="p-2 bg-slate-300 text-center">
                                 {player.name}
-                                <button
-                                    // teamId, userId, userName, status
+                                {user?.team_status === "CAPTAIN" && <button
                                     onClick={() => {
                                         updateStatus({
                                             teamId: params.id,
@@ -96,7 +87,7 @@ const Team = () => {
                                     className="p-2 rounded border-4 border-red-500"
                                 >
                                     ВЫГНАТЬ НАХер!
-                                </button>
+                                </button>}
                             </p>
                         );
                     }

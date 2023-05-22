@@ -9,6 +9,7 @@ import {
     createTheme,
 } from "@g-loot/react-tournament-brackets";
 import { useParams } from "react-router-dom";
+import { useSelector } from "react-redux";
 export interface ITeam {
     id: string;
     resultText: string | null;
@@ -169,12 +170,16 @@ export const simpleSmallBracket: IMatch[] = [
     },
 ];
 export const Tournament = () => {
-    const params = useParams()
-    const tournId = params["id"]
+    const params = useParams();
+    const { user, isAuthenticated } = useSelector((state: any) => state.user);
+
+    const tournId = params["id"];
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetTournamentByIdQuery({
             id: tournId,
         });
+    const [registerTeam, { isSuccess: registerSuccess }] =
+        tournamentAPI.useRegisterTeamOnTournamentMutation();
     let matches: IMatch[] = [];
     if (isSuccess) {
         matches = transformMatches(data);
@@ -182,6 +187,10 @@ export const Tournament = () => {
     const windowSize = useWindowSize();
     const width = Math.max(500, windowSize.width);
     const height = Math.max(500, windowSize.height);
+    if (isSuccess && user) {
+        console.log(data);
+    }
+
     return (
         <Layout>
             <button
@@ -191,8 +200,23 @@ export const Tournament = () => {
                 SHOW DESE NUTS
             </button>
             <div className="flex justify-center">
-                <div className="w-full bg-slate-400"></div>
-                {isSuccess && Object.keys(data).length > 0 ? (
+                <div className="w-full bg-slate-400">
+                    {user &&
+                    isSuccess &&
+                    !data?.teams.some((team) => team.id === user?.team) ? (
+                        <button
+                            className="p-2 bg-green-400"
+                            onClick={() => registerTeam(data?.id)}
+                        >
+                            Register Team
+                        </button>
+                    ) : (
+                        <></>
+                    )}
+                </div>
+                {isSuccess &&
+                Object.keys(data).length > 0 &&
+                data.matches.length > 0 ? (
                     <SingleEliminationBracket
                         theme={GlootTheme}
                         matches={matches}
@@ -212,7 +236,9 @@ export const Tournament = () => {
                         onPartyClick={(match) => console.log(match)}
                     />
                 ) : (
-                    <p className="py-full text-center w-[20%] bg-red-600 text-xl">Error....!</p>
+                    <p className="py-full text-center w-[20%] bg-orange-600 text-xl">
+                        Tournament bracket in process
+                    </p>
                 )}
                 <div className="w-full bg-slate-400"></div>
             </div>

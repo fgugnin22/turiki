@@ -5,7 +5,7 @@ from turiki.serializers import TournamentSerializer, MatchSerializer, TeamSerial
 from turiki.Permissons import IsAdminUserOrReadOnly
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
-from turiki.services import check_captain, set_match_winner, create_message
+from turiki.services import check_captain, set_match_winner, create_message, register_team
 
 
 # Create your views here.
@@ -25,12 +25,18 @@ class TournamentAPIView(ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
-        request.data["teams"] = []
-        request.data["matches"] = []
+        keys = request.data.keys()
+        if not ("teams" in keys):
+            request.data["teams"] = []
+        if not ("matches" in keys):
+            request.data["matches"] = []
+        if not ("status" in keys):
+            request.data["status"] = instance.status
+        if instance.status == "REGISTRATION_OPENED" and request.user.team_status == "CAPTAIN":
+            register_team(instance, request.user.team)
         serializer = self.serializer_class(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-
         return Response(serializer.data)
 
 

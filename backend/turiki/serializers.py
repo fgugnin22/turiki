@@ -2,7 +2,7 @@ from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .services import add_team_player, change_team_name, change_players_status, is_user_in_team, create_bracket, \
-    set_initial_matches, set_tournament_status, end_match, create_lobby
+    set_initial_matches, set_tournament_status, end_match, create_lobby, register_team
 from turiki.models import *
 
 User = get_user_model()
@@ -27,34 +27,6 @@ class MatchSerializer(serializers.ModelSerializer):
         # set_match_winner(instance)
         create_lobby(instance)
         end_match(instance)
-        return instance
-
-
-class TournamentSerializer(serializers.ModelSerializer):
-    teams = serializers.StringRelatedField(many=True)
-    matches = MatchSerializer(many=True)
-
-    class Meta:
-        depth = 2
-        model = Tournament
-        fields = (
-            'id', 'name', 'prize', "starts", "matches", "teams", "max_rounds", "status")
-
-    def create(self, validated_data):
-        validated_data.pop("matches")
-        validated_data.pop("teams")
-        rounds = validated_data.get("max_rounds", 1)
-        tourn = Tournament.objects.create(**validated_data)
-        tourn = create_bracket(tourn, rounds)
-        return tourn
-
-    def update(self, instance, validated_data):
-        status = validated_data.pop("status")
-        set_tournament_status(instance, status)
-        if status == "REGISTRATION_CLOSED":
-            set_initial_matches(instance)
-        else:
-            print(status)
         return instance
 
 
@@ -95,6 +67,34 @@ class TeamSerializer(serializers.ModelSerializer):
         team = change_players_status(team, players, user_name)
         team.save()
         return team
+
+
+class TournamentSerializer(serializers.ModelSerializer):
+    teams = TeamSerializer(many=True)
+    matches = MatchSerializer(many=True)
+
+    class Meta:
+        depth = 2
+        model = Tournament
+        fields = (
+            'id', 'name', 'prize', "starts", "matches", "teams", "max_rounds", "status")
+
+    def create(self, validated_data):
+        validated_data.pop("matches")
+        validated_data.pop("teams")
+        rounds = validated_data.get("max_rounds", 1)
+        tourn = Tournament.objects.create(**validated_data)
+        tourn = create_bracket(tourn, rounds)
+        return tourn
+
+    def update(self, instance, validated_data):
+        status = validated_data.pop("status")
+        set_tournament_status(instance, status)
+        if status == "REGISTRATION_CLOSED":
+            set_initial_matches(instance)
+        else:
+            print(status)
+        return instance
 
 
 class MessageSerializer(serializers.ModelSerializer):
