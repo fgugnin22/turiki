@@ -8,7 +8,7 @@ import {
     SVGViewer,
     createTheme,
 } from "@g-loot/react-tournament-brackets";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useSelector } from "react-redux";
 export interface ITeam {
     id: string;
@@ -171,9 +171,9 @@ export const simpleSmallBracket: IMatch[] = [
 ];
 export const Tournament = () => {
     const params = useParams();
+    const tournId = params["id"];
     const { user, isAuthenticated } = useSelector((state: any) => state.user);
 
-    const tournId = params["id"];
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetTournamentByIdQuery({
             id: tournId,
@@ -181,16 +181,23 @@ export const Tournament = () => {
     const [registerTeam, { isSuccess: registerSuccess }] =
         tournamentAPI.useRegisterTeamOnTournamentMutation();
     let matches: IMatch[] = [];
-    if (isSuccess) {
-        matches = transformMatches(data);
-    }
+
     const windowSize = useWindowSize();
+    const navigate = useNavigate();
     const width = Math.max(500, windowSize.width);
     const height = Math.max(500, windowSize.height);
     if (isSuccess && user) {
         console.log(data);
     }
-
+    const matchClickHandler = ({ match }) => {
+        navigate(`/match/${match.id}`);
+    };
+    // const partyClickHandler = ({ party }) => {
+    //     navigate(`/team/${party.id}`);
+    // };
+    if (isSuccess) {
+        matches = transformMatches(data);
+    }
     return (
         <Layout>
             <button
@@ -232,8 +239,8 @@ export const Tournament = () => {
                                 {children}
                             </SVGViewer>
                         )}
-                        onMatchClick={(match) => console.log(match)}
-                        onPartyClick={(match) => console.log(match)}
+                        onMatchClick={matchClickHandler}
+                        onPartyClick={(participant) => alert(participant.name)}
                     />
                 ) : (
                     <p className="py-full text-center w-[20%] bg-orange-600 text-xl">

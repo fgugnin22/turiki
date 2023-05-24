@@ -128,7 +128,7 @@ class Chat(models.Model):
 class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
     user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
-    content = models.CharField(max_length=255, blank=False)
+    content = models.CharField(max_length=255, blank=False, null=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     # file = models.FileField(verbose_name="Файл")

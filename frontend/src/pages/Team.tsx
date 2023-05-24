@@ -75,7 +75,7 @@ const Team = () => {
                         return (
                             <p key={i} className="p-2 bg-slate-300 text-center">
                                 {player.name}
-                                {user?.team_status === "CAPTAIN" && <button
+                                {user?.team_status === "CAPTAIN" && user?.team === data?.id && <button
                                     onClick={() => {
                                         updateStatus({
                                             teamId: params.id,

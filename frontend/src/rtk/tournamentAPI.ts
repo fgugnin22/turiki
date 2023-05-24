@@ -15,7 +15,7 @@ export const tournamentAPI = createApi({
         },
     }),
     refetchOnFocus: true,
-    tagTypes: ["Team", "Tournament", "Match", ""],
+    tagTypes: ["Team", "Tournament", "Match", "Chat",""],
     endpoints: (build) => ({
         getMatchById: build.query({
             query: (search) => {
@@ -127,6 +127,24 @@ export const tournamentAPI = createApi({
                 };
             },
             invalidatesTags: ["Team"],
+        }),
+        getChatMessages: build.query({
+            query: ({chatId}) => {
+                return {
+                    url: `chat/${chatId}/`,
+                };
+            },
+            providesTags: ["Chat"],
+        }),
+        sendMessage: build.mutation({
+            query: ({ content, chatId }) => {
+                return {
+                    url: `chat/${chatId}/`,
+                    method: "PUT",
+                    body: { content },
+                };
+            },
+            invalidatesTags: ["Chat"],
         }),
     }),
 });
