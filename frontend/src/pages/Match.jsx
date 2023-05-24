@@ -39,7 +39,9 @@ const Match = () => {
     };
     return (
         <Layout>
-            <div>Match {isSuccess ? match.id : "loading or error"}</div>
+            {
+                isSuccess ? <Link to={`/match/${match.id}`}>Match {match.id}</Link> : null
+            }
             {isSuccess ? (
                 <div>
                     {isSuccess && match.participants[0] ? (
