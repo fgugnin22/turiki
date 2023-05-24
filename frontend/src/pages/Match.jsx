@@ -39,9 +39,9 @@ const Match = () => {
     };
     return (
         <Layout>
-            {
-                isSuccess ? <Link to={`/match/${match.id}`}>Match {match.id}</Link> : null
-            }
+            {isSuccess ? (
+                <Link to={`/match/${match.id}`}>Match {match.id}</Link>
+            ) : null}
             {isSuccess ? (
                 <div>
                     {isSuccess && match.participants[0] ? (
@@ -60,12 +60,12 @@ const Match = () => {
                     )}
                 </div>
             ) : null}
-            {isGetMessagesSuccess ? (
+            {isGetMessagesSuccess && isAuthenticated ? (
                 <div className="border-4 rounded-xl w-64 h-96 flex flex-col fixed top-20 right-0">
                     <div className="w-full overflow-y-scroll">
                         {messages.map((message) => {
                             let messageClass = "";
-                            if (message.user === user.name) {
+                            if (message.user === user?.name) {
                                 messageClass = " ml-auto";
                             } else {
                                 messageClass = " mr-auto";
