@@ -47,6 +47,7 @@ class TeamSerializer(serializers.ModelSerializer):
         depth = 1
         model = Team
         fields = "__all__"
+        extra_fields = ["id"]
 
     def create(self, validated_data):
         validated_data.pop("players")
