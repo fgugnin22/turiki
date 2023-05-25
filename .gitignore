@@ -27,4 +27,5 @@ backend/**/*/migrations
 backend/**/*/__pycache__
 backend/**/*.pyc
 startfrontendtestserver.ps1
+startpythonserver.ps1
 .gitignore
