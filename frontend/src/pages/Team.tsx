@@ -30,26 +30,20 @@ const Team = () => {
         <Layout>
             {data?.name}
 
-            {isSuccess ? (
-                isAuthenticated && !user?.team_status ? (
-                    <button
-                        onClick={() =>
-                            applyForTeam({
-                                teamId: params.id,
-                                userId: user.id,
-                                userName: user.name,
-                            })
-                        }
-                    >
-                        Подать заявку на вступление
-                    </button>
-                ) : (
-                    <></>
-                )
-            ) : (
-                <></>
+            {isSuccess && isAuthenticated && !user?.team_status && (
+                <button
+                    onClick={() =>
+                        applyForTeam({
+                            teamId: params.id,
+                            userId: user.id,
+                            userName: user.name
+                        })
+                    }
+                >
+                    Подать заявку на вступление
+                </button>
             )}
-            {isSuccess ? (
+            {isSuccess &&
                 data.players.map((player: any, i: number) => {
                     if (player.team_status == "PENDING") {
                         return (
@@ -62,7 +56,7 @@ const Team = () => {
                                             teamId: params.id,
                                             userId: player.id,
                                             userName: player.name,
-                                            status: "ACTIVE",
+                                            status: "ACTIVE"
                                         });
                                     }}
                                     className="p-2 rounded border-4 border-purple-500"
@@ -75,26 +69,26 @@ const Team = () => {
                         return (
                             <p key={i} className="p-2 bg-slate-300 text-center">
                                 {player.name}
-                                {user?.team_status === "CAPTAIN" && user?.team === data?.id && <button
-                                    onClick={() => {
-                                        updateStatus({
-                                            teamId: params.id,
-                                            userId: player.id,
-                                            userName: player.name,
-                                            status: "REJECTED",
-                                        });
-                                    }}
-                                    className="p-2 rounded border-4 border-red-500"
-                                >
-                                    ВЫГНАТЬ НАХер!
-                                </button>}
+                                {user?.team_status === "CAPTAIN" &&
+                                    user?.team === data?.id && (
+                                        <button
+                                            onClick={() => {
+                                                updateStatus({
+                                                    teamId: params.id,
+                                                    userId: player.id,
+                                                    userName: player.name,
+                                                    status: "REJECTED"
+                                                });
+                                            }}
+                                            className="p-2 rounded border-4 border-red-500"
+                                        >
+                                            ВЫГНАТЬ НАХер!
+                                        </button>
+                                    )}
                             </p>
                         );
                     }
-                })
-            ) : (
-                <></>
-            )}
+                })}
         </Layout>
     );
 };

@@ -5,6 +5,7 @@ interface ChatProps {
     sendMessage: (args) => void;
     chatId: number;
     messages: any[];
+    error?: string;
 }
 const Chat = (props) => {
     const { user, isAuthenticated } = useSelector((state: any) => state.user);
@@ -78,16 +79,25 @@ const Chat = (props) => {
             <form
                 className="flex flex-row bg-gray-300 p-3"
                 onSubmit={(e) => onSubmit(e)}
+                noValidate
             >
-                <input
-                    type="text"
-                    className="w-[calc(100%-60px)] px-2 py-1 rounded-md my-1 border-2 border-slate-500 mr-1"
-                    value={message}
-                    onChange={(e) => onChangeMessage(e)}
-                />
+                <label
+                    className="w-[calc(100%-60px)] mt-1 mb-0 mr-1 relative"
+                    htmlFor="chat"
+                >
+                    <input
+                        type="text"
+                        id="chat"
+                        className="w-full px-2 py-2  rounded-md mr-1 border-2 border-slate-500 focus:[&:invalid]:outline-none focus:[&:invalid]:border-red-400"
+                        value={message}
+                        onChange={(e) => onChangeMessage(e)}
+                        required
+                    />
+                </label>
                 <button
                     type="submit"
-                    className="w-[50px] px-2 py-1 my-1 rounded-md bg-slate-200 hover:bg-slate-50 transition-colors active:bg-slate-300 box-border border-2 border-slate-500"
+                    className="w-[50px] px-2 py-1 my-1 rounded-md bg-slate-200 
+                    hover:bg-slate-50 transition-colors active:bg-slate-300 box-border border-2 border-slate-500"
                 >
                     <svg className="w-[2em] h-[2em]" viewBox="0 0 20 20">
                         <path

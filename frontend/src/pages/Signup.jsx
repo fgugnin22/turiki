@@ -5,10 +5,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { register } from "../rtk/user";
 import { Navigate } from "react-router-dom";
 import { continueWithGoogle } from "../helpers/continueWithGoogle";
-import {authAPI} from "../rtk/auth"
+import { authAPI } from "../rtk/auth";
 const Signup = () => {
-    const [registerNew] = authAPI.useRegisterUserMutation()
-    const dispatch = useDispatch();
+    const [registerNew] = authAPI.useRegisterUserMutation();
     const inputClasses = `block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-400`;
     const { isAuthenticated } = useSelector((state) => state.user);
     const [accountCreated, setAccountCreated] = useState(false);
@@ -16,7 +15,7 @@ const Signup = () => {
         email: "",
         password: "",
         name: "",
-        re_password: "",
+        re_password: ""
     });
     const { email, password, name, re_password } = formData;
     const onChange = (e) =>
@@ -26,7 +25,7 @@ const Signup = () => {
         e.preventDefault();
         if (password === re_password) {
             // dispatch(register({ name, email, password, re_password }));
-            registerNew({ name, email, password, re_password })
+            registerNew({ name, email, password, re_password });
             setAccountCreated(true);
         }
     };

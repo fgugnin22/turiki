@@ -5,9 +5,11 @@ import { tournamentAPI } from "../rtk/tournamentAPI";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import Chat from "../components/Chat";
+import TeamPlayerList from "../components/TeamPlayerList";
 const Match = () => {
-    const { user, isAuthenticated } = useSelector((state) => state.user);
+    const { isAuthenticated } = useSelector((state) => state.user);
     const params = useParams();
+
     const {
         data: match,
         isSuccess,
@@ -25,11 +27,18 @@ const Match = () => {
     const messages = chat?.messages;
 
     const [message, setMessage] = useState("");
-    const onChangeMessage = (e) => setMessage(e.target.value);
     const [
         sendMessage,
         { isSuccess: isSendMessageSuccess, isError: isSendMessageError }
     ] = tournamentAPI.useSendMessageMutation({ skip: message?.length > 0 });
+    const { data: team1, isSuccess: isTeam1Success } =
+        tournamentAPI.useGetTeamByIdQuery(match?.participants[0].team.id, {
+            skip: isFetching || !match?.participants[0]?.team
+        });
+    const { data: team2, isSuccess: isTeam2Success } =
+        tournamentAPI.useGetTeamByIdQuery(match?.participants[1].team.id, {
+            skip: isFetching || !match?.participants[1]?.team
+        });
     const onSubmit = (e) => {
         e.preventDefault();
         sendMessage({
@@ -49,20 +58,12 @@ const Match = () => {
                 <Link to={`/match/${match.id}`}>Match {match.id}</Link>
             ) : null}
             {isSuccess ? (
-                <div>
-                    {isSuccess && match.participants[0] ? (
-                        <Link to={`/team/${match.participants[0].team.id}`}>
-                            <div>{match.participants[0].team.name}</div>
-                        </Link>
-                    ) : (
-                        "No"
+                <div className="m-auto">
+                    {isSuccess && match.participants[0] && isTeam1Success && (
+                        <TeamPlayerList team={team1} />
                     )}
-                    {isSuccess && match.participants[1] ? (
-                        <Link to={`/team/${match.participants[1].team.id}`}>
-                            <div>{match.participants[1].team.name}</div>
-                        </Link>
-                    ) : (
-                        "No"
+                    {isSuccess && match.participants[1] && isTeam2Success && (
+                        <TeamPlayerList team={team2} />
                     )}
                 </div>
             ) : null}
@@ -71,6 +72,7 @@ const Match = () => {
                     messages={messages}
                     chatId={match?.lobby?.chat?.id}
                     sendMessage={sendMessage}
+                    error={isGetMessagesError && "message can't be empty"}
                 />
             )}
         </Layout>
