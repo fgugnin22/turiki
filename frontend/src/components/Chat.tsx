@@ -8,11 +8,16 @@ interface ChatProps {
     error?: string;
 }
 const Chat = (props) => {
-    const { user, isAuthenticated } = useAppSelector((state: any) => state.user);
+    const { user, isAuthenticated } = useAppSelector(
+        (state: any) => state.user
+    );
     const [message, setMessage] = useState("");
     const onChangeMessage = (e) => setMessage(e.target.value);
     const onSubmit = (e) => {
         e.preventDefault();
+        if (message.length === 0) {
+            return;
+        }
         props.sendMessage({
             chatId: props.chatId,
             content: message

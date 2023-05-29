@@ -13,7 +13,7 @@ export const store = configureStore({
         getDefaultMiddleware().concat(tournamentAPI.middleware).concat(logger),
     devTools: import.meta.env.VITE_NODE_ENV !== "production"
 });
-export type RootState = ReturnType<typeof tournamentAPI.reducer>;
+export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;
 export type AppStore = typeof store;
 export const useAppDispatch = () => useDispatch<AppDispatch>();

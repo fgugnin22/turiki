@@ -30,7 +30,7 @@ const Match = () => {
     const [
         sendMessage,
         { isSuccess: isSendMessageSuccess, isError: isSendMessageError }
-    ] = tournamentAPI.useSendMessageMutation({ skip: message?.length > 0 });
+    ] = tournamentAPI.useSendMessageMutation();
     const { data: team1, isSuccess: isTeam1Success } =
         tournamentAPI.useGetTeamByIdQuery(match?.participants[0].team.id, {
             skip: isFetching || !match?.participants[0]?.team
@@ -39,14 +39,6 @@ const Match = () => {
         tournamentAPI.useGetTeamByIdQuery(match?.participants[1].team.id, {
             skip: isFetching || !match?.participants[1]?.team
         });
-    const onSubmit = (e) => {
-        e.preventDefault();
-        sendMessage({
-            chatId: match?.lobby?.chat?.id,
-            content: message
-        });
-        setMessage("");
-    };
     const messagesEndRef = useRef(null);
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
