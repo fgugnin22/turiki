@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { Link } from "react-router-dom";
 interface ChatProps {
     sendMessage: (args) => void;
@@ -8,7 +8,7 @@ interface ChatProps {
     error?: string;
 }
 const Chat = (props) => {
-    const { user, isAuthenticated } = useSelector((state: any) => state.user);
+    const { user, isAuthenticated } = useAppSelector((state: any) => state.user);
     const [message, setMessage] = useState("");
     const onChangeMessage = (e) => setMessage(e.target.value);
     const onSubmit = (e) => {

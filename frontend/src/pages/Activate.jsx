@@ -3,8 +3,9 @@ import Layout from "../hocs/Layout";
 import { Navigate, useParams } from "react-router-dom";
 import { activate } from "../rtk/user";
 import { useDispatch } from "react-redux";
+import { useAppDispatch } from "../rtk/store";
 const Activate = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const [verified, setVerified] = useState(false);
   const params = useParams();

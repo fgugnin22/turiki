@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import Layout from "../hocs/Layout";
-import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { tournamentAPI } from "../rtk/tournamentAPI";
-import { Navigate } from "react-router-dom";
 const TeamCreate = () => {
     const [createTeam, creationResult] = tournamentAPI.useCreateTeamMutation();
-    const { isAuthenticated, user } = useSelector((state) => state.user);
+    const { isAuthenticated, user } = useAppSelector((state) => state.user);
     const [formData, setFormData] = useState({
-        teamName: "",
+        teamName: ""
     });
     const inputClasses = `block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-400`;
     const onSubmit = (e) => {
@@ -15,10 +14,10 @@ const TeamCreate = () => {
         const team = {
             players: [
                 {
-                    name: user.name,
-                },
+                    name: user.name
+                }
             ],
-            name: formData.teamName,
+            name: formData.teamName
         };
         createTeam(team)
             .unwrap()

@@ -1,5 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { useAppDispatch, useAppSelector } from "../rtk/store";
+import Layout from "../hocs/Layout";
+import { tournamentAPI } from "../rtk/tournamentAPI";
 export interface Team {
     id: number;
     name: string;
@@ -15,11 +18,9 @@ export interface Tournament {
     active: boolean;
     played: boolean;
 }
-import Layout from "../hocs/Layout";
-import { tournamentAPI } from "../rtk/tournamentAPI";
-import { useSelector } from "react-redux";
+
 const Team = () => {
-    const { user, isAuthenticated } = useSelector((state: any) => state.user);
+    const { user, isAuthenticated } = useAppSelector((state: any) => state.user);
     const params = useParams();
     const [updateStatus] = tournamentAPI.useUpdateTeamMemberStatusMutation();
     const [applyForTeam] = tournamentAPI.useApplyForTeamMutation();

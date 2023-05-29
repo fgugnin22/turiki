@@ -1,11 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useSelector, useDispatch } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { logout } from "../rtk/user";
 const NavBar = () => {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const access = localStorage.getItem("access");
-    const { isAuthenticated, user } = useSelector((state) => state.user);
+    const { isAuthenticated, user } = useAppSelector((state) => state.user);
     const guestLinks = () => {
         return (
             <div className="md:flex items-center space-x-1">

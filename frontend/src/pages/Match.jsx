@@ -3,11 +3,11 @@ import { useParams } from "react-router-dom";
 import Layout from "../hocs/Layout";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../rtk/store";
 import Chat from "../components/Chat";
 import TeamPlayerList from "../components/TeamPlayerList";
 const Match = () => {
-    const { isAuthenticated } = useSelector((state) => state.user);
+    const { isAuthenticated } = useAppSelector((state) => state.user);
     const params = useParams();
 
     const {

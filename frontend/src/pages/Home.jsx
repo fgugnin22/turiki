@@ -1,9 +1,10 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import { useAppSelector } from "../rtk/store";
 import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
 const Home = () => {
-    const { isAuthenticated, user } = useSelector((state) => state.user);
+    const { isAuthenticated, user } = useAppSelector((state) => state.user);
     return (
         <Layout>
             <div className="">

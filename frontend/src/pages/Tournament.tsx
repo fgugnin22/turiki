@@ -9,7 +9,7 @@ import {
     createTheme
 } from "@g-loot/react-tournament-brackets";
 import { useNavigate, useParams } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../rtk/store";
 export interface ITeam {
     id: string;
     resultText: string | null;
@@ -53,7 +53,7 @@ const GlootTheme = createTheme({
 export const Tournament = () => {
     const params = useParams();
     const tournId = params["id"];
-    const { user, isAuthenticated } = useSelector((state: any) => state.user);
+    const { user, isAuthenticated } = useAppSelector((state: any) => state.user);
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetTournamentByIdQuery({
             id: tournId

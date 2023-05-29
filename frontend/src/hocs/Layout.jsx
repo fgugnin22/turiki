@@ -3,10 +3,10 @@ import NavBar from "../components/NavBar";
 import Footer from "../components/Footer";
 import { getParameterByName } from "../helpers/getParameterByName";
 import { checkAuth, googleAuthenticate } from "../rtk/user";
-import { useDispatch, useSelector } from "react-redux";
+import { useAppDispatch, useAppSelector } from "../rtk/store";
 const Layout = (props) => {
-  const { isAuthenticated } = useSelector((state) => state.user);
-  const dispatch = useDispatch();
+  const { isAuthenticated } = useAppSelector((state) => state.user);
+  const dispatch = useAppDispatch();
   const state = getParameterByName("state");
   const code = getParameterByName("code"); //get code and state from google oauth2
   useEffect(() => {
