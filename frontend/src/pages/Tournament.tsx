@@ -53,7 +53,7 @@ const GlootTheme = createTheme({
 export const Tournament = () => {
     const params = useParams();
     const tournId = params["id"];
-    const { user, isAuthenticated } = useAppSelector((state: any) => state.user);
+    const { user, isAuthenticated } = useAppSelector((state) => state.user);
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetTournamentByIdQuery({
             id: tournId

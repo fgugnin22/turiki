@@ -64,7 +64,6 @@ const Match = () => {
                     messages={messages}
                     chatId={match?.lobby?.chat?.id}
                     sendMessage={sendMessage}
-                    error={isGetMessagesError && "message can't be empty"}
                 />
             )}
         </Layout>
