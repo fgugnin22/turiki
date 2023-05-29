@@ -1,16 +1,18 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { Link } from "react-router-dom";
+interface chatArgs {
+    chatId: number;
+    content: string;
+}
 interface ChatProps {
-    sendMessage: (args) => void;
+    sendMessage: (chatArgs: chatArgs) => void;
     chatId: number;
     messages: any[];
     error?: string;
 }
-const Chat = (props) => {
-    const { user, isAuthenticated } = useAppSelector(
-        (state: any) => state.user
-    );
+const Chat = (props: ChatProps) => {
+    const { user, isAuthenticated } = useAppSelector((state) => state.user);
     const [message, setMessage] = useState("");
     const onChangeMessage = (e) => setMessage(e.target.value);
     const onSubmit = (e) => {
@@ -24,7 +26,7 @@ const Chat = (props) => {
         });
         setMessage("");
     };
-    const messagesEndRef = useRef(null);
+    const messagesEndRef = useRef<HTMLElement>(null);
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
