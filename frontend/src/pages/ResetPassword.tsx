@@ -11,9 +11,9 @@ const ResetPassword = () => {
     email: "",
   });
   const { email } = formData;
-  const onChange = (e) =>
+  const onChange = (e:React.FormEvent<HTMLInputElement>) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  const onSubmit = (e) => {
+  const onSubmit = (e:React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     dispatch(resetPassword(email));
     setRequestSent(true);
@@ -29,7 +29,7 @@ const ResetPassword = () => {
           <p className="text-center mb-1 font-semibold text-2xl">
             Reset Password via email
           </p>
-          <form onSubmit={(e) => onSubmit(e)}>
+          <form onSubmit={(e:React.FormEvent<HTMLInputElement>) => onSubmit(e)}>
             <div className="relative mb-3">
               <input
                 className={inputClasses}
@@ -37,7 +37,7 @@ const ResetPassword = () => {
                 placeholder="Email"
                 name="email"
                 value={email}
-                onChange={(e) => onChange(e)}
+                onChange={(e:React.FormEvent<HTMLInputElement>) => onChange(e)}
                 required
               />
             </div>

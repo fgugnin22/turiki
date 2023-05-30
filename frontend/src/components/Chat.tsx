@@ -14,8 +14,9 @@ interface ChatProps {
 const Chat = (props: ChatProps) => {
     const { user, isAuthenticated } = useAppSelector((state) => state.user);
     const [message, setMessage] = useState("");
-    const onChangeMessage = (e) => setMessage(e.target.value);
-    const onSubmit = (e) => {
+    const onChangeMessage = (e: React.FormEvent<HTMLInputElement>) =>
+        setMessage(e.target.value);
+    const onSubmit = (e: React.FormEvent<HTMLInputElement>) => {
         e.preventDefault();
         if (message.length === 0) {
             return;
@@ -85,7 +86,7 @@ const Chat = (props: ChatProps) => {
             </div>
             <form
                 className="flex flex-row bg-gray-300 p-3"
-                onSubmit={(e) => onSubmit(e)}
+                onSubmit={(e: React.FormEvent<HTMLInputElement>) => onSubmit(e)}
                 noValidate
             >
                 <label
@@ -97,7 +98,9 @@ const Chat = (props: ChatProps) => {
                         id="chat"
                         className="w-full px-2 py-2  rounded-md mr-1 border-2 border-slate-500 focus:[&:invalid]:outline-none focus:[&:invalid]:border-red-400"
                         value={message}
-                        onChange={(e) => onChangeMessage(e)}
+                        onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                            onChangeMessage(e)
+                        }
                         required
                     />
                 </label>

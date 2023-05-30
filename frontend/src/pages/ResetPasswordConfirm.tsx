@@ -13,9 +13,9 @@ const ResetPasswordConfirm = () => {
     re_new_password: "",
   });
   const { new_password, re_new_password } = formData;
-  const onChange = (e) =>
+  const onChange = (e:React.FormEvent<HTMLInputElement>) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  const onSubmit = (e) => {
+  const onSubmit = (e:React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     const uid = params.uid;
     const token = params.token;
@@ -34,7 +34,7 @@ const ResetPasswordConfirm = () => {
           <p className="text-center mb-1 font-semibold text-2xl">
             Reset Password via email
           </p>
-          <form onSubmit={(e) => onSubmit(e)}>
+          <form onSubmit={(e:React.FormEvent<HTMLInputElement>) => onSubmit(e)}>
             <div className="relative mb-3">
               <input
                 className={inputClasses}
@@ -42,7 +42,7 @@ const ResetPasswordConfirm = () => {
                 placeholder="New Password"
                 name="new_password"
                 value={new_password}
-                onChange={(e) => onChange(e)}
+                onChange={(e:React.FormEvent<HTMLInputElement>) => onChange(e)}
                 minLength={6}
                 required
               />
@@ -54,7 +54,7 @@ const ResetPasswordConfirm = () => {
                 placeholder="Confirm New Password"
                 name="re_new_password"
                 value={re_new_password}
-                onChange={(e) => onChange(e)}
+                onChange={(e:React.FormEvent<HTMLInputElement>) => onChange(e)}
                 minLength={6}
                 required
               />

@@ -17,10 +17,10 @@ const Signup = () => {
         re_password: ""
     });
     const { email, password, name, re_password } = formData;
-    const onChange = (e) =>
+    const onChange = (e: React.FormEvent<HTMLInputElement>) =>
         setFormData({ ...formData, [e.target.name]: e.target.value });
 
-    const onSubmit = (e) => {
+    const onSubmit = (e: React.FormEvent<HTMLInputElement>) => {
         e.preventDefault();
         if (password === re_password) {
             dispatch(register({ name, email, password, re_password }));
@@ -41,7 +41,11 @@ const Signup = () => {
                     <p className="text-center mb-1 font-semibold text-2xl">
                         Sign Up
                     </p>
-                    <form onSubmit={(e) => onSubmit(e)}>
+                    <form
+                        onSubmit={(e: React.FormEvent<HTMLInputElement>) =>
+                            onSubmit(e)
+                        }
+                    >
                         <div className="relative mb-3">
                             <input
                                 className={inputClasses}
@@ -49,7 +53,9 @@ const Signup = () => {
                                 placeholder="Name"
                                 name="name"
                                 value={name}
-                                onChange={(e) => onChange(e)}
+                                onChange={(
+                                    e: React.FormEvent<HTMLInputElement>
+                                ) => onChange(e)}
                                 required
                             />
                         </div>
@@ -60,7 +66,9 @@ const Signup = () => {
                                 placeholder="Email"
                                 name="email"
                                 value={email}
-                                onChange={(e) => onChange(e)}
+                                onChange={(
+                                    e: React.FormEvent<HTMLInputElement>
+                                ) => onChange(e)}
                                 required
                             />
                         </div>
@@ -71,7 +79,9 @@ const Signup = () => {
                                 placeholder="Password*"
                                 name="password"
                                 value={password}
-                                onChange={(e) => onChange(e)}
+                                onChange={(
+                                    e: React.FormEvent<HTMLInputElement>
+                                ) => onChange(e)}
                                 minLength={6}
                                 required
                             />
@@ -83,7 +93,9 @@ const Signup = () => {
                                 placeholder="Confirm password*"
                                 name="re_password"
                                 value={re_password}
-                                onChange={(e) => onChange(e)}
+                                onChange={(
+                                    e: React.FormEvent<HTMLInputElement>
+                                ) => onChange(e)}
                                 minLength={6}
                                 required
                             />
