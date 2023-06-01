@@ -1,3 +1,6 @@
+from channels.db import database_sync_to_async
+from django.contrib.auth.models import AnonymousUser
+import jwt
 from .models import UserAccount, Match, Tournament, Team, Participant, Lobby, Chat, Message
 from rest_framework import serializers
 import random
@@ -126,6 +129,19 @@ def change_players_status(team, new_players, user_name):
                         break
             break
     return team
+
+
+@database_sync_to_async
+def return_user(headers):
+    token = headers[4][1].decode('utf-8')[4:]
+    from auth_system.settings import SECRET_KEY
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
+        user_id = payload["user_id"]
+        user = UserAccount.objects.get(pk=user_id)
+    except:
+        user = AnonymousUser()
+    return user
 
 
 # from turiki.services import end_match
