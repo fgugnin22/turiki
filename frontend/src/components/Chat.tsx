@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { Link } from "react-router-dom";
+import useWebSocket from "react-use-websocket";
 interface chatArgs {
     chatId: number;
     content: string;
@@ -11,9 +12,17 @@ interface ChatProps {
     messages: any[];
     error?: string;
 }
+
 const Chat = (props: ChatProps) => {
+    const { sendMessage, lastMessage } = useWebSocket(
+        `ws://localhost:8000/ws/chat/${
+            props.chatId
+        }/?token=${localStorage.getItem("access")}`,
+        {}
+    );
     const { user, isAuthenticated } = useAppSelector((state) => state.user);
     const [message, setMessage] = useState("");
+
     const onChangeMessage = (e: React.FormEvent<HTMLInputElement>) =>
         setMessage(e.target.value);
     const onSubmit = (e: React.FormEvent<HTMLInputElement>) => {
@@ -21,18 +30,26 @@ const Chat = (props: ChatProps) => {
         if (message.length === 0) {
             return;
         }
-        props.sendMessage({
-            chatId: props.chatId,
-            content: message
-        });
+        sendMessage(
+            JSON.stringify({
+                type: "chat_message",
+                chatId: props.chatId,
+                message
+            })
+        );
         setMessage("");
     };
     const messagesEndRef = useRef<HTMLElement>(null);
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
-    const messages = props.messages
+    const [messages, setMessages] = useState(props.messages);
     useEffect(scrollToBottom, [messages]);
+    useEffect(() => {
+        if (lastMessage !== null) {
+            setMessages([...messages, JSON.parse(lastMessage.data).message]);
+        }
+    }, [lastMessage]);
     return (
         <div className="flex ml-auto mt-auto flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden min-h-[400px] border-2 border-slate-600">
             <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
@@ -87,7 +104,7 @@ const Chat = (props: ChatProps) => {
             </div>
             <form
                 className="flex flex-row bg-gray-300 p-3"
-                onSubmit={(e: React.FormEvent<HTMLInputElement>) => onSubmit(e)}
+                onSubmit={(e: any) => onSubmit(e)}
                 noValidate
             >
                 <label

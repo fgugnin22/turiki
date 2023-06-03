@@ -132,8 +132,8 @@ def change_players_status(team, new_players, user_name):
 
 
 @database_sync_to_async
-def return_user(headers):
-    token = headers[4][1].decode('utf-8')[4:]
+def return_user(token):
+    print(token)
     from auth_system.settings import SECRET_KEY
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])

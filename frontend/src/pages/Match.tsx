@@ -26,7 +26,6 @@ const Match = () => {
     );
     const messages = chat?.messages;
 
-    const [message, setMessage] = useState("");
     const [
         sendMessage,
         { isSuccess: isSendMessageSuccess, isError: isSendMessageError }
