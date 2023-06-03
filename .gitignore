@@ -22,7 +22,7 @@ logs
 *.njsproj
 *.sln
 *.sw?
-backend/**/*.sqlite3
+# backend/**/*.sqlite3
 backend/**/*/migrations
 backend/**/*/__pycache__
 backend/**/*.pyc
