@@ -4,7 +4,6 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 
 
 # модель пользователя с логином - почтой(у жанго по умолчанию логин - имя пользователя)
-
 # управление моделью пользователя
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):

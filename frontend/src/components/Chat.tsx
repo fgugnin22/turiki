@@ -31,11 +31,12 @@ const Chat = (props: ChatProps) => {
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
-    useEffect(scrollToBottom, [props.messages]);
+    const messages = props.messages
+    useEffect(scrollToBottom, [messages]);
     return (
         <div className="flex ml-auto mt-auto flex-col flex-grow w-full max-w-xl bg-white shadow-xl rounded-lg overflow-hidden min-h-[400px] border-2 border-slate-600">
             <div className="flex flex-col flex-grow h-0 p-4 overflow-auto">
-                {props.messages.map((message) => {
+                {messages.map((message) => {
                     if (message.user === user?.name) {
                         return (
                             <div
