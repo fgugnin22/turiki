@@ -140,7 +140,7 @@ def return_user(headers):
         user_id = payload["user_id"]
         user = UserAccount.objects.get(pk=user_id)
     except:
-        user = AnonymousUser()
+        user = None
     return user
 
 
@@ -165,6 +165,14 @@ def check_captain(data, user) -> bool:
 # user
 # content
 def create_message(user, chat, content):
+    if len(content) == 0:
+        raise serializers.ValidationError("Content must not be an empty string")
+    return Message.objects.create(user=user, chat=chat, content=content)
+
+
+@database_sync_to_async
+def async_create_message(user, chat_id, content):
+    chat = Chat.objects.get(pk=chat_id)
     if len(content) == 0:
         raise serializers.ValidationError("Content must not be an empty string")
     return Message.objects.create(user=user, chat=chat, content=content)
