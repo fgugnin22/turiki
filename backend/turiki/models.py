@@ -36,7 +36,7 @@ class Tournament(models.Model):
     name = models.CharField(max_length=255, default=f"test_tournament{random.random()}")
     prize = models.IntegerField(default=0)
     status = models.CharField(default="REGISTRATION OPENED", max_length=255)
-    starts = models.CharField(max_length=255, default="15.05.2023")
+    starts = models.DateTimeField(auto_now_add=True)
     # teams = models.ManyToManyField("Team", through="IDK KAK BUDET NAZIVATSYA") <-- TODO: SDELAT'
     max_rounds = models.IntegerField(default=1)
 
