@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 const TournamentList = () => {
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetAllTournamentsQuery({});
-    console.log(data);
 
     return (
         <Layout>

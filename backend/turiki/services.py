@@ -181,8 +181,10 @@ def async_create_message(user, chat_id, content):
 def create_lobby(match):
     if not (len(match.participants.values()) == 2 and (not ("DONE" in match.state))):
         return
-    if match.lobby is not None:
-        print("lobby already created")
+    try:
+        if match.lobby is not None:
+            print("lobby already created")
+    except:
         return
     chat = Chat.objects.create()
     lobby = Lobby.objects.create(match=match, chat=chat)

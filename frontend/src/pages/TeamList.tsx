@@ -8,9 +8,8 @@ const TeamList = () => {
         data: teamList,
         isError,
         isLoading,
-        isSuccess,
+        isSuccess
     } = tournamentAPI.useTeamListQuery({});
-    console.log(teamList);
     return (
         <Layout>
             {isSuccess ? (

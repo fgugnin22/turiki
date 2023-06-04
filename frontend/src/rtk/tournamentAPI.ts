@@ -19,6 +19,24 @@ export const tournamentAPI = createApi({
     refetchOnMountOrArgChange: true,
     tagTypes: ["Team", "Tournament", "Match", "Chat", ""],
     endpoints: (build) => ({
+        claimMatchResult: build.mutation({
+            query: ({ participantId, isWinner, matchId }) => {
+                const body = {
+                    participants: [
+                        {
+                            id: participantId,
+                            is_winner: isWinner
+                        }
+                    ]
+                };
+                return {
+                    url: `match/${matchId}/`,
+                    method: "PUT",
+                    body
+                };
+            },
+            invalidatesTags: ["Match"]
+        }),
         getMatchById: build.query({
             query: (search) => {
                 return { url: `match/${search.id}/` };
