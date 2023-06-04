@@ -12,37 +12,39 @@ export const tournamentAPI = createApi({
             }
             headers.set("Accept", "*/*");
             return headers;
-        },
+        }
     }),
     refetchOnFocus: true,
-    tagTypes: ["Team", "Tournament", "Match", "Chat",""],
+    refetchOnReconnect: true,
+    refetchOnMountOrArgChange: true,
+    tagTypes: ["Team", "Tournament", "Match", "Chat", ""],
     endpoints: (build) => ({
         getMatchById: build.query({
             query: (search) => {
                 return { url: `match/${search.id}/` };
             },
-            providesTags: ["Match"],
+            providesTags: ["Match"]
         }),
         getTournamentById: build.query({
             query: (search) => {
                 return { url: `tournament/${search.id}/` };
             },
-            providesTags: ["Tournament"],
+            providesTags: ["Tournament"]
         }),
         getAllTournaments: build.query({
             query: () => {
                 return { url: `tournament/` };
             },
-            providesTags: ["Tournament"],
+            providesTags: ["Tournament"]
         }),
         registerTeamOnTournament: build.mutation({
             query: (tournamentId) => {
                 return {
                     url: `tournament/${tournamentId}/`,
-                    method: "PUT",
+                    method: "PUT"
                 };
             },
-            invalidatesTags: ["Tournament"],
+            invalidatesTags: ["Tournament"]
         }),
         createTeam: build.mutation({
             query: (team) => {
@@ -51,25 +53,25 @@ export const tournamentAPI = createApi({
                 return {
                     url: `team/`,
                     method: "POST",
-                    body: team,
+                    body: team
                 };
-            },
+            }
         }),
         teamList: build.query({
             query: () => {
                 return {
-                    url: `team/`,
+                    url: `team/`
                 };
             },
-            providesTags: ["Team"],
+            providesTags: ["Team"]
         }),
         getTeamById: build.query({
             query: (id) => {
                 return {
-                    url: `team/${id}/`,
+                    url: `team/${id}/`
                 };
             },
-            providesTags: ["Team"],
+            providesTags: ["Team"]
         }),
         applyForTeam: build.mutation({
             query: ({ teamId, userId, userName }) => {
@@ -78,17 +80,17 @@ export const tournamentAPI = createApi({
                         {
                             id: userId,
                             name: userName,
-                            team_status: "PENDING",
-                        },
-                    ],
+                            team_status: "PENDING"
+                        }
+                    ]
                 };
                 return {
                     method: "PUT",
                     url: `team/${teamId}/`,
-                    body,
+                    body
                 };
             },
-            invalidatesTags: ["Team"],
+            invalidatesTags: ["Team"]
         }),
         updateTeamMemberStatus: build.mutation({
             query: ({ teamId, userId, userName, status }) => {
@@ -97,17 +99,17 @@ export const tournamentAPI = createApi({
                         {
                             id: userId,
                             name: userName,
-                            team_status: status,
-                        },
-                    ],
+                            team_status: status
+                        }
+                    ]
                 };
                 return {
                     method: "PUT",
                     url: `team/${teamId}/`,
-                    body,
+                    body
                 };
             },
-            invalidatesTags: ["Team"],
+            invalidatesTags: ["Team"]
         }),
         leaveFromTeam: build.mutation({
             query: ({ teamId, userId, userName }) => {
@@ -116,35 +118,42 @@ export const tournamentAPI = createApi({
                         {
                             id: userId,
                             name: userName,
-                            team_status: "REJECTED",
-                        },
-                    ],
+                            team_status: "REJECTED"
+                        }
+                    ]
                 };
                 return {
                     method: "PUT",
                     url: `team/${teamId}/`,
-                    body,
+                    body
                 };
             },
-            invalidatesTags: ["Team"],
+            invalidatesTags: ["Team"]
         }),
         getChatMessages: build.query({
-            query: ({chatId}) => {
+            query: ({ chatId }) => {
                 return {
-                    url: `chat/${chatId}/`,
+                    url: `chat/${chatId}/`
                 };
             },
-            providesTags: ["Chat"],
+            // onQueryStarted({chatId}, { dispatch, queryFulfilled }) {
+            //     const result = dispatch(
+            //         tournamentAPI.util.updateQueryData('getChatMessages', chatId, (draft) => {
+            //             Object.assign(draft, patch)
+            //         })
+            //     )
+            // },
+            providesTags: ["Chat"]
         }),
         sendMessage: build.mutation({
             query: ({ content, chatId }) => {
                 return {
                     url: `chat/${chatId}/`,
                     method: "PUT",
-                    body: { content },
+                    body: { content }
                 };
             },
-            invalidatesTags: ["Chat"],
-        }),
-    }),
+            invalidatesTags: ["Chat"]
+        })
+    })
 });

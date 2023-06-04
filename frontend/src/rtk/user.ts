@@ -173,7 +173,7 @@ export const activate = createAsyncThunk(
         }
     }
 );
-export const resetPassword = createAsyncThunk(
+export const resetPassword = createAsyncThunk<string, string>(
     "users/reset_password",
     async (email, thunkAPI) => {
         try {

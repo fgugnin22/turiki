@@ -96,7 +96,8 @@ export default function transformMatches(tournamentObject: Root):IMatch[] {
             resultMatch.nextMatchId = null;
         }
         resultMatch.tournamentRoundText = match.round_text;
-        resultMatch.startTime = match.starts;
+        const starts = new Date(match.starts)
+        resultMatch.startTime = starts.toLocaleDateString().slice(0, -5 ) + ' ' + starts.toLocaleTimeString().slice(0, -3);
         resultMatch.state = match.state;
         resultMatch.participants = [];
         for (let p of match.participants) {

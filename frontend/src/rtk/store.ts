@@ -10,7 +10,7 @@ export const store = configureStore({
         user: userReducer
     },
     middleware: (getDefaultMiddleware) =>
-        getDefaultMiddleware().concat(tournamentAPI.middleware).concat(logger),
+        getDefaultMiddleware().concat(tournamentAPI.middleware),
     devTools: import.meta.env.VITE_NODE_ENV !== "production"
 });
 export type RootState = ReturnType<typeof store.getState>;

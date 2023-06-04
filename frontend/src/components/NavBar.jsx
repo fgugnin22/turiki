@@ -55,7 +55,7 @@ const NavBar = () => {
                         <Link
                             className="py-5 px-3 text-gray-700 hover:text-gray-900"
                             aria-current="page"
-                            to="/"
+                            to="/dashboard"
                         >
                             Home
                         </Link>

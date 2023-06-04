@@ -31,22 +31,21 @@ const Match = () => {
         { isSuccess: isSendMessageSuccess, isError: isSendMessageError }
     ] = tournamentAPI.useSendMessageMutation();
     const { data: team1, isSuccess: isTeam1Success } =
-        tournamentAPI.useGetTeamByIdQuery(match?.participants[0].team.id, {
+        tournamentAPI.useGetTeamByIdQuery(match?.participants[0]?.team.id, {
             skip: isFetching || !match?.participants[0]?.team
         });
     const { data: team2, isSuccess: isTeam2Success } =
-        tournamentAPI.useGetTeamByIdQuery(match?.participants[1].team.id, {
+        tournamentAPI.useGetTeamByIdQuery(match?.participants[1]?.team.id, {
             skip: isFetching || !match?.participants[1]?.team
         });
-    const messagesEndRef = useRef(null);
-    const scrollToBottom = () => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    };
-    useEffect(scrollToBottom, [messages]);
+    const starts = new Date(match?.starts)
     return (
         <Layout>
             {isSuccess ? (
-                <Link to={`/match/${match.id}`}>Match {match.id}</Link>
+                <div>
+                    Match {match.id}
+                    <div>{starts.toLocaleDateString().slice(0, -5 ) + ' ' + starts.toLocaleTimeString().slice(0, -3)}</div>
+                </div>
             ) : null}
             {isSuccess ? (
                 <div className="m-auto">
