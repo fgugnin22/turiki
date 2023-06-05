@@ -49,7 +49,7 @@ class Tournament(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True, unique=True)
-    tournaments = models.ManyToManyField(Tournament, related_name="teams", null=True, blank=True, )
+    tournaments = models.ManyToManyField(Tournament, related_name="teams", blank=True)
     next_member = models.CharField(null=True, blank=True, max_length=255)
 
     def __str__(self):
@@ -61,7 +61,7 @@ class Team(models.Model):
 
 
 class Match(models.Model):
-    teams = models.ManyToManyField(Team, related_name="matches", null=True, blank=True, through="Participant")
+    teams = models.ManyToManyField(Team, related_name="matches", blank=True, through="Participant")
     next_match = models.ForeignKey('Match', unique=False, on_delete=models.SET_NULL, related_name='previous_match',
                                    null=True, blank=True)
     name = models.CharField(max_length=127, blank=True, null=True)

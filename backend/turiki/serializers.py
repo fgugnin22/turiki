@@ -17,7 +17,7 @@ class UserSerializer(UserCreateSerializer):
         model = User
         # СЮДА ДОБАВЛЯТЬ ПОЛЯ КОТОРЫЕ ПОТОМ ОТСЫЛАЕМ НА КЛИЕНТ
         fields = ('id', 'email', 'name', 'password', 'is_active', 'team', 'team_status')
-
+    
 
 class MatchSerializer(serializers.ModelSerializer):
     # participants = serializers.StringRelatedField(many=True)
@@ -32,6 +32,9 @@ class MatchSerializer(serializers.ModelSerializer):
         create_lobby(instance)
         end_match(instance)
         return instance
+
+    def create(self, validated_data):
+        pass
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -110,6 +113,12 @@ class MessageSerializer(serializers.ModelSerializer):
         model = Message
         fields = "__all__"
 
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
 
 class ChatSerializer(serializers.ModelSerializer):
     messages = MessageSerializer(many=True)
@@ -122,7 +131,4 @@ class ChatSerializer(serializers.ModelSerializer):
         pass
 
     def update(self, instance, validated_data):
-        return instance
-
-    def __delete__(self, instance):
         pass
