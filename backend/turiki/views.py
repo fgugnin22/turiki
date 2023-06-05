@@ -1,5 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from turiki.services import set_active
 from turiki.services import create_lobby
 from turiki.models import *
 from turiki.serializers import (
@@ -8,7 +9,7 @@ from turiki.serializers import (
     TeamSerializer,
     ChatSerializer,
 )
-from turiki.Permissons import IsAdminUserOrReadOnly
+from turiki.permissons import IsAdminUserOrReadOnly
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
 from turiki.services import (
@@ -44,8 +45,8 @@ class TournamentAPIView(ModelViewSet):
         if not ("status" in keys):
             request.data["status"] = instance.status
         if (
-            instance.status == "REGISTRATION_OPENED"
-            and request.user.team_status == "CAPTAIN"
+                instance.status == "REGISTRATION_OPENED"
+                and request.user.team_status == "CAPTAIN"
         ):
             register_team(instance, request.user.team)
         serializer = self.serializer_class(instance, data=request.data)
@@ -65,9 +66,11 @@ class MatchAPIView(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         import datetime
         import calendar
+        from django.contrib.auth.models import AnonymousUser
         instance = self.get_object()
-        print(calendar.timegm(instance.starts.timetuple()) <= calendar.timegm(datetime.datetime.utcnow().timetuple()))
-        if calendar.timegm(instance.starts.timetuple()) <= calendar.timegm(datetime.datetime.utcnow().timetuple()):
+        if instance.starts.timetuple() <= datetime.datetime.utcnow().timetuple() and not isinstance(request.user,
+                                                                                                    AnonymousUser):
+            set_active(instance)
             create_lobby(instance)
         return super().retrieve(request, *args, **kwargs)
 

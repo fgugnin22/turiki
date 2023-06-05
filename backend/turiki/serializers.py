@@ -5,10 +5,14 @@ from .services import add_team_player, change_team_name, change_players_status, 
     set_initial_matches, set_tournament_status, end_match, create_lobby, register_team
 from turiki.models import *
 
+"""
+В этом файле описывается как отсылаем на клиент и принимаем с клиента информацию о моделях из бд
+"""
+
 User = get_user_model()
 
 
-class UserCreateSerializer1(UserCreateSerializer):
+class UserSerializer(UserCreateSerializer):
     class Meta(UserCreateSerializer.Meta):
         model = User
         # СЮДА ДОБАВЛЯТЬ ПОЛЯ КОТОРЫЕ ПОТОМ ОТСЫЛАЕМ НА КЛИЕНТ
@@ -122,4 +126,3 @@ class ChatSerializer(serializers.ModelSerializer):
 
     def __delete__(self, instance):
         pass
-# class LobbySerializer(serializers.ModelSerializer):

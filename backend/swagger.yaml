@@ -16,13 +16,13 @@ securityDefinitions:
   Basic:
     type: basic
 security:
-  - Basic: []
+  - Basic: [ ]
 paths:
   /api/chat/:
     get:
       operationId: api_chat_list
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
@@ -32,12 +32,12 @@ paths:
               $ref: '#/definitions/Chat'
       tags:
         - api
-    parameters: []
+    parameters: [ ]
   /api/chat/{id}/:
     get:
       operationId: api_chat_read
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
@@ -87,7 +87,7 @@ paths:
     get:
       operationId: api_match_list
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
@@ -97,12 +97,12 @@ paths:
               $ref: '#/definitions/Match'
       tags:
         - api
-    parameters: []
+    parameters: [ ]
   /api/match/{id}/:
     get:
       operationId: api_match_read
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
@@ -152,7 +152,7 @@ paths:
     get:
       operationId: api_team_list
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
@@ -178,12 +178,12 @@ paths:
             $ref: '#/definitions/Team'
       tags:
         - api
-    parameters: []
+    parameters: [ ]
   /api/team/{id}/:
     get:
       operationId: api_team_read
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
@@ -226,7 +226,7 @@ paths:
     delete:
       operationId: api_team_delete
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '204':
           description: ''
@@ -242,7 +242,7 @@ paths:
     get:
       operationId: api_tournament_list
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
@@ -268,12 +268,12 @@ paths:
             $ref: '#/definitions/Tournament'
       tags:
         - api
-    parameters: []
+    parameters: [ ]
   /api/tournament/{id}/:
     get:
       operationId: api_tournament_read
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
@@ -316,7 +316,7 @@ paths:
     delete:
       operationId: api_tournament_delete
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '204':
           description: ''
@@ -347,7 +347,7 @@ paths:
             $ref: '#/definitions/TokenObtainPair'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/jwt/refresh/:
     post:
       operationId: auth_jwt_refresh_create
@@ -367,7 +367,7 @@ paths:
             $ref: '#/definitions/TokenRefresh'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/jwt/verify/:
     post:
       operationId: auth_jwt_verify_create
@@ -387,12 +387,12 @@ paths:
             $ref: '#/definitions/TokenVerify'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/o/{provider}/:
     get:
       operationId: auth_o_read
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
@@ -425,14 +425,14 @@ paths:
     get:
       operationId: auth_users_list
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
           schema:
             type: array
             items:
-              $ref: '#/definitions/UserCreateSerializer1'
+              $ref: '#/definitions/UserSerializer'
       tags:
         - auth
     post:
@@ -451,7 +451,7 @@ paths:
             $ref: '#/definitions/UserCreatePasswordRetype'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/users/activation/:
     post:
       operationId: auth_users_activation
@@ -469,19 +469,19 @@ paths:
             $ref: '#/definitions/Activation'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/users/me/:
     get:
       operationId: auth_users_me_read
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
           schema:
             type: array
             items:
-              $ref: '#/definitions/UserCreateSerializer1'
+              $ref: '#/definitions/UserSerializer'
       tags:
         - auth
     put:
@@ -492,12 +492,12 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/UserCreateSerializer1'
+            $ref: '#/definitions/UserSerializer'
       responses:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/UserCreateSerializer1'
+            $ref: '#/definitions/UserSerializer'
       tags:
         - auth
     patch:
@@ -508,24 +508,24 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/UserCreateSerializer1'
+            $ref: '#/definitions/UserSerializer'
       responses:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/UserCreateSerializer1'
+            $ref: '#/definitions/UserSerializer'
       tags:
         - auth
     delete:
       operationId: auth_users_me_delete
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '204':
           description: ''
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/users/resend_activation/:
     post:
       operationId: auth_users_resend_activation
@@ -543,7 +543,7 @@ paths:
             $ref: '#/definitions/SendEmailReset'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/users/reset_email/:
     post:
       operationId: auth_users_reset_username
@@ -561,7 +561,7 @@ paths:
             $ref: '#/definitions/SendEmailReset'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/users/reset_email_confirm/:
     post:
       operationId: auth_users_reset_username_confirm
@@ -579,7 +579,7 @@ paths:
             $ref: '#/definitions/UsernameResetConfirm'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/users/reset_password/:
     post:
       operationId: auth_users_reset_password
@@ -597,7 +597,7 @@ paths:
             $ref: '#/definitions/SendEmailReset'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/users/reset_password_confirm/:
     post:
       operationId: auth_users_reset_password_confirm
@@ -615,7 +615,7 @@ paths:
             $ref: '#/definitions/PasswordResetConfirmRetype'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/users/set_email/:
     post:
       operationId: auth_users_set_username
@@ -633,7 +633,7 @@ paths:
             $ref: '#/definitions/SetUsernameRetype'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/users/set_password/:
     post:
       operationId: auth_users_set_password
@@ -651,17 +651,17 @@ paths:
             $ref: '#/definitions/SetPasswordRetype'
       tags:
         - auth
-    parameters: []
+    parameters: [ ]
   /auth/users/{id}/:
     get:
       operationId: auth_users_read
       description: ''
-      parameters: []
+      parameters: [ ]
       responses:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/UserCreateSerializer1'
+            $ref: '#/definitions/UserSerializer'
       tags:
         - auth
     put:
@@ -672,12 +672,12 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/UserCreateSerializer1'
+            $ref: '#/definitions/UserSerializer'
       responses:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/UserCreateSerializer1'
+            $ref: '#/definitions/UserSerializer'
       tags:
         - auth
     patch:
@@ -688,12 +688,12 @@ paths:
           in: body
           required: true
           schema:
-            $ref: '#/definitions/UserCreateSerializer1'
+            $ref: '#/definitions/UserSerializer'
       responses:
         '200':
           description: ''
           schema:
-            $ref: '#/definitions/UserCreateSerializer1'
+            $ref: '#/definitions/UserSerializer'
       tags:
         - auth
     parameters:

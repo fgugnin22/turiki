@@ -2,6 +2,12 @@ from django.db import models
 import random
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 
+"""
+В этом файле описывается структура сущностей в базе данных, их взаимодействие друг с другом
+По этому файлу django автоматически строит миграции в бд (py manage.py makemigrations -> py manage.py migrate)
+Мне наверное стоит нарисовать граф отношений всех моделей, но пока что мне лень
+"""
+
 
 # модель пользователя с логином - почтой(у жанго по умолчанию логин - имя пользователя)
 # управление моделью пользователя
@@ -15,7 +21,7 @@ class UserAccountManager(BaseUserManager):
         user.save()
         return user
 
-    # создать админа(потом)
+    # создать админа(потом) - сделано иксди
 
     def create_superuser(self, email, password=None, **extra_fields):
         if not email:
@@ -34,7 +40,7 @@ class Tournament(models.Model):
     prize = models.IntegerField(default=0)
     status = models.CharField(default="REGISTRATION OPENED", max_length=255)
     starts = models.DateTimeField(auto_now_add=True)
-    # teams = models.ManyToManyField("Team", through="IDK KAK BUDET NAZIVATSYA") <-- TODO: SDELAT'
+    # teams = models.ManyToManyField("Team", through="IDK KAK BUDET NAZIVATSYA") <-- TODO: SDELAT' типо что была итоговая таблица команд кто какое место занял какой приз получил и тд
     max_rounds = models.IntegerField(default=1)
 
     def __str__(self):
@@ -94,11 +100,12 @@ class Participant(models.Model):
 
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
+    objects = UserAccountManager()
+
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    objects = UserAccountManager()
     team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.SET_NULL, related_name="players")
     team_status = models.CharField(max_length=31, null=True, blank=True)
     USERNAME_FIELD = 'email'  # что является логином

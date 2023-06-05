@@ -21,14 +21,19 @@ from turiki.views import TournamentAPIView, MatchAPIView, TeamAPIView, ChatAPIVi
 from rest_framework.routers import DefaultRouter
 from .yasg import urlpatterns as doc_urls
 
+# с помощью defaultrouter'а регистрируем api маршруты
 tournamentRouter = DefaultRouter()
 tournamentRouter.register(r'api/tournament', TournamentAPIView, basename='tournament')
+
 matchRouter = DefaultRouter()
 matchRouter.register(r'api/match', MatchAPIView, basename='match')
+
 teamRouter = DefaultRouter()
 teamRouter.register(r'api/team', TeamAPIView, basename='team')
+
 chatRouter = DefaultRouter()
 chatRouter.register(r'api/chat', ChatAPIView, basename='chat')
+
 # Я НЕ ЗНАЮ КАК ОБЪЯСНИТЬ НО ПОРЯДОК URL ОЧЕНЬ ВАЖЕН, ЕСЛИ ПЕРЕСТАВИТЬ МОЖЕТ ВСЁ СЛОМАТЬСЯ НАХЕР!
 urlpatterns = [
     path('admin/', admin.site.urls),

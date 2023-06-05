@@ -20,6 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# Используется для шифрования jwt-токенов -> берется json-payload токена, смешивается шифрованием с этим ключом и получается электронная подпись токена(3 часть)
 SECRET_KEY = 'django-insecure-1yo=48qh-t*2s3jjmp7hg-iw!vddxk4tx9r6d6!wmb+$e-gy8q'
 
 # SECURITY WARNING: don't run with debug turned on in production!
@@ -44,8 +45,9 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
 ]
+# Откуда могут приходить запросы
 CORS_ORIGIN_WHITELIST = (
-    'http://localhost:8000',  # for localhost (REACT Default)
+    'http://localhost:8000',  # for localhost
     'http://localhost:5173',
     'http://127.0.0.1:8000',  # for network
 )
@@ -62,14 +64,16 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
-
+# Где находится роутинг для http запросов
 ROOT_URLCONF = 'auth_system.urls'
+# я хз как именно это работает и как взаимодействует с 49-54 строкой
 CSRF_COOKIE_SECURE = True
 CORS_ALLOW_CREDENTIALS = True
 CSRF_TRUSTED_ORIGINS = [
     'http://localhost:5173',
     'http://localhost:8000'
 ]
+# html templates
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -87,9 +91,10 @@ TEMPLATES = [
         },
     },
 ]
-
+# wsgi - синхронный сервер, asgi - и синхронный и асинхронный
 WSGI_APPLICATION = 'auth_system.wsgi.application'
 ASGI_APPLICATION = 'auth_system.asgi.application'
+# Настройка RedisDB для websocket(нужна для кеширования типа(я его еще не сделал))
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
@@ -100,7 +105,7 @@ CHANNEL_LAYERS = {
 }
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+# Настройка основной DB
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -111,7 +116,7 @@ DATABASES = {
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
-
+# впринципе тут очевидно
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -129,28 +134,29 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
-
+# тут тоже
 LANGUAGE_CODE = 'ru'
 
 TIME_ZONE = 'UTC'
 
-USE_I18N = True
+USE_I18N = True  # эт я хз
 
-USE_TZ = True
+USE_TZ = True  # тоже самое
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
-
+# настройка статичных файлов (js, html, css, jpg, png и тд)
 STATIC_URL = '/assets/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'dist/assets')
 ]
 STATIC_ROOT = os.path.join(BASE_DIR, 'assets')
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'  # хз
 
-AUTH_USER_MODEL = 'turiki.UserAccount'
+AUTH_USER_MODEL = 'turiki.UserAccount'  # модель юзера для авторизации что тут сказать
 
+# настройка почтовой рассылки через мой гугл акк
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -158,6 +164,7 @@ EMAIL_HOST_USER = 'fedorgugnin22@gmail.com'
 EMAIL_HOST_PASSWORD = 'glmyiiuedkjicydf'
 EMAIL_USE_TLS = True
 
+# настройка DRF
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated'
@@ -166,7 +173,7 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
 }
-# здесь надо доделать настройки simplejwt!
+# здесь надо доделать настройки simplejwt!(а какие я забыл))
 SIMPLE_JWT = {
     'AUTH_HEADER_TYPES': ('JWT',),
     'ACCESS_TOKEN_LIFETIME': timedelta(hours=8),
@@ -179,6 +186,7 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
+# djoser использует simplejwt для jwt авторизации т.е. библа использует другую библу
 DJOSER = {
     'LOGIN_FIELD': 'email',
     'USER_CREATE_PASSWORD_RETYPE': True,
@@ -195,9 +203,9 @@ DJOSER = {
     'SOCIAL_AUTH_TOKEN_STRATEGY': 'djoser.social.token.jwt.TokenStrategy',
     'SOCIAL_AUTH_ALLOWED_REDIRECT_URIS': ['http://localhost:8000', 'http://localhost:5173'],
     'SERIALIZERS': {
-        'user_create': 'turiki.serializers.UserCreateSerializer1',
-        'user': 'turiki.serializers.UserCreateSerializer1',
-        'current_user': 'turiki.serializers.UserCreateSerializer1',
+        'user_create': 'turiki.serializers.UserSerializer',
+        'user': 'turiki.serializers.UserSerializer',
+        'current_user': 'turiki.serializers.UserSerializer',
         'user_delete': 'djoser.serializers.UserDeleteSerializer',
     }
 }
@@ -208,4 +216,3 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/userinfo.email',
                                    'https://www.googleapis.com/auth/userinfo.profile', 'openid']
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
-# djoser.readthedocs.io - доки

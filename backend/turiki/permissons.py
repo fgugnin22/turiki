@@ -4,7 +4,8 @@ from rest_framework.permissions import IsAdminUser, SAFE_METHODS
 
 
 class IsAdminUserOrReadOnly(IsAdminUser):
-    def has_permission(self, request, view):
+    # кастомное разрешение если админ - можно делать все, если нет - только читать
+    def has_permission(self, request, view) -> bool:
         is_admin = super(
             IsAdminUserOrReadOnly,
             self).has_permission(request, view)

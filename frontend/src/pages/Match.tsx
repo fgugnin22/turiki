@@ -46,7 +46,9 @@ const Match = () => {
         selfParticipant =
             match?.participants[0]?.team.id === user?.team
                 ? match?.participants[0]
-                : match?.participants[1];
+                : match?.participants[1]?.team.id === user?.team
+                ? match?.participants[1]
+                : null;
         isPlayingThisMatch =
             match?.participants[0]?.team.id === user?.team
                 ? true
@@ -58,6 +60,19 @@ const Match = () => {
         <Layout>
             {isSuccess && (
                 <>
+                    {match?.state === "SCORE_DONE" && isPlayingThisMatch && (
+                        <div>
+                            {selfParticipant?.is_winner ? (
+                                <p className="p-3 text-center bg-lime-500 mb-12">
+                                    You won this match
+                                </p>
+                            ) : (
+                                <p className="p-3 text-center bg-red-500 mb-12">
+                                    You lost this match
+                                </p>
+                            )}
+                        </div>
+                    )}
                     <div>
                         Match {match.id}
                         <div>
@@ -111,6 +126,7 @@ const Match = () => {
                         ))}
                 </>
             )}
+
             {isGetMessagesSuccess && isAuthenticated && (
                 <Chat
                     messages={messages}

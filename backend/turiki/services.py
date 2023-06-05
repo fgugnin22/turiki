@@ -14,6 +14,16 @@ from .models import (
 from rest_framework import serializers
 import random
 
+"""
+В этот файл я попытался частично вынести более сложную логику по работе с бд и некоторые функции хелперы
+"""
+
+
+def set_active(match):  # self-explanatory fr tho
+    if match.state == "NO_SHOW":
+        match.state = "ACTIVE"
+        match.save()
+
 
 def set_tournament_status(tournament, status):
     tournament.status = status
@@ -26,6 +36,10 @@ def register_team(tournament, team):
 
 
 def set_initial_matches(tournament):
+    """
+    Эта функция наполняет начальные матчи(матчи на максимальной глубине)
+    присутствует рандомизация команд
+    """
     matches = list(tournament.matches.values())
     teams = list(tournament.teams.values())
     if len(teams) == 0:
@@ -52,6 +66,13 @@ def set_initial_matches(tournament):
 
 
 def create_match(next_round_count, rounds, tournament, next_match=None):
+    """
+    создает турнирную сетку
+    кол-во раундов определяет глубину сетки:
+    1 раунд - 1 матч, 2 раунда - 3 матча, 3 раунда - 7 матчей, N раундов - (2^N - 1) матчей
+    каждый матч кроме финала содержит ссылку на следующий матч
+    пока что создает только single elimination bracket
+    """
     if next_round_count <= 0:
         return
     elif next_round_count == rounds:
@@ -83,11 +104,13 @@ def create_match(next_round_count, rounds, tournament, next_match=None):
 
 
 def create_bracket(tournament, rounds):
+    # вызывает функцию create_match я хз зачем так непонятно сделал с именами, потом переделаю TODO:!!!
     create_match(rounds, rounds, tournament, None)
     return tournament
 
 
 def is_user_in_team(user_name):
+    # состоит ли user с именем user_name в КАКОЙ-ЛИБО команде
     user = UserAccount.objects.get(name=user_name)
     if user.team_status is not None and user.team_status != "REJECTED":
         print(user.team_status is None)
@@ -95,9 +118,9 @@ def is_user_in_team(user_name):
 
 
 def add_team_player(team, user_name, status="PENDING"):
+    # добавляет user с именем user_name в команду, team - объект класса Team (models.py)
     player = UserAccount.objects.get(name=user_name)
-    if player.team_status is not None or player.team_status == "REJECTED":
-        print("denied", player.name, player.team_status)
+    if is_user_in_team(user_name):
         return team
     player.team_status = status
     team.players.add(player)
@@ -106,6 +129,7 @@ def add_team_player(team, user_name, status="PENDING"):
 
 
 def change_team_name(team, user_name, team_name):
+    # позволяет только капитану команды поменять имя команды
     players = list(team.players.values())
     for p in players:
         if p["name"] == user_name and p["team_status"] == "CAPTAIN":
@@ -113,12 +137,15 @@ def change_team_name(team, user_name, team_name):
             if team_name is None:
                 return team
             team.name = team_name
-
             break
     return team
 
 
 def change_players_status(team, new_players, user_name):
+    """
+    Этот монстр позволяет капитану менять состав команды
+    (принимать челов в команду, удалять их, делать капитаном вместо себя)
+    """
     players = team.players.values()
     for p in players:
         if p["name"] == user_name and p["team_status"] == "PENDING":
@@ -157,7 +184,8 @@ def change_players_status(team, new_players, user_name):
 
 
 @database_sync_to_async
-def return_user(token):
+def async_return_user(token):
+    # асинхронное доставание UserAccount по jwt токену из БД для consumers.py -> websocket
     from auth_system.settings import SECRET_KEY
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
@@ -168,27 +196,24 @@ def return_user(token):
     return user
 
 
-# from turiki.services import end_match
-# match = Match.objects.get(pk=26)
-# end_match(match)
-# participant2 = Participant.objects.create(team=team2, match=m, status="NO_SHOW", result_text="TBD")
 def update_next_match(next_match, winner):
+    # winner - объект класса Participant, next_match - Match
+    # добавляем выигравшего в матче участника в следующий матч(создаем нового участника для выигравшей команды)
     next_participant = Participant.objects.create(
         team=winner.team, match=next_match, status="NO_SHOW", result_text="TBD"
     )
     next_match.participants.add(next_participant)
+    next_match.save()
 
 
 def check_captain(data, user) -> bool:
+    # проверка на капитана из request.data
     participant = Participant.objects.get(pk=data["participants"][0]["id"])
     if user.team_status == "CAPTAIN" and user.team.id == participant.team.id:
         return True
     return False
 
 
-# chat
-# user
-# content
 def create_message(user, chat, content):
     if len(content) == 0:
         raise serializers.ValidationError("Content must not be an empty string")
@@ -197,13 +222,16 @@ def create_message(user, chat, content):
 
 @database_sync_to_async
 def async_create_message(user, chat_id, content):
+    # асинхронная почти что копия create_message для consumers.py
     chat = Chat.objects.get(pk=chat_id)
     if len(content) == 0:
         raise serializers.ValidationError("Content must not be an empty string")
+    chat.save()
     return Message.objects.create(user=user, chat=chat, content=content)
 
 
 def create_lobby(match):
+    # создание лобби и чата в матче если в нем есть 2 команды, он не закончен
     if not (len(match.participants.values()) == 2 and (not ("DONE" in match.state))):
         return
     try:
@@ -218,6 +246,7 @@ def create_lobby(match):
 
 
 def end_match(match):
+    # ставит результат матча с валидацией на одинаковые результаты обеих команд и в случае успеха обновляет след матч
     [p1, p2] = list(match.participants.values())
     p1 = Participant.objects.get(pk=p1["id"])
     p2 = Participant.objects.get(pk=p2["id"])
@@ -251,6 +280,7 @@ def end_match(match):
 
 
 def set_match_winner(match, data):
+    # Ставит результат в Participant т.е. позволяет капитану сделать заявку на результат
     [p1, p2] = list(match.participants.values())
     p1 = Participant.objects.get(pk=p1["id"])
     p2 = Participant.objects.get(pk=p2["id"])
