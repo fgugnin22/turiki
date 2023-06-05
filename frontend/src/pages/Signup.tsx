@@ -29,7 +29,7 @@ const Signup = () => {
     };
     // check if authenticated -> redirect to homepage
     if (isAuthenticated) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/dashboard" replace />;
     }
     if (accountCreated) {
         return <Navigate to="/login" replace />;

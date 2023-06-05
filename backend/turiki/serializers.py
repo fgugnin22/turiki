@@ -60,7 +60,6 @@ class TeamSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         user_name = validated_data.get("next_member")
         players = validated_data.get("players")
-        print(validated_data)
         team_name = validated_data.get("name")
         team = change_team_name(instance, user_name, team_name)
         if len(players) == 1 and players[0]["team_status"] == "PENDING":

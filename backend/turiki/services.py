@@ -1,7 +1,16 @@
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import AnonymousUser
 import jwt
-from .models import UserAccount, Match, Tournament, Team, Participant, Lobby, Chat, Message
+from .models import (
+    UserAccount,
+    Match,
+    Tournament,
+    Team,
+    Participant,
+    Lobby,
+    Chat,
+    Message,
+)
 from rest_framework import serializers
 import random
 
@@ -30,10 +39,14 @@ def set_initial_matches(tournament):
         m = Match.objects.get(pk=match["id"])
         team1 = teams.pop()
         team1 = Team.objects.get(pk=team1["id"])
-        participant1 = Participant.objects.create(team=team1, match=m, status="NO_SHOW", result_text="TBD")
+        participant1 = Participant.objects.create(
+            team=team1, match=m, status="NO_SHOW", result_text="TBD"
+        )
         team2 = teams.pop()
         team2 = Team.objects.get(pk=team2["id"])
-        participant2 = Participant.objects.create(team=team2, match=m, status="NO_SHOW", result_text="TBD")
+        participant2 = Participant.objects.create(
+            team=team2, match=m, status="NO_SHOW", result_text="TBD"
+        )
         m.participants.add(participant1)
         m.participants.add(participant2)
 
@@ -42,17 +55,29 @@ def create_match(next_round_count, rounds, tournament, next_match=None):
     if next_round_count <= 0:
         return
     elif next_round_count == rounds:
-        final_match = Match.objects.create(next_match=next_match, name=f"{rounds - next_round_count + 1}",
-                                           round_text=f"Матч за {rounds - next_round_count + 1} место", state="NO_SHOW",
-                                           tournament=tournament)
+        final_match = Match.objects.create(
+            next_match=next_match,
+            name=f"{rounds - next_round_count + 1}",
+            round_text=f"Матч за {rounds - next_round_count + 1} место",
+            state="NO_SHOW",
+            tournament=tournament,
+        )
         create_match(next_round_count - 1, rounds, tournament, final_match)
     else:
-        match1 = Match.objects.create(next_match=next_match, name=f"{rounds - next_round_count + 1}",
-                                      round_text=f"Матч за {rounds - next_round_count + 1} место", state="NO_SHOW",
-                                      tournament=tournament)
-        match2 = Match.objects.create(next_match=next_match, name=f"{rounds - next_round_count + 1}",
-                                      round_text=f"Матч за {rounds - next_round_count + 1} место", state="NO_SHOW",
-                                      tournament=tournament)
+        match1 = Match.objects.create(
+            next_match=next_match,
+            name=f"{rounds - next_round_count + 1}",
+            round_text=f"Матч за {rounds - next_round_count + 1} место",
+            state="NO_SHOW",
+            tournament=tournament,
+        )
+        match2 = Match.objects.create(
+            next_match=next_match,
+            name=f"{rounds - next_round_count + 1}",
+            round_text=f"Матч за {rounds - next_round_count + 1} место",
+            state="NO_SHOW",
+            tournament=tournament,
+        )
         create_match(next_round_count - 1, rounds, tournament, match1)
         create_match(next_round_count - 1, rounds, tournament, match2)
 
@@ -133,7 +158,6 @@ def change_players_status(team, new_players, user_name):
 
 @database_sync_to_async
 def return_user(token):
-    print(token)
     from auth_system.settings import SECRET_KEY
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
@@ -149,8 +173,9 @@ def return_user(token):
 # end_match(match)
 # participant2 = Participant.objects.create(team=team2, match=m, status="NO_SHOW", result_text="TBD")
 def update_next_match(next_match, winner):
-    next_participant = Participant.objects.create(team=winner.team, match=next_match, status="NO_SHOW",
-                                                  result_text="TBD")
+    next_participant = Participant.objects.create(
+        team=winner.team, match=next_match, status="NO_SHOW", result_text="TBD"
+    )
     next_match.participants.add(next_participant)
 
 
@@ -185,13 +210,11 @@ def create_lobby(match):
         if match.lobby is not None:
             print("lobby already created")
     except:
-        return
-    chat = Chat.objects.create()
-    lobby = Lobby.objects.create(match=match, chat=chat)
-    chat.lobby = lobby
-    chat.save()
-    print("LOBBY CREATED")
-    return
+        chat = Chat.objects.create()
+        lobby = Lobby.objects.create(match=match, chat=chat)
+        chat.lobby = lobby
+        chat.save()
+        print("LOBBY CREATED")
 
 
 def end_match(match):

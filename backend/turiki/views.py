@@ -1,11 +1,22 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
+from turiki.services import create_lobby
 from turiki.models import *
-from turiki.serializers import TournamentSerializer, MatchSerializer, TeamSerializer, ChatSerializer
+from turiki.serializers import (
+    TournamentSerializer,
+    MatchSerializer,
+    TeamSerializer,
+    ChatSerializer,
+)
 from turiki.Permissons import IsAdminUserOrReadOnly
 from rest_framework import status
 from rest_framework.permissions import AllowAny, IsAuthenticatedOrReadOnly
-from turiki.services import check_captain, set_match_winner, create_message, register_team
+from turiki.services import (
+    check_captain,
+    set_match_winner,
+    create_message,
+    register_team,
+)
 
 
 # Create your views here.
@@ -32,7 +43,10 @@ class TournamentAPIView(ModelViewSet):
             request.data["matches"] = []
         if not ("status" in keys):
             request.data["status"] = instance.status
-        if instance.status == "REGISTRATION_OPENED" and request.user.team_status == "CAPTAIN":
+        if (
+            instance.status == "REGISTRATION_OPENED"
+            and request.user.team_status == "CAPTAIN"
+        ):
             register_team(instance, request.user.team)
         serializer = self.serializer_class(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -47,6 +61,15 @@ class MatchAPIView(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         pass
+
+    def retrieve(self, request, *args, **kwargs):
+        import datetime
+        import calendar
+        instance = self.get_object()
+        print(calendar.timegm(instance.starts.timetuple()) <= calendar.timegm(datetime.datetime.utcnow().timetuple()))
+        if calendar.timegm(instance.starts.timetuple()) <= calendar.timegm(datetime.datetime.utcnow().timetuple()):
+            create_lobby(instance)
+        return super().retrieve(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()

@@ -17,7 +17,7 @@ const Activate = () => {
     };
     // check if verified -> redirect to homepage
     if (verified) {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/dashboard" replace />;
     }
     return (
         <Layout>

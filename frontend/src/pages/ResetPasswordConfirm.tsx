@@ -25,7 +25,7 @@ const ResetPasswordConfirm = () => {
     setRequestSent(true);
   };
   if (requestSent) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
   return (
     <Layout>

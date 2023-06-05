@@ -7,7 +7,6 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 # управление моделью пользователя
 class UserAccountManager(BaseUserManager):
     def create_user(self, email, password=None, **extra_fields):
-        print(extra_fields)
         if not email:
             raise ValueError('Email required!')
         email = self.normalize_email(email)
@@ -26,7 +25,6 @@ class UserAccountManager(BaseUserManager):
         user.set_password(password)
         user.is_superuser = 1
         user.is_staff = 1
-        print(user)
         user.save()
         return user
 
@@ -70,7 +68,6 @@ class Match(models.Model):
 
     def get_participants(self):
         arr = list(self.teams.values())
-        print(arr)
         if len(arr) == 0:
             return ""
         elif len(arr) == 1:

@@ -20,7 +20,7 @@ const ResetPassword = () => {
   };
   // check if authenticated -> redirect to homepage
   if (requestSent) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/dashboard" replace />;
   }
   return (
     <Layout>
