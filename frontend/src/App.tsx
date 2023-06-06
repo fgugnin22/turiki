@@ -15,7 +15,7 @@ import NoMatch from "./pages/NoMatch";
 import TeamCreate from "./pages/TeamCreate";
 import TeamList from "./pages/TeamList";
 import TournmanetList from "./pages/TournamentList";
-import Test from "./pages/Test";
+// import Test from "./pages/Test";
 function App() {
     return (
         <Provider store={store}>
@@ -53,11 +53,11 @@ function App() {
                         path="/tournaments"
                         element={<TournmanetList />}
                     ></Route>
-                    {import.meta.env.VITE_NODE_ENV === "development" ? (
+                    {/* {import.meta.env.VITE_NODE_ENV === "development" ? (
                         <Route path="/test_auth_api" element={<Test />}></Route>
                     ) : (
                         <></>
-                    )}
+                    )} */}
                 </Routes>
             </BrowserRouter>
         </Provider>

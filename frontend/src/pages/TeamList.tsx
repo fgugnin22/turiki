@@ -9,7 +9,7 @@ const TeamList = () => {
         isError,
         isLoading,
         isSuccess
-    } = tournamentAPI.useTeamListQuery({});
+    } = tournamentAPI.useTeamListQuery(null);
     return (
         <Layout>
             {isSuccess ? (

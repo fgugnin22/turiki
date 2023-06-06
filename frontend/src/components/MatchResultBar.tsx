@@ -4,7 +4,6 @@ interface MatchResultBarProps {
     selfParticipant: any;
 }
 const MatchResultBar = (props: MatchResultBarProps) => {
-    console.log(props);
     return (
         <div className="mt-0">
             {props.match?.state === "SCORE_DONE" &&

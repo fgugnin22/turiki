@@ -14,7 +14,7 @@ const Match = () => {
         isSuccess,
         isFetching,
         isError
-    } = tournamentAPI.useGetMatchByIdQuery({ id: params.id });
+    } = tournamentAPI.useGetMatchByIdQuery({ id: params.id! });
     const {
         data: chat,
         isSuccess: isGetMessagesSuccess,
@@ -25,20 +25,16 @@ const Match = () => {
     );
     const messages = chat?.messages;
 
-    const [
-        sendMessage,
-        { isSuccess: isSendMessageSuccess, isError: isSendMessageError }
-    ] = tournamentAPI.useSendMessageMutation();
     const { data: team1, isSuccess: isTeam1Success } =
         tournamentAPI.useGetTeamByIdQuery(match?.participants[0]?.team.id, {
-            skip: isFetching || !match?.participants[0]?.team
+            skip: isFetching || !match?.participants[0]?.team?.id
         });
     const { data: team2, isSuccess: isTeam2Success } =
         tournamentAPI.useGetTeamByIdQuery(match?.participants[1]?.team.id, {
             skip: isFetching || !match?.participants[1]?.team
         });
     const [claimMatchResult, {}] = tournamentAPI.useClaimMatchResultMutation();
-    const starts = new Date(match?.starts);
+    const starts = new Date(match?.starts!);
     let selfParticipant: any;
     if (isSuccess) {
         selfParticipant =
@@ -52,10 +48,10 @@ const Match = () => {
         <Layout>
             {isSuccess && (
                 <>
-                    {/* <MatchResultBar
+                    <MatchResultBar
                         match={match}
                         selfParticipant={selfParticipant}
-                    /> */}
+                    />
                     <div>
                         Match {match.id}
                         <div>
@@ -74,7 +70,7 @@ const Match = () => {
                     </div>
                     <MatchResultVote
                         starts={starts}
-                        isActive={match.state}
+                        isActive={match.state === "ACTIVE"}
                         isCaptain={user?.team_status === "CAPTAIN"}
                         matchId={match?.id}
                         participantId={selfParticipant?.id}
@@ -83,12 +79,10 @@ const Match = () => {
                     />
                 </>
             )}
-
             {isGetMessagesSuccess && isAuthenticated && (
                 <Chat
                     messages={messages}
-                    chatId={match?.lobby?.chat?.id}
-                    sendMessage={sendMessage}
+                    chatId={match?.lobby?.chat?.id!}
                 />
             )}
         </Layout>

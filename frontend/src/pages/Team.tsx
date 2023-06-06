@@ -1,23 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../rtk/store";
+import { useAppSelector } from "../rtk/store";
 import Layout from "../hocs/Layout";
 import { tournamentAPI } from "../rtk/tournamentAPI";
-export interface Team {
-    id: number;
-    name: string;
-    tournaments: Tournament[];
-}
-
-export interface Tournament {
-    id: number;
-    name: string;
-    prize: number;
-    registration_opened: boolean;
-    starts: string;
-    active: boolean;
-    played: boolean;
-}
 
 const Team = () => {
     const { user, isAuthenticated } = useAppSelector((state) => state.user);
@@ -34,11 +19,11 @@ const Team = () => {
             {isSuccess && isAuthenticated && !user?.team_status && (
                 <button
                     onClick={() => {
-                        if (!user) {
+                        if (!user || !params) {
                             return;
                         }
                         return applyForTeam({
-                            teamId: params.id,
+                            teamId: params.id!,
                             userId: user.id,
                             userName: user.name
                         });
@@ -57,7 +42,7 @@ const Team = () => {
                                     // teamId, userId, userName, status
                                     onClick={() => {
                                         updateStatus({
-                                            teamId: params.id,
+                                            teamId: params.id!,
                                             userId: player.id,
                                             userName: player.name,
                                             status: "ACTIVE"
@@ -78,7 +63,7 @@ const Team = () => {
                                         <button
                                             onClick={() => {
                                                 updateStatus({
-                                                    teamId: params.id,
+                                                    teamId: params.id!,
                                                     userId: player.id,
                                                     userName: player.name,
                                                     status: "REJECTED"

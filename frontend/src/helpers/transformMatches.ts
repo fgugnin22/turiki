@@ -1,3 +1,4 @@
+import { Player } from "../components/TeamPlayerList";
 import { IMatch } from "../pages/Tournament";
 export interface Root {
     name: string;
@@ -11,24 +12,32 @@ export interface Root {
 }
 
 export interface Match {
+    lobby: {
+        id:number;
+        match: any;
+        chat: {
+            id:number;
+        };
+    } | null;
     id: number;
     state: string;
     round_text: string;
     starts: string;
     tournament: Tournament;
     participants: Participant[];
-    next_match?: NextMatch;
+    next_match: NextMatch | null;
     name: string;
 }
 
 export interface Tournament {
     id: number;
-    name: string;
+    name:string;
     prize: number;
-    registration_opened: boolean;
-    starts: string;
-    active: boolean;
-    played: boolean;
+    status:string;
+    starts:string;
+    max_rounds:number;
+    matches: any[];
+    teams: any[];
 }
 
 export interface Participant {
@@ -44,8 +53,23 @@ export interface Team {
     id: number;
     name: string;
     tournaments: number[];
+    games: any[],
+    players: Player[]
 }
-
+// {
+        //     "id": 77,
+        //     "games": [],
+        //     "players": [
+        //         {
+        //             "team_status": "CAPTAIN",
+        //             "id": 14,
+        //             "name": "faggot.r6"
+        //         }
+        //     ],
+        //     "name": "faggots",
+        //     "next_member": "faggot.r6",
+        //     "tournaments": []
+        // }
 export interface Match2 {
     id: number;
     name: string;
@@ -78,12 +102,10 @@ export interface Tournament2 {
     played: boolean;
 }
 
-export default function transformMatches(tournamentObject: Root):IMatch[] {
-    
+export default function transformMatches(tournamentObject: Tournament): IMatch[] {
     const matches = tournamentObject.matches;
     const resultMatches = [];
     for (let match of matches) {
-        
         const resultMatch: any = {};
         resultMatch.id = match.id;
         resultMatch.name = match.name;
@@ -96,8 +118,11 @@ export default function transformMatches(tournamentObject: Root):IMatch[] {
             resultMatch.nextMatchId = null;
         }
         resultMatch.tournamentRoundText = match.round_text;
-        const starts = new Date(match.starts)
-        resultMatch.startTime = starts.toLocaleDateString().slice(0, -5 ) + ' ' + starts.toLocaleTimeString().slice(0, -3);
+        const starts = new Date(match.starts);
+        resultMatch.startTime =
+            starts.toLocaleDateString().slice(0, -5) +
+            " " +
+            starts.toLocaleTimeString().slice(0, -3);
         resultMatch.state = match.state;
         resultMatch.participants = [];
         for (let p of match.participants) {

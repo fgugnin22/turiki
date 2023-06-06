@@ -4,13 +4,13 @@ import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
 const TournamentList = () => {
     const { data, error, isLoading, isSuccess } =
-        tournamentAPI.useGetAllTournamentsQuery({});
+        tournamentAPI.useGetAllTournamentsQuery(null);
 
     return (
         <Layout>
             <div>TournamentList</div>
-            {data?.length > 0 ? (
-                data.map((tourn: any, index: number) => (
+            {isSuccess && data?.length > 0 ? (
+                data?.map((tourn: any, index: number) => (
                     <Link
                         key={index}
                         className="p-3 text-center my-1 bg-slate-300"

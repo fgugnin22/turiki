@@ -2,20 +2,19 @@ import React, { Key } from "react";
 import { Link } from "react-router-dom";
 import { IUser } from "../rtk/user";
 
-type Player = Omit<IUser, "email" | "is_active" | "team">;
+export type Player = Omit<IUser, "email" | "is_active" | "team">;
 interface TeamPlayerListProps {
     team: {
-        id: Number;
-        games: String[];
+        id:number;
+        games:string[];
         players: Player[];
-        name: String;
-        next_member: String;
+        name:string;
+        next_member?:string;
         tournaments: any[];
     };
 }
 
 const TeamPlayerList = (props: TeamPlayerListProps) => {
-    console.log(props.team);
     return (
         <div className="p-2 rounded-lg bg-slate-100">
             <Link

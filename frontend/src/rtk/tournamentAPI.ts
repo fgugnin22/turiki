@@ -1,4 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { Match, Team, Tournament } from "../helpers/transformMatches";
+import { IChangeSelfTeamStatus, ICreateTeam } from "../types";
 
 export const tournamentAPI = createApi({
     reducerPath: "tournamentAPI",
@@ -19,7 +21,10 @@ export const tournamentAPI = createApi({
     refetchOnMountOrArgChange: false,
     tagTypes: ["Team", "Tournament", "Match", "Chat", ""],
     endpoints: (build) => ({
-        claimMatchResult: build.mutation({
+        claimMatchResult: build.mutation<
+            Match,
+            { participantId: number; isWinner: Boolean; matchId: number }
+        >({
             query: ({ participantId, isWinner, matchId }) => {
                 const body = {
                     participants: [
@@ -37,25 +42,25 @@ export const tournamentAPI = createApi({
             },
             invalidatesTags: ["Match"]
         }),
-        getMatchById: build.query({
+        getMatchById: build.query<Match, { id: number | string }>({
             query: (search) => {
                 return { url: `match/${search.id}/` };
             },
             providesTags: ["Match"]
         }),
-        getTournamentById: build.query({
+        getTournamentById: build.query<Tournament, { id: number | string }>({
             query: (search) => {
                 return { url: `tournament/${search.id}/` };
             },
             providesTags: ["Tournament"]
         }),
-        getAllTournaments: build.query({
+        getAllTournaments: build.query<Tournament[], null>({
             query: () => {
                 return { url: `tournament/` };
             },
             providesTags: ["Tournament"]
         }),
-        registerTeamOnTournament: build.mutation({
+        registerTeamOnTournament: build.mutation<Tournament, String | Number | undefined>({
             query: (tournamentId) => {
                 return {
                     url: `tournament/${tournamentId}/`,
@@ -64,7 +69,7 @@ export const tournamentAPI = createApi({
             },
             invalidatesTags: ["Tournament"]
         }),
-        createTeam: build.mutation({
+        createTeam: build.mutation<Team, ICreateTeam>({
             query: (team) => {
                 team.matches = [];
                 team.tournaments = [];
@@ -75,7 +80,7 @@ export const tournamentAPI = createApi({
                 };
             }
         }),
-        teamList: build.query({
+        teamList: build.query<Team[], null>({
             query: () => {
                 return {
                     url: `team/`
@@ -83,7 +88,7 @@ export const tournamentAPI = createApi({
             },
             providesTags: ["Team"]
         }),
-        getTeamById: build.query({
+        getTeamById: build.query<Team, string | undefined | number>({
             query: (id) => {
                 return {
                     url: `team/${id}/`
@@ -91,7 +96,7 @@ export const tournamentAPI = createApi({
             },
             providesTags: ["Team"]
         }),
-        applyForTeam: build.mutation({
+        applyForTeam: build.mutation<Team, IChangeSelfTeamStatus>({
             query: ({ teamId, userId, userName }) => {
                 const body = {
                     players: [
@@ -110,7 +115,10 @@ export const tournamentAPI = createApi({
             },
             invalidatesTags: ["Team"]
         }),
-        updateTeamMemberStatus: build.mutation({
+        updateTeamMemberStatus: build.mutation<
+            Team,
+            { teamId: string; userId: number; userName: string; status: string }
+        >({
             query: ({ teamId, userId, userName, status }) => {
                 const body = {
                     players: [
@@ -129,7 +137,7 @@ export const tournamentAPI = createApi({
             },
             invalidatesTags: ["Team"]
         }),
-        leaveFromTeam: build.mutation({
+        leaveFromTeam: build.mutation<Team, IChangeSelfTeamStatus>({
             query: ({ teamId, userId, userName }) => {
                 const body = {
                     players: [
@@ -154,24 +162,7 @@ export const tournamentAPI = createApi({
                     url: `chat/${chatId}/`
                 };
             },
-            // onQueryStarted({chatId}, { dispatch, queryFulfilled }) {
-            //     const result = dispatch(
-            //         tournamentAPI.util.updateQueryData('getChatMessages', chatId, (draft) => {
-            //             Object.assign(draft, patch)
-            //         })
-            //     )
-            // },
             providesTags: ["Chat"]
-        }),
-        sendMessage: build.mutation({
-            query: ({ content, chatId }) => {
-                return {
-                    url: `chat/${chatId}/`,
-                    method: "PUT",
-                    body: { content }
-                };
-            },
-            invalidatesTags: ["Chat"]
         })
     })
 });

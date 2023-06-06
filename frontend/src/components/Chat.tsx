@@ -7,7 +7,6 @@ interface chatArgs {
     content: string;
 }
 interface ChatProps {
-    sendMessage: (chatArgs: chatArgs) => void;
     chatId: number;
     messages: any[];
     error?: string;

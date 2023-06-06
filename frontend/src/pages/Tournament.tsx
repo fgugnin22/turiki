@@ -1,6 +1,6 @@
 import useWindowSize from "../hooks/useWindowSize";
 import { tournamentAPI } from "../rtk/tournamentAPI";
-import transformMatches from "../helpers/transformMatches.js";
+import transformMatches, { Root } from "../helpers/transformMatches.js";
 import Layout from "../hocs/Layout.jsx";
 import {
     SingleEliminationBracket,
@@ -56,7 +56,7 @@ export const Tournament = () => {
     const { user, isAuthenticated } = useAppSelector((state) => state.user);
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetTournamentByIdQuery({
-            id: tournId
+            id: tournId!
         });
     const [registerTeam, { isSuccess: registerSuccess }] =
         tournamentAPI.useRegisterTeamOnTournamentMutation();

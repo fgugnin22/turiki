@@ -1,11 +1,13 @@
+import { tournamentAPI } from "../rtk/tournamentAPI";
+
 interface MatchResultVoteProps {
     starts: Date;
     isActive: Boolean;
     isCaptain: Boolean;
-    matchId: Number,
-    participantId: Number,
+    matchId:number,
+    participantId:number,
     isWinner: Boolean | null;
-    claimMatchResult: (args: Omit<MatchResultVoteProps, "starts" | "isCaptain"|  "isActive" | "claimMatchResult">) => void;
+    claimMatchResult: Function;
 }
 
 const MatchResultVote = (props: MatchResultVoteProps) => {
@@ -13,10 +15,9 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
         <div>
             {Number(props.starts) < Number(new Date()) &&
                 props.isActive &&
-                props.isWinner !== null &&
                 props.isCaptain &&
-                (props.isWinner ? (
-                    <div>
+                (props.isWinner === null ? (
+                    <div className="bg-slate-400 text-center">
                         <button
                             className="p-2 rounded bg-green-400 m-2"
                             onClick={() =>

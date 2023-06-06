@@ -4,7 +4,7 @@ import axios from "axios";
 const server_URL = import.meta.env.VITE_API_URL;
 export const googleAuthenticate = createAsyncThunk(
     "users/googleAuth",
-    async ({ state, code }: { state: String; code: String }, thunkAPI) => {
+    async ({ state, code }: { state:string; code:string }, thunkAPI) => {
         if (state && code && !localStorage.getItem("access")) {
             const details: any = {
                 state,
@@ -273,11 +273,11 @@ export const checkAuth = createAsyncThunk(
     }
 );
 export interface IUser {
-    id: Number;
-    email: String;
-    name: String;
+    id:number;
+    email:string;
+    name:string;
     is_active: Boolean;
-    team: Number;
+    team:number;
     team_status: "CAPTAIN" | "REJECTED" | "ACTIVE" | "MANAGER" | null;
 }
 interface initialUserState {
