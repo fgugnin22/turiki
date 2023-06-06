@@ -54,10 +54,7 @@ function App() {
                         element={<TournmanetList />}
                     ></Route>
                     {import.meta.env.VITE_NODE_ENV === "development" ? (
-                        <Route
-                            path="/test_auth_api"
-                            element={<Test />}
-                        ></Route>
+                        <Route path="/test_auth_api" element={<Test />}></Route>
                     ) : (
                         <></>
                     )}

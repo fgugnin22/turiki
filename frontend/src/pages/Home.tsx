@@ -4,7 +4,7 @@ import { useAppSelector } from "../rtk/store";
 import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
 const Home = () => {
-    const { isAuthenticated, user } = useAppSelector((state) => state.user);
+    const { user } = useAppSelector((state) => state.user);
     return (
         <Layout>
             <div className="">
