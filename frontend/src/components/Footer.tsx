@@ -121,9 +121,9 @@ const Footer = () => {
             {/* <!--Copyright section--> */}
             <div className="bg-neutral-200 px-6 py-4 text-center dark:bg-neutral-700">
                 <span>© 2023 Copyright: </span>
-                <a className="font-semibold text-neutral-600 dark:text-neutral-400">
+                <p className="font-semibold text-neutral-600 dark:text-neutral-400">
                     Самый низ футера емае
-                </a>
+                </p>
             </div>
         </footer>
     );
