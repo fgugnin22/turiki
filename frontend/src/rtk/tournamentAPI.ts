@@ -16,7 +16,7 @@ export const tournamentAPI = createApi({
     }),
     refetchOnFocus: true,
     refetchOnReconnect: true,
-    refetchOnMountOrArgChange: true,
+    refetchOnMountOrArgChange: false,
     tagTypes: ["Team", "Tournament", "Match", "Chat", ""],
     endpoints: (build) => ({
         claimMatchResult: build.mutation({
