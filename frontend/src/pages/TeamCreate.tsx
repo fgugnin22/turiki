@@ -1,16 +1,19 @@
 import React, { useState } from "react";
 import Layout from "../hocs/Layout";
-import { useAppDispatch, useAppSelector } from "../rtk/store";
+import { useAppSelector } from "../rtk/store";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 const TeamCreate = () => {
-    const [createTeam, creationResult] = tournamentAPI.useCreateTeamMutation();
+    const [createTeam] = tournamentAPI.useCreateTeamMutation();
     const { isAuthenticated, user } = useAppSelector((state) => state.user);
     const [formData, setFormData] = useState({
         teamName: ""
     });
     const inputClasses = `block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-400`;
-    const onSubmit = (e: React.FormEvent<HTMLInputElement>) => {
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        if (!user) {
+            return;
+        }
         const team = {
             players: [
                 {
@@ -24,8 +27,10 @@ const TeamCreate = () => {
             .then(() => {})
             .catch((error) => console.log(error.originalStatus | error.status));
     };
-    const onChange = (e: React.FormEvent<HTMLInputElement>) =>
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    const onChange = (e: React.FormEvent<HTMLInputElement>) => {
+        const target = e.target as HTMLInputElement;
+        return setFormData({ ...formData, [target.name]: target.value });
+    };
     if (!isAuthenticated) {
         return <Layout>You need to Log In first!</Layout>;
     }
@@ -36,11 +41,7 @@ const TeamCreate = () => {
                     <p className="text-center mb-1 font-semibold text-2xl">
                         Register a Team
                     </p>
-                    <form
-                        onSubmit={(e: React.FormEvent<HTMLInputElement>) =>
-                            onSubmit(e)
-                        }
-                    >
+                    <form onSubmit={onSubmit}>
                         <div className="relative mb-3">
                             <input
                                 className={inputClasses}

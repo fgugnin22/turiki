@@ -1,12 +1,21 @@
-import React from "react";
+import React, { Key } from "react";
 import { Link } from "react-router-dom";
-// match.participants[1].team.id
+import { IUser } from "../rtk/user";
 
-// match.participants[1].team.name
+type Player = Omit<IUser, "email" | "is_active" | "team">;
 interface TeamPlayerListProps {
-    team: any;
+    team: {
+        id: Number;
+        games: String[];
+        players: Player[];
+        name: String;
+        next_member: String;
+        tournaments: any[];
+    };
 }
+
 const TeamPlayerList = (props: TeamPlayerListProps) => {
+    console.log(props.team);
     return (
         <div className="p-2 rounded-lg bg-slate-100">
             <Link
@@ -18,7 +27,7 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
             {props.team &&
                 props.team.players.map((player) => (
                     <Link
-                        key={player.id}
+                        key={player.id as Key}
                         to={`/player/${player.id}`}
                         className="p-2 bg-zinc-400 block rounded-sm hover:bg-slate-400 "
                     >

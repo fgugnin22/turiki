@@ -28,15 +28,30 @@ const NavBar = () => {
                 <a
                     className=""
                     onClick={() => {
-                        dispatch(logout(access));
+                        if (!access) {
+                            return;
+                        }
+                        dispatch(logout());
                     }}
                     href="#!"
                 >
                     Logout
                 </a>
-                {user && !user.team ? <Link className="py-2 mx-4 rounded-md px-3 bg-slate-300" to="/team/create">
-                    Create Team
-                </Link> : <Link className="py-2 mx-4 rounded-md px-3 bg-green-600" to={`/team/${user?.team}`}>My team</Link>}
+                {user && !user.team ? (
+                    <Link
+                        className="py-2 mx-4 rounded-md px-3 bg-slate-300"
+                        to="/team/create"
+                    >
+                        Create Team
+                    </Link>
+                ) : (
+                    <Link
+                        className="py-2 mx-4 rounded-md px-3 bg-green-600"
+                        to={`/team/${user?.team}`}
+                    >
+                        My team
+                    </Link>
+                )}
             </div>
         );
     };

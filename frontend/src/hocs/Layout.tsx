@@ -4,7 +4,7 @@ import Footer from "../components/Footer";
 import { getParameterByName } from "../helpers/getParameterByName";
 import { checkAuth, googleAuthenticate } from "../rtk/user";
 import { useAppDispatch, useAppSelector } from "../rtk/store";
-const Layout = (props) => {
+const Layout = (props: {children: React.ReactNode[] | React.ReactNode}) => {
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const state = getParameterByName("state");

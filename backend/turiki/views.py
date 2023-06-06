@@ -65,7 +65,6 @@ class MatchAPIView(ModelViewSet):
 
     def retrieve(self, request, *args, **kwargs):
         import datetime
-        import calendar
         from django.contrib.auth.models import AnonymousUser
         instance = self.get_object()
         if instance.starts.timetuple() <= datetime.datetime.utcnow().timetuple() and not isinstance(request.user,
@@ -118,7 +117,7 @@ class ChatAPIView(ModelViewSet):
     def retrieve(self, request, *args, **kwargs):
         # TODO: сделать логику по аутентфикации
         # TODO: (чтобы читать могли только те, кто состоит в чате/матче/лобби вотевер + \админы)
-        super().retrieve(request, *args, **kwargs)
+        return super().retrieve(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
         raise serializers.ValidationError('not allowed use websocket instead')

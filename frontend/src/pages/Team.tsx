@@ -33,13 +33,16 @@ const Team = () => {
 
             {isSuccess && isAuthenticated && !user?.team_status && (
                 <button
-                    onClick={() =>
-                        applyForTeam({
+                    onClick={() => {
+                        if (!user) {
+                            return;
+                        }
+                        return applyForTeam({
                             teamId: params.id,
                             userId: user.id,
                             userName: user.name
-                        })
-                    }
+                        });
+                    }}
                 >
                     Подать заявку на вступление
                 </button>

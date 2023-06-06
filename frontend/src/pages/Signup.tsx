@@ -18,9 +18,10 @@ const Signup = () => {
     });
     const { email, password, name, re_password } = formData;
     const onChange = (e: React.FormEvent<HTMLInputElement>) =>
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+        { const target = e.target as HTMLInputElement
+            return setFormData({ ...formData, [target.name]: target.value })};
 
-    const onSubmit = (e: React.FormEvent<HTMLInputElement>) => {
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         if (password === re_password) {
             dispatch(register({ name, email, password, re_password }));
@@ -41,11 +42,7 @@ const Signup = () => {
                     <p className="text-center mb-1 font-semibold text-2xl">
                         Sign Up
                     </p>
-                    <form
-                        onSubmit={(e: React.FormEvent<HTMLInputElement>) =>
-                            onSubmit(e)
-                        }
-                    >
+                    <form onSubmit={onSubmit}>
                         <div className="relative mb-3">
                             <input
                                 className={inputClasses}

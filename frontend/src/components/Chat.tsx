@@ -23,8 +23,8 @@ const Chat = (props: ChatProps) => {
     const { user, isAuthenticated } = useAppSelector((state) => state.user);
     const [message, setMessage] = useState("");
 
-    const onChangeMessage = (e: React.FormEvent<HTMLInputElement>) =>
-        setMessage(e.target.value);
+    const onChangeMessage = (e: React.FormEvent) =>
+        setMessage((e.target as HTMLInputElement).value);
     const onSubmit = (e: React.FormEvent<HTMLInputElement>) => {
         e.preventDefault();
         if (message.length === 0) {
@@ -100,7 +100,7 @@ const Chat = (props: ChatProps) => {
                         );
                     }
                 })}
-                <div ref={messagesEndRef}></div>
+                <div ref={messagesEndRef as React.RefObject<HTMLDivElement>}></div>
             </div>
             <form
                 className="flex flex-row bg-gray-300 p-3"

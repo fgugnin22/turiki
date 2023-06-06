@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import logger from "redux-logger";
+// import logger from "redux-logger";
 import { setupListeners } from "@reduxjs/toolkit/query";
 import userReducer from "./user";
 import { tournamentAPI } from "./tournamentAPI";

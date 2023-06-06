@@ -25,9 +25,11 @@ const Login = () => {
         password: ""
     });
     const { email, password } = formData;
-    const onChange = (e: React.FormEvent<HTMLInputElement>) =>
-        setFormData({ ...formData, [e.target.name]: e.target.value });
-    const onSubmit = (e: React.FormEvent<HTMLInputElement>) => {
+    const onChange = (e: React.FormEvent<HTMLInputElement>) => {
+        const target = e.target as HTMLInputElement;
+        return setFormData({ ...formData, [target.name]: target.value });
+    };
+    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         dispatch(login({ email, password }));
     };
@@ -43,11 +45,7 @@ const Login = () => {
                     <p className="text-center mb-1 font-semibold text-2xl">
                         Sign In
                     </p>
-                    <form
-                        onSubmit={(e: React.FormEvent<HTMLInputElement>) =>
-                            onSubmit(e)
-                        }
-                    >
+                    <form onSubmit={onSubmit}>
                         <div className="relative mb-3">
                             <input
                                 className={`peer block min-h-[auto] w-full rounded border-2 ${inputBorderColor} bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear`}

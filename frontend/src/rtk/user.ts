@@ -4,15 +4,15 @@ import axios from "axios";
 const server_URL = import.meta.env.VITE_API_URL;
 export const googleAuthenticate = createAsyncThunk(
     "users/googleAuth",
-    async ({ state, code }: { state: string; code: string }, thunkAPI) => {
+    async ({ state, code }: { state: String; code: String }, thunkAPI) => {
         if (state && code && !localStorage.getItem("access")) {
-            const details = {
+            const details: any = {
                 state,
                 code
             };
             const formBody = Object.keys(details)
                 .map(
-                    (key) =>
+                    (key: string) =>
                         encodeURIComponent(key) +
                         "=" +
                         encodeURIComponent(details[key])
@@ -39,7 +39,7 @@ export const googleAuthenticate = createAsyncThunk(
                 } else {
                     return thunkAPI.rejectWithValue("google auth failed!");
                 }
-            } catch (err) {
+            } catch (err: any) {
                 return thunkAPI.rejectWithValue(err.response.data);
             }
         } else {
@@ -80,7 +80,7 @@ export const register = createAsyncThunk(
             } else {
                 return thunkAPI.rejectWithValue(data);
             }
-        } catch (err) {
+        } catch (err: any) {
             return thunkAPI.rejectWithValue(err.response.data);
         }
     }
@@ -106,7 +106,7 @@ export const getUser = createAsyncThunk(
                 localStorage.removeItem("access");
                 return thunkAPI.rejectWithValue(data);
             }
-        } catch (err) {
+        } catch (err: any) {
             return thunkAPI.rejectWithValue(err.response.data);
         }
     }
@@ -144,7 +144,7 @@ export const login = createAsyncThunk(
                 localStorage.removeItem("access");
                 return thunkAPI.rejectWithValue(data);
             }
-        } catch (err) {
+        } catch (err: any) {
             localStorage.removeItem("access");
             return thunkAPI.rejectWithValue(err.response.data);
         }
@@ -266,13 +266,28 @@ export const checkAuth = createAsyncThunk(
                 localStorage.removeItem("access");
                 return thunkAPI.rejectWithValue(data);
             }
-        } catch (err) {
+        } catch (err: any) {
             localStorage.removeItem("access");
             return thunkAPI.rejectWithValue(err.response.data);
         }
     }
 );
-
+export interface IUser {
+    id: Number;
+    email: String;
+    name: String;
+    is_active: Boolean;
+    team: Number;
+    team_status: "CAPTAIN" | "REJECTED" | "ACTIVE" | "MANAGER" | null;
+}
+interface initialUserState {
+    isAuthenticated: Boolean;
+    user: IUser | null;
+    loading: Boolean;
+    registered: Boolean;
+    activated: Boolean;
+    loginFail: Boolean;
+}
 const initialState = {
     isAuthenticated: false,
     user: null,
@@ -280,7 +295,7 @@ const initialState = {
     registered: false,
     activated: false,
     loginFail: false
-};
+} as initialUserState
 
 const userSlice = createSlice({
     name: "user",

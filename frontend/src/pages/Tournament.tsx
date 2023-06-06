@@ -9,7 +9,7 @@ import {
     createTheme
 } from "@g-loot/react-tournament-brackets";
 import { useNavigate, useParams } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../rtk/store";
+import { useAppSelector } from "../rtk/store";
 export interface ITeam {
     id: string;
     resultText: string | null;
@@ -65,11 +65,19 @@ export const Tournament = () => {
     const navigate = useNavigate();
     const width = Math.max(500, windowSize.width);
     const height = Math.max(500, windowSize.height);
-    const matchClickHandler = ({ match }) => {
+    const matchClickHandler = ({
+        match
+    }: {
+        match: IMatch;
+        topWon: boolean;
+        bottomWon: boolean;
+    }) => {
         navigate(`/match/${match.id}`);
     };
-    const partyClickHandler = (participant) =>
-        participant.teamId && navigate(`/team/${participant.teamId}`);
+    // const partyClickHandler = (participant) => {
+    //     console.log(participant);
+    //     return participant.teamId && navigate(`/team/${participant.teamId}`);
+    // };
 
     if (isSuccess) {
         matches = transformMatches(data);
@@ -80,7 +88,9 @@ export const Tournament = () => {
                 <div className="w-full bg-slate-400">
                     {user &&
                         isSuccess &&
-                        !data?.teams.some((team) => team.id === user?.team) && (
+                        !data?.teams.some(
+                            (team: ITeam) => Number(team.id) === user?.team
+                        ) && (
                             <button
                                 className="p-2 bg-green-400"
                                 onClick={() => registerTeam(data?.id)}
@@ -107,8 +117,11 @@ export const Tournament = () => {
                                 {children}
                             </SVGViewer>
                         )}
-                        onMatchClick={matchClickHandler}
-                        onPartyClick={partyClickHandler}
+                        onMatchClick={matchClickHandler as any}
+                        onPartyClick={
+                            /* partyClickHandler */ () =>
+                                console.log("participant click!")
+                        }
                     />
                 ) : (
                     <p className="py-full text-center w-[20%] bg-orange-600 text-xl">

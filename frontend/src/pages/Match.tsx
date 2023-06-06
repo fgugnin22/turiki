@@ -1,15 +1,14 @@
-import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Layout from "../hocs/Layout";
 import { tournamentAPI } from "../rtk/tournamentAPI";
-import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../rtk/store";
+import { useAppSelector } from "../rtk/store";
 import Chat from "../components/Chat";
 import TeamPlayerList from "../components/TeamPlayerList";
+import MatchResultBar from "../components/MatchResultBar";
+import MatchResultVote from "../components/MatchResultVote";
 const Match = () => {
     const { user, isAuthenticated } = useAppSelector((state) => state.user);
     const params = useParams();
-
     const {
         data: match,
         isSuccess,
@@ -40,8 +39,7 @@ const Match = () => {
         });
     const [claimMatchResult, {}] = tournamentAPI.useClaimMatchResultMutation();
     const starts = new Date(match?.starts);
-    let selfParticipant: object;
-    let isPlayingThisMatch: boolean;
+    let selfParticipant: any;
     if (isSuccess) {
         selfParticipant =
             match?.participants[0]?.team.id === user?.team
@@ -49,30 +47,15 @@ const Match = () => {
                 : match?.participants[1]?.team.id === user?.team
                 ? match?.participants[1]
                 : null;
-        isPlayingThisMatch =
-            match?.participants[0]?.team.id === user?.team
-                ? true
-                : match?.participants[1]?.team.id === user?.team
-                ? true
-                : false;
     }
     return (
         <Layout>
             {isSuccess && (
                 <>
-                    {match?.state === "SCORE_DONE" && isPlayingThisMatch && (
-                        <div>
-                            {selfParticipant?.is_winner ? (
-                                <p className="p-3 text-center bg-lime-500 mb-12">
-                                    You won this match
-                                </p>
-                            ) : (
-                                <p className="p-3 text-center bg-red-500 mb-12">
-                                    You lost this match
-                                </p>
-                            )}
-                        </div>
-                    )}
+                    {/* <MatchResultBar
+                        match={match}
+                        selfParticipant={selfParticipant}
+                    /> */}
                     <div>
                         Match {match.id}
                         <div>
@@ -89,41 +72,15 @@ const Match = () => {
                             match.participants[1] &&
                             isTeam2Success && <TeamPlayerList team={team2} />}
                     </div>
-                    {Number(starts) < Number(new Date()) &&
-                        match.state === "ACTIVE" &&
-                        isPlayingThisMatch &&
-                        user.team_status === "CAPTAIN" &&
-                        (selfParticipant?.is_winner === null ? (
-                            <div>
-                                <button
-                                    className="p-2 rounded bg-green-400 m-2"
-                                    onClick={() =>
-                                        claimMatchResult({
-                                            isWinner: true,
-                                            matchId: match?.id,
-                                            participantId: selfParticipant.id
-                                        })
-                                    }
-                                >
-                                    Мы падибили!!
-                                </button>
-                                <button
-                                    className="p-2 rounded bg-red-500 m-2"
-                                    onClick={() =>
-                                        claimMatchResult({
-                                            isWinner: false,
-                                            matchId: match?.id,
-                                            participantId: selfParticipant.id
-                                        })
-                                    }
-                                >
-                                    Мы прасрали!!
-                                </button>
-                                {/* { participantId, isWinner, matchId } */}
-                            </div>
-                        ) : (
-                            <p>Ожидаем ответа от капитана другой команды...</p>
-                        ))}
+                    <MatchResultVote
+                        starts={starts}
+                        isActive={match.state}
+                        isCaptain={user?.team_status === "CAPTAIN"}
+                        matchId={match?.id}
+                        participantId={selfParticipant?.id}
+                        isWinner={selfParticipant?.is_winner}
+                        claimMatchResult={claimMatchResult}
+                    />
                 </>
             )}
 

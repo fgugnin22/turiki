@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { ReactEventHandler, useState } from "react";
 import Layout from "../hocs/Layout";
 import { Navigate, useParams } from "react-router-dom";
 import { activate } from "../rtk/user";
@@ -9,9 +9,12 @@ const Activate = () => {
 
     const [verified, setVerified] = useState(false);
     const params = useParams();
-    const verify_account = (e: React.FormEvent<HTMLInputElement>) => {
+    const verify_account = () => {
         const uid = params.uid;
         const token = params.token;
+        if (!(uid && token)) {
+            return;
+        }
         dispatch(activate({ uid, token }));
         setVerified(true);
     };
