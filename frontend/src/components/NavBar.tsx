@@ -29,12 +29,9 @@ const NavBar = () => {
                 <a
                     className=""
                     onClick={() => {
-                        if (!access) {
-                            return;
-                        }
                         dispatch(logout());
                     }}
-                    href="#!"
+                    href="#"
                 >
                     Logout
                 </a>

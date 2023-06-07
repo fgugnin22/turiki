@@ -240,9 +240,25 @@ export const resetPasswordConfirm = createAsyncThunk(
         }
     }
 );
+
+const getNewAccessToken = async (refresh: string) => {
+    try {
+        const res = await fetch(`${server_URL}/auth/jwt/verify`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                refresh
+            })
+        });
+        const data: { access: string } = await res.json();
+        return data.access;
+    } catch (error) {
+        return false;
+    }
+};
 export const checkAuth = createAsyncThunk(
     "users/verify",
-    async (token: string, thunkAPI) => {
+    async (token: string, thunkAPI: any) => {
         try {
             const body = JSON.stringify({ token: token });
 
@@ -259,9 +275,8 @@ export const checkAuth = createAsyncThunk(
 
             if (res.status === 200) {
                 const { dispatch } = thunkAPI;
-                if (localStorage.getItem("access")) {
-                    thunkAPI.fulfillWithValue("access token already been set! no need to refetch user data")
-                    return;
+                if (thunkAPI.getState()?.user?.user) {
+                    return data
                 }
                 dispatch(getUser(token));
 
