@@ -2,11 +2,9 @@ import React, { useState, useEffect } from "react";
 import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../rtk/store";
-
 import { login, resetRegistered } from "../rtk/user";
 import { Navigate } from "react-router-dom";
 import { continueWithGoogle } from "../helpers/continueWithGoogle";
-import axios from "axios";
 
 const Login = () => {
     const dispatch = useAppDispatch();
