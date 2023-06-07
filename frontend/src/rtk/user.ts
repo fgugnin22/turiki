@@ -1,8 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { IUser } from "../types";
-import thunk from "redux-thunk";
 const server_URL = import.meta.env.VITE_API_URL;
+const removeTokensFromLocalStorage = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+};
+
 export const googleAuthenticate = createAsyncThunk(
     "users/googleAuth",
     async ({ state, code }: { state: string; code: string }, thunkAPI) => {
@@ -104,7 +108,7 @@ export const getUser = createAsyncThunk(
             if (res.status === 200) {
                 return data;
             } else {
-                localStorage.removeItem("access");
+                removeTokensFromLocalStorage();
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (err: any) {
@@ -136,17 +140,18 @@ export const login = createAsyncThunk(
 
             if (res.status === 200) {
                 const { dispatch } = thunkAPI;
-                const { access } = data;
+                const { access, refresh } = data;
                 localStorage.setItem("access", access);
+                localStorage.setItem("refresh", refresh);
                 dispatch(getUser(access));
 
                 return data;
             } else {
-                localStorage.removeItem("access");
+                removeTokensFromLocalStorage();
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (err: any) {
-            localStorage.removeItem("access");
+            removeTokensFromLocalStorage();
             return thunkAPI.rejectWithValue(err.response.data);
         }
     }
@@ -243,7 +248,7 @@ export const resetPasswordConfirm = createAsyncThunk(
 
 const getNewAccessToken = async (refresh: string) => {
     try {
-        const res = await fetch(`${server_URL}/auth/jwt/verify`, {
+        const res = await fetch(`${server_URL}/auth/jwt/refresh/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -253,7 +258,7 @@ const getNewAccessToken = async (refresh: string) => {
         const data: { access: string } = await res.json();
         return data.access;
     } catch (error) {
-        return false;
+        return Promise.reject("access token refreshing failed!");
     }
 };
 export const checkAuth = createAsyncThunk(
@@ -275,19 +280,33 @@ export const checkAuth = createAsyncThunk(
 
             if (res.status === 200) {
                 const { dispatch } = thunkAPI;
-                const userState = thunkAPI.getState()?.user as IUser | null | undefined
+                const userState = thunkAPI.getState()?.user.userDetails as
+                    | IUser
+                    | null
+                    | undefined;
                 if (userState) {
-                    return data
+                    return data;
                 }
                 dispatch(getUser(token));
 
                 return data;
             } else {
-                localStorage.removeItem("access");
-                return thunkAPI.rejectWithValue(data);
+                const refresh = localStorage.getItem("refresh");
+                if (refresh) {
+                    const newAccess = await getNewAccessToken(refresh);
+                    localStorage.setItem("access", newAccess);
+                    const { dispatch } = thunkAPI;
+                    dispatch(getUser(newAccess));
+                    return thunkAPI.fulfillWithValue(
+                        "access token has been refreshed"
+                    );
+                } else {
+                    removeTokensFromLocalStorage();
+                    return thunkAPI.rejectWithValue(data);
+                }
             }
         } catch (err: any) {
-            localStorage.removeItem("access");
+            removeTokensFromLocalStorage();
             return thunkAPI.rejectWithValue(err.response.data);
         }
     }
@@ -318,7 +337,7 @@ const userSlice = createSlice({
             state.registered = false;
         },
         logout: (state) => {
-            localStorage.removeItem("access");
+            removeTokensFromLocalStorage();
             state.userDetails = null;
             state.isAuthenticated = false;
         }
