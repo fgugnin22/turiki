@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useAppDispatch, useAppSelector } from "../rtk/store";
+import {  useAppSelector } from "../rtk/store";
 import { Link } from "react-router-dom";
+import { ROUTES } from "../RouteTypes";
 import useWebSocket from "react-use-websocket";
 interface chatArgs {
     chatId: number;
@@ -69,7 +70,7 @@ const Chat = (props: ChatProps) => {
                                         2 min ago, you
                                     </span>
                                 </div>
-                                <Link to={`/`}>
+                                <Link to={ROUTES.DASHBOARD.path}>
                                     <div className="flex-shrink-0 h-10 w-10 rounded-full bg-gray-300"></div>
                                 </Link>
                             </div>

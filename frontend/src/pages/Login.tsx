@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { login, resetRegistered } from "../rtk/user";
 import { Navigate } from "react-router-dom";
 import { continueWithGoogle } from "../helpers/continueWithGoogle";
+import { ROUTES } from "../RouteTypes";
 
 const Login = () => {
     const dispatch = useAppDispatch();
@@ -34,7 +35,7 @@ const Login = () => {
     // check if authenticated -> redirect to homepage
 
     if (isAuthenticated) {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate to={ROUTES.DASHBOARD.path} replace />;
     }
     return (
         <Layout>
@@ -108,12 +109,12 @@ const Login = () => {
                         Continue With Google
                     </button>
                     <button className="w-[49%] my-1 py-2 px-4 rounded bg-yellow-400 hover:bg-yellow-300 transition duration-300">
-                        <Link className="w-full block" to="/signup">
+                        <Link className="w-full block" to={ROUTES.REGISTER_ACCOUNT.path}>
                             Don't have an account? Sign Up
                         </Link>
                     </button>
                     <button className="w-[49%] ml-[2%] my-1 py-2 px-4 rounded bg-blue-400 hover:bg-blue-500 transition duration-300">
-                        <Link className="w-full block" to="/reset-password">
+                        <Link className="w-full block" to={ROUTES.RESET_PASSWORD.path}>
                             Forgot your password? Reset Password
                         </Link>
                     </button>

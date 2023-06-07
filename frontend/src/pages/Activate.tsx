@@ -4,6 +4,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { activate } from "../rtk/user";
 import { useDispatch } from "react-redux";
 import { useAppDispatch } from "../rtk/store";
+import { ROUTES } from "../RouteTypes";
 const Activate = () => {
     const dispatch = useAppDispatch();
 
@@ -20,7 +21,7 @@ const Activate = () => {
     };
     // check if verified -> redirect to homepage
     if (verified) {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate to={ROUTES.DASHBOARD.path} replace />;
     }
     return (
         <Layout>

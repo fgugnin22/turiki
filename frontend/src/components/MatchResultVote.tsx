@@ -22,7 +22,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
                             className="p-2 rounded bg-green-400 m-2"
                             onClick={() =>
                                 props.claimMatchResult({
-                                    isWinner: props.isWinner,
+                                    isWinner: true,
                                     matchId: props.matchId,
                                     participantId: props.participantId
                                 })
@@ -34,7 +34,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
                             className="p-2 rounded bg-red-500 m-2"
                             onClick={() =>
                                 props.claimMatchResult({
-                                    isWinner: props.isWinner,
+                                    isWinner: false,
                                     matchId: props.matchId,
                                     participantId: props.participantId
                                 })

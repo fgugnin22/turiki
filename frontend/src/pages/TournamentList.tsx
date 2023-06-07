@@ -2,6 +2,7 @@ import React from "react";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
+import { ROUTES } from "../RouteTypes";
 const TournamentList = () => {
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetAllTournamentsQuery(null);
@@ -14,7 +15,7 @@ const TournamentList = () => {
                     <Link
                         key={index}
                         className="p-3 text-center my-1 bg-slate-300"
-                        to={`/tournament/${data[index]["id"]}`}
+                        to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.buildPath({id: data[index]["id"]})}
                     >
                         {tourn.name}; prize: {tourn.prize} teams: {tourn.teams.length}
                     </Link>

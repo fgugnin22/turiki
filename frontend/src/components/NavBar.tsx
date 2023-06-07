@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { logout } from "../rtk/user";
+import { ROUTES } from "../RouteTypes";
 const NavBar = () => {
     const dispatch = useAppDispatch();
     const access = localStorage.getItem("access");
@@ -9,13 +10,13 @@ const NavBar = () => {
     const guestLinks = () => {
         return (
             <div className="md:flex items-center space-x-1">
-                <Link className="py-5 px-3" to="/login">
+                <Link className="py-5 px-3" to={ROUTES.LOGIN.path}>
                     Login
                 </Link>
 
                 <Link
                     className="py-2 px-3 bg-yellow-400 hover:bg-yellow-300 rounded transition duration-300"
-                    to="/signup"
+                    to={ROUTES.REGISTER_ACCOUNT.path}
                 >
                     Sign Up
                 </Link>
@@ -40,17 +41,22 @@ const NavBar = () => {
                 {user && !user.team ? (
                     <Link
                         className="py-2 mx-4 rounded-md px-3 bg-slate-300"
-                        to="/team/create"
+                        to={ROUTES.TEAMS.CREATE.path}
                     >
                         Create Team
                     </Link>
                 ) : (
-                    <Link
-                        className="py-2 mx-4 rounded-md px-3 bg-green-600"
-                        to={`/team/${user?.team}`}
-                    >
-                        My team
-                    </Link>
+                    user?.team && (
+                        <Link
+                            className="py-2 mx-4 rounded-md px-3 bg-green-600"
+                            // to={`/team/${user?.team}`}
+                            to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({
+                                id: user?.team
+                            })}
+                        >
+                            My team
+                        </Link>
+                    )
                 )}
             </div>
         );
@@ -63,14 +69,14 @@ const NavBar = () => {
                     <div>
                         <Link
                             className="py-5 px-3 text-gray-700 hover:text-gray-900 text-xl font-semibold"
-                            to="/tournaments"
+                            to={ROUTES.TOURNAMENTS.path}
                         >
                             Turiki emae
                         </Link>
                         <Link
                             className="py-5 px-3 text-gray-700 hover:text-gray-900"
                             aria-current="page"
-                            to="/dashboard"
+                            to={ROUTES.DASHBOARD.path}
                         >
                             Home
                         </Link>

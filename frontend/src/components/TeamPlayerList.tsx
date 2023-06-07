@@ -1,6 +1,7 @@
 import React, { Key } from "react";
 import { Link } from "react-router-dom";
 import { IUser } from "../types";
+import { ROUTES } from "../RouteTypes";
 
 export type Player = Omit<IUser, "email" | "is_active" | "team">;
 interface TeamPlayerListProps {
@@ -18,7 +19,8 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
     return (
         <div className="p-2 rounded-lg bg-slate-100">
             <Link
-                to={`/team/${props.team.id}`}
+                // to={`/team/${props.team.id}`}
+                to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({id: props.team.id})}
                 className="p-3 rounded-md bg-slate-300 m-2 text-xl hover:bg-slate-400 block transition-colors"
             >
                 <div>{props.team.name}</div>
@@ -27,7 +29,8 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
                 props.team.players.map((player) => (
                     <Link
                         key={player.id as Key}
-                        to={`/player/${player.id}`}
+                        to="#"
+                        // to={`/player/${player.id}`}
                         className="p-2 bg-zinc-400 block rounded-sm hover:bg-slate-400 "
                     >
                         <div>{player.name}</div>

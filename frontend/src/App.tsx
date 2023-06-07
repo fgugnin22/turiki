@@ -15,42 +15,43 @@ import NoMatch from "./pages/NoMatch";
 import TeamCreate from "./pages/TeamCreate";
 import TeamList from "./pages/TeamList";
 import TournmanetList from "./pages/TournamentList";
+import {ROUTES} from "./RouteTypes"
 // import Test from "./pages/Test";
 function App() {
     return (
         <Provider store={store}>
             <BrowserRouter>
                 <Routes>
-                    <Route path="/dashboard" element={<Home />}></Route>
-                    <Route path="/login" element={<Login />}></Route>
-                    <Route path="/signup" element={<Signup />}></Route>
+                    <Route path={ROUTES.DASHBOARD.path} element={<Home />}></Route>
+                    <Route path={ROUTES.LOGIN.path} element={<Login />}></Route>
+                    <Route path={ROUTES.REGISTER_ACCOUNT.path} element={<Signup />}></Route>
                     <Route
-                        path="/reset-password"
+                        path={ROUTES.RESET_PASSWORD.path}
                         element={<ResetPassword />}
                     ></Route>
                     <Route
-                        path="/password/reset/confirm/:uid/:token"
+                        path={ROUTES.RESET_PASSWORD_CONFIRM.path}
                         element={<ResetPasswordConfirm />}
                     ></Route>
                     <Route
-                        path="/activate/:uid/:token"
+                        path={ROUTES.ACTIVATE_ACCOUNT.path}
                         element={<Activate />}
                     ></Route>
-                    <Route path="/team/:id" element={<Team />}></Route>
-                    <Route path="/match/:id" element={<Match />}></Route>
+                    <Route path={ROUTES.TEAMS.TEAM_BY_ID.path} element={<Team />}></Route>
+                    <Route path={ROUTES.MATCHES.MATCH_BY_ID.path} element={<Match />}></Route>
                     <Route
-                        path="/tournament/:id"
+                        path={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.path}
                         element={<Tournament />}
                     ></Route>
                     <Route
-                        path="/tournament/:id/register"
+                        path={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.REGISTER_TEAM.path}
                         element={<TournamentRegisterTeam />}
                     ></Route>
-                    <Route path="*" element={<NoMatch />} />
-                    <Route path="/team/create" element={<TeamCreate />}></Route>
-                    <Route path="/team" element={<TeamList />}></Route>
+                    <Route path={ROUTES.NO_MATCH404.path} element={<NoMatch />} />
+                    <Route path={ROUTES.TEAMS.CREATE.path} element={<TeamCreate />}></Route>
+                    <Route path={ROUTES.TEAMS.path} element={<TeamList />}></Route>
                     <Route
-                        path="/tournaments"
+                        path={ROUTES.TOURNAMENTS.path}
                         element={<TournmanetList />}
                     ></Route>
                     {/* {import.meta.env.VITE_NODE_ENV === "development" ? (

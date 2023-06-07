@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { register } from "../rtk/user";
 import { Navigate } from "react-router-dom";
 import { continueWithGoogle } from "../helpers/continueWithGoogle";
+import { ROUTES } from "../RouteTypes";
 const Signup = () => {
     const dispatch = useAppDispatch();
     const inputClasses = `block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-400`;
@@ -30,10 +31,10 @@ const Signup = () => {
     };
     // check if authenticated -> redirect to homepage
     if (isAuthenticated) {
-        return <Navigate to="/dashboard" replace />;
+        return <Navigate to={ROUTES.DASHBOARD.path} replace />;
     }
     if (accountCreated) {
-        return <Navigate to="/login" replace />;
+        return <Navigate to={ROUTES.LOGIN.path} replace />;
     }
     return (
         <Layout>
@@ -111,7 +112,7 @@ const Signup = () => {
                         Sign In With Google
                     </button>
                     <button className="w-full my-0 py-2 px-4 rounded bg-yellow-400 hover:bg-yellow-300 transition duration-300">
-                        <Link className="w-full block" to="/login">
+                        <Link className="w-full block" to={ROUTES.LOGIN.path}>
                             Already have an account? Sign In
                         </Link>
                     </button>

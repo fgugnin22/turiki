@@ -1,10 +1,11 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 import { IUser } from "../types";
+import thunk from "redux-thunk";
 const server_URL = import.meta.env.VITE_API_URL;
 export const googleAuthenticate = createAsyncThunk(
     "users/googleAuth",
-    async ({ state, code }: { state:string; code:string }, thunkAPI) => {
+    async ({ state, code }: { state: string; code: string }, thunkAPI) => {
         if (state && code && !localStorage.getItem("access")) {
             const details: any = {
                 state,
@@ -258,7 +259,10 @@ export const checkAuth = createAsyncThunk(
 
             if (res.status === 200) {
                 const { dispatch } = thunkAPI;
-
+                if (localStorage.getItem("access")) {
+                    thunkAPI.fulfillWithValue("access token already been set! no need to refetch user data")
+                    return;
+                }
                 dispatch(getUser(token));
 
                 return data;
@@ -288,7 +292,7 @@ const initialState = {
     registered: false,
     activated: false,
     loginFail: false
-} as initialUserState
+} as initialUserState;
 
 const userSlice = createSlice({
     name: "user",
