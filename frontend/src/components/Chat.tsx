@@ -20,7 +20,7 @@ const Chat = (props: ChatProps) => {
         }/?token=${localStorage.getItem("access")}`,
         {}
     );
-    const { user, isAuthenticated } = useAppSelector((state) => state.user);
+    const { userDetails: user, isAuthenticated } = useAppSelector((state) => state.user);
     const [message, setMessage] = useState("");
 
     const onChangeMessage = (e: React.FormEvent) =>

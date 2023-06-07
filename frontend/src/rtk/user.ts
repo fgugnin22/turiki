@@ -275,7 +275,8 @@ export const checkAuth = createAsyncThunk(
 
             if (res.status === 200) {
                 const { dispatch } = thunkAPI;
-                if (thunkAPI.getState()?.user?.user) {
+                const userState = thunkAPI.getState()?.user as IUser | null | undefined
+                if (userState) {
                     return data
                 }
                 dispatch(getUser(token));
@@ -294,7 +295,7 @@ export const checkAuth = createAsyncThunk(
 
 interface initialUserState {
     isAuthenticated: Boolean;
-    user: IUser | null;
+    userDetails: IUser | null;
     loading: Boolean;
     registered: Boolean;
     activated: Boolean;
@@ -302,7 +303,7 @@ interface initialUserState {
 }
 const initialState = {
     isAuthenticated: false,
-    user: null,
+    userDetails: null,
     loading: false,
     registered: false,
     activated: false,
@@ -318,7 +319,7 @@ const userSlice = createSlice({
         },
         logout: (state) => {
             localStorage.removeItem("access");
-            state.user = null;
+            state.userDetails = null;
             state.isAuthenticated = false;
         }
     },
@@ -351,7 +352,7 @@ const userSlice = createSlice({
             })
             .addCase(getUser.fulfilled, (state, action) => {
                 state.loading = false;
-                state.user = action.payload;
+                state.userDetails = action.payload;
             })
             .addCase(getUser.rejected, (state) => {
                 state.loading = false;

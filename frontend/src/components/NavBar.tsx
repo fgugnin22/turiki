@@ -6,7 +6,7 @@ import { ROUTES } from "../RouteTypes";
 const NavBar = () => {
     const dispatch = useAppDispatch();
     const access = localStorage.getItem("access");
-    const { isAuthenticated, user } = useAppSelector((state) => state.user);
+    const { isAuthenticated, userDetails: user } = useAppSelector((state) => state.user);
     const guestLinks = () => {
         return (
             <div className="md:flex items-center space-x-1">

@@ -5,7 +5,7 @@ import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../RouteTypes";
 const Home = () => {
-    const { user } = useAppSelector((state) => state.user);
+    const { userDetails: user } = useAppSelector((state) => state.user);
     return (
         <Layout>
             <div className="">

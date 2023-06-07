@@ -7,7 +7,7 @@ import TeamPlayerList from "../components/TeamPlayerList";
 import MatchResultBar from "../components/MatchResultBar";
 import MatchResultVote from "../components/MatchResultVote";
 const Match = () => {
-    const { user, isAuthenticated } = useAppSelector((state) => state.user);
+    const { userDetails: user, isAuthenticated } = useAppSelector((state) => state.user);
     const params = useParams();
     const {
         data: match,

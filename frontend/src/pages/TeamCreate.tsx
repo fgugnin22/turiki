@@ -4,7 +4,7 @@ import { useAppSelector } from "../rtk/store";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 const TeamCreate = () => {
     const [createTeam] = tournamentAPI.useCreateTeamMutation();
-    const { isAuthenticated, user } = useAppSelector((state) => state.user);
+    const { isAuthenticated, userDetails: user } = useAppSelector((state) => state.user);
     const [formData, setFormData] = useState({
         teamName: ""
     });

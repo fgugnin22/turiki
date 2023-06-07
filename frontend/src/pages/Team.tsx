@@ -5,7 +5,7 @@ import Layout from "../hocs/Layout";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 
 const Team = () => {
-    const { user, isAuthenticated } = useAppSelector((state) => state.user);
+    const { userDetails: user, isAuthenticated } = useAppSelector((state) => state.user);
     const params = useParams();
     const [updateStatus] = tournamentAPI.useUpdateTeamMemberStatusMutation();
     const [applyForTeam] = tournamentAPI.useApplyForTeamMutation();
