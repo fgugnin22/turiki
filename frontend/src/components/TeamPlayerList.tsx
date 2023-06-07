@@ -1,6 +1,6 @@
 import React, { Key } from "react";
 import { Link } from "react-router-dom";
-import { IUser } from "../rtk/user";
+import { IUser } from "../types";
 
 export type Player = Omit<IUser, "email" | "is_active" | "team">;
 interface TeamPlayerListProps {

@@ -1,6 +1,6 @@
 import useWindowSize from "../hooks/useWindowSize";
 import { tournamentAPI } from "../rtk/tournamentAPI";
-import transformMatches, { Root } from "../helpers/transformMatches.js";
+import transformMatches, { Root, Team } from "../helpers/transformMatches.js";
 import Layout from "../hocs/Layout.jsx";
 import {
     SingleEliminationBracket,
@@ -10,21 +10,13 @@ import {
 } from "@g-loot/react-tournament-brackets";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../rtk/store";
-export interface ITeam {
-    id: string;
-    resultText: string | null;
-    isWinner: boolean;
-    status: string | null;
-    name: string;
-    picture: string | undefined | null;
-}
 export interface IMatch {
     id: number;
     nextMatchId: number | null;
     tournamentRoundText: string;
     startTime: string;
     state: string;
-    participants: ITeam[];
+    participants: Team[];
 }
 
 const GlootTheme = createTheme({
@@ -89,7 +81,7 @@ export const Tournament = () => {
                     {user &&
                         isSuccess &&
                         !data?.teams.some(
-                            (team: ITeam) => Number(team.id) === user?.team
+                            (team: Team) => Number(team.id) === user?.team
                         ) && (
                             <button
                                 className="p-2 bg-green-400"

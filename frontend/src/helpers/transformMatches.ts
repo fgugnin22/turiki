@@ -3,12 +3,11 @@ import { IMatch } from "../pages/Tournament";
 export interface Root {
     name: string;
     prize: number;
-    registration_opened: boolean;
     starts: string;
-    active: boolean;
-    played: boolean;
+    status: string;
     matches: Match[];
     teams: string[];
+    max_rounds: number;
 }
 
 export interface Match {
@@ -36,8 +35,8 @@ export interface Tournament {
     status:string;
     starts:string;
     max_rounds:number;
-    matches: any[];
-    teams: any[];
+    matches: Match[];
+    teams: Team[];
 }
 
 export interface Participant {
@@ -56,20 +55,6 @@ export interface Team {
     games: any[],
     players: Player[]
 }
-// {
-        //     "id": 77,
-        //     "games": [],
-        //     "players": [
-        //         {
-        //             "team_status": "CAPTAIN",
-        //             "id": 14,
-        //             "name": "faggot.r6"
-        //         }
-        //     ],
-        //     "name": "faggots",
-        //     "next_member": "faggot.r6",
-        //     "tournaments": []
-        // }
 export interface Match2 {
     id: number;
     name: string;

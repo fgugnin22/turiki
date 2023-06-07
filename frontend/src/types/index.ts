@@ -22,17 +22,11 @@ export interface ICreateTeam {
     }[];
     name:string;
 }
-// {
-//     "id": 77,
-//     "games": [],
-//     "players": [
-//         {
-//             "team_status": "CAPTAIN",
-//             "id": 14,
-//             "name": "faggot.r6"
-//         }
-//     ],
-//     "name": "faggots",
-//     "next_member": "faggot.r6",
-//     "tournaments": []
-// }
+export interface IUser {
+    id:number;
+    email:string;
+    name:string;
+    is_active: Boolean;
+    team:number;
+    team_status: "CAPTAIN" | "REJECTED" | "ACTIVE" | "MANAGER" | null;
+}

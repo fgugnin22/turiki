@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-
+import { IUser } from "../types";
 const server_URL = import.meta.env.VITE_API_URL;
 export const googleAuthenticate = createAsyncThunk(
     "users/googleAuth",
@@ -272,14 +272,7 @@ export const checkAuth = createAsyncThunk(
         }
     }
 );
-export interface IUser {
-    id:number;
-    email:string;
-    name:string;
-    is_active: Boolean;
-    team:number;
-    team_status: "CAPTAIN" | "REJECTED" | "ACTIVE" | "MANAGER" | null;
-}
+
 interface initialUserState {
     isAuthenticated: Boolean;
     user: IUser | null;
