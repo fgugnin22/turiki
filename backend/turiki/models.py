@@ -5,7 +5,6 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseU
 """
 В этом файле описывается структура сущностей в базе данных, их взаимодействие друг с другом
 По этому файлу django автоматически строит миграции в бд (py manage.py makemigrations -> py manage.py migrate)
-Мне наверное стоит нарисовать граф отношений всех моделей, но пока что мне лень
 """
 
 
@@ -21,8 +20,7 @@ class UserAccountManager(BaseUserManager):
         user.save()
         return user
 
-    # создать админа(потом) - сделано иксди
-
+    # создать админа
     def create_superuser(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('Email required!')

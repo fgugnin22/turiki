@@ -7,6 +7,16 @@ from turiki.models import *
 
 """
 В этом файле описывается как отсылаем на клиент и принимаем с клиента информацию о моделях из бд
+вкратце о работе сериализаторов(конкретно про ModelSerializer(дальше - MS) т.к. он дает немного магии в виде простой 
+работы с бд из коробки(CRUD), кастомизация с помощью переопределения методов create/update):
+
+в *Meta* классе определяем модель с которой будет связан MS и поля которые отсылаются обратно в запрос на клиент
+
+параметр *depth* отвечает за глубину сериализации вложенных объектов - тех моделей с которыми у данной есть отношения - 
+many to many, many to one, one to one
+
+если надо переопределить как сериализуются некоторые поля, то это делает с помощью переопределения этих полей в классе
+нужного сериализатора 
 """
 
 User = get_user_model()
@@ -17,7 +27,7 @@ class UserSerializer(UserCreateSerializer):
         model = User
         # СЮДА ДОБАВЛЯТЬ ПОЛЯ КОТОРЫЕ ПОТОМ ОТСЫЛАЕМ НА КЛИЕНТ
         fields = ('id', 'email', 'name', 'password', 'is_active', 'team', 'team_status')
-    
+
 
 class MatchSerializer(serializers.ModelSerializer):
     # participants = serializers.StringRelatedField(many=True)
