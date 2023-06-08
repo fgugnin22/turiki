@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'drf_yasg',
+    'django_extensions'
 ]
 # Откуда могут приходить запросы
 CORS_ORIGIN_WHITELIST = (
@@ -216,3 +217,9 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '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'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/userinfo.email',
                                    'https://www.googleapis.com/auth/userinfo.profile', 'openid']
 SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ['first_name', 'last_name']
+
+# настройки приложения для рисования графов структур в БД
+GRAPH_MODELS = {
+    "all_applications": True,
+    'group_models': True,
+}

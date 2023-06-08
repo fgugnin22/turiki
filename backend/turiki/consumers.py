@@ -24,16 +24,17 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # ^эта функция отрабатывает когда от клиента приходят запросы по WS
         message = content["message"]  # достаем текст сообщения
         user = self.scope["user"]  # 20 строка
-        if user is None:  # если юзера нет или токен был неправильный то ничего дальше не происходит
+        if user is None:  # если юзера нет или токен был неправильный, то ничего дальше не происходит
             return
         msg_instance = await async_create_message(user=user, chat_id=self.chat_id, content=message)
         # ^создаем объект сообщения в бд
-        # и отправляем его обратно всей группе(т.е. всем в этом чате)
+        # и отправляем его обратно всей группе(т.е. всем в этом чате, кроме, видимо, автора)
         await self.channel_layer.group_send(
             self.chat_id_group_name, {
                 "type": "chat_message",
-                # по значению ключа type отрабатывает одноименная функция в этом классе причем она обязательна
+                # По значению ключа type отрабатывает одноименная функция в этом классе причем она обязательна
                 # т.е. в этом случае значение type - chat_message, отрабатывает функция ниже def chat_message
+                # такая функция должна существовать иначе будет ошибка
                 "message": {
                     "id": msg_instance.id,
                     "user": msg_instance.user.name,
@@ -45,7 +46,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         )
 
     async def chat_message(self, event):
-        # здесь отсылаем сообщение обратно автору( проверить что будет если убрать из функции всё и оставить голой
+        # здесь отсылаем сообщение обратно автору
         message = event["message"]
         await self.send(text_data=json.dumps({"message": message, "user": self.scope["user"].name}))
 
