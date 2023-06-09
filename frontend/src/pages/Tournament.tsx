@@ -6,10 +6,13 @@ import {
     SingleEliminationBracket,
     Match,
     SVGViewer,
-    createTheme
+    createTheme,
+    MATCH_STATES
 } from "@g-loot/react-tournament-brackets";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../rtk/store";
+import { ROUTES } from "../RouteTypes";
+import RegisterTeamModal from "../components/RegisterTeamModal";
 export interface IMatch {
     id: number;
     nextMatchId: number | null;
@@ -52,8 +55,7 @@ export const Tournament = () => {
         tournamentAPI.useGetTournamentByIdQuery({
             id: tournId!
         });
-    const [registerTeam, { isSuccess: registerSuccess }] =
-        tournamentAPI.useRegisterTeamOnTournamentMutation();
+
     let matches: IMatch[] = [];
     const windowSize = useWindowSize();
     const navigate = useNavigate();
@@ -68,11 +70,12 @@ export const Tournament = () => {
     }) => {
         navigate(`/match/${match.id}`);
     };
-    // const partyClickHandler = (participant) => {
-    //     console.log(participant);
-    //     return participant.teamId && navigate(`/team/${participant.teamId}`);
-    // };
 
+    const isTeamNotRegistered =
+        user &&
+        isSuccess &&
+        data &&
+        !data.teams.some((team: Team) => Number(team.id) === user.team);
     if (isSuccess) {
         matches = transformMatches(data);
     }
@@ -80,23 +83,28 @@ export const Tournament = () => {
         <Layout>
             <div className="flex justify-center">
                 <div className="w-full bg-slate-400">
-                    {user &&
-                        isSuccess &&
-                        !data?.teams.some(
-                            (team: Team) => Number(team.id) === user?.team
-                        ) && (
-                            <button
-                                className="p-2 bg-green-400"
-                                onClick={() =>
-                                    registerTeam({
-                                        tournamentId: data?.id,
-                                        players: [{ id: user.id }]
-                                    })
-                                }
-                            >
-                                Register Team
-                            </button>
-                        )}
+                    {isTeamNotRegistered && (
+                        <RegisterTeamModal />
+                        // <Link
+                        //     className="p-3 bg-lime-600 rounded-xl m-3"
+                        //     to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.REGISTER_TEAM.buildPath(
+                        //         { id: data.id }
+                        //     )}
+                        // >
+                        //     Register Team
+                        // </Link>
+                        // <
+                        //   button  className="p-2 bg-green-400"
+                        //     onClick={() =>
+                        //         registerTeam({
+                        //             tournamentId: data?.id!,
+                        //             players: [{ id: user.id }]
+                        //         })
+                        //     }
+                        // >
+                        //     Register Team
+                        // </button>
+                    )}
                 </div>
                 {isSuccess &&
                 Object.keys(data).length > 0 &&
@@ -123,9 +131,9 @@ export const Tournament = () => {
                         }
                     />
                 ) : (
-                    <p className="py-full text-center w-[20%] bg-orange-600 text-xl">
+                    <span className="py-full text-center w-[20%] bg-orange-600 text-xl">
                         Tournament bracket in process
-                    </p>
+                    </span>
                 )}
                 <div className="w-full bg-slate-400"></div>
             </div>

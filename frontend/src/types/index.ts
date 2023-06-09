@@ -28,7 +28,7 @@ export interface IUser {
     name: string;
     is_active: Boolean;
     team: number;
-    team_status: "CAPTAIN" | "REJECTED" | "ACTIVE" | "MANAGER" | null;
+    team_status: "CAPTAIN" | "REJECTED" | "ACTIVE" | "MANAGER" | "PENDING" | null;
 }
 export interface IRegisterTeam {
     tournamentId: number;
