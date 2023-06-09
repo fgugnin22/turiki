@@ -31,6 +31,7 @@ class UserSerializer(UserCreateSerializer):
 
 class MatchSerializer(serializers.ModelSerializer):
     # participants = serializers.StringRelatedField(many=True)
+    tournament = serializers.StringRelatedField()
 
     class Meta:
         depth = 2
@@ -49,6 +50,7 @@ class MatchSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     games = serializers.StringRelatedField(many=True, read_only=True)
+    tournaments = serializers.StringRelatedField(many=True)
 
     class PlayerSerializer(serializers.ModelSerializer):
         name = serializers.CharField()
@@ -90,15 +92,27 @@ class TournamentSerializer(serializers.ModelSerializer):
     teams = TeamSerializer(many=True)
     matches = MatchSerializer(many=True)
 
+    class PlayerSerializer(serializers.ModelSerializer):
+        name = serializers.CharField()
+        id = serializers.IntegerField(read_only=True)
+
+        class Meta:
+            depth = 1
+            model = User
+            fields = ["team_id", "id", "name"]
+
+    players = PlayerSerializer(many=True)
+
     class Meta:
         depth = 2
         model = Tournament
         fields = (
-            'id', 'name', 'prize', "starts", "matches", "teams", "max_rounds", "status")
+            'id', 'name', 'prize', "starts", "matches", "teams", "max_rounds", "status", "players")
 
     def create(self, validated_data):
         validated_data.pop("matches")
         validated_data.pop("teams")
+        validated_data.pop("players")
         rounds = validated_data.get("max_rounds", 1)
         tourn = Tournament.objects.create(**validated_data)
         tourn = create_bracket(tourn, rounds)

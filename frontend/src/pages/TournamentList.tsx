@@ -1,4 +1,3 @@
-import React from "react";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
@@ -11,13 +10,13 @@ const TournamentList = () => {
         <Layout>
             <div>TournamentList</div>
             {isSuccess && data?.length > 0 ? (
-                data?.map((tourn: any, index: number) => (
+                data?.map((tourn, index: number) => (
                     <Link
                         key={index}
                         className="p-3 text-center my-1 bg-slate-300"
                         to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.buildPath({id: data[index]["id"]})}
                     >
-                        {tourn.name}; prize: {tourn.prize} teams: {tourn.teams.length}
+                        {tourn.name}; prize: {tourn.prize} teams: {tourn.teams.length} status: {tourn.status}
                     </Link>
                 ))
             ) : (

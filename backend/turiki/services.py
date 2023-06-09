@@ -30,8 +30,20 @@ def set_tournament_status(tournament, status):
     tournament.save()
 
 
-def register_team(tournament, team):
+def register_team(tournament, team, players):
+    """
+    Регистрация команды вместе с игроками
+    """
     tournament.teams.add(team)
+    players_ids = [player["id"] for player in players]
+    for i, player_id in enumerate(players_ids):
+        try:
+            user_obj = UserAccount.objects.get(pk=player_id)
+            if user_obj.team.id == team.id:
+                tournament.players.add(user_obj)
+                print("added player")
+        except:
+            pass
     tournament.save()
 
 

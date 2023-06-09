@@ -4,19 +4,23 @@ interface MatchResultVoteProps {
     starts: Date;
     isActive: Boolean;
     isCaptain: Boolean;
-    matchId:number,
-    participantId:number,
+    matchId: number;
+    participantId: number;
     isWinner: Boolean | null;
     claimMatchResult: Function;
 }
 
 const MatchResultVote = (props: MatchResultVoteProps) => {
+    console.log(props);
+    if (!props.participantId) {
+        return <></>;
+    }
     return (
         <div>
             {Number(props.starts) < Number(new Date()) &&
                 props.isActive &&
                 props.isCaptain &&
-                (props.isWinner === null ? (
+                (props.isWinner === null || props.isWinner === undefined ? (
                     <div className="bg-slate-400 text-center">
                         <button
                             className="p-2 rounded bg-green-400 m-2"

@@ -34,11 +34,12 @@ class UserAccountManager(BaseUserManager):
 
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=255, default=f"test_tournament{random.random()}")
+    name = models.CharField(max_length=255, default=f"test_tournamentpy mana")
     prize = models.IntegerField(default=0)
-    status = models.CharField(default="REGISTRATION OPENED", max_length=255)
+    status = models.CharField(default="REGISTRATION_OPENED", max_length=255)
     starts = models.DateTimeField(auto_now_add=True)
     # teams = models.ManyToManyField("Team", through="IDK KAK BUDET NAZIVATSYA") <-- TODO: SDELAT' типо что была итоговая таблица команд кто какое место занял какой приз получил и тд
+    players = models.ManyToManyField("UserAccount", blank=True)
     max_rounds = models.IntegerField(default=1)
 
     def __str__(self):

@@ -1,5 +1,10 @@
 import { Player } from "../components/TeamPlayerList";
 import { IMatch } from "../pages/Tournament";
+export interface TournamentPlayer {
+    team_id: number;
+    id: number;
+    name: string;
+}
 export interface Root {
     name: string;
     prize: number;
@@ -8,14 +13,15 @@ export interface Root {
     matches: Match[];
     teams: string[];
     max_rounds: number;
+    players: TournamentPlayer[];
 }
 
 export interface Match {
     lobby: {
-        id:number;
+        id: number;
         match: any;
         chat: {
-            id:number;
+            id: number;
         };
     } | null;
     id: number;
@@ -30,13 +36,14 @@ export interface Match {
 
 export interface Tournament {
     id: number;
-    name:string;
+    name: string;
     prize: number;
-    status:string;
-    starts:string;
-    max_rounds:number;
+    status: string;
+    starts: string;
+    max_rounds: number;
     matches: Match[];
     teams: Team[];
+    players: TournamentPlayer[];
 }
 
 export interface Participant {
@@ -52,8 +59,8 @@ export interface Team {
     id: number;
     name: string;
     tournaments: number[];
-    games: any[],
-    players: Player[]
+    games: any[];
+    players: Player[];
 }
 export interface Match2 {
     id: number;
@@ -87,7 +94,9 @@ export interface Tournament2 {
     played: boolean;
 }
 
-export default function transformMatches(tournamentObject: Tournament): IMatch[] {
+export default function transformMatches(
+    tournamentObject: Tournament
+): IMatch[] {
     const matches = tournamentObject.matches;
     const resultMatches = [];
     for (let match of matches) {

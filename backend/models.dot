@@ -1,6 +1,6 @@
 digraph model_graph {
   // Dotfile by Django-Extensions graph_models
-  // Created: 2023-06-08 17:15
+  // Created: 2023-06-09 12:30
   // Cli Options: -a
 
   fontname = "Roboto"
@@ -421,6 +421,40 @@ digraph model_graph {
       <FONT FACE="Roboto">status</FONT>
       </TD><TD ALIGN="LEFT">
       <FONT FACE="Roboto">CharField</FONT>
+      </TD></TR>
+    
+    
+      </TABLE>
+      >]
+  
+    turiki_models_Player [label=<
+      <TABLE BGCOLOR="white" BORDER="1" CELLBORDER="0" CELLSPACING="0">
+      <TR><TD COLSPAN="2" CELLPADDING="5" ALIGN="CENTER" BGCOLOR="#1b563f">
+      <FONT FACE="Roboto" COLOR="white" POINT-SIZE="10"><B>
+      Player
+      </B></FONT></TD></TR>
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT FACE="Roboto"><B>id</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT FACE="Roboto"><B>BigAutoField</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>tournament</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (id)</B></FONT>
+      </TD></TR>
+    
+    
+    
+      <TR><TD ALIGN="LEFT" BORDER="0">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>user</B></FONT>
+      </TD><TD ALIGN="LEFT">
+      <FONT COLOR="#7B7B7B" FACE="Roboto"><B>ForeignKey (id)</B></FONT>
       </TD></TR>
     
     
@@ -1260,6 +1294,12 @@ digraph model_graph {
   django_contrib_sessions_models_Session -> django_contrib_sessions_base_session_AbstractBaseSession
   [label=" abstract\ninheritance"] [arrowhead=empty, arrowtail=none, dir=both];
 
+
+  turiki_models_Player -> turiki_models_Tournament
+  [label=" tournament (player)"] [arrowhead=none, arrowtail=dot, dir=both];
+
+  turiki_models_Player -> turiki_models_UserAccount
+  [label=" user (player)"] [arrowhead=none, arrowtail=dot, dir=both];
 
   turiki_models_Team -> turiki_models_Tournament
   [label=" tournaments (teams)"] [arrowhead=dot arrowtail=dot, dir=both];

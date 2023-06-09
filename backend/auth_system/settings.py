@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'drf_yasg',
     'django_extensions'
 ]
-# Откуда могут приходить запросы
+# Откуда могут приходить запросы на сервер
 CORS_ORIGIN_WHITELIST = (
     'http://localhost:8000',  # for localhost
     'http://localhost:5173',

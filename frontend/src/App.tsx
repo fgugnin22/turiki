@@ -54,11 +54,6 @@ function App() {
                         path={ROUTES.TOURNAMENTS.path}
                         element={<TournmanetList />}
                     ></Route>
-                    {/* {import.meta.env.VITE_NODE_ENV === "development" ? (
-                        <Route path="/test_auth_api" element={<Test />}></Route>
-                    ) : (
-                        <></>
-                    )} */}
                 </Routes>
             </BrowserRouter>
         </Provider>

@@ -45,7 +45,9 @@ const GlootTheme = createTheme({
 export const Tournament = () => {
     const params = useParams();
     const tournId = params["id"];
-    const { userDetails: user, isAuthenticated } = useAppSelector((state) => state.user);
+    const { userDetails: user, isAuthenticated } = useAppSelector(
+        (state) => state.user
+    );
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetTournamentByIdQuery({
             id: tournId!
@@ -85,7 +87,12 @@ export const Tournament = () => {
                         ) && (
                             <button
                                 className="p-2 bg-green-400"
-                                onClick={() => registerTeam(data?.id)}
+                                onClick={() =>
+                                    registerTeam({
+                                        tournamentId: data?.id,
+                                        players: [{ id: user.id }]
+                                    })
+                                }
                             >
                                 Register Team
                             </button>

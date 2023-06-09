@@ -19,8 +19,14 @@ from turiki.services import (
     register_team,
 )
 
-
 # Create your views here.
+"""
+View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
+в общем здесь в классах описаны методы(нередко скрытые наследованием), которые вызываются на тот или иной url
+сюда приходят и здесь обрабатываются запросы из urls.py(где эти view зарегистрированы на соответствующие url)
+"""
+
+
 class TournamentAPIView(ModelViewSet):
     queryset = Tournament.objects.all()
     serializer_class = TournamentSerializer
@@ -29,7 +35,6 @@ class TournamentAPIView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         request.data["matches"] = []
         request.data["teams"] = []
-        print(request.data, request.user)
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -38,17 +43,20 @@ class TournamentAPIView(ModelViewSet):
     def update(self, request, *args, **kwargs):
         instance = self.get_object()
         keys = request.data.keys()
+        print(request.data['players'])
         if not ("teams" in keys):
             request.data["teams"] = []
         if not ("matches" in keys):
             request.data["matches"] = []
         if not ("status" in keys):
             request.data["status"] = instance.status
+        if not ("players" in keys):
+            request.data["players"] = []
         if (
                 instance.status == "REGISTRATION_OPENED"
                 and request.user.team_status == "CAPTAIN"
         ):
-            register_team(instance, request.user.team)
+            register_team(instance, request.user.team, request.data["players"])
         serializer = self.serializer_class(instance, data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)

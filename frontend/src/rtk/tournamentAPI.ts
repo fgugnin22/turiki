@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Match, Team, Tournament } from "../helpers/transformMatches";
-import { IChangeSelfTeamStatus, ICreateTeam } from "../types";
+import { IChangeSelfTeamStatus, ICreateTeam, IRegisterTeam } from "../types";
 
 export const tournamentAPI = createApi({
     reducerPath: "tournamentAPI",
@@ -60,11 +60,18 @@ export const tournamentAPI = createApi({
             },
             providesTags: ["Tournament"]
         }),
-        registerTeamOnTournament: build.mutation<Tournament, String | Number | undefined>({
-            query: (tournamentId) => {
+        registerTeamOnTournament: build.mutation<Tournament, IRegisterTeam>({
+            query: ({ tournamentId, players }) => {
+                players = players.map((player, i) =>
+                    Object.assign(player, { name: "sample name xfrsfasd f" })
+                );
                 return {
                     url: `tournament/${tournamentId}/`,
-                    method: "PUT"
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ players })
                 };
             },
             invalidatesTags: ["Tournament"]
