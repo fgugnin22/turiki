@@ -1,3 +1,5 @@
+import datetime
+
 from channels.db import database_sync_to_async
 from django.contrib.auth.models import AnonymousUser
 import jwt
@@ -77,7 +79,7 @@ def set_initial_matches(tournament):
         m.participants.add(participant2)
 
 
-def create_match(next_round_count, rounds, tournament, next_match=None):
+def create_match(next_round_count, rounds, tournament, next_match=None, starts=datetime.datetime.now()):
     """
     создает турнирную сетку
     кол-во раундов определяет глубину сетки:
@@ -94,8 +96,9 @@ def create_match(next_round_count, rounds, tournament, next_match=None):
             round_text=f"Матч за {rounds - next_round_count + 1} место",
             state="NO_SHOW",
             tournament=tournament,
+            starts=starts
         )
-        create_match(next_round_count - 1, rounds, tournament, final_match)
+        create_match(next_round_count - 1, rounds, tournament, final_match, starts)
     else:
         match1 = Match.objects.create(
             next_match=next_match,
@@ -103,6 +106,7 @@ def create_match(next_round_count, rounds, tournament, next_match=None):
             round_text=f"Матч за {rounds - next_round_count + 1} место",
             state="NO_SHOW",
             tournament=tournament,
+            starts=starts
         )
         match2 = Match.objects.create(
             next_match=next_match,
@@ -110,9 +114,10 @@ def create_match(next_round_count, rounds, tournament, next_match=None):
             round_text=f"Матч за {rounds - next_round_count + 1} место",
             state="NO_SHOW",
             tournament=tournament,
+            starts=starts
         )
-        create_match(next_round_count - 1, rounds, tournament, match1)
-        create_match(next_round_count - 1, rounds, tournament, match2)
+        create_match(next_round_count - 1, rounds, tournament, match1, starts)
+        create_match(next_round_count - 1, rounds, tournament, match2, starts)
 
 
 def create_bracket(tournament, rounds):
