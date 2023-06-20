@@ -1,9 +1,12 @@
+import datetime
 import dramatiq
 from turiki.models import *
 from apscheduler.schedulers.background import BackgroundScheduler
-from apscheduler.triggers.date import DateTrigger
 from datetime import datetime, timezone, timedelta
-import types
+from turiki.models import Chat, Lobby, Match, Team, Participant
+
+MSK_TIMEZONE = timezone(timedelta(hours=3))
+IN_A_MINUTE = datetime.now() + timedelta(minutes=0.5)
 
 
 # TODO: rabbitmq server start script path: C:\Program Files\RabbitMQ Server\rabbitmq_server-3.11.17\sbin
@@ -15,30 +18,138 @@ def set_match_state(match_id: int, state: str):
     match.save()
 
 
-MSK_TIMEZONE = timezone(timedelta(hours=3))
-IN_A_MINUTE = datetime.now() + timedelta(minutes=0.5)
+@dramatiq.actor
+def set_match_active(match_id: int):
+    instance = Match.objects.get(pk=match_id)
+    set_active(instance)
+    create_lobby(instance)
 
 
-def ball():
+def exec_task_on_date(func: type(set_match_state), args: list, when=datetime.now()):
     scheduler = BackgroundScheduler()
-    scheduler.add_job(set_match_state.send, 'date',
-                      run_date=IN_A_MINUTE,
-                      args=[56, "ACTIVE"])  # работает
+    scheduler.add_job(func.send, 'date', run_date=when, args=args, misfire_grace_time=10 ** 6)
     try:
         scheduler.start()
     except KeyboardInterrupt:
         scheduler.shutdown()
 
 
-def exec_task_on_date(func: type(set_match_state), args: list, when: type(datetime)):
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func.send, 'date', run_date=when, args=args)
-    try:
-        scheduler.start()
-    except:
-        scheduler.shutdown()
-#  py manage.py shell
+# py manage.py shell
 # from turiki.tasks import *
-# a = set_match_state
-# x = [a.send_with_options(args=(56, "ACTIVE"), delay=(i+1) * 500) for i in range(15)]
-# print()
+# [exec_task_on_date(set_match_state, [56, f"ACTIVE{i*10123}"], IN_A_MINUTE) for i in range(10)]
+# py manage.py rundramatiq --threads 8 --processes 8
+@dramatiq.actor
+def set_active(match):  # self-explanatory fr tho
+    if match.state == "NO_SHOW":
+        match.state = "ACTIVE"
+        match.save()
+
+
+# TODO: сделать отложенную активацию матча и создание лобби
+@dramatiq.actor
+def create_lobby(match):
+    # создание лобби и чата в матче если в нем есть 2 команды, он не закончен
+    if not (len(match.participants.values()) == 2 and (not ("DONE" in match.state))):
+        return
+    try:
+        if match.lobby is not None:
+            print("lobby already created")
+    except:
+        chat = Chat.objects.create()
+        lobby = Lobby.objects.create(match=match, chat=chat)
+        chat.lobby = lobby
+        chat.save()
+        print("LOBBY CREATED")
+
+
+@dramatiq.actor
+def set_tournament_status(tournament, status):
+    tournament.status = status
+    tournament.save()
+
+
+# TODO: сделать отложенное автоматическое наполнение матчей
+@dramatiq.actor
+def set_initial_matches(tournament):
+    """
+    Эта функция наполняет начальные матчи(матчи на максимальной глубине)
+    присутствует рандомизация команд
+    """
+    matches = list(tournament.matches.values())
+    teams = list(tournament.teams.values())
+    if len(teams) == 0:
+        return
+    random.shuffle(teams)
+    initial_matches = []
+    for match in matches:
+        if int(match["name"]) == int(tournament.max_rounds):
+            initial_matches.append(match)
+    for i, match in enumerate(initial_matches):
+        m = Match.objects.get(pk=match["id"])
+        team1 = teams.pop()
+        team1 = Team.objects.get(pk=team1["id"])
+        participant1 = Participant.objects.create(
+            team=team1, match=m, status="NO_SHOW", result_text="TBD"
+        )
+        team2 = teams.pop()
+        team2 = Team.objects.get(pk=team2["id"])
+        participant2 = Participant.objects.create(
+            team=team2, match=m, status="NO_SHOW", result_text="TBD"
+        )
+        m.participants.add(participant1)
+        m.participants.add(participant2)
+
+
+# TODO: автоматическое отложенное создание сетки перед началом за какое-то кол-во времени
+# TODO: обновить сериализатор (create) чтобы там этой функции не было
+@dramatiq.actor
+def create_bracket(tournament, rounds):
+    # вызывает функцию create_match я хз зачем так непонятно сделал с именами, потом переделаю TODO:!!!
+    create_match(rounds, rounds, tournament, None)
+    return tournament
+
+
+@dramatiq.actor
+def create_match(next_round_count, rounds, tournament, next_match=None, starts=datetime.now()):
+    """
+    Создает турнирную сетку
+    кол-во раундов определяет глубину сетки:
+    1 раунд - 1 матч, 2 раунда - 3 матча, 3 раунда - 7 матчей, N раундов - (2^N - 1) матчей
+    каждый матч кроме финала содержит ссылку на следующий матч
+    пока что создает только single elimination bracket
+    """
+    if next_round_count <= 0:
+        return
+    elif next_round_count == rounds:
+        final_match = Match.objects.create(
+            next_match=next_match,
+            name=f"{rounds - next_round_count + 1}",
+            round_text=f"Матч за {rounds - next_round_count + 1} место",
+            state="NO_SHOW",
+            tournament=tournament,
+            starts=starts
+        )
+        exec_task_on_date(set_match_active, [final_match.id],
+                          when=starts + datetime.timedelta(minutes=(next_round_count - 1) * 60))
+        create_match(next_round_count - 1, rounds, tournament, final_match, starts)
+    else:
+        match1 = Match.objects.create(
+            next_match=next_match,
+            name=f"{rounds - next_round_count + 1}",
+            round_text=f"Матч за {rounds - next_round_count + 1} место",
+            state="NO_SHOW",
+            tournament=tournament,
+            starts=starts
+        )
+        match2 = Match.objects.create(
+            next_match=next_match,
+            name=f"{rounds - next_round_count + 1}",
+            round_text=f"Матч за {rounds - next_round_count + 1} место",
+            state="NO_SHOW",
+            tournament=tournament,
+            starts=starts
+        )
+        exec_task_on_date(set_match_active, [match1.id], when=starts)
+        exec_task_on_date(set_match_active, [match2.id], when=starts)
+        create_match(next_round_count - 1, rounds, tournament, match1, starts)
+        create_match(next_round_count - 1, rounds, tournament, match2, starts)

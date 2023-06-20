@@ -1,7 +1,6 @@
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-from turiki.services import set_active
-from turiki.services import create_lobby
+from turiki.tasks import set_active, create_lobby
 from turiki.models import *
 from turiki.serializers import (
     TournamentSerializer,
@@ -35,6 +34,7 @@ class TournamentAPIView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         request.data["matches"] = []
         request.data["teams"] = []
+        request.data["players"] = []
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save()
@@ -71,15 +71,15 @@ class MatchAPIView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         pass
 
-    def retrieve(self, request, *args, **kwargs):
-        import datetime
-        from django.contrib.auth.models import AnonymousUser
-        instance = self.get_object()
-        if instance.starts.timetuple() <= datetime.datetime.utcnow().timetuple() and not isinstance(request.user,
-                                                                                                    AnonymousUser):
-            set_active(instance)
-            create_lobby(instance)
-        return super().retrieve(request, *args, **kwargs)
+    # def retrieve(self, request, *args, **kwargs):
+    #     import datetime
+    #     from django.contrib.auth.models import AnonymousUser
+    #     instance = self.get_object()
+    #     if instance.starts.timetuple() <= datetime.datetime.utcnow().timetuple() and not isinstance(request.user,
+    #                                                                                                 AnonymousUser):
+    #         set_active(instance)
+    #         create_lobby(instance)
+    #     return super().retrieve(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()

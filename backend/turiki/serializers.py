@@ -1,9 +1,13 @@
+from datetime import datetime
+
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .services import add_team_player, change_team_name, change_players_status, is_user_in_team, create_bracket, \
-    set_initial_matches, set_tournament_status, end_match, create_lobby, register_team
+from .services import add_team_player, change_team_name, change_players_status, is_user_in_team, end_match, \
+    register_team
+from .tasks import create_lobby, set_tournament_status, set_initial_matches, create_bracket
 from turiki.models import *
+from .tasks import exec_task_on_date
 
 """
 В этом файле описывается как отсылаем на клиент и принимаем с клиента информацию о моделях из бд
@@ -50,7 +54,7 @@ class MatchSerializer(serializers.ModelSerializer):
 
 class TeamSerializer(serializers.ModelSerializer):
     games = serializers.StringRelatedField(many=True, read_only=True)
-    tournaments = serializers.StringRelatedField(many=True)
+    tournaments = serializers.StringRelatedField(many=True, read_only=True)
 
     class PlayerSerializer(serializers.ModelSerializer):
         name = serializers.CharField()
@@ -120,8 +124,9 @@ class TournamentSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         status = validated_data.pop("status")
+        when_to_update = instance.starts if instance.status in ["REGISTRATION_CLOSED"] else datetime.now()
+        exec_task_on_date(set_tournament_status, [instance, status], when_to_update)
         set_tournament_status(instance, status)
-
         if status == "REGISTRATION_CLOSED" and len(instance.matches.values()) == 0:
             instance = create_bracket(instance, instance.max_rounds)
             set_initial_matches(instance)

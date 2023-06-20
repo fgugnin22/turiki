@@ -37,7 +37,7 @@ class Tournament(models.Model):
     name = models.CharField(max_length=255, default=f"test_tournamentpy mana")
     prize = models.IntegerField(default=0)
     status = models.CharField(default="REGISTRATION_OPENED", max_length=255)
-    starts = models.DateTimeField(auto_now_add=True)
+    starts = models.DateTimeField(blank=True, null=True)
     # teams = models.ManyToManyField("Team", through="IDK KAK BUDET NAZIVATSYA") <-- TODO: SDELAT' типо что была итоговая таблица команд кто какое место занял какой приз получил и тд
     players = models.ManyToManyField("UserAccount", blank=True)
     max_rounds = models.IntegerField(default=1)
@@ -67,7 +67,7 @@ class Match(models.Model):
     round_text = models.CharField(max_length=31, blank=True, null=True)  # ПОРЯДОК СЛЕДОВАНИЯ МАТЧЕЙ
     # В ТУРНИРЕ, Т.Е. 1 - ПЕРВЫЕ МАТЧИ В ТУРНИРЕ, 2 - ВТОРЫЕ И ТД. п.с. на самом деле это не обязательно, просто рекомендация)))
     state = models.CharField(max_length=31, null=True, blank=True)
-    starts = models.DateTimeField(auto_now_add=True, blank=True, null=True)
+    starts = models.DateTimeField(blank=True, null=True)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="matches",
                                    null=True, blank=True, )
 
@@ -131,7 +131,7 @@ class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
     user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     content = models.CharField(max_length=255, blank=False, null=False)
-    created_at = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(blank=True, null=True)
 
     # file = models.FileField(verbose_name="Файл")
     def __str__(self):
