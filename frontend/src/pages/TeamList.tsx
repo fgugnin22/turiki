@@ -15,8 +15,12 @@ const TeamList = () => {
         <Layout>
             {isSuccess ? (
                 teamList.map((team: any, i: number) => (
-                    <div key={i} className="p-3 bg-slate-300">
+                    <div
+                        key={i}
+                        className="p-3 bg-slate-300 m-4 border-solid border-slate-500 border-2 rounded w-96 h-28 text-center"
+                    >
                         <Link
+                            className="text-xl"
                             to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({
                                 id: team.id
                             })}
