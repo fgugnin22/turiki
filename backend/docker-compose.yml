@@ -1,0 +1,57 @@
+# Определение версии Docker Compose и начало описания сервисов
+version: '3'
+
+services:
+  django:
+    # Сборка образа для сервиса django из текущей директории
+    build: .
+    # Задание имени контейнера для сервиса django
+    container_name: django
+    # Задание команды, которую нужно запустить при запуске контейнера для сервиса django
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/usr/src/app
+    # Открытие порта на хостовой машине и перенаправление на порт в контейнере
+    ports:
+      - "8000:8000"
+    # Зависимость от другого сервиса
+    depends_on:
+      - pgdb
+      - redis
+      - rabbit
+      - dramatiq
+  redis:
+    image: redis:5
+    ports:
+      - "6379:6379"
+  rabbit:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    depends_on:
+      - redis
+    restart: unless-stopped
+  pgdb:
+    # Использование готового образа postgres
+    image: postgres
+    # Задание переменных окружения для контейнера с postgres
+    environment:
+      - POSTGRES_DB=TurikiCore
+      - POSTGRES_USER=$PG_USER
+      - POSTGRES_PASSWORD=$PG_PASSWORD
+      # Задание имени контейнера для сервиса pgdb
+    container_name: pgdb
+    ports:
+      - "5432:5432"
+  dramatiq:
+    volumes:
+      - .:/usr/src/app
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: sh -c "python manage.py rundramatiq --processes 2 --threads 2"
+    depends_on:
+      - rabbit
+
+
