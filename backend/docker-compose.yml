@@ -1,20 +1,14 @@
-# Определение версии Docker Compose и начало описания сервисов
 version: '3'
 
 services:
   django:
-    # Сборка образа для сервиса django из текущей директории
     build: .
-    # Задание имени контейнера для сервиса django
     container_name: django
-    # Задание команды, которую нужно запустить при запуске контейнера для сервиса django
     command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/usr/src/app
-    # Открытие порта на хостовой машине и перенаправление на порт в контейнере
     ports:
       - "8000:8000"
-    # Зависимость от другого сервиса
     depends_on:
       - pgdb
       - redis
@@ -52,6 +46,5 @@ services:
       dockerfile: Dockerfile
     command: sh -c "python manage.py rundramatiq --processes 2 --threads 2"
     depends_on:
+      - redis
       - rabbit
-
-
