@@ -24,7 +24,7 @@ const Match = () => {
         { skip: isFetching || !match?.lobby }
     );
     const messages = chat?.messages;
-
+    console.log(chat, match?.lobby?.chat?.id)
     const { data: team1, isSuccess: isTeam1Success } =
         tournamentAPI.useGetTeamByIdQuery(match?.participants[0]?.team.id, {
             skip: isFetching || !match?.participants[0]?.team?.id

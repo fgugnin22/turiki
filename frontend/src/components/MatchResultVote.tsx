@@ -11,7 +11,6 @@ interface MatchResultVoteProps {
 }
 
 const MatchResultVote = (props: MatchResultVoteProps) => {
-    console.log(props);
     if (!props.participantId) {
         return <></>;
     }

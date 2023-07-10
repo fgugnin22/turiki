@@ -28,7 +28,7 @@ services:
     restart: unless-stopped
   pgdb:
     # Использование готового образа postgres
-    image: postgres
+    image: postgres:latest
     # Задание переменных окружения для контейнера с postgres
     environment:
       - POSTGRES_DB=TurikiCore
@@ -38,6 +38,14 @@ services:
     container_name: pgdb
     ports:
       - "5432:5432"
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=fedorgugnin22@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=Fedor_223
+    ports:
+      - "5050:80"
   dramatiq:
     volumes:
       - .:/usr/src/app
