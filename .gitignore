@@ -12,9 +12,11 @@ logs
 **/dist-ssr
 *.local
 **/venv
+ball.json
+.vscode
 # Editor directories and files
-.vscode/*
-!.vscode/extensions.json
+*/.pytest_cache
+*/__pycache__
 **/.idea
 .DS_Store
 *.suo
@@ -24,5 +26,3 @@ logs
 *.sw?
 backend/**/*/migrations
 backend/**/*/__pycache__
-backend/**/*.pyc
-.gitignore
