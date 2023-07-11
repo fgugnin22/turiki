@@ -1,9 +1,9 @@
-#вместо C:\Users\fgugn\OneDrive\Рабочий стол\github test repos\balls\ поставьте свои пути до каждой из папок шо бы скрипты працували
+#вместо C:\Users\fgugn\projects\proh\ поставьте свои пути до каждой из папок шо бы скрипты працували
 
-Remove-Item "C:\Users\fgugn\OneDrive\Рабочий стол\github test repos\balls\backend\dist" -Recurse
-Set-Location "C:\Users\fgugn\OneDrive\Рабочий стол\github test repos\balls\frontend"
+Remove-Item "C:\Users\fgugn\projects\proh\backend\dist" -Recurse
+Set-Location "C:\Users\fgugn\projects\proh\frontend"
 npm i
 npm run build
-Copy-Item "C:\Users\fgugn\OneDrive\Рабочий стол\github test repos\balls\frontend\dist" -Destination "C:\Users\fgugn\OneDrive\Рабочий стол\github test repos\balls\backend" -Recurse
-Set-Location "C:\Users\fgugn\OneDrive\Рабочий стол\github test repos\balls\backend"
+Copy-Item "C:\Users\fgugn\projects\proh\frontend\dist" -Destination "C:\Users\fgugn\projects\proh\backend" -Recurse
+Set-Location "C:\Users\fgugn\projects\proh\backend"
 docker-compose up
