@@ -6,7 +6,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: django
-    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    command: sh -c "mkdir -p /usr/src/app/turiki/migrations && touch /usr/src/app/turiki/migrations/__init__.py && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/usr/src/app
     ports:
