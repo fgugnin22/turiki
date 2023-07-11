@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import { useAppSelector } from "../rtk/store";
 import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
-import { ROUTES } from "../RouteTypes";
+import { ROUTES } from "../app/RouteTypes";
 const Home = () => {
     const { userDetails: user } = useAppSelector((state) => state.user);
     return (

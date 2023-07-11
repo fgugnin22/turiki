@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ROUTES } from "../RouteTypes";
+import { ROUTES } from "../app/RouteTypes";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import { useTypedParams } from "react-router-typesafe-routes/dom";
 import { useNavigate } from "react-router-dom";

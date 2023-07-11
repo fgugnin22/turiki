@@ -11,7 +11,7 @@ import {
 } from "@g-loot/react-tournament-brackets";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../rtk/store";
-import { ROUTES } from "../RouteTypes";
+import { ROUTES } from "../app/RouteTypes";
 import RegisterTeamModal from "../components/RegisterTeamModal";
 export interface IMatch {
     id: number;

@@ -1,7 +1,7 @@
 import React, { Key } from "react";
 import { Link } from "react-router-dom";
 import { IUser } from "../types";
-import { ROUTES } from "../RouteTypes";
+import { ROUTES } from "../app/RouteTypes";
 
 export type Player = Omit<IUser, "email" | "is_active" | "team">;
 interface TeamPlayerListProps {

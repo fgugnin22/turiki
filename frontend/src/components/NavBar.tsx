@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { logout } from "../rtk/user";
-import { ROUTES } from "../RouteTypes";
+import { ROUTES } from "../app/RouteTypes";
 const NavBar = () => {
     const dispatch = useAppDispatch();
     const access = localStorage.getItem("access");

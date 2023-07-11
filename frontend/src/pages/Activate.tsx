@@ -4,7 +4,7 @@ import { Navigate, useParams } from "react-router-dom";
 import { activate } from "../rtk/user";
 import { useDispatch } from "react-redux";
 import { useAppDispatch } from "../rtk/store";
-import { ROUTES } from "../RouteTypes";
+import { ROUTES } from "../app/RouteTypes";
 const Activate = () => {
     const dispatch = useAppDispatch();
 

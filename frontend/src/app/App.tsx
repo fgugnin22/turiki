@@ -1,20 +1,20 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import ResetPassword from "./pages/ResetPassword";
-import ResetPasswordConfirm from "./pages/ResetPasswordConfirm";
-import Activate from "./pages/Activate";
+import Home from "../pages/Home";
+import Login from "../pages/Login";
+import Signup from "../pages/Signup";
+import ResetPassword from "../pages/ResetPassword";
+import ResetPasswordConfirm from "../pages/ResetPasswordConfirm";
+import Activate from "../pages/Activate";
 import { Provider } from "react-redux";
-import { store } from "./rtk/store";
-import Team from "./pages/Team";
-import Match from "./pages/Match";
-import Tournament from "./pages/Tournament";
-import TournamentRegisterTeam from "./pages/TournamentRegisterTeam";
-import NoMatch from "./pages/NoMatch";
-import TeamCreate from "./pages/TeamCreate";
-import TeamList from "./pages/TeamList";
-import TournmanetList from "./pages/TournamentList";
+import { store } from "../rtk/store";
+import Team from "../pages/Team";
+import Match from "../pages/Match";
+import Tournament from "../pages/Tournament";
+import TournamentRegisterTeam from "../pages/TournamentRegisterTeam";
+import NoMatch from "../pages/NoMatch";
+import TeamCreate from "../pages/TeamCreate";
+import TeamList from "../pages/TeamList";
+import TournmanetList from "../pages/TournamentList";
 import {ROUTES} from "./RouteTypes"
 // import Test from "./pages/Test";
 function App() {

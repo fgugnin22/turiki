@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { register } from "../rtk/user";
 import { Navigate } from "react-router-dom";
 import { continueWithGoogle } from "../helpers/continueWithGoogle";
-import { ROUTES } from "../RouteTypes";
+import { ROUTES } from "../app/RouteTypes";
 const Signup = () => {
     const dispatch = useAppDispatch();
     const inputClasses = `block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-400`;

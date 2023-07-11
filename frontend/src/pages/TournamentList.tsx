@@ -1,7 +1,7 @@
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import Layout from "../hocs/Layout";
 import { Link } from "react-router-dom";
-import { ROUTES } from "../RouteTypes";
+import { ROUTES } from "../app/RouteTypes";
 const TournamentList = () => {
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetAllTournamentsQuery(null);
