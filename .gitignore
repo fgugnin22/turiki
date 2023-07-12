@@ -24,5 +24,6 @@ ball.json
 *.njsproj
 *.sln
 *.sw?
-backend/**/*/migrations
+backend/**/*/migrations/*
+!backend/**/*/migrations/__init__.py
 backend/**/*/__pycache__
