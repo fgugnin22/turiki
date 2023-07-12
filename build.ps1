@@ -1,9 +1,10 @@
-#вместо C:\Users\fgugn\projects\proh\ поставьте свои пути до каждой из папок шо бы скрипты працували
+#Для этого скрипта необходимо выполнить условия из Readme.md!!!
 
-Remove-Item "C:\Users\fgugn\projects\proh\backend\dist" -Recurse
-Set-Location "C:\Users\fgugn\projects\proh\frontend"
+Remove-Item $pwd"\backend\dist" -Recurse
+cd $pwd"\frontend"
 npm i
 npm run build
-Copy-Item "C:\Users\fgugn\projects\proh\frontend\dist" -Destination "C:\Users\fgugn\projects\proh\backend" -Recurse
-Set-Location "C:\Users\fgugn\projects\proh\backend"
+cd ..
+Copy-Item  $pwd"\frontend\dist" -Destination $pwd"\backend" -Recurse
+cd  $pwd"\backend"
 docker-compose up
