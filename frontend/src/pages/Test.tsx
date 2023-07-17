@@ -1,5 +1,5 @@
 // import React, { useEffect } from "react";
-// import Layout from "../hocs/Layout";
+// import {Layout} from "../hocs/Layout";
 // import { tournamentAPI } from "../rtk/tournamentAPI";
 // const Test = () => {
 //     // const result = authAPI.useGetUserQuery({

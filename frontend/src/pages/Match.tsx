@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import Layout from "../widgets/Layout";
+import {Layout} from "../widgets/Layout";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import { useAppSelector } from "../rtk/store";
 import Chat from "../features/Chat";

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../widgets/Layout";
+import {Layout} from "../widgets/Layout";
 import { Link } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../rtk/store";
 import { register } from "../rtk/user";

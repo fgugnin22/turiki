@@ -1,5 +1,5 @@
 import React, { ReactEventHandler, useState } from "react";
-import Layout from "../widgets/Layout";
+import {Layout} from "../widgets/Layout";
 import { Navigate, useParams } from "react-router-dom";
 import { activate } from "../rtk/user";
 import { useDispatch } from "react-redux";

@@ -1,5 +1,5 @@
 import React from "react";
-import Layout from "../widgets/Layout";
+import {Layout} from "../widgets/Layout";
 const NoMatch = () => {
     return (
         <Layout>

@@ -1,7 +1,7 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../rtk/store";
-import Layout from "../widgets/Layout";
+import {Layout} from "../widgets/Layout";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 
 const Team = () => {

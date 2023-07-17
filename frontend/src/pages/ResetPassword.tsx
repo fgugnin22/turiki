@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../widgets/Layout";
+import {Layout} from "../widgets/Layout";
 import { Navigate } from "react-router-dom";
 import { resetPassword } from "../rtk/user";
 import { useAppDispatch, useAppSelector } from "../rtk/store";
