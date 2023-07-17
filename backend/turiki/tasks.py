@@ -130,7 +130,7 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             starts=starts
         )
         exec_task_on_date(set_match_active, [final_match.id],
-                          when=starts + datetime.timedelta(minutes=(next_round_count - 1) * 60))
+                          when=starts + timedelta(minutes=(next_round_count - 1) * 60))
         create_match(next_round_count - 1, rounds, tournament, final_match, starts)
     else:
         match1 = Match.objects.create(

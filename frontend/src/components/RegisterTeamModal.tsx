@@ -7,7 +7,7 @@ import { useAppSelector } from "../rtk/store";
 
 const RegisterTeamModal = () => {
     const navigate = useNavigate();
-    const stackLength = 2;
+    const stackLength = Number(import.meta.env.VITE_STACK_LENGTH);
     const { userDetails, isAuthenticated } = useAppSelector(
         (state) => state.user
     );
@@ -20,7 +20,6 @@ const RegisterTeamModal = () => {
             return [...prev];
         });
     };
-    // console.log(formState);
     const { id: tournamentId } = useTypedParams(
         ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.REGISTER_TEAM
     );
@@ -43,7 +42,9 @@ const RegisterTeamModal = () => {
                 );
             })
             .map((player) => ({ id: player.id }));
+        
         if (assignedPlayers?.length !== stackLength) {
+            console.log("there", stackLength === assignedPlayers?.length);
             setSubmitError(true);
             return;
         }
@@ -56,12 +57,6 @@ const RegisterTeamModal = () => {
         registerTeam({ tournamentId, players: assignedPlayers })
             .unwrap()
             .then(() => {
-                // navigate(
-                //     ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.buildPath({
-                //         id: tournamentId
-                //     }),
-                //     { replace: true }
-                // );
                 setShowModal(false);
             })
             .catch(() => setSubmitError(true));
