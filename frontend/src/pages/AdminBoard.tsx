@@ -1,9 +1,12 @@
-import React from 'react'
+import React from "react";
+import { Layout } from "../widgets/Layout";
 
 const AdminBoard = () => {
-  return (
-    <div>AdminBoard</div>
-  )
-}
+    return (
+        <Layout>
+            <div></div>
+        </Layout>
+    );
+};
 
-export default AdminBoard
+export default AdminBoard;
