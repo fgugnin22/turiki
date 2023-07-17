@@ -1,4 +1,4 @@
-import { Player } from "../components/TeamPlayerList";
+import { Player } from "../features/TeamPlayerList";
 import { IMatch } from "../pages/Tournament";
 export interface TournamentPlayer {
     team_id: number;

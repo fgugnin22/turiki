@@ -1,7 +1,7 @@
 import React from "react";
 import { useSelector } from "react-redux";
 import { useAppSelector } from "../rtk/store";
-import Layout from "../hocs/Layout";
+import Layout from "../widgets/Layout";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../app/RouteTypes";
 const Home = () => {

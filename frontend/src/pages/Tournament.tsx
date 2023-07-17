@@ -1,7 +1,7 @@
 import useWindowSize from "../hooks/useWindowSize";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import transformMatches, { Root, Team } from "../helpers/transformMatches.js";
-import Layout from "../hocs/Layout.jsx";
+import Layout from "../widgets/Layout.js";
 import {
     SingleEliminationBracket,
     Match,
@@ -12,7 +12,7 @@ import {
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../rtk/store";
 import { ROUTES } from "../app/RouteTypes";
-import RegisterTeamModal from "../components/RegisterTeamModal";
+import RegisterTeamModal from "../features/RegisterTeamModal";
 export interface IMatch {
     id: number;
     nextMatchId: number | null;

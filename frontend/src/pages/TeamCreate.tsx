@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import Layout from "../hocs/Layout";
+import Layout from "../widgets/Layout";
 import { useAppSelector } from "../rtk/store";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 const TeamCreate = () => {

@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import NavBar from "./NavBar";
+import Footer from "./Footer";
 import { getParameterByName } from "../helpers/getParameterByName";
 import { checkAuth, googleAuthenticate } from "../rtk/user";
 import { useAppDispatch, useAppSelector } from "../rtk/store";
