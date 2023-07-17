@@ -32,6 +32,12 @@ class UserSerializer(UserCreateSerializer):
         # СЮДА ДОБАВЛЯТЬ ПОЛЯ КОТОРЫЕ ПОТОМ ОТСЫЛАЕМ НА КЛИЕНТ
         fields = ('id', 'email', 'name', 'password', 'is_active', 'team', 'team_status')
 
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password")
+        if password is not None:
+            instance.set_password(password)
+        super().update(instance, validated_data)
+        return instance
 
 class MatchSerializer(serializers.ModelSerializer):
     # participants = serializers.StringRelatedField(many=True)

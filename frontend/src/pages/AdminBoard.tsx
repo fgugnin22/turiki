@@ -1,5 +1,5 @@
 import React from "react";
-import { Layout } from "../widgets/Layout";
+import { Layout } from "../processes/Layout";
 
 const AdminBoard = () => {
     return (

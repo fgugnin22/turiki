@@ -1,7 +1,7 @@
 import useWindowSize from "../hooks/useWindowSize";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import transformMatches, { Root, Team } from "../helpers/transformMatches.js";
-import {Layout} from "../widgets/Layout.js";
+import {Layout} from "../processes/Layout.js";
 import {
     SingleEliminationBracket,
     Match,

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import {Layout} from "../widgets/Layout.js";
+import {Layout} from "../processes/Layout.js";
 import { useAppSelector } from "../rtk/store.js";
 import { tournamentAPI } from "../rtk/tournamentAPI.js";
 import { useTypedParams } from "react-router-typesafe-routes/dom";

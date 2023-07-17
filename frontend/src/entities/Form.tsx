@@ -1,50 +1,10 @@
-import React, { useState, useEffect } from "react";
-import {Layout} from "../processes/Layout";
-import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../rtk/store";
-import { login, resetRegistered } from "../rtk/user";
-import { Navigate } from "react-router-dom";
-import { continueWithGoogle } from "../helpers/continueWithGoogle";
-import { ROUTES } from "../app/RouteTypes";
-
-const Login = () => {
-    const dispatch = useAppDispatch();
-
-    const { loading, isAuthenticated, registered, loginFail } = useAppSelector(
-        (state) => state.user
-    );
-    let inputBorderColor = loginFail
-        ? "border-red-600"
-        : "border-slate-300 focus:border-blue-400";
-    useEffect(() => {
-        if (registered) dispatch(resetRegistered());
-    }, [registered]);
-    const [formData, setFormData] = useState({
-        email: "",
-        password: ""
-    });
-    const { email, password } = formData;
-    const onChange = (e: React.FormEvent<HTMLInputElement>) => {
-        const target = e.target as HTMLInputElement;
-        return setFormData({ ...formData, [target.name]: target.value });
-    };
-    const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        dispatch(login({ email, password }));
-    };
-    // check if authenticated -> redirect to homepage
-
-    if (isAuthenticated) {
-        return <Navigate to={ROUTES.DASHBOARD.path} replace />;
-    }
-    return (
-        <Layout>
-            <div className="flex justify-center my-[5%]">
-                <div className="w-[450px]">
-                    <p className="text-center mb-1 font-semibold text-2xl">
-                        Sign In
-                    </p>
-                    <form onSubmit={onSubmit}>
+import React from 'react'
+type FormProps = {
+    
+}
+const Form = (props: FormProps) => {
+  return (
+    <form onSubmit={onSubmit}>
                         <div className="relative mb-3">
                             <input
                                 className={`peer block min-h-[auto] w-full rounded border-2 ${inputBorderColor} bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear`}
@@ -101,27 +61,7 @@ const Login = () => {
                             )}
                         </button>
                     </form>
-                    <button
-                        className="my-2 py-2 px-2 w-full bg-red-500 hover:bg-red-600 transition duration-300 rounded"
-                        //{loginWithGoogleClasses}
-                        onClick={continueWithGoogle}
-                    >
-                        Continue With Google
-                    </button>
-                    <button className="w-[49%] my-1 py-2 px-4 rounded bg-yellow-400 hover:bg-yellow-300 transition duration-300">
-                        <Link className="w-full block" to={ROUTES.REGISTER_ACCOUNT.path}>
-                            Don't have an account? Sign Up
-                        </Link>
-                    </button>
-                    <button className="w-[49%] ml-[2%] my-1 py-2 px-4 rounded bg-blue-400 hover:bg-blue-500 transition duration-300">
-                        <Link className="w-full block" to={ROUTES.RESET_PASSWORD.path}>
-                            Forgot your password? Reset Password
-                        </Link>
-                    </button>
-                </div>
-            </div>
-        </Layout>
-    );
-};
+  )
+}
 
-export default Login;
+export default Form

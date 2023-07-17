@@ -13,14 +13,10 @@ type UserCredentials = {
 };
 export const modifyUserCredentials = createAsyncThunk(
     "users/modify",
-    async ({ name, email, password }: Partial<UserCredentials>, thunkAPI) => {
-        const body = JSON.stringify({
-            name,
-            email,
-            password
-        });
+    async (credentials: Partial<UserCredentials>, thunkAPI) => {
+        const body = JSON.stringify(credentials);
         try {
-            const res = await fetch(`${server_URL}/auth/users/me`, {
+            const res = await fetch(`${server_URL}/auth/users/me/`, {
                 method: "PUT",
                 headers: {
                     Accept: "application/json",
@@ -145,6 +141,7 @@ export const getUser = createAsyncThunk(
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (err: any) {
+            removeTokensFromLocalStorage();
             return thunkAPI.rejectWithValue(err.response.data);
         }
     }
@@ -153,7 +150,11 @@ export const getUser = createAsyncThunk(
 export const login = createAsyncThunk(
     "users/login",
     async (
-        { email, password }: { email: string; password: string },
+        {
+            email,
+            password,
+            keepTokens
+        }: { email: string; password: string; keepTokens?: boolean },
         thunkAPI
     ) => {
         const body = JSON.stringify({
@@ -177,14 +178,18 @@ export const login = createAsyncThunk(
                 localStorage.setItem("access", access);
                 localStorage.setItem("refresh", refresh);
                 dispatch(getUser(access));
-
                 return data;
             } else {
-                removeTokensFromLocalStorage();
+                if (!keepTokens) {
+                    removeTokensFromLocalStorage();
+                }
+                console.log(thunkAPI.getState());
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (err: any) {
-            removeTokensFromLocalStorage();
+            if (!keepTokens) {
+                removeTokensFromLocalStorage();
+            }
             return thunkAPI.rejectWithValue(err.response.data);
         }
     }
@@ -353,14 +358,14 @@ interface initialUserState {
     activated: Boolean;
     loginFail: Boolean;
 }
-const initialState = {
+const initialState: initialUserState = {
     isAuthenticated: false,
     userDetails: null,
     loading: false,
     registered: false,
     activated: false,
     loginFail: false
-} as initialUserState;
+};
 
 const userSlice = createSlice({
     name: "user",
