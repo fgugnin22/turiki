@@ -17,14 +17,6 @@ const Home = () => {
         userName: ""
     });
     const { email, password, userName } = formData;
-    useEffect(() => {
-        if ((email === "" || !email) && user?.email) {
-            setFormData({ ...formData, email: user?.email });
-        }
-        if ((userName === "" || !userName) && user?.name) {
-            setFormData({ ...formData, userName: user?.name });
-        }
-    }, [user, loading]);
     const onChange = (e: React.FormEvent<HTMLInputElement>) => {
         const target = e.target as HTMLInputElement;
         return setFormData({ ...formData, [target.name]: target.value });
@@ -33,18 +25,21 @@ const Home = () => {
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const access = localStorage.getItem("access");
+        const refresh = localStorage.getItem("refresh");
         await dispatch(
-            login({ email: user?.email, password, keepTokens: true })
+            login({ email: user?.email, password, keepTokens: false })
         );
-        if (isAuthenticated) {
+        if (localStorage.getItem("access")) {
             const body = {
                 name: userName === "" ? undefined : userName,
                 email: email === "" ? undefined : email,
                 password
             };
-            console.log("amogus");
-            // dispatch(modifyUserCredentials(body));
+            setFormData({ email: "", password: "", userName: "" });
+            dispatch(modifyUserCredentials(body));
         }
+        localStorage.setItem("access", access);
+        localStorage.setItem("refresh", refresh);
         dispatch(getUser(access));
     };
     let inputBorderColor = loginFail
@@ -84,7 +79,7 @@ const Home = () => {
                                                 onChange={(
                                                     e: React.FormEvent<HTMLInputElement>
                                                 ) => onChange(e)}
-                                                minLength={6}
+                                                minLength={3}
                                             />
                                         </div>
                                         <div className="relative mb-3">
@@ -97,10 +92,12 @@ const Home = () => {
                                                 onChange={(
                                                     e: React.FormEvent<HTMLInputElement>
                                                 ) => onChange(e)}
-                                                minLength={6}
                                                 // required
                                             />
                                         </div>
+                                        {loginFail && (
+                                            <p>Вы ввели неправильный пароль</p>
+                                        )}
                                         <button
                                             className="py-2 w-full px-3 bg-lime-600 hover:bg-lime-500  text-gray-900 hover:text-gray-800 rounded transition duration-300 flex justify-center"
                                             type="submit"

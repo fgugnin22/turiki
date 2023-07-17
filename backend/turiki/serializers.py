@@ -37,6 +37,7 @@ class UserSerializer(UserCreateSerializer):
         if password is not None:
             instance.set_password(password)
         super().update(instance, validated_data)
+        super().save()
         return instance
 
 class MatchSerializer(serializers.ModelSerializer):
