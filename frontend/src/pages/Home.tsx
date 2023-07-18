@@ -5,7 +5,8 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "../app/RouteTypes";
 import { getUser, login, logout, modifyUserCredentials } from "../rtk/user";
 const Home = () => {
-    const {
+    const dispatch = useAppDispatch();
+    let {
         userDetails: user,
         loading,
         loginFail,
@@ -16,12 +17,22 @@ const Home = () => {
         password: "",
         userName: ""
     });
+    const [borderColor, setBorderColor] = useState(
+        "border-slate-300 focus:border-blue-400"
+    );
+    useEffect(() => {
+        setBorderColor(
+            loginFail
+                ? "border-red-600"
+                : "border-slate-300 focus:border-blue-400"
+        );
+    }, [loginFail]);
     const { email, password, userName } = formData;
     const onChange = (e: React.FormEvent<HTMLInputElement>) => {
         const target = e.target as HTMLInputElement;
+        setBorderColor("border-slate-300 focus:border-blue-400")
         return setFormData({ ...formData, [target.name]: target.value });
     };
-    const dispatch = useAppDispatch();
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const access = localStorage.getItem("access");
@@ -42,9 +53,6 @@ const Home = () => {
         localStorage.setItem("refresh", refresh);
         dispatch(getUser(access));
     };
-    let inputBorderColor = loginFail
-        ? "border-red-600"
-        : "border-slate-300 focus:border-blue-400";
     return (
         <Layout>
             <div className="">
@@ -55,9 +63,9 @@ const Home = () => {
                                 <p className="mx-auto p-4 bg-slate-300 text-center">
                                     {user.email}
                                 </p>
-                                <div>
+                                <div className="w-96 mx-auto my-12 border-4 border-gray-700 px-4 py-2 rounded-lg">
                                     <form onSubmit={onSubmit}>
-                                        <div className="relative mb-3 mt-3">
+                                        <div className="relative mb-3">
                                             <input
                                                 className={`peer block min-h-[auto] w-full rounded border-2 border-slate-300 focus:border-blue-400 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear`}
                                                 type="email"
@@ -84,7 +92,7 @@ const Home = () => {
                                         </div>
                                         <div className="relative mb-3">
                                             <input
-                                                className={`peer block min-h-[auto] w-full rounded border-2 ${inputBorderColor} bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear dark:text-neutral-200`}
+                                                className={`peer block min-h-[auto] w-full rounded border-2 ${borderColor} bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear dark:text-neutral-200`}
                                                 type="password"
                                                 placeholder="Password"
                                                 name="password"
@@ -92,14 +100,11 @@ const Home = () => {
                                                 onChange={(
                                                     e: React.FormEvent<HTMLInputElement>
                                                 ) => onChange(e)}
-                                                // required
+                                                required
                                             />
                                         </div>
-                                        {loginFail && (
-                                            <p>Вы ввели неправильный пароль</p>
-                                        )}
                                         <button
-                                            className="py-2 w-full px-3 bg-lime-600 hover:bg-lime-500  text-gray-900 hover:text-gray-800 rounded transition duration-300 flex justify-center"
+                                            className="py-2 w-full px-3 bg-black hover:bg-gray-800  text-white rounded transition duration-300 flex justify-center"
                                             type="submit"
                                         >
                                             {loading ? (
