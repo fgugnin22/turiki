@@ -163,7 +163,7 @@ REST_FRAMEWORK = {
 # здесь надо доделать настройки simplejwt!(а какие я забыл))
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
@@ -242,7 +242,7 @@ DRAMATIQ_TASKS_DATABASE = "default"
 DRAMATIQ_RESULT_BACKEND = {
     "BACKEND": "dramatiq.results.backends.redis.RedisBackend",
     "BACKEND_OPTIONS": {
-        "url": "redis://redis:6379",  #TODO: ЕСЛИ не работает заменить урл на redis://localhost:6379
+        "url": "redis://redis:6379",  # TODO: ЕСЛИ не работает заменить урл на redis://localhost:6379
     },
     "MIDDLEWARE_OPTIONS": {"result_ttl": 1000 * 60 * 10},
 }

@@ -5,13 +5,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from turiki.models import *
-from turiki.permissons import IsAdminUserOrReadOnly
+from turiki.permissons import IsAdminUserOrReadOnly, IsCaptainOfThisTeamOrAdmin
 from turiki.serializers import (
     TournamentSerializer,
     MatchSerializer,
     TeamSerializer,
     ChatSerializer,
 )
+from turiki.services import register_team
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
@@ -34,12 +35,27 @@ class TournamentAPIView(ModelViewSet):
         serializer.save()
         return Response(serializer.data)
 
-    @action(methods=['PATCH'], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=['POST', 'PATCH', 'DELETE'], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
     def register_team(self, request, pk=None):
-        pass
+        team = None
+        try:
+            team = Team.objects.get(pk=request.data["team"]["team_id"])
+        except:
+            team = request.user.team
+        tournament = self.get_object()
+        if request.method == "POST":
+            players_ids = request.data["team"]["players"]
+            result = register_team(tournament, team, players_ids, "REGISTER")
+        elif request.method == "DELETE":
+            result = register_team(tournament, team, None, "CANCEL_REGISTRATION")
+        elif request.method == "PATCH":
+            players_ids = request.data["team"]["players"]
+            result = register_team(tournament, team, players_ids, "CHANGE_PLAYERS")
+        return Response(f'{result}')
 
     @action(methods=['PATCH'], detail=True, permission_classes=[IsAdminUser])
     def status(self, request, pk=None):
+        # TODO: Заебать Андрея Ситникова
         pass
 
     # def update(self, request, *args, **kwargs):

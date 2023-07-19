@@ -8,21 +8,61 @@ from rest_framework import serializers
 """
 
 
-def register_team(tournament, team, players):
+def register_team(tournament, team, players_ids, action):
     """
     Регистрация команды вместе с игроками
     """
-    tournament.teams.add(team)
-    players_ids = [player["id"] for player in players]
-    for i, player_id in enumerate(players_ids):
-        try:
-            user_obj = UserAccount.objects.get(pk=player_id)
-            if user_obj.team.id == team.id:
-                tournament.players.add(user_obj)
-                print("added player")
-        except:
-            pass
-    tournament.save()
+    if tournament.status != "REGISTRATION_OPENED":
+        return "operation cancelled"
+    if action == "REGISTER":
+        teams = map(lambda x: x["id"], list(tournament.teams.values()))
+        if team.id in teams:
+            return "registration cancelled"
+        tournament.teams.add(team)
+        for i, player_id in enumerate(players_ids):
+            try:
+                user_obj = UserAccount.objects.get(pk=player_id)
+                if user_obj.team.id == team.id and (
+                        user_obj.team_status != "REJECTED" or user_obj.team_status != "PENDING"):
+                    tournament.players.add(user_obj)
+                    print("added player")
+            except:
+                print("something went wrong when adding player to tournament", player_id, user_obj)
+        tournament.save()
+        return "team registered successfully"
+    elif action == "CANCEL_REGISTRATION":
+        teams = map(lambda x: x["id"], list(tournament.teams.values()))
+        tourn_players = list(map(lambda x: x["id"], list(tournament.players.values())))
+        tournament.teams.remove(team)
+        if team.id not in teams:
+            return "registration changing cancelled"
+        for i, player_id in enumerate(tourn_players):
+            try:
+                user_obj = UserAccount.objects.get(pk=player_id)
+                if user_obj.team.id == team.id and (
+                        user_obj.team_status != "REJECTED" or user_obj.team_status != "PENDING"):
+                    tournament.players.remove(user_obj)
+                    print("removed player")
+            except:
+                pass
+        tournament.save()
+        return "team unregistered successfully"
+    elif action == "CHANGE_PLAYERS":
+        teams = map(lambda x: x["id"], list(tournament.teams.values()))
+        if team.id not in teams:
+            return "registration changing cancelled"
+        new_players = []
+        for i, player_id in enumerate(players_ids):
+            try:
+                user_obj = UserAccount.objects.get(pk=player_id)
+                if user_obj.team.id == team.id and (
+                        user_obj.team_status != "REJECTED" or user_obj.team_status != "PENDING"):
+                    new_players.append(user_obj)
+            except:
+                pass
+        tournament.players.set(new_players)
+        tournament.save()
+        return "players changed successfully"
 
 
 def is_user_in_team(user_name):
