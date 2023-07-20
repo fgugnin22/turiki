@@ -27,18 +27,20 @@ User = get_user_model()
 
 
 class UserSerializer(UserCreateSerializer):
+    team_status = serializers.SlugField(read_only=True)
+
     class Meta(UserCreateSerializer.Meta):
         model = User
         # СЮДА ДОБАВЛЯТЬ ПОЛЯ КОТОРЫЕ ПОТОМ ОТСЫЛАЕМ НА КЛИЕНТ
         fields = ('id', 'email', 'name', 'password', 'is_active', 'team', 'team_status')
 
-    # def update(self, instance, validated_data):
-    # password = validated_data.pop("password")
-    # if password is not None:
-    #     instance.set_password(password)
-    # super().update(instance, validated_data)
-    # instance.save()
-    # return instance
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password")
+        # if password is not None:
+        #     instance.set_password(password) TODO: umm uhh ,n vm guys
+        super().update(instance, validated_data)
+        instance.save()
+        return instance
 
 
 class MatchSerializer(serializers.ModelSerializer):

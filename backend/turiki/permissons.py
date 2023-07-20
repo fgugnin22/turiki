@@ -6,17 +6,35 @@ class IsAdminUserOrReadOnly(IsAdminUser):
     # кастомное разрешение если админ - можно делать все, если нет - только читать
     def has_permission(self, request, view) -> bool:
         is_admin = super().has_permission(request, view)
-        # Python3: is_admin = super().has_permission(request, view)
         return request.method in SAFE_METHODS or is_admin
 
 
 class IsCaptainOfThisTeamOrAdmin(IsAdminUser):
+    """
+    Тело запроса должно включать в себя след. структуру:
+    {
+        "team": {
+            "team_id": int
+        }
+    }
+    """
+
     def has_permission(self, request, view) -> bool:
         try:
             is_admin = super().has_permission(request, view)
+
             if is_admin:
                 return True
-            xd = request.data["team"]["team_id"] == request.user.team.id
-            return xd
+            players = list(view.get_object().players.values())
+            is_captain = any(
+                player["team_id"] == request.user.team.id and player["team_status"] == "CAPTAIN" for player in
+                players)
+            xd = False
+            try:
+                xd = request.data["team"][
+                         "team_id"] == request.user.team.id and request.user.team_status == "CAPTAIN"
+            except:
+                pass
+            return xd or is_captain
         except:
             return False

@@ -3,7 +3,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
-
 from turiki.models import *
 from turiki.permissons import IsAdminUserOrReadOnly, IsCaptainOfThisTeamOrAdmin
 from turiki.serializers import (
@@ -12,7 +11,7 @@ from turiki.serializers import (
     TeamSerializer,
     ChatSerializer,
 )
-from turiki.services import register_team
+from turiki.services import register_team, claim_match_result, apply_for_team, remove_from_team, invite_player
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
@@ -58,28 +57,6 @@ class TournamentAPIView(ModelViewSet):
         # TODO: Заебать Андрея Ситникова
         pass
 
-    # def update(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     keys = request.data.keys()
-    #     print(request.data['players'])
-    #     if not ("teams" in keys):
-    #         request.data["teams"] = []
-    #     if not ("matches" in keys):
-    #         request.data["matches"] = []
-    #     if not ("status" in keys):
-    #         request.data["status"] = instance.status
-    #     if not ("players" in keys):
-    #         request.data["players"] = []
-    #     if (
-    #             instance.status == "REGISTRATION_OPENED"
-    #             and request.user.team_status == "CAPTAIN"
-    #     ):
-    #         register_team(instance, request.user.team, request.data["players"])
-    #     serializer = self.serializer_class(instance, data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_update(serializer)
-    #     return Response(serializer.data)
-
 
 class MatchAPIView(ModelViewSet):
     queryset = Match.objects.all()
@@ -87,25 +64,24 @@ class MatchAPIView(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def create(self, request, *args, **kwargs):
-        pass
+        return Response(status=404)
 
-    @action(methods=['PATCH'], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=['PATCH'], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
     def claim_result(self, request, pk=None):
-        pass
+        try:
+            match = self.get_object()
+            team_id = request.user.team.id
+            result = request.data["team"]["result"]
+            if type(result) != bool:
+                return Response("type of match result must be boolean", status=400)
+            claim_match_result(match, team_id, result)
+            return Response("Match result has been claimed")
+        except:
+            return Response("data types mismatch", status=400)
 
     @action(methods=['PATCH'], detail=True, permission_classes=[IsAdminUser])
     def force_status(self, request, pk=None):
         pass
-    # def update(self, request, *args, **kwargs):
-    #     instance = self.get_object()
-    #     user = request.user
-    #     if check_captain(request.data, user):
-    #         set_match_winner(instance, request.data)
-    #         serializer = self.serializer_class(instance, data=request.data)
-    #         serializer.is_valid(raise_exception=True)
-    #         self.perform_update(serializer)
-    #         return Response(serializer.data)
-    #     return Response(status=status.HTTP_403_FORBIDDEN)
 
 
 class TeamAPIView(ModelViewSet):
@@ -117,17 +93,36 @@ class TeamAPIView(ModelViewSet):
     def player_status(self, request, pk=None):
         pass
 
-    @action(methods=['PATCH'], detail=True, permission_classes=[IsAuthenticated])
-    def invite_player(self, request, pk=None):
-        # Пример тела запроса
-        # {
-        #     "candidate": {
-        #         "user_id": int,
-        #         "has_captain_approval": bool,
-        #         "has_own_approval": bool,
-        #     }
-        # }
-        pass
+    @action(methods=['PATCH', 'DELETE'], detail=True, permission_classes=[IsAuthenticated])
+    def apply_for_team(self, request, pk=None):
+        team = self.get_object()
+        if request.method == "PATCH":
+            res = apply_for_team(team, request.user)
+        elif request.method == "DELETE":
+            res = remove_from_team(team, request.user)
+        if res is not None:
+            return Response(res)
+        # else:
+        #     if request.method == "PATCH":
+        #         res = invite_player(team, player_id)
+        #     elif request.method == "DELETE":
+        #         player = UserAccount.objects.get(pk=player_id)
+        #         res = remove_from_team(team, player)
+        #     return Response(res)
+
+        return Response("kekw")
+
+    @action(methods=['PATCH', 'DELETE'], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
+    def invite(self, request, pk=None):
+        team = self.get_object()
+        player_id = request.data["player_id"]
+        player = UserAccount.objects.get(pk=player_id)
+        res = None
+        if request.method == 'PATCH':
+            res = invite_player(team, player)
+        elif request.method == 'DELETE':
+            res = remove_from_team(team, player)
+        return Response(res)
 
     @action(methods=['PATCH, PUT'], detail=True, permission_classes=[IsAuthenticated])
     def name(self, request, pk=None):

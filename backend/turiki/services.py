@@ -186,48 +186,92 @@ def async_create_message(user, chat_id, content):
     return Message.objects.create(user=user, chat=chat, content=content)
 
 
+def claim_match_result(match, team_id, result):
+    # Ставит результат в Participant т.е. позволяет капитану сделать заявку на результат
+    try:
+        [p1, p2] = list(match.participants.values())
+        p1 = Participant.objects.get(pk=p1["id"])
+        if team_id == p1.team.id:
+            p1.is_winner = result
+            p1.save()
+        else:
+            p2 = Participant.objects.get(pk=p2["id"])
+            p2.is_winner = result
+            p2.save()
+        end_match(match)
+    except:
+        print("something went wrong when trying updating match results")
+        return
+
+
 def end_match(match):
     # ставит результат матча с валидацией на одинаковые результаты обеих команд и в случае успеха обновляет след матч
     [p1, p2] = list(match.participants.values())
     p1 = Participant.objects.get(pk=p1["id"])
     p2 = Participant.objects.get(pk=p2["id"])
     next_match = match.next_match
-    if p1.is_winner and p2.is_winner == False or p1.is_winner == False and p2.is_winner:
+    if not p1.is_winner and p2.is_winner or p1.is_winner == False and p2.is_winner:
         pass
     else:
         print("compromised results!!!".upper())
         return
     match.state = "SCORE_DONE"
-
     match.save()
     if next_match is None:
         return
     if p1.is_winner:
         p1.result_text = "WON"
         p2.result_text = "LOST"
-        p1.status = "PLAYED"
-        p2.status = "PLAYED"
+        p1.status, p2.status = "PLAYED", "PLAYED"
         p1.save()
         p2.save()
         update_next_match(next_match, p1)
         return
     p2.result_text = "WON"
     p1.result_text = "LOST"
-    p1.status = "PLAYED"
-    p2.status = "PLAYED"
+    p1.status, p2.status = "PLAYED", "PLAYED"
     p1.save()
     p2.save()
     update_next_match(next_match, p2)
 
 
-def set_match_winner(match, data):
-    # Ставит результат в Participant т.е. позволяет капитану сделать заявку на результат
-    [p1, p2] = list(match.participants.values())
-    p1 = Participant.objects.get(pk=p1["id"])
-    p2 = Participant.objects.get(pk=p2["id"])
-    if data["participants"][0]["id"] == p1.id:
-        p1.is_winner = data["participants"][0]["is_winner"]
-        p1.save()
-        return
-    p2.is_winner = data["participants"][0]["is_winner"]
-    p2.save()
+def apply_for_team(team, player):
+    team_players_ids = map(lambda x: x["id"], list(team.players.values()))
+    if player.id in team_players_ids:
+        return "player already applied for this team"
+    res = None
+    if team.next_member == player.name:
+        player.team_status = "ACTIVE"
+        res = "player added to the team"
+    else:
+        player.team_status = "PENDING"
+        res = "successfully applied for team"
+    player.team = team
+    team.players.add(player)
+    player.save()
+    return res
+
+
+def remove_from_team(team, player):
+    try:
+        player.team = None
+        player.team_status = None
+        player.save()
+        if player.name == team.next_member:
+            team.next_member = None
+            team.save()
+        team.players.remove(player)
+        return "player kicked from team"
+    except:
+        return None
+
+
+def invite_player(team, player):
+    if player.team is not None and player.team.id == team.id and player.team_status == "PENDING":
+        team.players.add(player)
+        player.team_status = "ACTIVE"
+        player.save()
+        return "player added to the team"
+    team.next_member = player.name
+    team.save()
+    return "player was invited to the team"
