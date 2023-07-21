@@ -256,7 +256,7 @@ def remove_from_team(team, player):
         team.players.remove(player)
         return "player kicked from team"
     except:
-        return None
+        return "None"
 
 
 def invite_player(team, player):
@@ -277,4 +277,4 @@ def create_team(user, name):
     team.players.add(user)
     user.team = team
     user.team_status = "CAPTAIN"
-    return "team created successfully"
+    return team

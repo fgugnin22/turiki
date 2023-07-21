@@ -1,13 +1,16 @@
 import React from "react";
 import { useParams } from "react-router-dom";
 import { useAppSelector } from "../rtk/store";
-import {Layout} from "../processes/Layout";
+import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 
 const Team = () => {
-    const { userDetails: user, isAuthenticated } = useAppSelector((state) => state.user);
+    const { userDetails: user, isAuthenticated } = useAppSelector(
+        (state) => state.user
+    );
     const params = useParams();
-    const [updateStatus] = tournamentAPI.useUpdateTeamMemberStatusMutation();
+    const [acceptPlayerToTeam] = tournamentAPI.useInvitePlayerToTeamMutation();
+    const [kickPlayerFromTeam] = tournamentAPI.useKickPlayerFromTeamMutation();
     const [applyForTeam] = tournamentAPI.useApplyForTeamMutation();
     const { data, isLoading, isError, isSuccess } =
         tournamentAPI.useGetTeamByIdQuery(params.id);
@@ -22,11 +25,7 @@ const Team = () => {
                         if (!user || !params) {
                             return;
                         }
-                        return applyForTeam({
-                            teamId: params.id!,
-                            userId: user.id,
-                            userName: user.name
-                        });
+                        return applyForTeam(Number(params?.id));
                     }}
                 >
                     Подать заявку на вступление
@@ -41,11 +40,9 @@ const Team = () => {
                                 <button
                                     // teamId, userId, userName, status
                                     onClick={() => {
-                                        updateStatus({
-                                            teamId: params.id!,
-                                            userId: player.id,
-                                            userName: player.name,
-                                            status: "ACTIVE"
+                                        acceptPlayerToTeam({
+                                            teamId: Number(params.id),
+                                            player_id: player.id
                                         });
                                     }}
                                     className="p-2 rounded border-4 border-purple-500"
@@ -62,11 +59,9 @@ const Team = () => {
                                     user?.team === data?.id && (
                                         <button
                                             onClick={() => {
-                                                updateStatus({
-                                                    teamId: params.id!,
-                                                    userId: player.id,
-                                                    userName: player.name,
-                                                    status: "REJECTED"
+                                                kickPlayerFromTeam({
+                                                    teamId: Number(params.id),
+                                                    player_id: player.id
                                                 });
                                             }}
                                             className="p-2 rounded border-4 border-red-500"

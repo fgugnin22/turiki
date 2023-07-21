@@ -6,7 +6,6 @@ import { useNavigate } from "react-router-dom";
 import { useAppSelector } from "../rtk/store";
 
 const RegisterTeamModal = () => {
-    const navigate = useNavigate();
     const stackLength = Number(import.meta.env.VITE_STACK_LENGTH);
     const { userDetails, isAuthenticated } = useAppSelector(
         (state) => state.user
@@ -41,7 +40,7 @@ const RegisterTeamModal = () => {
                     player.team_status !== "REJECTED"
                 );
             })
-            .map((player) => ({ id: player.id }));
+            .map((player) => (player.id));
         
         if (assignedPlayers?.length !== stackLength) {
             console.log("there", stackLength === assignedPlayers?.length);
@@ -54,7 +53,7 @@ const RegisterTeamModal = () => {
                 id: tournamentId
             })
         );
-        registerTeam({ tournamentId, players: assignedPlayers })
+        registerTeam({ tournamentId, players: assignedPlayers, teamId: userDetails?.team! })
             .unwrap()
             .then(() => {
                 setShowModal(false);

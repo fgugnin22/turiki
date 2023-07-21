@@ -73,7 +73,7 @@ const Match = () => {
                         isActive={match.state === "ACTIVE"}
                         isCaptain={user?.team_status === "CAPTAIN"}
                         matchId={match?.id}
-                        participantId={selfParticipant?.id}
+                        teamId={user?.team}
                         isWinner={selfParticipant?.is_winner}
                         claimMatchResult={claimMatchResult}
                     />

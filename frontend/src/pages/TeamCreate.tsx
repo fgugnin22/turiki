@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import {Layout} from "../processes/Layout";
+import { Layout } from "../processes/Layout";
 import { useAppSelector } from "../rtk/store";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 const TeamCreate = () => {
     const [createTeam] = tournamentAPI.useCreateTeamMutation();
-    const { isAuthenticated, userDetails: user } = useAppSelector((state) => state.user);
+    const { isAuthenticated, userDetails: user } = useAppSelector(
+        (state) => state.user
+    );
     const [formData, setFormData] = useState({
         teamName: ""
     });
@@ -14,18 +16,8 @@ const TeamCreate = () => {
         if (!user) {
             return;
         }
-        const team = {
-            players: [
-                {
-                    name: user.name
-                }
-            ],
-            name: formData.teamName
-        };
-        createTeam(team)
-            .unwrap()
-            .then(() => {})
-            .catch((error) => console.log(error.originalStatus | error.status));
+
+        createTeam(formData.teamName);
     };
     const onChange = (e: React.FormEvent<HTMLInputElement>) => {
         const target = e.target as HTMLInputElement;
