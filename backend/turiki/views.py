@@ -1,6 +1,10 @@
 from rest_framework import serializers
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAdminUser, IsAuthenticated
+from rest_framework.permissions import (
+    IsAuthenticatedOrReadOnly,
+    IsAdminUser,
+    IsAuthenticated,
+)
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from turiki.models import *
@@ -11,8 +15,15 @@ from turiki.serializers import (
     TeamSerializer,
     ChatSerializer,
 )
-from turiki.services import register_team, claim_match_result, apply_for_team, remove_from_team, invite_player, \
-    change_team_name, create_team
+from turiki.services import (
+    register_team,
+    claim_match_result,
+    apply_for_team,
+    remove_from_team,
+    invite_player,
+    change_team_name,
+    create_team,
+)
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
@@ -35,9 +46,12 @@ class TournamentAPIView(ModelViewSet):
         serializer.save()
         return Response(serializer.data)
 
-    @action(methods=['POST', 'PATCH', 'DELETE'], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
+    @action(
+        methods=["POST", "PATCH", "DELETE"],
+        detail=True,
+        permission_classes=[IsCaptainOfThisTeamOrAdmin],
+    )
     def register_team(self, request, pk=None):
-        team = None
         try:
             team = Team.objects.get(pk=request.data["team"]["team_id"])
         except:
@@ -51,9 +65,9 @@ class TournamentAPIView(ModelViewSet):
         elif request.method == "PATCH":
             players_ids = request.data["team"]["players"]
             result = register_team(tournament, team, players_ids, "CHANGE_PLAYERS")
-        return Response(f'{result}')
+        return Response(f"{result}")
 
-    @action(methods=['PATCH'], detail=True, permission_classes=[IsAdminUser])
+    @action(methods=["PATCH"], detail=True, permission_classes=[IsAdminUser])
     def status(self, request, pk=None):
         # TODO: Заебать Андрея Ситникова
         pass
@@ -67,7 +81,9 @@ class MatchAPIView(ModelViewSet):
     def create(self, request, *args, **kwargs):
         return Response(status=404)
 
-    @action(methods=['PATCH'], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
+    @action(
+        methods=["PATCH"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin]
+    )
     def claim_result(self, request, pk=None):
         try:
             match = self.get_object()
@@ -80,7 +96,7 @@ class MatchAPIView(ModelViewSet):
         except:
             return Response("data types mismatch", status=400)
 
-    @action(methods=['PATCH'], detail=True, permission_classes=[IsAdminUser])
+    @action(methods=["PATCH"], detail=True, permission_classes=[IsAdminUser])
     def force_status(self, request, pk=None):
         pass
 
@@ -90,11 +106,13 @@ class TeamAPIView(ModelViewSet):
     serializer_class = TeamSerializer
     permission_classes = [IsCaptainOfThisTeamOrAdmin]
 
-    @action(methods=['PATCH'], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=["PATCH"], detail=True, permission_classes=[IsAuthenticated])
     def player_status(self, request, pk=None):
         pass
 
-    @action(methods=['PATCH', 'DELETE'], detail=True, permission_classes=[IsAuthenticated])
+    @action(
+        methods=["PATCH", "DELETE"], detail=True, permission_classes=[IsAuthenticated]
+    )
     def apply_for_team(self, request, pk=None):
         team = self.get_object()
         if request.method == "PATCH":
@@ -105,18 +123,26 @@ class TeamAPIView(ModelViewSet):
             return Response(res)
         return Response("Nothing seemed to happen")
 
-    @action(methods=['PATCH', 'DELETE'], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
+    @action(
+        methods=["PATCH", "DELETE"],
+        detail=True,
+        permission_classes=[IsCaptainOfThisTeamOrAdmin],
+    )
     def invite(self, request, pk=None):
         team = self.get_object()
         player = UserAccount.objects.get(pk=request.data["player_id"])
         res = None
-        if request.method == 'PATCH':
+        if request.method == "PATCH":
             res = invite_player(team, player)
-        elif request.method == 'DELETE':
+        elif request.method == "DELETE":
             res = remove_from_team(team, player)
         return Response(res)
 
-    @action(methods=['PATCH', 'PUT'], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
+    @action(
+        methods=["PATCH", "PUT"],
+        detail=True,
+        permission_classes=[IsCaptainOfThisTeamOrAdmin],
+    )
     def change_name(self, request, pk=None):
         try:
             team = self.get_object()
@@ -148,4 +174,4 @@ class ChatAPIView(ModelViewSet):
         return super().retrieve(request, *args, **kwargs)
 
     def update(self, request, *args, **kwargs):
-        raise serializers.ValidationError('not allowed use websocket instead')
+        raise serializers.ValidationError("not allowed use websocket instead")

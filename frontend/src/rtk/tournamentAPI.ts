@@ -5,7 +5,7 @@ import { IChangeSelfTeamStatus, ICreateTeam, IRegisterTeam } from "../types";
 export const tournamentAPI = createApi({
     reducerPath: "tournamentAPI",
     baseQuery: fetchBaseQuery({
-        baseUrl: `${import.meta.env.VITE_API_URL}/api/`,
+        baseUrl: `${import.meta.env.VITE_API_URL}/api/v2/`,
         prepareHeaders: (headers) => {
             // By default, if we have a token in the store, let's use that for authenticated requests
             const access = localStorage.getItem("access");
