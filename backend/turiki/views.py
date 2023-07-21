@@ -12,7 +12,7 @@ from turiki.serializers import (
     ChatSerializer,
 )
 from turiki.services import register_team, claim_match_result, apply_for_team, remove_from_team, invite_player, \
-    change_team_name
+    change_team_name, create_team
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
@@ -88,7 +88,7 @@ class MatchAPIView(ModelViewSet):
 class TeamAPIView(ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly]
+    permission_classes = [IsCaptainOfThisTeamOrAdmin]
 
     @action(methods=['PATCH'], detail=True, permission_classes=[IsAuthenticated])
     def player_status(self, request, pk=None):
@@ -125,23 +125,16 @@ class TeamAPIView(ModelViewSet):
             return Response(res, 200)
         except:
             return Response(status=400)
-    # def create(self, request, *args, **kwargs): TODO: этот метод скорее всего должен остаться
-    #     request.data["next_member"] = request.user.name
-    #     request.data["players"] = []
-    #     print(request.data)
-    #     serializer = self.serializer_class(data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     serializer.save()
-    #     return Response(serializer.data)
-    #
-    # def update(self, request, *args, **kwargs):
-    #     request.data["next_member"] = request.user.name
-    #     instance = self.get_object()
-    #     serializer = self.serializer_class(instance, data=request.data)
-    #     serializer.is_valid(raise_exception=True)
-    #     self.perform_update(serializer)
-    #
-    #     return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        try:
+            res = create_team(user=request.user, name=request.data.pop("name"))
+            return Response(res, 201)
+        except:
+            return Response(status=400)
+
+    def update(self, request, *args, **kwargs):
+        raise serializers.ValidationError("use other endpoints")
 
 
 class ChatAPIView(ModelViewSet):

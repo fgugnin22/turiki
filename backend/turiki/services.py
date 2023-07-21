@@ -268,3 +268,13 @@ def invite_player(team, player):
     team.next_member = player.name
     team.save()
     return "player was invited to the team"
+
+
+def create_team(user, name):
+    if user.team is not None:
+        raise serializers.ValidationError('user already in a team')
+    team = Team.objects.create(name=name)
+    team.players.add(user)
+    user.team = team
+    user.team_status = "CAPTAIN"
+    return "team created successfully"
