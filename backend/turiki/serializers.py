@@ -3,11 +3,7 @@ from datetime import datetime
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .services import add_team_player, change_team_name, change_players_status, is_user_in_team, end_match, \
-    register_team
-from .tasks import create_lobby, set_tournament_status, set_initial_matches, create_bracket
 from turiki.models import *
-from .tasks import exec_task_on_date
 
 """
 В этом файле описывается как отсылаем на клиент и принимаем с клиента информацию о моделях из бд

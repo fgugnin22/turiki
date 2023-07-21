@@ -84,17 +84,10 @@ def add_team_player(team, user_name, status="PENDING"):
     return team
 
 
-def change_team_name(team, user_name, team_name):
-    # позволяет только капитану команды поменять имя команды
-    players = list(team.players.values())
-    for p in players:
-        if p["name"] == user_name and p["team_status"] == "CAPTAIN":
-            print(team_name, 123)
-            if team_name is None:
-                return team
-            team.name = team_name
-            break
-    return team
+def change_team_name(team, team_name):
+    team.name = team_name
+    team.save()
+    return "team name changed successfully"
 
 
 def change_players_status(team, new_players, user_name):

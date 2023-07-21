@@ -11,7 +11,8 @@ from turiki.serializers import (
     TeamSerializer,
     ChatSerializer,
 )
-from turiki.services import register_team, claim_match_result, apply_for_team, remove_from_team, invite_player
+from turiki.services import register_team, claim_match_result, apply_for_team, remove_from_team, invite_player, \
+    change_team_name
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
@@ -102,21 +103,12 @@ class TeamAPIView(ModelViewSet):
             res = remove_from_team(team, request.user)
         if res is not None:
             return Response(res)
-        # else:
-        #     if request.method == "PATCH":
-        #         res = invite_player(team, player_id)
-        #     elif request.method == "DELETE":
-        #         player = UserAccount.objects.get(pk=player_id)
-        #         res = remove_from_team(team, player)
-        #     return Response(res)
-
-        return Response("kekw")
+        return Response("Nothing seemed to happen")
 
     @action(methods=['PATCH', 'DELETE'], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
     def invite(self, request, pk=None):
         team = self.get_object()
-        player_id = request.data["player_id"]
-        player = UserAccount.objects.get(pk=player_id)
+        player = UserAccount.objects.get(pk=request.data["player_id"])
         res = None
         if request.method == 'PATCH':
             res = invite_player(team, player)
@@ -124,9 +116,15 @@ class TeamAPIView(ModelViewSet):
             res = remove_from_team(team, player)
         return Response(res)
 
-    @action(methods=['PATCH, PUT'], detail=True, permission_classes=[IsAuthenticated])
-    def name(self, request, pk=None):
-        pass
+    @action(methods=['PATCH', 'PUT'], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
+    def change_name(self, request, pk=None):
+        try:
+            team = self.get_object()
+            name = request.data.pop("name")
+            res = change_team_name(team, name)
+            return Response(res, 200)
+        except:
+            return Response(status=400)
     # def create(self, request, *args, **kwargs): TODO: этот метод скорее всего должен остаться
     #     request.data["next_member"] = request.user.name
     #     request.data["players"] = []
