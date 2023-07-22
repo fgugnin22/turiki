@@ -89,6 +89,43 @@ export const tournamentAPI = createApi({
             },
             invalidatesTags: ["Tournament", "Team"]
         }),
+        createBracket: build.mutation<null, number | string>({
+            query: (id) => {
+                return {
+                    url: `tournament/${id}/bracket/`,
+                    method: "POST"
+                };
+            }
+        }),
+        initializeMatches: build.mutation<null, number | string>({
+            query: (id) => {
+                return {
+                    url: `tournament/${id}/initialize_matches/`,
+                    method: "POST"
+                };
+            }
+        }),
+        createTournament: build.mutation<
+            Tournament,
+            {
+                prize: number | string;
+                name: string;
+                max_rounds: number | string;
+            }
+        >({
+            query: ({ prize, name, max_rounds }) => {
+                const body = JSON.stringify({
+                    name,
+                    prize,
+                    max_rounds
+                });
+                return {
+                    url: `tournament/`,
+                    method: "POST",
+                    body
+                };
+            }
+        }),
         createTeam: build.mutation<Team, string>({
             query: (name) => {
                 const body = JSON.stringify({

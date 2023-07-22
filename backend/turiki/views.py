@@ -16,16 +16,8 @@ from turiki.serializers import (
     TeamSerializer,
     ChatSerializer,
 )
-from turiki.services import (
-    register_team,
-    claim_match_result,
-    apply_for_team,
-    remove_from_team,
-    invite_player,
-    change_team_name,
-    create_team,
-    create_tournament,
-)
+from turiki.services import *
+from turiki.tasks import *
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
@@ -46,7 +38,7 @@ class TournamentAPIView(ModelViewSet):
                 request.data.pop("prize"),
                 request.data.pop("max_rounds"),
             )
-            
+
             name = (
                 name
                 if name is not None
@@ -55,7 +47,7 @@ class TournamentAPIView(ModelViewSet):
             print(2)
             prize = prize if prize is not None else "Prize too xd"
             max_rounds = max_rounds if max_rounds is not None else 1000
-            
+
             tourn = create_tournament(name, prize, max_rounds)
             return Response(model_to_dict(tourn), 201)
         except:
@@ -86,6 +78,23 @@ class TournamentAPIView(ModelViewSet):
     def status(self, request, pk=None):
         # TODO: Заебать Андрея Ситникова
         pass
+
+    @action(methods=["POST"], detail=True, permission_classes=[IsAdminUser])
+    def bracket(self, request, pk=None):
+        try:
+            tourn = self.get_object()
+            create_bracket(tourn, tourn.max_rounds)
+            return Response(201)
+        except:
+            return Response(400)
+
+    @action(methods=["POST"], detail=True, permission_classes=[IsAdminUser])
+    def initialize_matches(self, request, pk=None):
+        try:
+            set_initial_matches(tournament=self.get_object())
+            return Response(201)
+        except:
+            return Response(400)
 
 
 class MatchAPIView(ModelViewSet):

@@ -23,8 +23,8 @@ def register_team(tournament, team, players_ids, action):
             try:
                 user_obj = UserAccount.objects.get(pk=player_id)
                 if user_obj.team.id == team.id and (
-                    user_obj.team_status != "REJECTED"
-                    or user_obj.team_status != "PENDING"
+                        user_obj.team_status != "REJECTED"
+                        or user_obj.team_status != "PENDING"
                 ):
                     tournament.players.add(user_obj)
                     print("added player")
@@ -46,8 +46,8 @@ def register_team(tournament, team, players_ids, action):
             try:
                 user_obj = UserAccount.objects.get(pk=player_id)
                 if user_obj.team.id == team.id and (
-                    user_obj.team_status != "REJECTED"
-                    or user_obj.team_status != "PENDING"
+                        user_obj.team_status != "REJECTED"
+                        or user_obj.team_status != "PENDING"
                 ):
                     tournament.players.remove(user_obj)
                     print("removed player")
@@ -64,8 +64,8 @@ def register_team(tournament, team, players_ids, action):
             try:
                 user_obj = UserAccount.objects.get(pk=player_id)
                 if user_obj.team.id == team.id and (
-                    user_obj.team_status != "REJECTED"
-                    or user_obj.team_status != "PENDING"
+                        user_obj.team_status != "REJECTED"
+                        or user_obj.team_status != "PENDING"
                 ):
                     new_players.append(user_obj)
             except:
@@ -98,48 +98,6 @@ def change_team_name(team, team_name):
     team.name = team_name
     team.save()
     return "team name changed successfully"
-
-
-def change_players_status(team, new_players, user_name):
-    """
-    Этот монстр позволяет капитану менять состав команды
-    (принимать челов в команду, удалять их, делать капитаном вместо себя)
-    """
-    players = team.players.values()
-    for p in players:
-        if p["name"] == user_name and p["team_status"] == "PENDING":
-            for obj in new_players:
-                obj = dict(obj)
-                player = UserAccount.objects.get(name=obj["name"])
-                if player.name == user_name and obj["team_status"] == "REJECTED":
-                    player.team_status = None
-                    player.team = None
-                    player.save()
-                    break
-            break
-        if p["name"] == user_name and p["team_status"] == "CAPTAIN":
-            for obj in new_players:
-                obj = dict(obj)
-                player = UserAccount.objects.get(name=obj["name"])
-                if str(player.team_id) == str(p["team_id"]):
-                    player.team_status = obj["team_status"]
-                    player.save()
-                    if obj["team_status"] == "REJECTED":
-                        player.team_status = None
-                        player.team = None
-                        player.save()
-                        if team.players.last() is not None:
-                            next_cap = team.players.last()
-                            next_cap.team_status = "CAPTAIN"
-                            next_cap.save()
-                        break
-                    if player.name == user_name and obj["team_status"] == "REJECTED":
-                        player.team_status = None
-                        player.team = None
-                        player.save()
-                        break
-            break
-    return team
 
 
 @database_sync_to_async
@@ -214,9 +172,7 @@ def end_match(match):
     p1 = Participant.objects.get(pk=p1["id"])
     p2 = Participant.objects.get(pk=p2["id"])
     next_match = match.next_match
-    if not p1.is_winner and p2.is_winner or p1.is_winner == False and p2.is_winner:
-        pass
-    else:
+    if (p1.is_winner == p2.is_winner) or not (p1.is_winner == p2.is_winner == None):
         print("compromised results!!!".upper())
         return
     match.state = "SCORE_DONE"
@@ -272,9 +228,9 @@ def remove_from_team(team, player):
 
 def invite_player(team, player):
     if (
-        player.team is not None
-        and player.team.id == team.id
-        and player.team_status == "PENDING"
+            player.team is not None
+            and player.team.id == team.id
+            and player.team_status == "PENDING"
     ):
         team.players.add(player)
         player.team_status = "ACTIVE"
@@ -297,7 +253,7 @@ def create_team(user, name):
 
 
 def create_tournament(
-    name, prize, max_rounds, starts=datetime.now() + timedelta(hours=3)
+        name, prize, max_rounds, starts=datetime.now() + timedelta(hours=3)
 ):
     try:
         tourn = Tournament.objects.create(
