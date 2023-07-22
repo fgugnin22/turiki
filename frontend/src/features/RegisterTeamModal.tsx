@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import { ROUTES } from "../app/RouteTypes";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import { useTypedParams } from "react-router-typesafe-routes/dom";
-import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../rtk/store";
 
-const RegisterTeamModal = () => {
+import { Team } from "../helpers/transformMatches";
+const RegisterTeamModal = ({ team }: { team: Team }) => {
     const stackLength = Number(import.meta.env.VITE_STACK_LENGTH);
-    const { userDetails, isAuthenticated } = useAppSelector(
-        (state) => state.user
-    );
+
     const [submitError, setSubmitError] = useState(false);
     const [formState, setFormState] = useState<boolean[]>([]);
     const checkHandler = (e: React.FormEvent<HTMLInputElement>) => {
@@ -24,15 +21,10 @@ const RegisterTeamModal = () => {
     );
     const [registerTeam, { isSuccess: isRegisterSuccess }] =
         tournamentAPI.useRegisterTeamOnTournamentMutation();
-    const { data: selfTeam, isSuccess: isTeamSuccess } =
-        tournamentAPI.useGetTeamByIdQuery(userDetails?.team, {
-            skip: !userDetails?.team || !isAuthenticated
-        });
     const [showModal, setShowModal] = useState<boolean>(false);
     const sumbitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        const assignedPlayers = selfTeam?.players
+        const assignedPlayers = team?.players
             .filter((player, index) => {
                 return (
                     formState[index] &&
@@ -40,8 +32,8 @@ const RegisterTeamModal = () => {
                     player.team_status !== "REJECTED"
                 );
             })
-            .map((player) => (player.id));
-        
+            .map((player) => player.id);
+
         if (assignedPlayers?.length !== stackLength) {
             console.log("there", stackLength === assignedPlayers?.length);
             setSubmitError(true);
@@ -53,7 +45,11 @@ const RegisterTeamModal = () => {
                 id: tournamentId
             })
         );
-        registerTeam({ tournamentId, players: assignedPlayers, teamId: userDetails?.team! })
+        registerTeam({
+            tournamentId,
+            players: assignedPlayers,
+            teamId: team.id
+        })
             .unwrap()
             .then(() => {
                 setShowModal(false);
@@ -89,8 +85,8 @@ const RegisterTeamModal = () => {
                                         <form onSubmit={sumbitHandler}>
                                             <ul className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                                 {
-                                                    selfTeam &&
-                                                        selfTeam.players.map(
+                                                    team &&
+                                                        team.players.map(
                                                             (player, index) => {
                                                                 // if (
                                                                 //     player.id ===

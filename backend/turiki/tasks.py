@@ -101,11 +101,11 @@ def set_initial_matches(tournament):
 
 
 # TODO: автоматическое отложенное создание сетки перед началом за какое-то кол-во времени
-# TODO: обновить сериализатор (create) чтобы там этой функции не было
 @dramatiq.actor
 def create_bracket(tournament, rounds):
     # вызывает функцию create_match я хз зачем так непонятно сделал с именами, потом переделаю TODO:!!!
-    create_match(rounds, rounds, tournament, None)
+    if len(list(tournament.teams.values())) == 2 ** rounds and len(list(tournament.matches.values())) == 0:
+        create_match(rounds, rounds, tournament, None)
     return tournament
 
 

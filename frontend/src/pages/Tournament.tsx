@@ -1,7 +1,7 @@
 import useWindowSize from "../hooks/useWindowSize";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import transformMatches, { Root, Team } from "../helpers/transformMatches.js";
-import {Layout} from "../processes/Layout.js";
+import { Layout } from "../processes/Layout.js";
 import {
     SingleEliminationBracket,
     Match,
@@ -55,7 +55,14 @@ export const Tournament = () => {
         tournamentAPI.useGetTournamentByIdQuery({
             id: tournId!
         });
-
+    const isTeamNotRegistered =
+        user &&
+        isSuccess &&
+        data &&
+        !data.teams.some((team: Team) => Number(team.id) === user.team);
+    const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
+        skip: !isTeamNotRegistered
+    });
     let matches: IMatch[] = [];
     const windowSize = useWindowSize();
     const navigate = useNavigate();
@@ -71,11 +78,6 @@ export const Tournament = () => {
         navigate(`/match/${match.id}`);
     };
 
-    const isTeamNotRegistered =
-        user &&
-        isSuccess &&
-        data &&
-        !data.teams.some((team: Team) => Number(team.id) === user.team);
     if (isSuccess) {
         matches = transformMatches(data);
     }
@@ -83,28 +85,7 @@ export const Tournament = () => {
         <Layout>
             <div className="flex justify-center">
                 <div className="w-full bg-slate-400">
-                    {isTeamNotRegistered && (
-                        <RegisterTeamModal />
-                        // <Link
-                        //     className="p-3 bg-lime-600 rounded-xl m-3"
-                        //     to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.REGISTER_TEAM.buildPath(
-                        //         { id: data.id }
-                        //     )}
-                        // >
-                        //     Register Team
-                        // </Link>
-                        // <
-                        //   button  className="p-2 bg-green-400"
-                        //     onClick={() =>
-                        //         registerTeam({
-                        //             tournamentId: data?.id!,
-                        //             players: [{ id: user.id }]
-                        //         })
-                        //     }
-                        // >
-                        //     Register Team
-                        // </button>
-                    )}
+                    {isTeamNotRegistered && <RegisterTeamModal team={team!} />}
                 </div>
                 {isSuccess &&
                 Object.keys(data).length > 0 &&
