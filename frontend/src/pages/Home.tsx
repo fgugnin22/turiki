@@ -38,7 +38,7 @@ const Home = () => {
         const access = localStorage.getItem("access");
         const refresh = localStorage.getItem("refresh");
         await dispatch(
-            login({ email: user?.email, password, keepTokens: false })
+            login({ email: user?.email!, password, keepTokens: false })
         );
         if (localStorage.getItem("access")) {
             const body = {
@@ -49,9 +49,9 @@ const Home = () => {
             setFormData({ email: "", password: "", userName: "" });
             dispatch(modifyUserCredentials(body));
         }
-        localStorage.setItem("access", access);
-        localStorage.setItem("refresh", refresh);
-        dispatch(getUser(access));
+        localStorage.setItem("access", access!);
+        localStorage.setItem("refresh", refresh!);
+        dispatch(getUser(access!));
     };
     return (
         <Layout>
@@ -62,7 +62,10 @@ const Home = () => {
                             <>
                                 {user.is_staff && (
                                     <div className="m-4 text-right">
-                                        <Link className="p-2 inline-block bg-gray-900 text-white text-lg rounded" to={ROUTES.ADMINPAGE.path}>
+                                        <Link
+                                            className="p-2 inline-block bg-gray-900 text-white text-lg rounded"
+                                            to={ROUTES.ADMINPAGE.path}
+                                        >
                                             <button>Моя Админка</button>
                                         </Link>
                                     </div>

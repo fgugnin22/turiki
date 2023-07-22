@@ -172,8 +172,10 @@ def end_match(match):
     p1 = Participant.objects.get(pk=p1["id"])
     p2 = Participant.objects.get(pk=p2["id"])
     next_match = match.next_match
-    if (p1.is_winner == p2.is_winner) or not (p1.is_winner == p2.is_winner == None):
+    if (p1.is_winner == p2.is_winner):
         print("compromised results!!!".upper())
+        return
+    if p1.is_winner is None or p2.is_winner is None:
         return
     match.state = "SCORE_DONE"
     match.save()
