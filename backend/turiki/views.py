@@ -5,6 +5,7 @@ from rest_framework.permissions import (
     IsAdminUser,
     IsAuthenticated,
 )
+from django.forms.models import model_to_dict
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 from turiki.models import *
@@ -23,6 +24,7 @@ from turiki.services import (
     invite_player,
     change_team_name,
     create_team,
+    create_tournament,
 )
 
 """
@@ -38,13 +40,26 @@ class TournamentAPIView(ModelViewSet):
     permission_classes = [IsAdminUserOrReadOnly]
 
     def create(self, request, *args, **kwargs):
-        request.data["matches"] = []
-        request.data["teams"] = []
-        request.data["players"] = []
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+        try:
+            name, prize, max_rounds = (
+                request.data.pop("name"),
+                request.data.pop("prize"),
+                request.data.pop("max_rounds"),
+            )
+            
+            name = (
+                name
+                if name is not None
+                else "You forgot to name the tournament dumbass"
+            )
+            print(2)
+            prize = prize if prize is not None else "Prize too xd"
+            max_rounds = max_rounds if max_rounds is not None else 1000
+            
+            tourn = create_tournament(name, prize, max_rounds)
+            return Response(model_to_dict(tourn), 201)
+        except:
+            return Response("something went wrong when creating the tournament", 400)
 
     @action(
         methods=["POST", "PATCH", "DELETE"],
@@ -154,8 +169,8 @@ class TeamAPIView(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            res = create_team(user=request.user, name=request.data.pop("name"))
-            return Response(res, 201)
+            team = create_team(user=request.user, name=request.data.pop("name"))
+            return Response(model_to_dict(team), 201)
         except:
             return Response(status=400)
 

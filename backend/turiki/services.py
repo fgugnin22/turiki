@@ -23,11 +23,17 @@ def register_team(tournament, team, players_ids, action):
             try:
                 user_obj = UserAccount.objects.get(pk=player_id)
                 if user_obj.team.id == team.id and (
-                        user_obj.team_status != "REJECTED" or user_obj.team_status != "PENDING"):
+                    user_obj.team_status != "REJECTED"
+                    or user_obj.team_status != "PENDING"
+                ):
                     tournament.players.add(user_obj)
                     print("added player")
             except:
-                print("something went wrong when adding player to tournament", player_id, user_obj)
+                print(
+                    "something went wrong when adding player to tournament",
+                    player_id,
+                    user_obj,
+                )
         tournament.save()
         return "team registered successfully"
     elif action == "CANCEL_REGISTRATION":
@@ -40,7 +46,9 @@ def register_team(tournament, team, players_ids, action):
             try:
                 user_obj = UserAccount.objects.get(pk=player_id)
                 if user_obj.team.id == team.id and (
-                        user_obj.team_status != "REJECTED" or user_obj.team_status != "PENDING"):
+                    user_obj.team_status != "REJECTED"
+                    or user_obj.team_status != "PENDING"
+                ):
                     tournament.players.remove(user_obj)
                     print("removed player")
             except:
@@ -56,7 +64,9 @@ def register_team(tournament, team, players_ids, action):
             try:
                 user_obj = UserAccount.objects.get(pk=player_id)
                 if user_obj.team.id == team.id and (
-                        user_obj.team_status != "REJECTED" or user_obj.team_status != "PENDING"):
+                    user_obj.team_status != "REJECTED"
+                    or user_obj.team_status != "PENDING"
+                ):
                     new_players.append(user_obj)
             except:
                 pass
@@ -136,6 +146,7 @@ def change_players_status(team, new_players, user_name):
 def async_return_user(token):
     # асинхронное доставание UserAccount по jwt токену из БД для consumers.py -> websocket
     from auth_system.settings import SECRET_KEY
+
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])
         user_id = payload["user_id"]
@@ -260,7 +271,11 @@ def remove_from_team(team, player):
 
 
 def invite_player(team, player):
-    if player.team is not None and player.team.id == team.id and player.team_status == "PENDING":
+    if (
+        player.team is not None
+        and player.team.id == team.id
+        and player.team_status == "PENDING"
+    ):
         team.players.add(player)
         player.team_status = "ACTIVE"
         player.save()
@@ -272,9 +287,22 @@ def invite_player(team, player):
 
 def create_team(user, name):
     if user.team is not None:
-        raise serializers.ValidationError('user already in a team')
+        raise serializers.ValidationError("user already in a team")
     team = Team.objects.create(name=name)
     team.players.add(user)
     user.team = team
     user.team_status = "CAPTAIN"
+    user.save()
     return team
+
+
+def create_tournament(
+    name, prize, max_rounds, starts=datetime.now() + timedelta(hours=3)
+):
+    try:
+        tourn = Tournament.objects.create(
+            name=name, prize=prize, max_rounds=max_rounds, starts=starts
+        )
+        return tourn
+    except:
+        return "wtf tournament no good wehn creating"
