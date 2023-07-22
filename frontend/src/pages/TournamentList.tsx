@@ -38,11 +38,11 @@ const TournamentList = () => {
             {isSuccess && data?.length > 0 ? (
                 data?.map((tourn, index: number) => (
                     <div
-                        className="p-3 text-center my-1 bg-slate-300 flex flex-row flex-wrap"
+                        className="p-3 my-4 text-center bg-slate-300 flex flex-row flex-wrap"
                         key={index}
                     >
                         <Link
-                            className="text-lg h-12 w-[60%] block border-4 border-blue-800 rounded m-4"
+                            className="text-lg h-12 w-[60%] block border-4 border-blue-800 rounded"
                             to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.buildPath({
                                 id: data[index]["id"]
                             })}
@@ -52,7 +52,7 @@ const TournamentList = () => {
                         </Link>
                         {userDetails?.is_staff && (
                             <>
-                                <div className=" text-sm border-4 border-blue-800 rounded h-12 w-1/3 my-4 ml-auto mr-4 flex">
+                                <div className=" text-sm border-4 border-blue-800 rounded h-12 w-1/3 ml-auto mr-0 flex">
                                     <button
                                         onClick={() => createBracket(tourn.id)}
                                         className="p-2 bg-zinc-400"
@@ -68,28 +68,32 @@ const TournamentList = () => {
                                         Initialize Matches
                                     </button>
                                 </div>
-                                {teams[index] && (
-                                    <RegisterTeamModal
-                                        tournamentId={tourn.id}
-                                        team={teams[index]}
-                                    />
-                                )}
-                                <div className="flex flex-col ml-auto self-center border-4 border-blue-800 rounded">
-                                    <button
-                                        id={String(index)}
-                                        onClick={handleTeamSubmit}
-                                        className="p-2 bg-zinc-400 text-sm h-10 w-48 ml-auto"
-                                    >
-                                        Найти команду
-                                    </button>
-                                    <input
-                                        id={String(index)}
-                                        value={teamIds[index]}
-                                        onChange={handleChange}
-                                        className="h-10 w-48 text-xl ml-auto"
-                                        type="text"
-                                        placeholder="Введите id команды"
-                                    />
+                                <div className="ml-auto flex w-1/3">
+                                    {teams[index] && (
+                                        <div className="self-end mt-auto">
+                                            <RegisterTeamModal
+                                                tournamentId={tourn.id}
+                                                team={teams[index]}
+                                            />
+                                        </div>
+                                    )}
+                                    <div className="flex flex-col ml-auto self-end border-4 border-blue-800 rounded">
+                                        <button
+                                            id={String(index)}
+                                            onClick={handleTeamSubmit}
+                                            className="p-2 bg-zinc-400 text-sm h-10 w-48 ml-auto"
+                                        >
+                                            Найти команду
+                                        </button>
+                                        <input
+                                            id={String(index)}
+                                            value={teamIds[index]}
+                                            onChange={handleChange}
+                                            className="h-10 w-48 text-xl ml-auto"
+                                            type="text"
+                                            placeholder="Введите id команды"
+                                        />
+                                    </div>
                                 </div>
                             </>
                         )}
