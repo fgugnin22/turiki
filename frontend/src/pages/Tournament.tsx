@@ -47,7 +47,7 @@ const GlootTheme = createTheme({
 
 export const Tournament = () => {
     const params = useParams();
-    const tournId = params["id"];
+    const tournId = Number(params["id"]);
     const { userDetails: user, isAuthenticated } = useAppSelector(
         (state) => state.user
     );
@@ -85,7 +85,7 @@ export const Tournament = () => {
         <Layout>
             <div className="flex justify-center">
                 <div className="w-full bg-slate-400">
-                    {isTeamNotRegistered && <RegisterTeamModal team={team!} />}
+                    {isTeamNotRegistered && <RegisterTeamModal tournamentId={tournId} team={team!} />}
                 </div>
                 {isSuccess &&
                 Object.keys(data).length > 0 &&

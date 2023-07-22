@@ -4,19 +4,33 @@ import { Link } from "react-router-dom";
 import { ROUTES } from "../app/RouteTypes";
 import { useAppSelector } from "../rtk/store";
 import { useState } from "react";
+import RegisterTeamModal from "../features/RegisterTeamModal";
+import { Team } from "../helpers/transformMatches";
 const TournamentList = () => {
-    const [teamId, setTeamId] = useState()
-    const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
-
-    }
-    const handleTeamSubmit = (e: React.MouseEvent<HTMLButtonElement>) => {
-
-    }
-    const { data, error, isLoading, isSuccess } =
-        tournamentAPI.useGetAllTournamentsQuery(null);
     const [createBracket] = tournamentAPI.useCreateBracketMutation();
     const [initializeMatches] = tournamentAPI.useInitializeMatchesMutation();
-    const [registerTeam] = tournamentAPI.useRegisterTeamOnTournamentMutation()
+    const [fetchTeamById] = tournamentAPI.useLazyGetTeamByIdQuery();
+    const { data, error, isLoading, isSuccess } =
+        tournamentAPI.useGetAllTournamentsQuery(null);
+    const [teamIds, setTeamIds] = useState<number[]>([]);
+    const [teams, setTeams] = useState<Team[]>([]);
+    const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
+        const target = e.target as HTMLInputElement;
+        console.log(teamIds);
+        setTeamIds((prev) => {
+            prev[Number(target.id)] = Number(target.value);
+            return [...prev];
+        });
+    };
+    const handleTeamSubmit = async (e: React.MouseEvent<HTMLButtonElement>) => {
+        const target = e.target as HTMLInputElement;
+        const data = (await fetchTeamById(teamIds[Number(target.id)])).data!;
+        setTeams((prev) => {
+            prev[Number(target.id)] = data;
+            return [...prev];
+        });
+    };
+
     const { userDetails } = useAppSelector((state) => state.user);
     return (
         <Layout>
@@ -54,12 +68,23 @@ const TournamentList = () => {
                                         Initialize Matches
                                     </button>
                                 </div>
+                                {teams[index] && (
+                                    <RegisterTeamModal
+                                        tournamentId={tourn.id}
+                                        team={teams[index]}
+                                    />
+                                )}
                                 <div className="flex flex-col ml-auto self-center border-4 border-blue-800 rounded">
-                                    <button onClick={handleTeamSubmit} className="p-2 bg-zinc-400 text-sm h-10 w-48 ml-auto">
-                                        Зарегистрировать команду
+                                    <button
+                                        id={String(index)}
+                                        onClick={handleTeamSubmit}
+                                        className="p-2 bg-zinc-400 text-sm h-10 w-48 ml-auto"
+                                    >
+                                        Найти команду
                                     </button>
                                     <input
-                                        value={teamId}
+                                        id={String(index)}
+                                        value={teamIds[index]}
                                         onChange={handleChange}
                                         className="h-10 w-48 text-xl ml-auto"
                                         type="text"

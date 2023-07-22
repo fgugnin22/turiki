@@ -1,12 +1,15 @@
 import React, { useState } from "react";
-import { ROUTES } from "../app/RouteTypes";
 import { tournamentAPI } from "../rtk/tournamentAPI";
-import { useTypedParams } from "react-router-typesafe-routes/dom";
 
 import { Team } from "../helpers/transformMatches";
-const RegisterTeamModal = ({ team }: { team: Team }) => {
+const RegisterTeamModal = ({
+    team,
+    tournamentId
+}: {
+    team: Team;
+    tournamentId: number;
+}) => {
     const stackLength = Number(import.meta.env.VITE_STACK_LENGTH);
-
     const [submitError, setSubmitError] = useState(false);
     const [formState, setFormState] = useState<boolean[]>([]);
     const checkHandler = (e: React.FormEvent<HTMLInputElement>) => {
@@ -16,9 +19,6 @@ const RegisterTeamModal = ({ team }: { team: Team }) => {
             return [...prev];
         });
     };
-    const { id: tournamentId } = useTypedParams(
-        ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.REGISTER_TEAM
-    );
     const [registerTeam, { isSuccess: isRegisterSuccess }] =
         tournamentAPI.useRegisterTeamOnTournamentMutation();
     const [showModal, setShowModal] = useState<boolean>(false);
@@ -39,12 +39,6 @@ const RegisterTeamModal = ({ team }: { team: Team }) => {
             setSubmitError(true);
             return;
         }
-        console.log(
-            assignedPlayers,
-            ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.buildPath({
-                id: tournamentId
-            })
-        );
         registerTeam({
             tournamentId,
             players: assignedPlayers,
@@ -59,7 +53,7 @@ const RegisterTeamModal = ({ team }: { team: Team }) => {
     };
     return (
         <>
-            <div className="flex items-center justify-center h-60">
+            <div className="flex items-center justify-center">
                 <button
                     className="px-6 py-3 text-purple-100 bg-purple-600 rounded-md"
                     type="button"
