@@ -15,16 +15,27 @@ import NoMatch from "../pages/NoMatch";
 import TeamCreate from "../pages/TeamCreate";
 import TeamList from "../pages/TeamList";
 import TournmanetList from "../pages/TournamentList";
-import {ROUTES} from "./RouteTypes"
+import { ROUTES } from "./RouteTypes";
+import AdminBoard from "../pages/AdminBoard";
 // import Test from "./pages/Test";
 function App() {
     return (
         <Provider store={store}>
             <BrowserRouter>
                 <Routes>
-                    <Route path={ROUTES.DASHBOARD.path} element={<Home />}></Route>
+                    <Route
+                        path={ROUTES.ADMINPAGE.path}
+                        element={<AdminBoard />}
+                    ></Route>
+                    <Route
+                        path={ROUTES.DASHBOARD.path}
+                        element={<Home />}
+                    ></Route>
                     <Route path={ROUTES.LOGIN.path} element={<Login />}></Route>
-                    <Route path={ROUTES.REGISTER_ACCOUNT.path} element={<Signup />}></Route>
+                    <Route
+                        path={ROUTES.REGISTER_ACCOUNT.path}
+                        element={<Signup />}
+                    ></Route>
                     <Route
                         path={ROUTES.RESET_PASSWORD.path}
                         element={<ResetPassword />}
@@ -37,19 +48,37 @@ function App() {
                         path={ROUTES.ACTIVATE_ACCOUNT.path}
                         element={<Activate />}
                     ></Route>
-                    <Route path={ROUTES.TEAMS.TEAM_BY_ID.path} element={<Team />}></Route>
-                    <Route path={ROUTES.MATCHES.MATCH_BY_ID.path} element={<Match />}></Route>
+                    <Route
+                        path={ROUTES.TEAMS.TEAM_BY_ID.path}
+                        element={<Team />}
+                    ></Route>
+                    <Route
+                        path={ROUTES.MATCHES.MATCH_BY_ID.path}
+                        element={<Match />}
+                    ></Route>
                     <Route
                         path={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.path}
                         element={<Tournament />}
                     ></Route>
                     <Route
-                        path={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.REGISTER_TEAM.path}
+                        path={
+                            ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.REGISTER_TEAM
+                                .path
+                        }
                         element={<TournamentRegisterTeam />}
                     ></Route>
-                    <Route path={ROUTES.NO_MATCH404.path} element={<NoMatch />} />
-                    <Route path={ROUTES.TEAMS.CREATE.path} element={<TeamCreate />}></Route>
-                    <Route path={ROUTES.TEAMS.path} element={<TeamList />}></Route>
+                    <Route
+                        path={ROUTES.NO_MATCH404.path}
+                        element={<NoMatch />}
+                    />
+                    <Route
+                        path={ROUTES.TEAMS.CREATE.path}
+                        element={<TeamCreate />}
+                    ></Route>
+                    <Route
+                        path={ROUTES.TEAMS.path}
+                        element={<TeamList />}
+                    ></Route>
                     <Route
                         path={ROUTES.TOURNAMENTS.path}
                         element={<TournmanetList />}

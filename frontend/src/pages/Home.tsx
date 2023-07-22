@@ -30,7 +30,7 @@ const Home = () => {
     const { email, password, userName } = formData;
     const onChange = (e: React.FormEvent<HTMLInputElement>) => {
         const target = e.target as HTMLInputElement;
-        setBorderColor("border-slate-300 focus:border-blue-400")
+        setBorderColor("border-slate-300 focus:border-blue-400");
         return setFormData({ ...formData, [target.name]: target.value });
     };
     const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -60,6 +60,13 @@ const Home = () => {
                     <div className="">
                         {user ? (
                             <>
+                                {user.is_staff && (
+                                    <div className="m-4 text-right">
+                                        <Link className="p-2 inline-block bg-gray-900 text-white text-lg rounded" to={ROUTES.ADMINPAGE.path}>
+                                            <button>Моя Админка</button>
+                                        </Link>
+                                    </div>
+                                )}
                                 <p className="mx-auto p-4 bg-slate-300 text-center">
                                     {user.email}
                                 </p>

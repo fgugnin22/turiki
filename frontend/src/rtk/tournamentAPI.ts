@@ -39,7 +39,7 @@ export const tournamentAPI = createApi({
                     body
                 };
             },
-            invalidatesTags: ["Match"]
+            invalidatesTags: ["Match", "Tournament"]
         }),
         getMatchById: build.query<Match, { id: number | string }>({
             query: (search) => {
@@ -87,7 +87,7 @@ export const tournamentAPI = createApi({
                     body
                 };
             },
-            invalidatesTags: ["Tournament"]
+            invalidatesTags: ["Tournament", "Team"]
         }),
         createTeam: build.mutation<Team, string>({
             query: (name) => {
