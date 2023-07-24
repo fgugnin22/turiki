@@ -1,10 +1,10 @@
 import React, { useEffect } from "react";
-import NavBar from "../components/NavBar";
-import Footer from "../components/Footer";
+import NavBar from "../widgets/NavBar";
+import Footer from "../widgets/Footer";
 import { getParameterByName } from "../helpers/getParameterByName";
 import { checkAuth, googleAuthenticate } from "../rtk/user";
 import { useAppDispatch, useAppSelector } from "../rtk/store";
-const Layout = (props: {children: React.ReactNode[] | React.ReactNode}) => {
+export const Layout = (props: {children: React.ReactNode[] | React.ReactNode}) => {
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const state = getParameterByName("state");
@@ -29,4 +29,3 @@ const Layout = (props: {children: React.ReactNode[] | React.ReactNode}) => {
   );
 };
 
-export default Layout;

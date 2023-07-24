@@ -5,13 +5,13 @@ interface MatchResultVoteProps {
     isActive: Boolean;
     isCaptain: Boolean;
     matchId: number;
-    participantId: number;
+    teamId: number | undefined;
     isWinner: Boolean | null;
     claimMatchResult: Function;
 }
 
 const MatchResultVote = (props: MatchResultVoteProps) => {
-    if (!props.participantId) {
+    if (!props.teamId) {
         return <></>;
     }
     return (
@@ -27,7 +27,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
                                 props.claimMatchResult({
                                     isWinner: true,
                                     matchId: props.matchId,
-                                    participantId: props.participantId
+                                    teamId: props.teamId
                                 })
                             }
                         >
@@ -39,7 +39,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
                                 props.claimMatchResult({
                                     isWinner: false,
                                     matchId: props.matchId,
-                                    participantId: props.participantId
+                                    teamId: props.teamId
                                 })
                             }
                         >

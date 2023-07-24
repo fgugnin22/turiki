@@ -1,40 +1,31 @@
 import React, { useState } from "react";
-import { ROUTES } from "../RouteTypes";
 import { tournamentAPI } from "../rtk/tournamentAPI";
-import { useTypedParams } from "react-router-typesafe-routes/dom";
-import { useNavigate } from "react-router-dom";
-import { useAppSelector } from "../rtk/store";
 
-const RegisterTeamModal = () => {
-    const navigate = useNavigate();
-    const stackLength = 2;
-    const { userDetails, isAuthenticated } = useAppSelector(
-        (state) => state.user
-    );
-    const [submitError, setSubmitError] = useState(false);
+import { Team } from "../helpers/transformMatches";
+const RegisterTeamModal = ({
+    team,
+    tournamentId
+}: {
+    team: Team;
+    tournamentId: number;
+}) => {
+    const stackLength = Number(import.meta.env.VITE_STACK_LENGTH);
+    const [submitError, setSubmitError] = useState<any>(false);
     const [formState, setFormState] = useState<boolean[]>([]);
     const checkHandler = (e: React.FormEvent<HTMLInputElement>) => {
+        setSubmitError(false);
         const target = e.target as HTMLInputElement;
         setFormState((prev) => {
             prev[Number(target.value)] = !prev[Number(target.value)];
             return [...prev];
         });
     };
-    // console.log(formState);
-    const { id: tournamentId } = useTypedParams(
-        ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.REGISTER_TEAM
-    );
     const [registerTeam, { isSuccess: isRegisterSuccess }] =
         tournamentAPI.useRegisterTeamOnTournamentMutation();
-    const { data: selfTeam, isSuccess: isTeamSuccess } =
-        tournamentAPI.useGetTeamByIdQuery(userDetails?.team, {
-            skip: !userDetails?.team || !isAuthenticated
-        });
     const [showModal, setShowModal] = useState<boolean>(false);
     const sumbitHandler = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-
-        const assignedPlayers = selfTeam?.players
+        const assignedPlayers = team?.players
             .filter((player, index) => {
                 return (
                     formState[index] &&
@@ -42,40 +33,39 @@ const RegisterTeamModal = () => {
                     player.team_status !== "REJECTED"
                 );
             })
-            .map((player) => ({ id: player.id }));
+            .map((player) => player.id);
+
         if (assignedPlayers?.length !== stackLength) {
-            setSubmitError(true);
+            console.log("there", stackLength === assignedPlayers?.length);
+            setSubmitError(`Выберите ${stackLength} игроков`);
             return;
         }
-        console.log(
-            assignedPlayers,
-            ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.buildPath({
-                id: tournamentId
-            })
-        );
-        registerTeam({ tournamentId, players: assignedPlayers })
+        registerTeam({
+            tournamentId,
+            players: assignedPlayers,
+            teamId: team.id
+        })
             .unwrap()
             .then(() => {
-                // navigate(
-                //     ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.buildPath({
-                //         id: tournamentId
-                //     }),
-                //     { replace: true }
-                // );
                 setShowModal(false);
             })
-            .catch(() => setSubmitError(true));
+            .catch((error) => {
+                setSubmitError(error.data[0]);
+            });
         setShowModal(false);
     };
     return (
         <>
-            <div className="flex items-center justify-center h-60">
+            <div className="flex items-center justify-center">
                 <button
-                    className="px-6 py-3 text-purple-100 bg-purple-600 rounded-md"
+                    className="px-6 py-3 text-lg text-purple-100 bg-purple-600 hover:bg-purple-700 transition-colors active:bg-sky-700 rounded-md w-48 min-h-[5.5rem]"
                     type="button"
-                    onClick={() => setShowModal(true)}
+                    onClick={() => {
+                        setSubmitError(false);
+                        setShowModal(true);
+                    }}
                 >
-                    Register Team
+                    {submitError ? submitError : "Зарегистрировать команду"}
                 </button>
             </div>
             {showModal ? (
@@ -95,8 +85,8 @@ const RegisterTeamModal = () => {
                                         <form onSubmit={sumbitHandler}>
                                             <ul className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
                                                 {
-                                                    selfTeam &&
-                                                        selfTeam.players.map(
+                                                    team &&
+                                                        team.players.map(
                                                             (player, index) => {
                                                                 // if (
                                                                 //     player.id ===

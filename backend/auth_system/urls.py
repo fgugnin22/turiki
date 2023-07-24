@@ -23,16 +23,16 @@ from .yasg import urlpatterns as doc_urls
 
 # с помощью defaultrouter'а регистрируем api маршруты
 tournamentRouter = DefaultRouter()
-tournamentRouter.register(r'api/tournament', TournamentAPIView, basename='tournament')
+tournamentRouter.register(r'api/v2/tournament', TournamentAPIView, basename='tournament')
 
 matchRouter = DefaultRouter()
-matchRouter.register(r'api/match', MatchAPIView, basename='match')
+matchRouter.register(r'api/v2/match', MatchAPIView, basename='match')
 
 teamRouter = DefaultRouter()
-teamRouter.register(r'api/team', TeamAPIView, basename='team')
+teamRouter.register(r'api/v2/team', TeamAPIView, basename='team')
 
 chatRouter = DefaultRouter()
-chatRouter.register(r'api/chat', ChatAPIView, basename='chat')
+chatRouter.register(r'api/v2/chat', ChatAPIView, basename='chat')
 
 # Я НЕ ЗНАЮ КАК ОБЪЯСНИТЬ НО ПОРЯДОК URL ОЧЕНЬ ВАЖЕН, ЕСЛИ ПЕРЕСТАВИТЬ МОЖЕТ ВСЁ СЛОМАТЬСЯ НАХЕР!
 urlpatterns = [
@@ -43,7 +43,7 @@ urlpatterns = [
 
 ]
 urlpatterns += doc_urls
-urlpatterns += [re_path(r'^((?!api).)*$', TemplateView.as_view(template_name='index.html'))]
+urlpatterns += [re_path(r'^((?!api/v2).)*$', TemplateView.as_view(template_name='index.html'))]
 urlpatterns += tournamentRouter.urls
 urlpatterns += matchRouter.urls
 urlpatterns += teamRouter.urls

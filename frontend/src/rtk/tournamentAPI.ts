@@ -1,11 +1,11 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Match, Team, Tournament } from "../helpers/transformMatches";
-import { IChangeSelfTeamStatus, ICreateTeam, IRegisterTeam } from "../types";
+import { IChangeSelfTeamStatus, ICreateTeam, IRegisterTeam } from "../shared";
 
 export const tournamentAPI = createApi({
     reducerPath: "tournamentAPI",
     baseQuery: fetchBaseQuery({
-        baseUrl: `${import.meta.env.VITE_API_URL}/api/`,
+        baseUrl: `${import.meta.env.VITE_API_URL}/api/v2/`,
         prepareHeaders: (headers) => {
             // By default, if we have a token in the store, let's use that for authenticated requests
             const access = localStorage.getItem("access");
@@ -13,6 +13,7 @@ export const tournamentAPI = createApi({
                 headers.set("Authorization", `JWT ${access}`);
             }
             headers.set("Accept", "*/*");
+            headers.set("Content-Type", "application/json");
             return headers;
         }
     }),
@@ -22,25 +23,23 @@ export const tournamentAPI = createApi({
     tagTypes: ["Team", "Tournament", "Match", "Chat", ""],
     endpoints: (build) => ({
         claimMatchResult: build.mutation<
-            Match,
-            { participantId: number; isWinner: Boolean; matchId: number }
+            null,
+            { teamId: number; isWinner: Boolean; matchId: number }
         >({
-            query: ({ participantId, isWinner, matchId }) => {
+            query: ({ teamId, isWinner, matchId }) => {
                 const body = {
-                    participants: [
-                        {
-                            id: participantId,
-                            is_winner: isWinner
-                        }
-                    ]
+                    team: {
+                        team_id: teamId,
+                        result: isWinner
+                    }
                 };
                 return {
-                    url: `match/${matchId}/`,
-                    method: "PUT",
+                    url: `match/${matchId}/claim_result/`,
+                    method: "PATCH",
                     body
                 };
             },
-            invalidatesTags: ["Match"]
+            invalidatesTags: ["Match", "Tournament"]
         }),
         getMatchById: build.query<Match, { id: number | string }>({
             query: (search) => {
@@ -60,30 +59,82 @@ export const tournamentAPI = createApi({
             },
             providesTags: ["Tournament"]
         }),
-        registerTeamOnTournament: build.mutation<Tournament, IRegisterTeam>({
-            query: ({ tournamentId, players }) => {
-                players = players.map((player, i) =>
-                    Object.assign(player, { name: "sample name xfrsfasd f" })
-                );
+        registerTeamOnTournament: build.mutation<
+            null,
+            { teamId: number; players: number[]; tournamentId: number }
+        >({
+            // {
+            //     "team": {
+            //         "team_id": 74,
+            //         "players": [
+            //             7
+            //         ]
+            //     }
+            // }
+            query: ({ tournamentId, players, teamId }) => {
+                const body = JSON.stringify({
+                    team: {
+                        team_id: teamId,
+                        players
+                    }
+                });
                 return {
-                    url: `tournament/${tournamentId}/`,
-                    method: "PUT",
+                    url: `tournament/${tournamentId}/register_team/`,
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
-                    body: JSON.stringify({ players })
+                    body
                 };
             },
-            invalidatesTags: ["Tournament"]
+            invalidatesTags: ["Tournament", "Team"]
         }),
-        createTeam: build.mutation<Team, ICreateTeam>({
-            query: (team) => {
-                team.matches = [];
-                team.tournaments = [];
+        createBracket: build.mutation<null, number | string>({
+            query: (id) => {
+                return {
+                    url: `tournament/${id}/bracket/`,
+                    method: "POST"
+                };
+            }
+        }),
+        initializeMatches: build.mutation<null, number | string>({
+            query: (id) => {
+                return {
+                    url: `tournament/${id}/initialize_matches/`,
+                    method: "POST"
+                };
+            }
+        }),
+        createTournament: build.mutation<
+            Tournament,
+            {
+                prize: number | string;
+                name: string;
+                max_rounds: number | string;
+            }
+        >({
+            query: ({ prize, name, max_rounds }) => {
+                const body = JSON.stringify({
+                    name,
+                    prize,
+                    max_rounds
+                });
+                return {
+                    url: `tournament/`,
+                    method: "POST",
+                    body
+                };
+            }
+        }),
+        createTeam: build.mutation<Team, string>({
+            query: (name) => {
+                const body = JSON.stringify({
+                    name
+                });
                 return {
                     url: `team/`,
                     method: "POST",
-                    body: team
+                    body
                 };
             }
         }),
@@ -103,62 +154,52 @@ export const tournamentAPI = createApi({
             },
             providesTags: ["Team"]
         }),
-        applyForTeam: build.mutation<Team, IChangeSelfTeamStatus>({
-            query: ({ teamId, userId, userName }) => {
-                const body = {
-                    players: [
-                        {
-                            id: userId,
-                            name: userName,
-                            team_status: "PENDING"
-                        }
-                    ]
-                };
+        applyForTeam: build.mutation<null, number>({
+            query: (teamId) => {
                 return {
-                    method: "PUT",
-                    url: `team/${teamId}/`,
-                    body
+                    method: "PATCH",
+                    url: `team/${teamId}/apply_for_team/`
                 };
             },
             invalidatesTags: ["Team"]
         }),
-        updateTeamMemberStatus: build.mutation<
-            Team,
-            { teamId: string; userId: number; userName: string; status: string }
+        kickPlayerFromTeam: build.mutation<
+            null,
+            { teamId: number; player_id: number }
         >({
-            query: ({ teamId, userId, userName, status }) => {
-                const body = {
-                    players: [
-                        {
-                            id: userId,
-                            name: userName,
-                            team_status: status
-                        }
-                    ]
-                };
+            query: ({ player_id, teamId }) => {
+                const body = JSON.stringify({
+                    player_id
+                });
                 return {
-                    method: "PUT",
-                    url: `team/${teamId}/`,
+                    method: "DELETE",
+                    url: `team/${teamId}/invite/`,
                     body
                 };
             },
             invalidatesTags: ["Team"]
         }),
-        leaveFromTeam: build.mutation<Team, IChangeSelfTeamStatus>({
-            query: ({ teamId, userId, userName }) => {
-                const body = {
-                    players: [
-                        {
-                            id: userId,
-                            name: userName,
-                            team_status: "REJECTED"
-                        }
-                    ]
-                };
+        invitePlayerToTeam: build.mutation<
+            null,
+            { teamId: number; player_id: number }
+        >({
+            query: ({ player_id, teamId }) => {
+                const body = JSON.stringify({
+                    player_id
+                });
                 return {
-                    method: "PUT",
-                    url: `team/${teamId}/`,
+                    method: "PATCH",
+                    url: `team/${teamId}/invite/`,
                     body
+                };
+            },
+            invalidatesTags: ["Team"]
+        }),
+        leaveFromTeam: build.mutation<null, number>({
+            query: (teamId) => {
+                return {
+                    method: "DELETE",
+                    url: `team/${teamId}/apply_for_team/`
                 };
             },
             invalidatesTags: ["Team"]

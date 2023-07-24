@@ -3,11 +3,7 @@ from datetime import datetime
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .services import add_team_player, change_team_name, change_players_status, is_user_in_team, end_match, \
-    register_team
-from .tasks import create_lobby, set_tournament_status, set_initial_matches, create_bracket
 from turiki.models import *
-from .tasks import exec_task_on_date
 
 """
 В этом файле описывается как отсылаем на клиент и принимаем с клиента информацию о моделях из бд
@@ -27,10 +23,29 @@ User = get_user_model()
 
 
 class UserSerializer(UserCreateSerializer):
+    team_status = serializers.SlugField(read_only=True)
+
     class Meta(UserCreateSerializer.Meta):
         model = User
         # СЮДА ДОБАВЛЯТЬ ПОЛЯ КОТОРЫЕ ПОТОМ ОТСЫЛАЕМ НА КЛИЕНТ
-        fields = ('id', 'email', 'name', 'password', 'is_active', 'team', 'team_status')
+        fields = (
+            "id",
+            "email",
+            "name",
+            "password",
+            "is_active",
+            "team",
+            "team_status",
+            "is_staff",
+        )
+
+    def update(self, instance, validated_data):
+        password = validated_data.pop("password")
+        # if password is not None:
+        #     instance.set_password(password) TODO: umm uhh ,n vm guys
+        super().update(instance, validated_data)
+        instance.save()
+        return instance
 
 
 class MatchSerializer(serializers.ModelSerializer):
@@ -40,16 +55,17 @@ class MatchSerializer(serializers.ModelSerializer):
     class Meta:
         depth = 2
         model = Match
-        fields = ("id", "state", "round_text", "starts", "tournament", "participants", "next_match", "name", "lobby")
-
-    def update(self, instance, validated_data):
-        # set_match_winner(instance)
-        create_lobby(instance)
-        end_match(instance)
-        return instance
-
-    def create(self, validated_data):
-        pass
+        fields = (
+            "id",
+            "state",
+            "round_text",
+            "starts",
+            "tournament",
+            "participants",
+            "next_match",
+            "name",
+            "lobby",
+        )
 
 
 class TeamSerializer(serializers.ModelSerializer):
@@ -72,25 +88,6 @@ class TeamSerializer(serializers.ModelSerializer):
         fields = "__all__"
         extra_fields = ["id"]
 
-    def create(self, validated_data):
-        validated_data.pop("players")
-        user_name = validated_data.get("next_member")
-        is_user_in_team(user_name)
-        team = Team.objects.create(**validated_data)
-        team = add_team_player(team, user_name, "CAPTAIN")
-        return team
-
-    def update(self, instance, validated_data):
-        user_name = validated_data.get("next_member")
-        players = validated_data.get("players")
-        team_name = validated_data.get("name")
-        team = change_team_name(instance, user_name, team_name)
-        if len(players) == 1 and players[0]["team_status"] == "PENDING":
-            team = add_team_player(team, user_name)
-        team = change_players_status(team, players, user_name)
-        team.save()
-        return team
-
 
 class TournamentSerializer(serializers.ModelSerializer):
     teams = TeamSerializer(many=True)
@@ -111,28 +108,16 @@ class TournamentSerializer(serializers.ModelSerializer):
         depth = 2
         model = Tournament
         fields = (
-            'id', 'name', 'prize', "starts", "matches", "teams", "max_rounds", "status", "players")
-
-    def create(self, validated_data):
-        validated_data.pop("matches")
-        validated_data.pop("teams")
-        validated_data.pop("players")
-        rounds = validated_data.get("max_rounds", 1)
-        tourn = Tournament.objects.create(**validated_data)
-        tourn = create_bracket(tourn, rounds)
-        return tourn
-
-    def update(self, instance, validated_data):
-        status = validated_data.pop("status")
-        when_to_update = instance.starts if instance.status in ["REGISTRATION_CLOSED"] else datetime.now()
-        exec_task_on_date(set_tournament_status, [instance, status], when_to_update)
-        set_tournament_status(instance, status)
-        if status == "REGISTRATION_CLOSED" and len(instance.matches.values()) == 0:
-            instance = create_bracket(instance, instance.max_rounds)
-            set_initial_matches(instance)
-        else:
-            print(status)
-        return instance
+            "id",
+            "name",
+            "prize",
+            "starts",
+            "matches",
+            "teams",
+            "max_rounds",
+            "status",
+            "players",
+        )
 
 
 class MessageSerializer(serializers.ModelSerializer):
