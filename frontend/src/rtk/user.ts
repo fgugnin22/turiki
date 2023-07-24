@@ -1,12 +1,44 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { IUser } from "../types";
+import { IUser } from "../shared";
 const server_URL = import.meta.env.VITE_API_URL;
 const removeTokensFromLocalStorage = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
 };
-
+type UserCredentials = {
+    name: string;
+    email: string;
+    password: string;
+};
+export const modifyUserCredentials = createAsyncThunk(
+    "users/modify",
+    async (credentials: Partial<UserCredentials>, thunkAPI) => {
+        const body = JSON.stringify(credentials);
+        try {
+            const res = await fetch(`${server_URL}/auth/users/me/`, {
+                method: "PUT",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                    Authorization: `JWT ${localStorage.getItem("access")}`
+                },
+                body
+            });
+            if (res.status === 200) {
+                return await res.json();
+            } else {
+                return thunkAPI.rejectWithValue(
+                    "Modifying user credentials failed(unprocessed http status code)"
+                );
+            }
+        } catch (e) {
+            return thunkAPI.rejectWithValue(
+                "Modifying user credentials failed with an error in a trycatch statement!)"
+            );
+        }
+    }
+);
 export const googleAuthenticate = createAsyncThunk(
     "users/googleAuth",
     async ({ state, code }: { state: string; code: string }, thunkAPI) => {
@@ -52,10 +84,7 @@ export const googleAuthenticate = createAsyncThunk(
         }
     }
 );
-type SignUpState = {
-    name: string;
-    email: string;
-    password: string;
+type SignUpState = UserCredentials & {
     re_password: string;
 };
 export const register = createAsyncThunk(
@@ -112,6 +141,7 @@ export const getUser = createAsyncThunk(
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (err: any) {
+            removeTokensFromLocalStorage();
             return thunkAPI.rejectWithValue(err.response.data);
         }
     }
@@ -120,7 +150,11 @@ export const getUser = createAsyncThunk(
 export const login = createAsyncThunk(
     "users/login",
     async (
-        { email, password }: { email: string; password: string },
+        {
+            email,
+            password,
+            keepTokens
+        }: { email: string; password: string; keepTokens?: boolean },
         thunkAPI
     ) => {
         const body = JSON.stringify({
@@ -144,14 +178,18 @@ export const login = createAsyncThunk(
                 localStorage.setItem("access", access);
                 localStorage.setItem("refresh", refresh);
                 dispatch(getUser(access));
-
                 return data;
             } else {
-                removeTokensFromLocalStorage();
+                if (!keepTokens) {
+                    removeTokensFromLocalStorage();
+                }
+                console.log(thunkAPI.getState());
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (err: any) {
-            removeTokensFromLocalStorage();
+            if (!keepTokens) {
+                removeTokensFromLocalStorage();
+            }
             return thunkAPI.rejectWithValue(err.response.data);
         }
     }
@@ -320,14 +358,14 @@ interface initialUserState {
     activated: Boolean;
     loginFail: Boolean;
 }
-const initialState = {
+const initialState: initialUserState = {
     isAuthenticated: false,
     userDetails: null,
     loading: false,
     registered: false,
     activated: false,
     loginFail: false
-} as initialUserState;
+};
 
 const userSlice = createSlice({
     name: "user",
@@ -395,6 +433,16 @@ const userSlice = createSlice({
             .addCase(googleAuthenticate.fulfilled, (state) => {
                 state.loading = false;
                 state.isAuthenticated = true;
+            })
+            .addCase(modifyUserCredentials.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(modifyUserCredentials.fulfilled, (state, action) => {
+                state.loading = false;
+                state.userDetails = { ...state.userDetails, ...action.payload };
+            })
+            .addCase(modifyUserCredentials.rejected, (state) => {
+                state.loading = false;
             });
     }
 });

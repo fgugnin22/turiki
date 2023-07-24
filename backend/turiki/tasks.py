@@ -1,5 +1,7 @@
 import datetime
 import dramatiq
+from rest_framework import serializers
+
 from turiki.models import *
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timezone, timedelta
@@ -77,8 +79,8 @@ def set_initial_matches(tournament):
     """
     matches = list(tournament.matches.values())
     teams = list(tournament.teams.values())
-    if len(teams) == 0:
-        return
+    if len(teams) != 2 ** tournament.max_rounds:
+        raise serializers.ValidationError("Неверное кол-во команд для наполнения начальных матчей")
     random.shuffle(teams)
     initial_matches = []
     for match in matches:
@@ -101,12 +103,13 @@ def set_initial_matches(tournament):
 
 
 # TODO: автоматическое отложенное создание сетки перед началом за какое-то кол-во времени
-# TODO: обновить сериализатор (create) чтобы там этой функции не было
 @dramatiq.actor
 def create_bracket(tournament, rounds):
     # вызывает функцию create_match я хз зачем так непонятно сделал с именами, потом переделаю TODO:!!!
-    create_match(rounds, rounds, tournament, None)
-    return tournament
+    if len(list(tournament.teams.values())) == 2 ** rounds and len(list(tournament.matches.values())) == 0:
+        create_match(rounds, rounds, tournament, None)
+        return tournament
+    raise serializers.ValidationError("Недостаточно команд для старта турнира")
 
 
 @dramatiq.actor
@@ -130,7 +133,7 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             starts=starts
         )
         exec_task_on_date(set_match_active, [final_match.id],
-                          when=starts + datetime.timedelta(minutes=(next_round_count - 1) * 60))
+                          when=starts + timedelta(minutes=(next_round_count - 1) * 60))
         create_match(next_round_count - 1, rounds, tournament, final_match, starts)
     else:
         match1 = Match.objects.create(

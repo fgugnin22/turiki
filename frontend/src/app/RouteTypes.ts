@@ -1,6 +1,7 @@
 import { route, number } from "react-router-typesafe-routes/dom";
 export const ROUTES = {
     DASHBOARD: route("dashboard"),
+    ADMINPAGE: route("adminboard"),
     LOGIN: route("login"),
     REGISTER_ACCOUNT: route("signup"),
     RESET_PASSWORD: route("reset-password"),

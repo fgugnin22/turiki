@@ -26,9 +26,16 @@ export interface IUser {
     id: number;
     email: string;
     name: string;
-    is_active: Boolean;
+    is_active: boolean;
     team: number;
-    team_status: "CAPTAIN" | "REJECTED" | "ACTIVE" | "MANAGER" | "PENDING" | null;
+    is_staff: boolean;
+    team_status:
+        | "CAPTAIN"
+        | "REJECTED"
+        | "ACTIVE"
+        | "MANAGER"
+        | "PENDING"
+        | null;
 }
 export interface IRegisterTeam {
     tournamentId: number;

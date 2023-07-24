@@ -1,11 +1,11 @@
 import { useParams } from "react-router-dom";
-import Layout from "../hocs/Layout";
+import {Layout} from "../processes/Layout";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import { useAppSelector } from "../rtk/store";
-import Chat from "../components/Chat";
-import TeamPlayerList from "../components/TeamPlayerList";
-import MatchResultBar from "../components/MatchResultBar";
-import MatchResultVote from "../components/MatchResultVote";
+import Chat from "../features/Chat";
+import TeamPlayerList from "../features/TeamPlayerList";
+import MatchResultBar from "../features/MatchResultBar";
+import MatchResultVote from "../features/MatchResultVote";
 const Match = () => {
     const { userDetails: user, isAuthenticated } = useAppSelector((state) => state.user);
     const params = useParams();
@@ -73,7 +73,7 @@ const Match = () => {
                         isActive={match.state === "ACTIVE"}
                         isCaptain={user?.team_status === "CAPTAIN"}
                         matchId={match?.id}
-                        participantId={selfParticipant?.id}
+                        teamId={user?.team}
                         isWinner={selfParticipant?.is_winner}
                         claimMatchResult={claimMatchResult}
                     />
