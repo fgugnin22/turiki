@@ -10,9 +10,10 @@ const RegisterTeamModal = ({
     tournamentId: number;
 }) => {
     const stackLength = Number(import.meta.env.VITE_STACK_LENGTH);
-    const [submitError, setSubmitError] = useState(false);
+    const [submitError, setSubmitError] = useState<any>(false);
     const [formState, setFormState] = useState<boolean[]>([]);
     const checkHandler = (e: React.FormEvent<HTMLInputElement>) => {
+        setSubmitError(false);
         const target = e.target as HTMLInputElement;
         setFormState((prev) => {
             prev[Number(target.value)] = !prev[Number(target.value)];
@@ -36,7 +37,7 @@ const RegisterTeamModal = ({
 
         if (assignedPlayers?.length !== stackLength) {
             console.log("there", stackLength === assignedPlayers?.length);
-            setSubmitError(true);
+            setSubmitError(`Выберите ${stackLength} игроков`);
             return;
         }
         registerTeam({
@@ -48,18 +49,23 @@ const RegisterTeamModal = ({
             .then(() => {
                 setShowModal(false);
             })
-            .catch(() => setSubmitError(true));
+            .catch((error) => {
+                setSubmitError(error.data[0]);
+            });
         setShowModal(false);
     };
     return (
         <>
             <div className="flex items-center justify-center">
                 <button
-                    className="px-6 py-3 text-purple-100 bg-purple-600 rounded-md"
+                    className="px-6 py-3 text-lg text-purple-100 bg-purple-600 hover:bg-purple-700 transition-colors active:bg-sky-700 rounded-md w-48 min-h-[5.5rem]"
                     type="button"
-                    onClick={() => setShowModal(true)}
+                    onClick={() => {
+                        setSubmitError(false);
+                        setShowModal(true);
+                    }}
                 >
-                    Register Team
+                    {submitError ? submitError : "Зарегистрировать команду"}
                 </button>
             </div>
             {showModal ? (

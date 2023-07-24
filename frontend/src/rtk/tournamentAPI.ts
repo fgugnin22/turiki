@@ -1,6 +1,6 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Match, Team, Tournament } from "../helpers/transformMatches";
-import { IChangeSelfTeamStatus, ICreateTeam, IRegisterTeam } from "../types";
+import { IChangeSelfTeamStatus, ICreateTeam, IRegisterTeam } from "../shared";
 
 export const tournamentAPI = createApi({
     reducerPath: "tournamentAPI",

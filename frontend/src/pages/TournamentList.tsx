@@ -48,7 +48,10 @@ const TournamentList = () => {
                             })}
                         >
                             {tourn.name}; prize: {tourn.prize} teams:{" "}
-                            {tourn.teams.length} status: {tourn.status}
+                            {tourn.teams.length}
+                            {";"} status: {tourn.status}
+                            {"; "}
+                            Кол-во раундов: {tourn.max_rounds}
                         </Link>
                         {userDetails?.is_staff && (
                             <>

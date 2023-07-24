@@ -13,11 +13,13 @@ def register_team(tournament, team, players_ids, action):
     Регистрация команды вместе с игроками
     """
     if tournament.status != "REGISTRATION_OPENED":
-        return "operation cancelled"
+        raise serializers.ValidationError("registration cancelled")
     if action == "REGISTER":
         teams = map(lambda x: x["id"], list(tournament.teams.values()))
         if team.id in teams:
-            return "registration cancelled"
+            raise serializers.ValidationError("already registered")
+        if len(tournament.teams.values()) >= 2 ** tournament.max_rounds:
+            raise serializers.ValidationError("tournament max teams count reached")
         tournament.teams.add(team)
         for i, player_id in enumerate(players_ids):
             try:

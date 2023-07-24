@@ -81,20 +81,14 @@ class TournamentAPIView(ModelViewSet):
 
     @action(methods=["POST"], detail=True, permission_classes=[IsAdminUser])
     def bracket(self, request, pk=None):
-        try:
-            tourn = self.get_object()
-            create_bracket(tourn, tourn.max_rounds)
-            return Response(201)
-        except:
-            return Response(400)
+        tourn = self.get_object()
+        create_bracket(tourn, tourn.max_rounds)
+        return Response(status=201)
 
     @action(methods=["POST"], detail=True, permission_classes=[IsAdminUser])
     def initialize_matches(self, request, pk=None):
-        try:
-            set_initial_matches(tournament=self.get_object())
-            return Response(201)
-        except:
-            return Response(400)
+        set_initial_matches(tournament=self.get_object())
+        return Response(status=201)
 
 
 class MatchAPIView(ModelViewSet):

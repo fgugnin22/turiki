@@ -5,8 +5,10 @@ import { logout } from "../rtk/user";
 import { ROUTES } from "../app/RouteTypes";
 const NavBar = () => {
     const dispatch = useAppDispatch();
-    const access = localStorage.getItem("access");
-    const { isAuthenticated, userDetails: user } = useAppSelector((state) => state.user);
+    const { userDetails } = useAppSelector((state) => state.user);
+    const { isAuthenticated, userDetails: user } = useAppSelector(
+        (state) => state.user
+    );
     const guestLinks = () => {
         return (
             <div className="md:flex items-center space-x-1">
@@ -26,6 +28,7 @@ const NavBar = () => {
     const authLinks = () => {
         return (
             <div>
+                {userDetails?.name}
                 <a
                     className=""
                     onClick={() => {
@@ -33,7 +36,7 @@ const NavBar = () => {
                     }}
                     href="#"
                 >
-                    Logout
+                    , Logout
                 </a>
                 {user && !user.team ? (
                     <Link

@@ -1,5 +1,7 @@
 import datetime
 import dramatiq
+from rest_framework import serializers
+
 from turiki.models import *
 from apscheduler.schedulers.background import BackgroundScheduler
 from datetime import datetime, timezone, timedelta
@@ -77,8 +79,8 @@ def set_initial_matches(tournament):
     """
     matches = list(tournament.matches.values())
     teams = list(tournament.teams.values())
-    if len(teams) == 0:
-        return
+    if len(teams) != 2 ** tournament.max_rounds:
+        raise serializers.ValidationError("Неверное кол-во команд для наполнения начальных матчей")
     random.shuffle(teams)
     initial_matches = []
     for match in matches:
@@ -106,7 +108,8 @@ def create_bracket(tournament, rounds):
     # вызывает функцию create_match я хз зачем так непонятно сделал с именами, потом переделаю TODO:!!!
     if len(list(tournament.teams.values())) == 2 ** rounds and len(list(tournament.matches.values())) == 0:
         create_match(rounds, rounds, tournament, None)
-    return tournament
+        return tournament
+    raise serializers.ValidationError("Недостаточно команд для старта турнира")
 
 
 @dramatiq.actor
