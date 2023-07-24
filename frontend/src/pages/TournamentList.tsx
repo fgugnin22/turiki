@@ -36,7 +36,7 @@ const TournamentList = () => {
         <Layout>
             <div>TournamentList</div>
             {isSuccess && data?.length > 0 ? (
-                data?.map((tourn, index: number) => (
+                data?.map((tourn, index) => (
                     <div
                         className="p-3 my-4 text-center bg-slate-300 flex flex-row flex-wrap"
                         key={index}

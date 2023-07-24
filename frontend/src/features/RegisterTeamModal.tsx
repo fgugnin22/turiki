@@ -56,9 +56,12 @@ const RegisterTeamModal = ({
     };
     return (
         <>
-            <div className="flex items-center justify-center">
+            <div
+                onMouseOver={() => setSubmitError(false)}
+                className="flex items-center justify-center"
+            >
                 <button
-                    className="px-6 py-3 text-lg text-purple-100 bg-purple-600 hover:bg-purple-700 transition-colors active:bg-sky-700 rounded-md w-48 min-h-[5.5rem]"
+                    className={`px-6 py-3 text-lg ${submitError ? "text-white bg-red-500" : "text-purple-100 bg-purple-600 hover:bg-purple-700"} duration-300 transition-colors active:bg-sky-700 rounded-md w-48 min-h-[5.5rem]`}
                     type="button"
                     onClick={() => {
                         setSubmitError(false);

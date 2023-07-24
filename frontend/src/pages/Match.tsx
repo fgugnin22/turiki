@@ -44,6 +44,7 @@ const Match = () => {
                 ? match?.participants[1]
                 : null;
     }
+    console.log(selfParticipant)
     return (
         <Layout>
             {isSuccess && (

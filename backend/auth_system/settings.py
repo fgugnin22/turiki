@@ -37,11 +37,7 @@ INSTALLED_APPS = [
     "django_extensions",
 ]
 # Откуда могут приходить запросы на сервер
-CORS_ORIGIN_WHITELIST = (
-    "http://localhost:8000",  # for localhost
-    "http://localhost:5173",
-    "http://127.0.0.1:8000",  # for network
-)
+ALLOWED_HOSTS = ["*"]
 CORS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE = [

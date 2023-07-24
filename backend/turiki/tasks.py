@@ -13,12 +13,6 @@ IN_A_MINUTE = datetime.now() + timedelta(minutes=0.5)
 
 # TODO: rabbitmq server start script path: C:\Program Files\RabbitMQ Server\rabbitmq_server-3.11.17\sbin
 
-@dramatiq.actor
-def set_match_state(match_id: int, state: str):
-    match: type(Match) = Match.objects.get(pk=match_id)
-    match.state = state
-    match.save()
-
 
 @dramatiq.actor
 def set_match_active(match_id: int):
@@ -27,9 +21,10 @@ def set_match_active(match_id: int):
     create_lobby(instance)
 
 
-def exec_task_on_date(func: type(set_match_state), args: list, when=datetime.now()):
+def exec_task_on_date(func, args: list, when=datetime.now()):
     scheduler = BackgroundScheduler()
     scheduler.add_job(func.send, 'date', run_date=when, args=args, misfire_grace_time=10 ** 6)
+    print(when)
     try:
         scheduler.start()
     except KeyboardInterrupt:
@@ -44,6 +39,7 @@ def exec_task_on_date(func: type(set_match_state), args: list, when=datetime.now
 def set_active(match):  # self-explanatory fr tho
     if match.state == "NO_SHOW":
         match.state = "ACTIVE"
+        print("BLACK MEN SHAKING THEIR BOOTY CHEEKS")
         match.save()
 
 
@@ -51,8 +47,6 @@ def set_active(match):  # self-explanatory fr tho
 @dramatiq.actor
 def create_lobby(match):
     # создание лобби и чата в матче если в нем есть 2 команды, он не закончен
-    if not (len(match.participants.values()) == 2 and (not ("DONE" in match.state))):
-        return
     try:
         if match.lobby is not None:
             print("lobby already created")
