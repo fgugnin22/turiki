@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 
 import { Team } from "../helpers/transformMatches";
@@ -54,6 +54,23 @@ const RegisterTeamModal = ({
             });
         setShowModal(false);
     };
+    const buttonColors = useRef<string>(
+        `#${parseInt(String(Math.round(10 * Math.random())), 16)}${parseInt(
+            String(Math.round(10 * Math.random())),
+            16
+        )}${parseInt(String(Math.round(10 * Math.random())), 16)}`
+    );
+    useEffect(() => {
+        buttonColors.current = `#${parseInt(
+            String(Math.round(10 * Math.random())),
+            16
+        )}${parseInt(String(Math.round(10 * Math.random())), 16)}${parseInt(
+            String(Math.round(10 * Math.random())),
+            16
+        )}`;
+    }, [team]);
+
+    console.log(`bg-[${buttonColors.current}]`);
     return (
         <>
             <div
@@ -61,7 +78,18 @@ const RegisterTeamModal = ({
                 className="flex items-center justify-center"
             >
                 <button
-                    className={`px-6 py-3 text-lg ${submitError ? "text-white bg-red-500" : "text-purple-100 bg-purple-600 hover:bg-purple-700"} duration-300 transition-colors active:bg-sky-700 rounded-md w-48 min-h-[5.5rem]`}
+                    style={
+                        !submitError
+                            ? {
+                                  backgroundColor: `${buttonColors.current}`
+                              }
+                            : undefined
+                    }
+                    className={`px-6 py-3 text-lg ${
+                        submitError
+                            ? "text-white bg-red-500"
+                            : `text-purple-100 hover:bg-purple-700`
+                    } duration-300 transition-colors active:bg-sky-700 rounded-md w-48 min-h-[5.5rem]`}
                     type="button"
                     onClick={() => {
                         setSubmitError(false);

@@ -12,13 +12,13 @@ const TournamentList = () => {
     const [fetchTeamById] = tournamentAPI.useLazyGetTeamByIdQuery();
     const { data, error, isLoading, isSuccess } =
         tournamentAPI.useGetAllTournamentsQuery(null);
-    const [teamIds, setTeamIds] = useState<number[]>([]);
+    const [teamIds, setTeamIds] = useState<any[]>([]);
     const [teams, setTeams] = useState<Team[]>([]);
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
         const target = e.target as HTMLInputElement;
         console.log(teamIds);
         setTeamIds((prev) => {
-            prev[Number(target.id)] = Number(target.value);
+            prev[Number(target.id)] = target.value === "" ? "" : Number(target.value);
             return [...prev];
         });
     };
@@ -96,7 +96,7 @@ const TournamentList = () => {
                                             value={teamIds[index]}
                                             onChange={handleChange}
                                             className="h-10 w-48 text-xl ml-auto"
-                                            type="text"
+                                            type="number"
                                             placeholder="Введите id команды"
                                         />
                                     </div>
