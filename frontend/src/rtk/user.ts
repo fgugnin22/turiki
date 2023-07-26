@@ -183,7 +183,6 @@ export const login = createAsyncThunk(
                 if (!keepTokens) {
                     removeTokensFromLocalStorage();
                 }
-                console.log(thunkAPI.getState());
                 return thunkAPI.rejectWithValue(data);
             }
         } catch (err: any) {

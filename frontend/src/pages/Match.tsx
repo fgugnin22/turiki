@@ -1,5 +1,5 @@
 import { useParams } from "react-router-dom";
-import {Layout} from "../processes/Layout";
+import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../rtk/tournamentAPI";
 import { useAppSelector } from "../rtk/store";
 import Chat from "../features/Chat";
@@ -7,7 +7,9 @@ import TeamPlayerList from "../features/TeamPlayerList";
 import MatchResultBar from "../features/MatchResultBar";
 import MatchResultVote from "../features/MatchResultVote";
 const Match = () => {
-    const { userDetails: user, isAuthenticated } = useAppSelector((state) => state.user);
+    const { userDetails: user, isAuthenticated } = useAppSelector(
+        (state) => state.user
+    );
     const params = useParams();
     const {
         data: match,
@@ -24,7 +26,6 @@ const Match = () => {
         { skip: isFetching || !match?.lobby }
     );
     const messages = chat?.messages;
-    console.log(chat, match?.lobby?.chat?.id)
     const { data: team1, isSuccess: isTeam1Success } =
         tournamentAPI.useGetTeamByIdQuery(match?.participants[0]?.team.id, {
             skip: isFetching || !match?.participants[0]?.team?.id
@@ -44,7 +45,7 @@ const Match = () => {
                 ? match?.participants[1]
                 : null;
     }
-    console.log(selfParticipant)
+
     return (
         <Layout>
             {isSuccess && (
@@ -81,10 +82,7 @@ const Match = () => {
                 </>
             )}
             {isGetMessagesSuccess && isAuthenticated && (
-                <Chat
-                    messages={messages}
-                    chatId={match?.lobby?.chat?.id!}
-                />
+                <Chat messages={messages} chatId={match?.lobby?.chat?.id!} />
             )}
         </Layout>
     );

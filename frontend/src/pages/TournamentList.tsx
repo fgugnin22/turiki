@@ -16,7 +16,6 @@ const TournamentList = () => {
     const [teams, setTeams] = useState<Team[]>([]);
     const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
         const target = e.target as HTMLInputElement;
-        console.log(teamIds);
         setTeamIds((prev) => {
             prev[Number(target.id)] = target.value === "" ? "" : Number(target.value);
             return [...prev];
@@ -30,7 +29,6 @@ const TournamentList = () => {
             return [...prev];
         });
     };
-    console.log(teams);
     const { userDetails } = useAppSelector((state) => state.user);
     return (
         <Layout>

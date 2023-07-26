@@ -70,7 +70,6 @@ const RegisterTeamModal = ({
         )}`;
     }, [team]);
 
-    console.log(`bg-[${buttonColors.current}]`);
     return (
         <>
             <div
