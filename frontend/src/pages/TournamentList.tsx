@@ -30,7 +30,7 @@ const TournamentList = () => {
             return [...prev];
         });
     };
-
+    console.log(teams);
     const { userDetails } = useAppSelector((state) => state.user);
     return (
         <Layout>
@@ -73,7 +73,10 @@ const TournamentList = () => {
                                 </div>
                                 <div className="ml-auto flex w-1/3">
                                     {teams[index] && (
-                                        <div className="self-end mt-auto">
+                                        <div
+                                            className="self-end mt-auto"
+                                            key={teams[index].id}
+                                        >
                                             <RegisterTeamModal
                                                 tournamentId={tourn.id}
                                                 team={teams[index]}

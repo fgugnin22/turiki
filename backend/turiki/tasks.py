@@ -1,4 +1,3 @@
-import datetime
 import dramatiq
 from rest_framework import serializers
 
@@ -73,34 +72,38 @@ def set_initial_matches(tournament):
     """
     matches = list(tournament.matches.values())
     teams = list(tournament.teams.values())
-    if len(teams) != 2 ** tournament.max_rounds:
+    is_enough_teams_to_start = len(teams) == 2 ** tournament.max_rounds
+    if not is_enough_teams_to_start:
         raise serializers.ValidationError("Неверное кол-во команд для наполнения начальных матчей")
     random.shuffle(teams)
     initial_matches = []
     for match in matches:
-        if int(match["name"]) == int(tournament.max_rounds):
+        is_match_initial = int(match["name"]) == int(tournament.max_rounds)
+        if is_match_initial:
             initial_matches.append(match)
     for i, match in enumerate(initial_matches):
-        m = Match.objects.get(pk=match["id"])
+        match_object = Match.objects.get(pk=match["id"])
         team1 = teams.pop()
         team1 = Team.objects.get(pk=team1["id"])
         participant1 = Participant.objects.create(
-            team=team1, match=m, status="NO_SHOW", result_text="TBD"
+            team=team1, match=match_object, status="NO_SHOW", result_text="TBD"
         )
         team2 = teams.pop()
         team2 = Team.objects.get(pk=team2["id"])
         participant2 = Participant.objects.create(
-            team=team2, match=m, status="NO_SHOW", result_text="TBD"
+            team=team2, match=match_object, status="NO_SHOW", result_text="TBD"
         )
-        m.participants.add(participant1)
-        m.participants.add(participant2)
+        match_object.participants.add(participant1)
+        match_object.participants.add(participant2)
 
 
 # TODO: автоматическое отложенное создание сетки перед началом за какое-то кол-во времени
 @dramatiq.actor
 def create_bracket(tournament, rounds):
     # вызывает функцию create_match я хз зачем так непонятно сделал с именами, потом переделаю TODO:!!!
-    if len(list(tournament.teams.values())) == 2 ** rounds and len(list(tournament.matches.values())) == 0:
+    is_enough_teams_to_start_tournament = len(list(tournament.teams.values())) == 2 ** rounds and len(
+        list(tournament.matches.values())) == 0
+    if is_enough_teams_to_start_tournament:
         create_match(rounds, rounds, tournament, None)
         return tournament
     raise serializers.ValidationError("Недостаточно команд для старта турнира")
@@ -126,8 +129,9 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             tournament=tournament,
             starts=starts
         )
+        time_to_start_match_from_beginning_of_tournament = timedelta(minutes=(next_round_count - 1) * 60)
         exec_task_on_date(set_match_active, [final_match.id],
-                          when=starts + timedelta(minutes=(next_round_count - 1) * 60))
+                          when=starts + time_to_start_match_from_beginning_of_tournament)
         create_match(next_round_count - 1, rounds, tournament, final_match, starts)
     else:
         match1 = Match.objects.create(
