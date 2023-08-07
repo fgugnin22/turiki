@@ -60,6 +60,7 @@ class Team(models.Model):
 
 
 class Match(models.Model):
+    # maps = models.
     teams = models.ManyToManyField(Team, related_name="matches", blank=True, through="Participant")
     next_match = models.ForeignKey('Match', unique=False, on_delete=models.SET_NULL, related_name='previous_match',
                                    null=True, blank=True)

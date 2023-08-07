@@ -10,7 +10,7 @@ const TournamentRegisterTeam = () => {
     return (
         <Layout>
             <div className="relative">
-                <RegisterTeamModal />
+                {/* <RegisterTeamModal /> */}
             </div>
         </Layout>
     );

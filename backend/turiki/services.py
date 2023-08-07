@@ -1,11 +1,28 @@
+from datetime import timedelta, datetime
+
 from channels.db import database_sync_to_async
 import jwt
-from .tasks import *
+from .models import *
 from rest_framework import serializers
 
 """
 В этот файл я попытался частично вынести более сложную логику по работе с бд и некоторые функции хелперы
 """
+
+
+class TournamentService:
+    def __init__(self, tournament):
+        self.object = tournament
+
+
+class MatchService:
+    def __init__(self, match):
+        self.object = match
+
+
+class TeamService:
+    def __init__(self, team):
+        self.object = team
 
 
 def register_team(tournament, team, players_ids, action):
@@ -42,7 +59,8 @@ def register_team(tournament, team, players_ids, action):
         teams = map(lambda x: x["id"], list(tournament.teams.values()))
         tourn_players = list(map(lambda x: x["id"], list(tournament.players.values())))
         tournament.teams.remove(team)
-        if team.id not in teams:
+        is_team_in_tournament = team.id in teams
+        if not is_team_in_tournament:
             return "registration changing cancelled"
         for i, player_id in enumerate(tourn_players):
             try:
