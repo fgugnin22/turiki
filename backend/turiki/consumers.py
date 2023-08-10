@@ -1,8 +1,7 @@
 from asgiref.sync import async_to_sync, sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 import json
-from .models import Message, Chat
-from turiki.services import async_return_user, create_message, async_create_message
+from turiki.services import async_return_user, async_create_message
 
 
 # noinspection PyBroadException

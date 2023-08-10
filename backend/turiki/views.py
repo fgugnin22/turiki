@@ -16,7 +16,7 @@ from turiki.serializers import (
     TeamSerializer,
     ChatSerializer,
 )
-from turiki.services import *
+from turiki.services import TeamService, MatchService, TournamentService
 from turiki.tasks import *
 
 """
@@ -48,7 +48,7 @@ class TournamentAPIView(ModelViewSet):
             prize = prize if prize is not None else "Prize too xd"
             max_rounds = max_rounds if max_rounds is not None else 1000
 
-            tourn = create_tournament(name, prize, max_rounds)
+            tourn = TournamentService.create_tournament(name, prize, max_rounds)
             return Response(model_to_dict(tourn), 201)
         except:
             return Response("something went wrong when creating the tournament", 400)
@@ -66,12 +66,12 @@ class TournamentAPIView(ModelViewSet):
         tournament = self.get_object()
         if request.method == "POST":
             players_ids = request.data["team"]["players"]
-            result = register_team(tournament, team, players_ids, "REGISTER")
+            result = TournamentService.register_team(tournament, team, players_ids, "REGISTER")
         elif request.method == "DELETE":
-            result = register_team(tournament, team, None, "CANCEL_REGISTRATION")
+            result = TournamentService.register_team(tournament, team, None, "CANCEL_REGISTRATION")
         elif request.method == "PATCH":
             players_ids = request.data["team"]["players"]
-            result = register_team(tournament, team, players_ids, "CHANGE_PLAYERS")
+            result = TournamentService.register_team(tournament, team, players_ids, "CHANGE_PLAYERS")
         return Response(f"{result}")
 
     @action(methods=["PATCH"], detail=True, permission_classes=[IsAdminUser])
@@ -109,7 +109,7 @@ class MatchAPIView(ModelViewSet):
             result = request.data["team"]["result"]
             if type(result) != bool:
                 return Response("type of match result must be boolean", status=400)
-            claim_match_result(match, team_id, result)
+            MatchService.claim_match_result(match, team_id, result)
             return Response("Match result has been claimed")
         except:
             return Response("data types mismatch", status=400)
@@ -134,9 +134,9 @@ class TeamAPIView(ModelViewSet):
     def apply_for_team(self, request, pk=None):
         team = self.get_object()
         if request.method == "PATCH":
-            res = apply_for_team(team, request.user)
+            res = TeamService.apply_for_team(team, request.user)
         elif request.method == "DELETE":
-            res = remove_from_team(team, request.user)
+            res = TeamService.remove_from_team(team, request.user)
         if res is not None:
             return Response(res)
         return Response("Nothing seemed to happen")
@@ -151,9 +151,9 @@ class TeamAPIView(ModelViewSet):
         player = UserAccount.objects.get(pk=request.data["player_id"])
         res = None
         if request.method == "PATCH":
-            res = invite_player(team, player)
+            res = TeamService.invite_player(team, player)
         elif request.method == "DELETE":
-            res = remove_from_team(team, player)
+            res = TeamService.remove_from_team(team, player)
         return Response(res)
 
     @action(
@@ -165,14 +165,14 @@ class TeamAPIView(ModelViewSet):
         try:
             team = self.get_object()
             name = request.data.pop("name")
-            res = change_team_name(team, name)
+            res = TeamService.change_team_name(team, name)
             return Response(res, 200)
         except:
             return Response(status=400)
 
     def create(self, request, *args, **kwargs):
         try:
-            team = create_team(user=request.user, name=request.data.pop("name"))
+            team = TeamService.create_team(user=request.user, name=request.data.pop("name"))
             return Response(model_to_dict(team), 201)
         except:
             return Response(status=400)
