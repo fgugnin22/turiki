@@ -17,6 +17,7 @@ import TeamList from "../pages/TeamList";
 import TournmanetList from "../pages/TournamentList";
 import { ROUTES } from "./RouteTypes";
 import AdminBoard from "../pages/AdminBoard";
+import BracketExample from "../shared/BracketExample";
 // import Test from "./pages/Test";
 function App() {
     return (
@@ -82,6 +83,10 @@ function App() {
                     <Route
                         path={ROUTES.TOURNAMENTS.path}
                         element={<TournmanetList />}
+                    ></Route>
+                    <Route
+                        path="/examples/:name"
+                        element={<BracketExample />}
                     ></Route>
                 </Routes>
             </BrowserRouter>
