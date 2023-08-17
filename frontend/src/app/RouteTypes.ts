@@ -40,7 +40,8 @@ export const ROUTES = {
                     params: { id: number().defined() }
                 },
                 {
-                    REGISTER_TEAM: route("register")
+                    REGISTER_TEAM: route("register"),
+                    BRACKET: route("bracket")
                 }
             )
         }

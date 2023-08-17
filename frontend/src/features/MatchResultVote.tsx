@@ -14,6 +14,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
     if (!props.teamId) {
         return <></>;
     }
+    console.log(props)
     return (
         <div>
             {Number(props.starts) < Number(new Date()) &&

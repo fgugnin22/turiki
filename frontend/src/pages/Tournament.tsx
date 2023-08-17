@@ -13,6 +13,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../rtk/store";
 import { ROUTES } from "../app/RouteTypes";
 import RegisterTeamModal from "../features/RegisterTeamModal";
+import Bracket from "../shared/Bracket";
 export interface IMatch {
     id: number;
     nextMatchId: number | null;
@@ -51,15 +52,19 @@ export const Tournament = () => {
     const { userDetails: user, isAuthenticated } = useAppSelector(
         (state) => state.user
     );
-    const { data, error, isLoading, isSuccess } =
-        tournamentAPI.useGetTournamentByIdQuery({
-            id: tournId!
-        });
+    const {
+        data: tournament,
+        error,
+        isLoading,
+        isSuccess
+    } = tournamentAPI.useGetTournamentByIdQuery({
+        id: tournId!
+    });
     const isTeamNotRegistered =
         user &&
         isSuccess &&
-        data &&
-        !data.teams.some((team: Team) => Number(team.id) === user.team);
+        tournament &&
+        !tournament.teams.some((team: Team) => Number(team.id) === user.team);
     const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
         skip: !isTeamNotRegistered
     });
@@ -78,39 +83,32 @@ export const Tournament = () => {
         navigate(`/match/${match.id}`);
     };
 
-    if (isSuccess) {
-        matches = transformMatches(data);
-    }
     return (
         <Layout>
             <div className="flex justify-center">
                 <div className="w-full bg-slate-400">
-                    {isTeamNotRegistered && <RegisterTeamModal tournamentId={tournId} team={team!} />}
+                    {isTeamNotRegistered && (
+                        <RegisterTeamModal
+                            tournamentId={tournId}
+                            team={team!}
+                        />
+                    )}
                 </div>
                 {isSuccess &&
-                Object.keys(data).length > 0 &&
-                data.matches.length > 0 ? (
-                    <SingleEliminationBracket
-                        theme={GlootTheme}
-                        matches={matches}
-                        matchComponent={Match}
-                        svgWrapper={({ children, ...props }) => (
-                            <SVGViewer
-                                width={width}
-                                height={height}
-                                background="rgb(11, 13, 19)"
-                                SVGBackground="rgb(11, 13, 19)"
-                                {...props}
-                            >
-                                {children}
-                            </SVGViewer>
-                        )}
-                        onMatchClick={matchClickHandler as any}
-                        onPartyClick={
-                            /* partyClickHandler */ () =>
-                                console.log("participant click!")
+                Object.keys(tournament).length > 0 &&
+                tournament.matches.length > 0 ? (
+                    <button
+                        className="p-3 bg-slate-600 text-white flex items-center"
+                        onClick={() =>
+                            navigate(
+                                ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.BRACKET.buildPath(
+                                    { id: tournament.id }
+                                )
+                            )
                         }
-                    />
+                    >
+                        Смотреть турнирную сетку
+                    </button>
                 ) : (
                     <span className="py-full text-center w-[20%] bg-orange-600 text-xl">
                         Tournament bracket in process
