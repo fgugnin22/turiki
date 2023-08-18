@@ -9,7 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@g-loot/react-tournament-brackets": "^1.0.28",
     "@reduxjs/toolkit": "^1.9.5",
     "axios": "^1.3.6",
     "react": "^18.2.0",
@@ -29,6 +28,7 @@
     "@vitejs/plugin-react-swc": "^3.0.0",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.23",
+    "tailwind-scrollbar": "^3.0.5",
     "tailwindcss": "^3.3.2",
     "typescript": "^4.9.5",
     "vite": "^4.2.0"
