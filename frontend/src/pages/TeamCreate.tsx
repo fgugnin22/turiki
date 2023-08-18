@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Layout } from "../processes/Layout";
-import { useAppSelector } from "../rtk/store";
-import { tournamentAPI } from "../rtk/tournamentAPI";
+import { useAppSelector } from "../shared/rtk/store";
+import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 const TeamCreate = () => {
     const [createTeam] = tournamentAPI.useCreateTeamMutation();
     const { isAuthenticated, userDetails: user } = useAppSelector(

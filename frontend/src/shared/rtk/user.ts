@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
-import { IUser } from "../shared";
+import { IUser } from "..";
 const server_URL = import.meta.env.VITE_API_URL;
 const removeTokensFromLocalStorage = () => {
     localStorage.removeItem("access");

@@ -1,4 +1,4 @@
-import { tournamentAPI } from "../rtk/tournamentAPI";
+import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 
 interface MatchResultVoteProps {
     starts: Date;

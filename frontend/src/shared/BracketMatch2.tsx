@@ -18,7 +18,7 @@ const BracketMatch2 = () => {
                 ------------{" "}
                 <p className=" font-bold float-right">TBD</p>
             </div>
-            <BracketConnecter />
+            {/* <BracketConnecter /> */}
         </div>
     );
 };

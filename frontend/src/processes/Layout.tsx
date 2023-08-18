@@ -2,8 +2,8 @@ import React, { useEffect } from "react";
 import NavBar from "../widgets/NavBar";
 import Footer from "../widgets/Footer";
 import { getParameterByName } from "../helpers/getParameterByName";
-import { checkAuth, googleAuthenticate } from "../rtk/user";
-import { useAppDispatch, useAppSelector } from "../rtk/store";
+import { checkAuth, googleAuthenticate } from "../shared/rtk/user";
+import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 export const Layout = (props: {children: React.ReactNode[] | React.ReactNode}) => {
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();

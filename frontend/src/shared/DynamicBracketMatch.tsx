@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import { tournamentAPI } from "../rtk/tournamentAPI";
+import { tournamentAPI } from "./rtk/tournamentAPI";
 import BracketConnecter from "./BracketConnecter";
 import { ROUTES } from "../app/RouteTypes";
-import { useAppSelector } from "../rtk/store";
+import { useAppSelector } from "./rtk/store";
 
 type participants = {
     name: string;

@@ -1,9 +1,9 @@
 import React, { ReactEventHandler, useState } from "react";
 import {Layout} from "../processes/Layout";
 import { Navigate, useParams } from "react-router-dom";
-import { activate } from "../rtk/user";
+import { activate } from "../shared/rtk/user";
 import { useDispatch } from "react-redux";
-import { useAppDispatch } from "../rtk/store";
+import { useAppDispatch } from "../shared/rtk/store";
 import { ROUTES } from "../app/RouteTypes";
 const Activate = () => {
     const dispatch = useAppDispatch();

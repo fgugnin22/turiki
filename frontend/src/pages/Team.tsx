@@ -1,8 +1,8 @@
 import React from "react";
 import { useParams } from "react-router-dom";
-import { useAppSelector } from "../rtk/store";
+import { useAppSelector } from "../shared/rtk/store";
 import { Layout } from "../processes/Layout";
-import { tournamentAPI } from "../rtk/tournamentAPI";
+import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 
 const Team = () => {
     const { userDetails: user, isAuthenticated } = useAppSelector(

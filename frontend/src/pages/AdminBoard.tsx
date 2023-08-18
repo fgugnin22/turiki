@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "../processes/Layout";
-import { tournamentAPI } from "../rtk/tournamentAPI";
+import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 const AdminBoard = () => {
     return (
         <Layout>

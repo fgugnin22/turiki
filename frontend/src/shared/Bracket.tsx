@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import { Match, Tournament } from "../helpers/transformMatches";
-import { tournamentAPI } from "../rtk/tournamentAPI";
+import { tournamentAPI } from "./rtk/tournamentAPI";
 import { DraggableParent } from "./DraggableParent";
 import DynamicBracketMatch from "./DynamicBracketMatch";
 const sortMatchesForBracket = (matches: Match[] | undefined) => {

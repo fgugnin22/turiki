@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { tournamentAPI } from "../rtk/tournamentAPI";
+import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 
 import { Team } from "../helpers/transformMatches";
 const RegisterTeamModal = ({

@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout } from "../processes/Layout";
-import { tournamentAPI } from "../rtk/tournamentAPI";
+import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { useNavigate, useParams } from "react-router-dom";
 import Bracket from "../shared/Bracket";
 import { ROUTES } from "../app/RouteTypes";

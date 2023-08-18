@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { Layout } from "../processes/Layout";
-import { tournamentAPI } from "../rtk/tournamentAPI";
-import { useAppSelector } from "../rtk/store";
+import { tournamentAPI } from "../shared/rtk/tournamentAPI";
+import { useAppSelector } from "../shared/rtk/store";
 import Chat from "../features/Chat";
 import TeamPlayerList from "../features/TeamPlayerList";
 import MatchResultBar from "../features/MatchResultBar";

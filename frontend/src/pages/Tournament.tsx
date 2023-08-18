@@ -1,19 +1,11 @@
 import useWindowSize from "../hooks/useWindowSize";
-import { tournamentAPI } from "../rtk/tournamentAPI";
+import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import transformMatches, { Root, Team } from "../helpers/transformMatches.js";
 import { Layout } from "../processes/Layout.js";
-import {
-    SingleEliminationBracket,
-    Match,
-    SVGViewer,
-    createTheme,
-    MATCH_STATES
-} from "@g-loot/react-tournament-brackets";
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { useAppSelector } from "../rtk/store";
+import { useNavigate, useParams } from "react-router-dom";
+import { useAppSelector } from "../shared/rtk/store";
 import { ROUTES } from "../app/RouteTypes";
 import RegisterTeamModal from "../features/RegisterTeamModal";
-import Bracket from "../shared/Bracket";
 export interface IMatch {
     id: number;
     nextMatchId: number | null;
@@ -22,29 +14,6 @@ export interface IMatch {
     state: string;
     participants: Team[];
 }
-
-const GlootTheme = createTheme({
-    textColor: { main: "#000000", highlighted: "#F4F2FE", dark: "#707582" },
-    matchBackground: { wonColor: "#2D2D59", lostColor: "#1B1D2D" },
-    score: {
-        background: {
-            wonColor: `#10131C`,
-            lostColor: "#139487"
-        },
-        text: {
-            highlightedWonColor: "#7BF59D",
-            highlightedLostColor: "#FB7E94"
-        }
-    },
-    border: {
-        color: "#292B43",
-        highlightedColor: "RGBA(152,82,242,0.4)"
-    },
-    roundHeader: { backgroundColor: "#3B3F73", fontColor: "#F4F2FE" },
-    connectorColor: "#3B3F73",
-    connectorColorHighlight: "RGBA(152,82,242,0.4)",
-    svgBackground: "#0F121C"
-});
 
 export const Tournament = () => {
     const params = useParams();

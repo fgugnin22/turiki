@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAppDispatch, useAppSelector } from "../rtk/store";
-import { logout } from "../rtk/user";
+import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
+import { logout } from "../shared/rtk/user";
 import { ROUTES } from "../app/RouteTypes";
 const NavBar = () => {
     const dispatch = useAppDispatch();

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { useAppSelector, useAppDispatch } from "../rtk/store";
+import { useAppSelector, useAppDispatch } from "../shared/rtk/store";
 import { Layout } from "../processes/Layout";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../app/RouteTypes";
-import { getUser, login, logout, modifyUserCredentials } from "../rtk/user";
+import { getUser, login, logout, modifyUserCredentials } from "../shared/rtk/user";
 const Home = () => {
     const dispatch = useAppDispatch();
     let {
