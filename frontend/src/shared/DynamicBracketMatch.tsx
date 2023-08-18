@@ -39,11 +39,7 @@ const DynamicBracketMatch = ({
         );
     };
     const timeStarts = new Date(timeString);
-    console.log(
-        userDetails?.team,
-        participants[1]?.teamId,
-        participants[0]?.teamId
-    );
+
     return (
         <div
             className="flex items-center ml-[150px] last-of-type:mr-[150px]"

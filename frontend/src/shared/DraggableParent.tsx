@@ -6,7 +6,6 @@ type DragProps = {
 };
 export const DraggableParent :React.FC<PropsWithChildren<DragProps>> = ({ children }) => {
     const ourRef = useRef<any>(null);
-    console.log(ourRef.current)
     const [isMouseDown, setIsMouseDown] = useState(false);
     const mouseCoords = useRef({
         startX: 0,
