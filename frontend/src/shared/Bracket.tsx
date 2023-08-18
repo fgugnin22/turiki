@@ -62,12 +62,13 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
                                 tournament.max_rounds - Number(match.name) + 1
                             }
                             isNext={isNext}
-                            timeStarts={"afsdf"}
+                            timeString={match.starts}
                             matchId={match.id}
                             size={containerSize}
                             participants={[
                                 match.participants[0]
                                     ? {
+                                          teamId: match.participants[0].team.id,
                                           name: match.participants[0].team.name,
                                           status:
                                               match.participants[0].status ===
@@ -81,6 +82,7 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
                                     : null,
                                 match.participants[1]
                                     ? {
+                                          teamId: match.participants[1].team.id,
                                           name: match.participants[1].team.name,
                                           status:
                                               match.participants[1].status ===
