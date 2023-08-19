@@ -85,7 +85,7 @@ const TournamentList = () => {
                                         <button
                                             id={String(index)}
                                             onClick={handleTeamSubmit}
-                                            className="p-2 bg-zinc-400 text-sm h-10 w-48 ml-auto"
+                                            className="p-2 bg-zinc-400 text-sm h-10 w-52 ml-auto"
                                         >
                                             Найти команду
                                         </button>
@@ -93,7 +93,7 @@ const TournamentList = () => {
                                             id={String(index)}
                                             value={teamIds[index]}
                                             onChange={handleChange}
-                                            className="h-10 w-48 text-xl ml-auto"
+                                            className="h-10 w-52 text-xl ml-auto"
                                             type="number"
                                             placeholder="Введите id команды"
                                         />

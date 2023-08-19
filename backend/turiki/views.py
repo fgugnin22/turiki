@@ -7,7 +7,7 @@ from rest_framework.permissions import (
 )
 from django.forms.models import model_to_dict
 from rest_framework.response import Response
-from rest_framework.viewsets import ModelViewSet
+from rest_framework.viewsets import ModelViewSet, GenericViewSet
 from turiki.models import *
 from turiki.permissons import IsAdminUserOrReadOnly, IsCaptainOfThisTeamOrAdmin
 from turiki.serializers import (
@@ -18,12 +18,39 @@ from turiki.serializers import (
 )
 from turiki.services import TeamService, MatchService, TournamentService
 from turiki.tasks import *
+from rest_framework.views import APIView
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
 в общем здесь в классах описаны методы(нередко скрытые наследованием), которые вызываются на тот или иной url
 сюда приходят и здесь обрабатываются запросы из urls.py(где эти view зарегистрированы на соответствующие url)
 """
+
+
+class UserAPIView(GenericViewSet):
+    @action(methods=["PATCH"], detail=False, permission_classes=[IsAuthenticated])
+    def credentials(self, request):
+        # {
+        #     "old_password": string,
+        #     "new_password": string,
+        #     ...
+        # }
+        new_password = request.data.get("new_password")
+        old_password = request.data.get("old_password")
+        new_email = request.data.get("email")
+        new_name = request.data.get('name')
+        user = request.user
+        if user.check_password(old_password):
+            if new_password is not None:
+                user.set_password(new_password)
+            else:
+                if new_email is not None:
+                    user.email = new_email
+                if new_name is not None:
+                    user.name = new_name
+            user.save()
+            return Response("credentials updated successfully", 200)
+        return Response("very bad response", 400)
 
 
 class TournamentAPIView(ModelViewSet):
@@ -122,7 +149,7 @@ class MatchAPIView(ModelViewSet):
 class TeamAPIView(ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-    permission_classes = [IsCaptainOfThisTeamOrAdmin]
+    permission_classes = [IsAuthenticated]
 
     @action(methods=["PATCH"], detail=True, permission_classes=[IsAuthenticated])
     def player_status(self, request, pk=None):

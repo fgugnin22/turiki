@@ -40,11 +40,12 @@ class UserSerializer(UserCreateSerializer):
         )
 
     def update(self, instance, validated_data):
-        password = validated_data.pop("password")
+        # password = validated_data.pop("password")
+        # validated_data["password"] = instance.password
         # if password is not None:
         #     instance.set_password(password) TODO: umm uhh ,n vm guys
-        super().update(instance, validated_data)
-        instance.save()
+        # super().update(instance, validated_data)
+        # instance.save()
         return instance
 
 

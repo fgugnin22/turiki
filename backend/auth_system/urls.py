@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
-from turiki.views import TournamentAPIView, MatchAPIView, TeamAPIView, ChatAPIView
+from turiki.views import TournamentAPIView, MatchAPIView, TeamAPIView, ChatAPIView, UserAPIView
 from rest_framework.routers import DefaultRouter
 from .yasg import urlpatterns as doc_urls
 
@@ -34,6 +34,8 @@ teamRouter.register(r'api/v2/team', TeamAPIView, basename='team')
 chatRouter = DefaultRouter()
 chatRouter.register(r'api/v2/chat', ChatAPIView, basename='chat')
 
+userRouter = DefaultRouter()
+userRouter.register(r'api/v2/user', UserAPIView, basename='user')
 # Я НЕ ЗНАЮ КАК ОБЪЯСНИТЬ НО ПОРЯДОК URL ОЧЕНЬ ВАЖЕН, ЕСЛИ ПЕРЕСТАВИТЬ МОЖЕТ ВСЁ СЛОМАТЬСЯ НАХЕР!
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -48,3 +50,4 @@ urlpatterns += tournamentRouter.urls
 urlpatterns += matchRouter.urls
 urlpatterns += teamRouter.urls
 urlpatterns += chatRouter.urls
+urlpatterns += userRouter.urls

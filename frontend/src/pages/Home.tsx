@@ -3,7 +3,12 @@ import { useAppSelector, useAppDispatch } from "../shared/rtk/store";
 import { Layout } from "../processes/Layout";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../app/RouteTypes";
-import { getUser, login, logout, modifyUserCredentials } from "../shared/rtk/user";
+import {
+    getUser,
+    login,
+    logout,
+    modifyUserCredentials
+} from "../shared/rtk/user";
 const Home = () => {
     const dispatch = useAppDispatch();
     let {
@@ -15,7 +20,8 @@ const Home = () => {
     const [formData, setFormData] = useState({
         email: "",
         password: "",
-        userName: ""
+        userName: "",
+        newPassword: ""
     });
     const [borderColor, setBorderColor] = useState(
         "border-slate-300 focus:border-blue-400"
@@ -27,7 +33,7 @@ const Home = () => {
                 : "border-slate-300 focus:border-blue-400"
         );
     }, [loginFail]);
-    const { email, password, userName } = formData;
+    const { email, password, userName, newPassword } = formData;
     const onChange = (e: React.FormEvent<HTMLInputElement>) => {
         const target = e.target as HTMLInputElement;
         setBorderColor("border-slate-300 focus:border-blue-400");
@@ -44,9 +50,15 @@ const Home = () => {
             const body = {
                 name: userName === "" ? undefined : userName,
                 email: email === "" ? undefined : email,
-                password
+                old_password: password,
+                new_password: newPassword
             };
-            setFormData({ email: "", password: "", userName: "" });
+            setFormData({
+                email: "",
+                password: "",
+                userName: "",
+                newPassword: ""
+            });
             dispatch(modifyUserCredentials(body));
         }
         localStorage.setItem("access", access!);
@@ -107,6 +119,19 @@ const Home = () => {
                                                 placeholder="Password"
                                                 name="password"
                                                 value={password}
+                                                onChange={(
+                                                    e: React.FormEvent<HTMLInputElement>
+                                                ) => onChange(e)}
+                                                required
+                                            />
+                                        </div>
+                                        <div className="relative mb-3">
+                                            <input
+                                                className={`peer block min-h-[auto] w-full rounded border-2 ${borderColor} bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear dark:text-neutral-200`}
+                                                type="password"
+                                                placeholder="New password"
+                                                name="newPassword"
+                                                value={newPassword}
                                                 onChange={(
                                                     e: React.FormEvent<HTMLInputElement>
                                                 ) => onChange(e)}

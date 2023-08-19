@@ -11,13 +11,19 @@ type UserCredentials = {
     email: string;
     password: string;
 };
+type ModifyUserCredentials = {
+    name?: string;
+    email?: string;
+    old_password: string;
+    new_password?: string;
+};
 export const modifyUserCredentials = createAsyncThunk(
     "users/modify",
-    async (credentials: Partial<UserCredentials>, thunkAPI) => {
+    async (credentials: ModifyUserCredentials, thunkAPI) => {
         const body = JSON.stringify(credentials);
         try {
-            const res = await fetch(`${server_URL}/auth/users/me/`, {
-                method: "PUT",
+            const res = await fetch(`${server_URL}/api/v2/user/credentials/`, {
+                method: "PATCH",
                 headers: {
                     Accept: "application/json",
                     "Content-Type": "application/json",
