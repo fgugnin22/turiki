@@ -13,7 +13,7 @@ type Props = {
     timeString: string;
     matchId: number | string;
     participants: [Participant | null, Participant | null];
-    isNext: boolean;
+    hasChildMatches: boolean;
     size: {
         height: number;
         width: number;
@@ -74,7 +74,7 @@ const DynamicBracketMatch = ({
     timeString,
     matchId,
     participants,
-    isNext,
+    hasChildMatches,
     size,
     round
 }: Props) => {
@@ -130,7 +130,7 @@ const DynamicBracketMatch = ({
                         participant={participants[1]}
                     />
                 }
-                {isNext && <BracketConnecter round={round} />}
+                {hasChildMatches && <BracketConnecter round={round} />}
             </div>
         </div>
     );

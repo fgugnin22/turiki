@@ -2,7 +2,7 @@ import useWindowSize from "../hooks/useWindowSize";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import transformMatches, { Root, Team } from "../helpers/transformMatches.js";
 import { Layout } from "../processes/Layout.js";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { useAppSelector } from "../shared/rtk/store";
 import { ROUTES } from "../app/RouteTypes";
 import RegisterTeamModal from "../features/RegisterTeamModal";
@@ -37,20 +37,6 @@ export const Tournament = () => {
     const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
         skip: !isTeamNotRegistered
     });
-    let matches: IMatch[] = [];
-    const windowSize = useWindowSize();
-    const navigate = useNavigate();
-    const width = Math.max(500, windowSize.width);
-    const height = Math.max(500, windowSize.height);
-    const matchClickHandler = ({
-        match
-    }: {
-        match: IMatch;
-        topWon: boolean;
-        bottomWon: boolean;
-    }) => {
-        navigate(`/match/${match.id}`);
-    };
 
     return (
         <Layout>
@@ -66,18 +52,14 @@ export const Tournament = () => {
                 {isSuccess &&
                 Object.keys(tournament).length > 0 &&
                 tournament.matches.length > 0 ? (
-                    <button
-                        className="p-3 bg-slate-600 text-white flex items-center"
-                        onClick={() =>
-                            navigate(
-                                ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.BRACKET.buildPath(
-                                    { id: tournament.id }
-                                )
-                            )
-                        }
+                    <Link
+                        className="p-3 bg-slate-600 text-white flex items-center text-center"
+                        to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.BRACKET.buildPath(
+                            { id: tournament.id }
+                        )}
                     >
                         Смотреть турнирную сетку
-                    </button>
+                    </Link>
                 ) : (
                     <span className="py-full text-center w-[20%] bg-orange-600 text-xl">
                         Tournament bracket in process

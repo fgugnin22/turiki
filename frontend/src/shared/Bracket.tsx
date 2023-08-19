@@ -43,7 +43,7 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
     return (
         <>
             <DraggableParent>
-                <div className="max-w-[900px] max-h-[1000px] scrollbar-thin scrollbar-thumb-white scrollbar-track-black scrollbar-corner-black scrollbar-thumb-rounded-[3px] overflow-scroll">
+                <div className="max-w-full max-h-[1000px] scrollbar-thin scrollbar-thumb-white scrollbar-track-black scrollbar-corner-black scrollbar-thumb-rounded-[3px] overflow-scroll">
                     <div
                         className={`flex flex-col font-roboto gap-0 bg-black flex-wrap`}
                         style={{
@@ -58,7 +58,7 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
                                     bracketSize.height /
                                     2 ** (Number(match.name) - 1)
                             };
-                            const isNext = tournament.matches.some(
+                            const hasChildMatches = tournament.matches.some(
                                 (otherMatch) =>
                                     otherMatch.next_match?.id === match.id
                             );
@@ -70,7 +70,7 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
                                         Number(match.name) +
                                         1
                                     }
-                                    isNext={isNext}
+                                    hasChildMatches={hasChildMatches}
                                     timeString={match.starts}
                                     matchId={match.id}
                                     size={containerSize}
