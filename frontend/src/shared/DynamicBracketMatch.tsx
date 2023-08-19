@@ -4,16 +4,15 @@ import BracketConnecter from "./BracketConnecter";
 import { ROUTES } from "../app/RouteTypes";
 import { useAppSelector } from "./rtk/store";
 
-type participants = {
+type Participant = {
     name: string;
     status: "TBD" | "WON" | "LOST";
     teamId: number;
 };
-
 type Props = {
     timeString: string;
     matchId: number | string;
-    participants: [participants | null, participants | null];
+    participants: [Participant | null, Participant | null];
     isNext: boolean;
     size: {
         height: number;
@@ -21,7 +20,56 @@ type Props = {
     };
     round: number;
 };
-
+const EmptyParticipant = ({ isAtTheTop }: { isAtTheTop: boolean }) => {
+    return (
+        <div
+            className={`w-[350px] h-[50px] bg-white ${
+                isAtTheTop ? "rounded-tl" : "rounded-b"
+            }  text-[13px] font-light pl-[22px] pt-[16px]  pr-[24px]`}
+        >
+            ------------ <p className=" font-bold float-right">TBD</p>
+        </div>
+    );
+};
+const TeamParticipant = ({
+    participant,
+    isUserInParticipant,
+    isAtTheTop
+}: {
+    participant: Participant | null;
+    isUserInParticipant: boolean;
+    isAtTheTop: boolean;
+}) => {
+    return participant ? (
+        participant.status === "WON" ? (
+            <div
+                className={`w-[350px] h-[50px] bg-[#14a316] hover:bg-[#268474] transition-colors ${
+                    isAtTheTop ? "rounded-tl" : "rounded-b"
+                } text-[13px] font-light pl-[22px] pt-[16px] pr-[24px]`}
+            >
+                {participant?.name}{" "}
+                <span className=" font-medium inline">
+                    {isUserInParticipant && `(Ваша команда)`}
+                </span>
+                <p className=" font-bold float-right">{participant?.status}</p>
+            </div>
+        ) : (
+            <div
+                className={`w-[350px] h-[50px] bg-white ${
+                    isAtTheTop ? "rounded-tl" : "rounded-b"
+                } text-[13px] font-light pl-[22px] pt-[16px] pr-[24px]`}
+            >
+                {participant?.name}{" "}
+                <span className=" font-medium inline">
+                    {isUserInParticipant && `(Ваша команда)`}
+                </span>
+                <p className=" font-bold float-right">{participant?.status}</p>
+            </div>
+        )
+    ) : (
+        <EmptyParticipant isAtTheTop={isAtTheTop} />
+    );
+};
 const DynamicBracketMatch = ({
     timeString,
     matchId,
@@ -39,7 +87,6 @@ const DynamicBracketMatch = ({
         );
     };
     const timeStarts = new Date(timeString);
-
     return (
         <div
             className="flex items-center ml-[150px] last-of-type:mr-[150px]"
@@ -60,67 +107,29 @@ const DynamicBracketMatch = ({
                     </p>
                 </div>{" "}
                 <button
-                    className="block w-[90px] h-[25px] ml-auto bg-[#717171] rounded-t-[3px] text-center leading-[27px] text-white text-[11px] font-thin"
+                    className="block w-[90px] h-[25px] ml-auto bg-[#717171] rounded-t-[3px] text-center leading-[27px] text-white text-[11px] font-extralight"
                     onClick={handleMatchClick}
                 >
                     Подробнее
                 </button>
-                {participants[0] ? (
-                    participants[0].status === "WON" ? (
-                        <div className="w-[350px] h-[50px] bg-[#14A38B] hover:bg-[#268474] transition-colors rounded-tl text-[13px] font-thin pl-[22px] pt-[16px] pr-[24px]">
-                            {participants[0]?.name}
-                            <p className=" font-bold float-right">
-                                {participants[0]?.status}
-                            </p>
-                        </div>
-                    ) : (
-                        <div
-                            className={`w-[350px] h-[50px] ${
-                                userDetails?.team === participants[0]?.teamId
-                                    ? "bg-[#f0e032]"
-                                    : "bg-white"
-                            } rounded-tl text-[13px] font-thin pl-[22px] pt-[16px] pr-[24px]`}
-                        >
-                            {participants[0]?.name}
-                            <p className=" font-bold float-right">
-                                {participants[0]?.status}
-                            </p>
-                        </div>
-                    )
-                ) : (
-                    <div className="w-[350px] h-[50px] bg-white rounded-tl  text-[13px] font-thin pl-[22px] pt-[16px]  pr-[24px]">
-                        ------------{" "}
-                        <p className=" font-bold float-right">TBD</p>
-                    </div>
-                )}
-                {participants[1] ? (
-                    participants[1].status === "WON" ? (
-                        <div className="w-[350px] h-[50px] bg-[#14A38B] hover:bg-[#268474] transition-colors rounded-b text-[13px] font-thin pl-[22px] pt-[16px] pr-[24px]">
-                            {participants[1]?.name}
-                            <p className=" font-bold float-right">
-                                {participants[1]?.status}
-                            </p>
-                        </div>
-                    ) : (
-                        <div
-                            className={`w-[350px] h-[50px] ${
-                                userDetails?.team === participants[1]?.teamId
-                                    ? "bg-[#aacd33]"
-                                    : "bg-white"
-                            } rounded-b text-[13px] font-thin pl-[22px] pt-[16px] pr-[24px]`}
-                        >
-                            {participants[1]?.name}
-                            <p className=" font-bold float-right">
-                                {participants[1]?.status}
-                            </p>
-                        </div>
-                    )
-                ) : (
-                    <div className="w-[350px] h-[50px] bg-white rounded-bl rounded-br  text-[13px] font-thin pl-[22px] pt-[16px]  pr-[24px]">
-                        ------------{" "}
-                        <p className=" font-bold float-right">TBD</p>
-                    </div>
-                )}
+                {
+                    <TeamParticipant
+                        isAtTheTop={true}
+                        isUserInParticipant={
+                            userDetails?.team === participants[0]?.teamId
+                        }
+                        participant={participants[0]}
+                    />
+                }
+                {
+                    <TeamParticipant
+                        isAtTheTop={false}
+                        isUserInParticipant={
+                            userDetails?.team === participants[1]?.teamId
+                        }
+                        participant={participants[1]}
+                    />
+                }
                 {isNext && <BracketConnecter round={round} />}
             </div>
         </div>

@@ -1,10 +1,11 @@
-import { MouseEventHandler, PropsWithChildren, ReactElement, useRef, useState } from "react";
-
+import { PropsWithChildren, ReactElement, useRef, useState } from "react";
 
 type DragProps = {
     children: ReactElement | ReactElement[];
 };
-export const DraggableParent :React.FC<PropsWithChildren<DragProps>> = ({ children }) => {
+export const DraggableParent: React.FC<PropsWithChildren<DragProps>> = ({
+    children
+}) => {
     const ourRef = useRef<any>(null);
     const [isMouseDown, setIsMouseDown] = useState(false);
     const mouseCoords = useRef({
@@ -48,7 +49,7 @@ export const DraggableParent :React.FC<PropsWithChildren<DragProps>> = ({ childr
             onMouseDown={handleDragStart}
             onMouseUp={handleDragEnd}
             onMouseMove={handleDrag}
-            className={""}
+            className={"flex"}
         >
             {children}
         </div>

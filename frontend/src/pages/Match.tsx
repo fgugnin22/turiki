@@ -6,6 +6,7 @@ import Chat from "../features/Chat";
 import TeamPlayerList from "../features/TeamPlayerList";
 import MatchResultBar from "../features/MatchResultBar";
 import MatchResultVote from "../features/MatchResultVote";
+import { Participant } from "../helpers/transformMatches";
 const Match = () => {
     const { userDetails: user, isAuthenticated } = useAppSelector(
         (state) => state.user
@@ -36,7 +37,7 @@ const Match = () => {
         });
     const [claimMatchResult, {}] = tournamentAPI.useClaimMatchResultMutation();
     const starts = new Date(match?.starts!);
-    let selfParticipant: any;
+    let selfParticipant: Participant | null = null;
     if (isSuccess) {
         selfParticipant =
             match?.participants[0]?.team.id === user?.team
@@ -75,7 +76,7 @@ const Match = () => {
                         isActive={match.state === "ACTIVE"}
                         isCaptain={user?.team_status === "CAPTAIN"}
                         matchId={match?.id}
-                        teamId={user?.team}
+                        teamId={selfParticipant?.team.id}
                         isWinner={selfParticipant?.is_winner}
                         claimMatchResult={claimMatchResult}
                     />

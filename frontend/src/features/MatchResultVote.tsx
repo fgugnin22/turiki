@@ -1,4 +1,4 @@
-import { tournamentAPI } from "../shared/rtk/tournamentAPI";
+import { useAppSelector } from "../shared/rtk/store";
 
 interface MatchResultVoteProps {
     starts: Date;
@@ -11,12 +11,14 @@ interface MatchResultVoteProps {
 }
 
 const MatchResultVote = (props: MatchResultVoteProps) => {
+    const { userDetails } = useAppSelector((state) => state.user);
     if (!props.teamId) {
         return <></>;
     }
     return (
         <div>
             {Number(props.starts) < Number(new Date()) &&
+                props.teamId === userDetails?.team &&
                 props.isActive &&
                 props.isCaptain &&
                 (props.isWinner === null || props.isWinner === undefined ? (

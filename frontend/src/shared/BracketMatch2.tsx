@@ -7,14 +7,14 @@ const BracketMatch2 = () => {
                 <p className=" float-left">18:52</p>
                 <p className=" float-right">09.08</p>
             </div>
-            <div className="w-[90px] h-[25px] ml-auto bg-[#717171] rounded-t-[3px] text-center leading-[27px] text-white text-[11px] font-thin">
+            <div className="w-[90px] h-[25px] ml-auto bg-[#717171] rounded-t-[3px] text-center leading-[27px] text-white text-[11px] font-light">
                 Подробнее
             </div>
-            <div className="w-[350px] h-[50px] bg-white rounded-tl text-[13px] font-thin pl-[22px] pt-[16px] pr-[24px]">
+            <div className="w-[350px] h-[50px] bg-white rounded-tl text-[13px] font-light pl-[22px] pt-[16px] pr-[24px]">
                 Amogws123321 <p className=" font-bold float-right">TBD</p>
             </div>
 
-            <div className="w-[350px] h-[50px] bg-white rounded-bl rounded-br  text-[13px] font-thin pl-[22px] pt-[16px]  pr-[24px]">
+            <div className="w-[350px] h-[50px] bg-white rounded-bl rounded-br  text-[13px] font-light pl-[22px] pt-[16px]  pr-[24px]">
                 ------------{" "}
                 <p className=" font-bold float-right">TBD</p>
             </div>

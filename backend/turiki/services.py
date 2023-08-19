@@ -13,7 +13,7 @@ from rest_framework import serializers
 class TournamentService:
     @staticmethod
     def create_tournament(
-            name, prize, max_rounds, starts=datetime.now() + timedelta(hours=3)
+        name, prize, max_rounds, starts=datetime.now() + timedelta(hours=3)
     ):
         try:
             tourn = Tournament.objects.create(
@@ -34,15 +34,15 @@ class TournamentService:
             teams = map(lambda x: x["id"], list(tournament.teams.values()))
             if team.id in teams:
                 raise serializers.ValidationError("already registered")
-            if len(tournament.teams.values()) >= 2 ** tournament.max_rounds:
+            if len(tournament.teams.values()) >= 2**tournament.max_rounds:
                 raise serializers.ValidationError("tournament max teams count reached")
             tournament.teams.add(team)
             for i, player_id in enumerate(players_ids):
                 try:
                     user_obj = UserAccount.objects.get(pk=player_id)
                     if user_obj.team.id == team.id and (
-                            user_obj.team_status != "REJECTED"
-                            or user_obj.team_status != "PENDING"
+                        user_obj.team_status != "REJECTED"
+                        or user_obj.team_status != "PENDING"
                     ):
                         tournament.players.add(user_obj)
                         print("added player")
@@ -56,7 +56,9 @@ class TournamentService:
             return "team registered successfully"
         elif action == "CANCEL_REGISTRATION":
             teams = map(lambda x: x["id"], list(tournament.teams.values()))
-            tourn_players = list(map(lambda x: x["id"], list(tournament.players.values())))
+            tourn_players = list(
+                map(lambda x: x["id"], list(tournament.players.values()))
+            )
             tournament.teams.remove(team)
             is_team_in_tournament = team.id in teams
             if not is_team_in_tournament:
@@ -65,8 +67,8 @@ class TournamentService:
                 try:
                     user_obj = UserAccount.objects.get(pk=player_id)
                     if user_obj.team.id == team.id and (
-                            user_obj.team_status != "REJECTED"
-                            or user_obj.team_status != "PENDING"
+                        user_obj.team_status != "REJECTED"
+                        or user_obj.team_status != "PENDING"
                     ):
                         tournament.players.remove(user_obj)
                         print("removed player")
@@ -83,8 +85,8 @@ class TournamentService:
                 try:
                     user_obj = UserAccount.objects.get(pk=player_id)
                     if user_obj.team.id == team.id and (
-                            user_obj.team_status != "REJECTED"
-                            or user_obj.team_status != "PENDING"
+                        user_obj.team_status != "REJECTED"
+                        or user_obj.team_status != "PENDING"
                     ):
                         new_players.append(user_obj)
                 except:
@@ -98,6 +100,7 @@ class MatchService:
     @staticmethod
     def claim_match_result(match, team_id, result):
         # Ставит результат в Participant т.е. позволяет капитану сделать заявку на результат
+        print(team_id, result)
         try:
             [p1, p2] = list(match.participants.values())
             p1 = Participant.objects.get(pk=p1["id"])
@@ -120,28 +123,30 @@ class MatchService:
         p1 = Participant.objects.get(pk=p1["id"])
         p2 = Participant.objects.get(pk=p2["id"])
         next_match = match.next_match
-        if (p1.is_winner == p2.is_winner):
+        if p1.is_winner == p2.is_winner:
             print("compromised results!!!".upper())
             return
         if p1.is_winner is None or p2.is_winner is None:
             return
         match.state = "SCORE_DONE"
         match.save()
-        if next_match is None:
-            return
         if p1.is_winner:
             p1.result_text = "WON"
             p2.result_text = "LOST"
             p1.status, p2.status = "PLAYED", "PLAYED"
             p1.save()
             p2.save()
+            if next_match is None:
+                return
             MatchService.update_next_match(next_match, p1)
-            return
+            return   
         p2.result_text = "WON"
         p1.result_text = "LOST"
         p1.status, p2.status = "PLAYED", "PLAYED"
         p1.save()
         p2.save()
+        if next_match is None:
+            return
         MatchService.update_next_match(next_match, p2)
 
     @staticmethod
@@ -215,9 +220,9 @@ class TeamService:
     @staticmethod
     def invite_player(team, player):
         if (
-                player.team is not None
-                and player.team.id == team.id
-                and player.team_status == "PENDING"
+            player.team is not None
+            and player.team.id == team.id
+            and player.team_status == "PENDING"
         ):
             team.players.add(player)
             player.team_status = "ACTIVE"
