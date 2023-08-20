@@ -49,9 +49,16 @@ class UserSerializer(UserCreateSerializer):
         return instance
 
 
+class BansSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MapBan
+        fields = "__all__"
+
+
 class MatchSerializer(serializers.ModelSerializer):
     # participants = serializers.StringRelatedField(many=True)
     tournament = serializers.StringRelatedField()
+    bans = BansSerializer()
 
     class Meta:
         depth = 2
@@ -66,6 +73,7 @@ class MatchSerializer(serializers.ModelSerializer):
             "next_match",
             "name",
             "lobby",
+            "bans"
         )
 
 
@@ -126,6 +134,18 @@ class MessageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Message
+        fields = "__all__"
+
+    def create(self, validated_data):
+        pass
+
+    def update(self, instance, validated_data):
+        pass
+
+
+class MapBanSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = MapBan
         fields = "__all__"
 
     def create(self, validated_data):

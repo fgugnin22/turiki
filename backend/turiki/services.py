@@ -4,6 +4,7 @@ from channels.db import database_sync_to_async
 import jwt
 from .models import *
 from rest_framework import serializers
+from turiki.tasks import set_match_active, set_match_start_bans
 
 """
 В этот файл я попытался частично вынести более сложную логику по работе с бд и некоторые функции хелперы
@@ -13,7 +14,7 @@ from rest_framework import serializers
 class TournamentService:
     @staticmethod
     def create_tournament(
-        name, prize, max_rounds, starts=datetime.now() + timedelta(hours=3)
+            name, prize, max_rounds, starts=datetime.now() + timedelta(hours=3)
     ):
         try:
             tourn = Tournament.objects.create(
@@ -34,15 +35,15 @@ class TournamentService:
             teams = map(lambda x: x["id"], list(tournament.teams.values()))
             if team.id in teams:
                 raise serializers.ValidationError("already registered")
-            if len(tournament.teams.values()) >= 2**tournament.max_rounds:
+            if len(tournament.teams.values()) >= 2 ** tournament.max_rounds:
                 raise serializers.ValidationError("tournament max teams count reached")
             tournament.teams.add(team)
             for i, player_id in enumerate(players_ids):
                 try:
                     user_obj = UserAccount.objects.get(pk=player_id)
                     if user_obj.team.id == team.id and (
-                        user_obj.team_status != "REJECTED"
-                        or user_obj.team_status != "PENDING"
+                            user_obj.team_status != "REJECTED"
+                            or user_obj.team_status != "PENDING"
                     ):
                         tournament.players.add(user_obj)
                         print("added player")
@@ -67,8 +68,8 @@ class TournamentService:
                 try:
                     user_obj = UserAccount.objects.get(pk=player_id)
                     if user_obj.team.id == team.id and (
-                        user_obj.team_status != "REJECTED"
-                        or user_obj.team_status != "PENDING"
+                            user_obj.team_status != "REJECTED"
+                            or user_obj.team_status != "PENDING"
                     ):
                         tournament.players.remove(user_obj)
                         print("removed player")
@@ -85,8 +86,8 @@ class TournamentService:
                 try:
                     user_obj = UserAccount.objects.get(pk=player_id)
                     if user_obj.team.id == team.id and (
-                        user_obj.team_status != "REJECTED"
-                        or user_obj.team_status != "PENDING"
+                            user_obj.team_status != "REJECTED"
+                            or user_obj.team_status != "PENDING"
                     ):
                         new_players.append(user_obj)
                 except:
@@ -97,6 +98,20 @@ class TournamentService:
 
 
 class MatchService:
+    @staticmethod
+    def ban_map(match, team, map_to_ban):
+        if len(match.bans.maps) == 1:
+            raise serializers.ValidationError("Ты пытался забанить карту, которую уже выбрали, ты еблан???")
+        if not map_to_ban.upper() in match.bans.maps:
+            raise serializers.ValidationError("wrong map name")
+        if match.bans.previous_team == team.id:
+            raise serializers.ValidationError("Wait for other team to ban")
+        match.bans.maps.remove(map_to_ban.upper())
+        match.bans.previous_team = team.id
+        if len(match.bans.maps) == 1:
+            set_match_active(match)
+        match.bans.save()
+
     @staticmethod
     def claim_match_result(match, team_id, result):
         # Ставит результат в Participant т.е. позволяет капитану сделать заявку на результат
@@ -139,7 +154,7 @@ class MatchService:
             if next_match is None:
                 return
             MatchService.update_next_match(next_match, p1)
-            return   
+            return
         p2.result_text = "WON"
         p1.result_text = "LOST"
         p1.status, p2.status = "PLAYED", "PLAYED"
@@ -158,6 +173,9 @@ class MatchService:
         )
         next_match.participants.add(next_participant)
         next_match.save()
+        if len(list(next_match.participants.values())) == 2:
+            print("WTF MAN")
+            set_match_start_bans(next_match.id)
 
 
 class TeamService:
@@ -220,9 +238,9 @@ class TeamService:
     @staticmethod
     def invite_player(team, player):
         if (
-            player.team is not None
-            and player.team.id == team.id
-            and player.team_status == "PENDING"
+                player.team is not None
+                and player.team.id == team.id
+                and player.team_status == "PENDING"
         ):
             team.players.add(player)
             player.team_status = "ACTIVE"

@@ -106,12 +106,14 @@ const DynamicBracketMatch = ({
                             : timeStarts.getMonth()}
                     </p>
                 </div>{" "}
-                <button
-                    className="block w-[90px] h-[25px] ml-auto bg-[#717171] rounded-t-[3px] text-center leading-[27px] text-white text-[11px] font-extralight"
-                    onClick={handleMatchClick}
-                >
-                    Подробнее
-                </button>
+                {
+                    <button
+                        className="block w-[90px] h-[25px] ml-auto bg-[#717171] rounded-t-[3px] text-center leading-[27px] text-white text-[11px] font-extralight"
+                        onClick={handleMatchClick}
+                    >
+                        Подробнее
+                    </button>
+                }
                 {
                     <TeamParticipant
                         isAtTheTop={true}

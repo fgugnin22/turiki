@@ -17,5 +17,5 @@ class StatsMiddleware:
         # Add the header. Or do other things, my use case is to send a monitoring metric
         response["X-Page-Generation-Duration-ms"] = int(duration * 1000)
         if duration > 1:
-            logging.warning(f"Request processing takes too long ({round(duration * 1000, 3)}ms)")
+            logging.warning(f"Request processing takes too long ({round(duration * 1000)}ms)")
         return response

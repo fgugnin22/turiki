@@ -14,7 +14,7 @@ from turiki.serializers import (
     TournamentSerializer,
     MatchSerializer,
     TeamSerializer,
-    ChatSerializer,
+    ChatSerializer, MapBanSerializer,
 )
 from turiki.services import TeamService, MatchService, TournamentService
 from turiki.tasks import *
@@ -125,6 +125,27 @@ class MatchAPIView(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         return Response(status=404)
+
+    @action(
+        methods=["POST", "PATCH", "PUT"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin]
+    )
+    def ban(self, request, pk=None):
+        # {
+        #     "team": {
+        #         "team_id": int
+        #     },
+        #     "map": str
+        # }
+        try:
+            team = request.user.team
+            match = self.get_object()
+            map_to_ban = request.data["map"]
+            MatchService.ban_map(match, team, map_to_ban)
+            return Response(f"{map_to_ban} successfully banned!", 200)
+        except serializers.ValidationError as e:
+            raise e
+        except:
+            return Response("other errors", status=500)
 
     @action(
         methods=["PATCH"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin]

@@ -15,8 +15,23 @@ export interface Root {
     max_rounds: number;
     players: TournamentPlayer[];
 }
-
+export interface Bans {
+    id: number;
+    previous_team: number;
+    maps: (
+        | "CHALET"
+        | "BANK"
+        | "BORDER"
+        | "CLUBHOUSE"
+        | "KAFE"
+        | "OREGON"
+        | "SKYSCRAPER"
+        | "THEMEPARK"
+        | "VILLA"
+    )[];
+}
 export interface Match {
+    bans?: Bans,
     lobby: {
         id: number;
         match: any;

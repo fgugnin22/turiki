@@ -1,6 +1,6 @@
 from django.db import models
-import random
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.contrib.postgres import fields
 
 """
 В этом файле описывается структура сущностей в базе данных, их взаимодействие друг с другом
@@ -57,17 +57,60 @@ class Team(models.Model):
 
 #
 #
+class MapBan(models.Model):
+    CHALET = "CHALET"
+    BANK = "BANK"
+    BORDER = "BORDER"
+    CLUBHOUSE = "CLUBHOUSE"
+    KAFE = "KAFE"
+    OREGON = "OREGON"
+    SKYSCRAPER = "SKYSCRAPER"
+    THEMEPARK = "THEMEPARK"
+    VILLA = "VILLA"
+
+    DEFAULT_COMPETITIVE_MAP_CHOICES_TUPLE = (
+        (CHALET, CHALET.lower()),
+        (BANK, BANK.lower()),
+        (BORDER, BORDER.lower()),
+        (CLUBHOUSE, CLUBHOUSE.lower()),
+        (KAFE, KAFE.lower()),
+        (OREGON, OREGON.lower()),
+        (SKYSCRAPER, SKYSCRAPER.lower()),
+        (THEMEPARK, THEMEPARK.lower()),
+        (VILLA, VILLA.lower())
+    )
+
+    def get_default_map_pool(self=None):
+        return [
+            "CHALET",
+            "BANK",
+            "BORDER",
+            "CLUBHOUSE",
+            "KAFE",
+            "OREGON",
+            "SKYSCRAPER",
+            "THEMEPARK",
+            "VILLA"
+        ]
+
+    DEFAULT_MAP_POOL_SIZE = len(DEFAULT_COMPETITIVE_MAP_CHOICES_TUPLE)
+    previous_team = models.IntegerField(default=0)
+    maps = fields.ArrayField(
+        base_field=models.CharField(max_length=30, choices=DEFAULT_COMPETITIVE_MAP_CHOICES_TUPLE, default=None,
+                                    null=True),
+        size=DEFAULT_MAP_POOL_SIZE,
+        default=get_default_map_pool)
 
 
 class Match(models.Model):
-    # maps = models.
+    bans = models.OneToOneField(MapBan, on_delete=models.CASCADE, blank=True, null=True)
     teams = models.ManyToManyField(Team, related_name="matches", blank=True, through="Participant")
     next_match = models.ForeignKey('Match', unique=False, on_delete=models.SET_NULL, related_name='previous_match',
                                    null=True, blank=True)
     name = models.CharField(max_length=127, blank=True, null=True)
     round_text = models.CharField(max_length=31, blank=True, null=True)  # ПОРЯДОК СЛЕДОВАНИЯ МАТЧЕЙ
     # В ТУРНИРЕ, Т.Е. 1 - ПЕРВЫЕ МАТЧИ В ТУРНИРЕ, 2 - ВТОРЫЕ И ТД. п.с. на самом деле это не обязательно, просто рекомендация)))
-    state = models.CharField(max_length=31, null=True, blank=True)
+    state = models.CharField(max_length=31, null=True, blank=True)  #
     starts = models.DateTimeField(blank=True, null=True)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="matches",
                                    null=True, blank=True, )

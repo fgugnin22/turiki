@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { ReactElement, useRef } from "react";
 import { Match, Tournament } from "../helpers/transformMatches";
 import { tournamentAPI } from "./rtk/tournamentAPI";
 import { DraggableParent } from "./DraggableParent";
@@ -30,7 +30,6 @@ const sortMatchesForBracket = (matches: Match[] | undefined) => {
     return sortedMatches;
 };
 const Bracket = ({ tournament }: { tournament: Tournament }) => {
-    const bracketRef = useRef(null);
     const sortedMatches = sortMatchesForBracket(
         JSON.parse(JSON.stringify(tournament?.matches ?? false))
     );
@@ -40,15 +39,43 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
             ? 2 ** (tournament.max_rounds - 1) * 240
             : 0
     };
+    const roundHeaders: ReactElement[] = [];
+    for (let i = 0; i < tournament.max_rounds; i++) {
+        roundHeaders.push(
+            <div
+                key={i}
+                style={{
+                    width: `${
+                        (bracketSize.width - 150) / tournament.max_rounds - 150
+                    }px`
+                }}
+                className="h-12 ml-[150px] flex items-center justify-center bg-black text-white text-lg font-semibold"
+            >
+                {i + 1 === tournament.max_rounds
+                    ? "Финал"
+                    : i + 1 === tournament.max_rounds - 1
+                    ? "Полуфинал"
+                    : `1/${2 ** (tournament.max_rounds - i - 1)} финала`}
+            </div>
+        );
+    }
     return (
         <>
             <DraggableParent>
-                <div className="max-w-full max-h-[1000px] scrollbar-thin scrollbar-thumb-white scrollbar-track-black scrollbar-corner-black scrollbar-thumb-rounded-[3px] overflow-scroll">
+                <div className="max-w-full relative max-h-[1000px] scrollbar-thin scrollbar-thumb-white scrollbar-track-black scrollbar-corner-black scrollbar-thumb-rounded-[3px] overflow-scroll">
+                    <div
+                        style={{
+                            width: `${bracketSize.width}px`
+                        }}
+                        className="flex sticky top-0 bg-black z-50"
+                    >
+                        {roundHeaders}
+                    </div>
                     <div
                         className={`flex flex-col font-roboto gap-0 bg-black flex-wrap`}
                         style={{
                             width: `${bracketSize.width}px`,
-                            height: `${bracketSize.height}px`
+                            height: `${bracketSize.height + 48}px`
                         }}
                     >
                         {sortedMatches.map((match) => {

@@ -38,3 +38,9 @@ class IsCaptainOfThisTeamOrAdmin(IsAdminUser):
             return xd or is_captain
         except:
             return False
+# class IsCaptainAndPlayingThisMatch:
+#     def has_permission(self, request, view) -> bool:
+#         try:
+#             match = view.get_object().
+#         except:
+#             return False

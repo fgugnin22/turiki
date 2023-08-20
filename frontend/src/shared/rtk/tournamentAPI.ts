@@ -22,17 +22,39 @@ export const tournamentAPI = createApi({
     refetchOnMountOrArgChange: false,
     tagTypes: ["Team", "Tournament", "Match", "Chat", ""],
     endpoints: (build) => ({
+        banMap: build.mutation({
+            invalidatesTags: ["Match"],
+            query: ({
+                teamId,
+                mapName,
+                matchId
+            }: {
+                teamId: number | string;
+                mapName: string;
+                matchId: number | string;
+            }) => {
+                const body = {
+                    team_id: teamId,
+                    map: mapName
+                };
+                return {
+                    url: `match/${matchId}/ban/`,
+                    method: "POST",
+                    body
+                };
+            }
+        }),
         claimMatchResult: build.mutation<
             null,
             { teamId: number; isWinner: Boolean; matchId: number }
         >({
             query: ({ teamId, isWinner, matchId }) => {
-                const body = {
+                const body = JSON.stringify({
                     team: {
                         team_id: teamId,
                         result: isWinner
                     }
-                };
+                });
                 return {
                     url: `match/${matchId}/claim_result/`,
                     method: "PATCH",

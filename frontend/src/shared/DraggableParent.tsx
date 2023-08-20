@@ -49,7 +49,7 @@ export const DraggableParent: React.FC<PropsWithChildren<DragProps>> = ({
             onMouseDown={handleDragStart}
             onMouseUp={handleDragEnd}
             onMouseMove={handleDrag}
-            className={"flex"}
+            className={"max-w-full"}
         >
             {children}
         </div>

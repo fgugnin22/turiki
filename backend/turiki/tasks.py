@@ -1,3 +1,5 @@
+import random
+
 import dramatiq
 from rest_framework import serializers
 
@@ -12,12 +14,21 @@ IN_A_MINUTE = datetime.now() + timedelta(minutes=0.5)
 
 # TODO: rabbitmq server start script path: C:\Program Files\RabbitMQ Server\rabbitmq_server-3.11.17\sbin
 
+@dramatiq.actor
+def set_match_start_bans(match_id: int):
+    match = Match.objects.get(pk=match_id)
+    if match.state == "NO_SHOW":
+        match.state = "BANS"
+        bans = MapBan.objects.create(match=match)
+        match.bans = bans
+        match.save()
+
 
 @dramatiq.actor
-def set_match_active(match_id: int):
-    instance = Match.objects.get(pk=match_id)
-    set_active(instance)
-    create_lobby(instance)
+def set_match_active(match):
+    set_active(match)
+    create_lobby(match)
+    match.save()
 
 
 def exec_task_on_date(func, args: list, when=datetime.now()):
@@ -36,7 +47,7 @@ def exec_task_on_date(func, args: list, when=datetime.now()):
 # py manage.py rundramatiq --threads 8 --processes 8
 @dramatiq.actor
 def set_active(match):  # self-explanatory fr tho
-    if match.state == "NO_SHOW":
+    if match.state == "BANS":
         match.state = "ACTIVE"
         print("BLACK MEN SHAKING THEIR BOOTY CHEEKS")
         match.save()
@@ -130,7 +141,7 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             starts=starts
         )
         time_to_start_match_from_beginning_of_tournament = timedelta(minutes=(next_round_count - 1) * 60)
-        exec_task_on_date(set_match_active, [final_match.id],
+        exec_task_on_date(set_match_start_bans, [final_match.id],
                           when=starts + time_to_start_match_from_beginning_of_tournament)
         create_match(next_round_count - 1, rounds, tournament, final_match, starts)
     else:
@@ -150,7 +161,7 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             tournament=tournament,
             starts=starts
         )
-        exec_task_on_date(set_match_active, [match1.id], when=starts)
-        exec_task_on_date(set_match_active, [match2.id], when=starts)
+        exec_task_on_date(set_match_start_bans, [match1.id], when=starts)
+        exec_task_on_date(set_match_start_bans, [match2.id], when=starts)
         create_match(next_round_count - 1, rounds, tournament, match1, starts)
         create_match(next_round_count - 1, rounds, tournament, match2, starts)

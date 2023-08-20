@@ -21,7 +21,7 @@ export const Layout = (props: {children: React.ReactNode[] | React.ReactNode}) =
   }, [location, isAuthenticated]);
 
   return (
-    <div className="grid grid-cols-1 min-h-screen">
+    <div className="flex min-h-screen flex-col">
       <NavBar />
       {props.children}
       <Footer />
