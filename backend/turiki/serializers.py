@@ -55,10 +55,26 @@ class BansSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
+class LobbySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Lobby
+        depth = 1
+        fields = ("chat",)
+
+
+class ParticipantSerializer(serializers.ModelSerializer):
+    class Meta:
+        depth = 1
+        model = Participant
+        fields = ("id", "is_winner", "result_text", "status", "team")
+
+
 class MatchSerializer(serializers.ModelSerializer):
-    # participants = serializers.StringRelatedField(many=True)
+    participants = ParticipantSerializer(many=True)
     tournament = serializers.StringRelatedField()
     bans = BansSerializer()
+    lobby = LobbySerializer(many=False)
+    next_match = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         depth = 2
@@ -78,7 +94,6 @@ class MatchSerializer(serializers.ModelSerializer):
 
 
 class TeamSerializer(serializers.ModelSerializer):
-    games = serializers.StringRelatedField(many=True, read_only=True)
     tournaments = serializers.StringRelatedField(many=True, read_only=True)
 
     class PlayerSerializer(serializers.ModelSerializer):
@@ -99,8 +114,11 @@ class TeamSerializer(serializers.ModelSerializer):
 
 
 class TournamentSerializer(serializers.ModelSerializer):
-    teams = TeamSerializer(many=True)
-    matches = MatchSerializer(many=True)
+    class TournamentTeamSerializer(serializers.ModelSerializer):
+        class Meta:
+            depth = 1
+            model = Team
+            fields = ("id", "name")
 
     class PlayerSerializer(serializers.ModelSerializer):
         name = serializers.CharField()
@@ -111,6 +129,8 @@ class TournamentSerializer(serializers.ModelSerializer):
             model = User
             fields = ["team_id", "id", "name"]
 
+    teams = TournamentTeamSerializer(many=True)
+    matches = MatchSerializer(many=True)
     players = PlayerSerializer(many=True)
 
     class Meta:
