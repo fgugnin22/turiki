@@ -12,14 +12,13 @@ MSK_TIMEZONE = timezone(timedelta(hours=3))
 IN_A_MINUTE = datetime.now() + timedelta(minutes=0.5)
 
 
-# TODO: rabbitmq server start script path: C:\Program Files\RabbitMQ Server\rabbitmq_server-3.11.17\sbin
-
 @dramatiq.actor
 def set_match_start_bans(match_id: int):
     match = Match.objects.get(pk=match_id)
     if match.state == "NO_SHOW":
         match.state = "BANS"
-        bans = MapBan.objects.create(match=match)
+        rand_team = random.choice(list(match.teams.values()))["id"]
+        bans = MapBan.objects.create(match=match, previous_team=rand_team)
         match.bans = bans
         match.save()
 
