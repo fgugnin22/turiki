@@ -9,7 +9,7 @@ from rest_framework.permissions import (
 from django.forms.models import model_to_dict
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from turiki.models import *
+from turiki.models import Team, Tournament, Chat, MapBan, Match, UserAccount
 from turiki.permissons import IsAdminUserOrReadOnly, IsCaptainOfThisTeamOrAdmin
 from turiki.serializers import (
     TournamentSerializer,
@@ -18,7 +18,7 @@ from turiki.serializers import (
     ChatSerializer, MapBanSerializer,
 )
 from turiki.services import TeamService, MatchService, TournamentService
-from turiki.tasks import *
+from turiki.tasks import create_bracket, set_initial_matches, ban_map
 from rest_framework.views import APIView
 
 """
@@ -79,7 +79,6 @@ class TournamentAPIView(ModelViewSet):
                 if name is not None
                 else "You forgot to name the tournament dumbass"
             )
-            print(2)
             prize = prize if prize is not None else "Prize too xd"
             max_rounds = max_rounds if max_rounds is not None else 1000
 
@@ -148,12 +147,12 @@ class MatchAPIView(ModelViewSet):
             team = request.user.team
             match = self.get_object()
             map_to_ban = request.data["map"]
-            MatchService.ban_map(match, team, map_to_ban)
+            ban_map(match.id, team.id, map_to_ban, move=MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps))
             return Response(f"{map_to_ban} successfully banned!", 200)
         except serializers.ValidationError as e:
             raise e
-        except:
-            return Response("other errors", status=500)
+        except Exception:
+            return Response(f"other errors", status=500)
 
     @action(
         methods=["PATCH"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin]

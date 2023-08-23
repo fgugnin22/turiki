@@ -1,10 +1,11 @@
 from datetime import timedelta, datetime
 
+import dramatiq
 from channels.db import database_sync_to_async
 import jwt
-from .models import *
+from .models import Tournament, Team, MapBan, Match, Participant, UserAccount, Lobby, Chat, Message
 from rest_framework import serializers
-from turiki.tasks import set_match_active, set_match_start_bans
+from turiki.tasks import set_match_active, set_match_start_bans, exec_task_on_date
 
 """
 В этот файл я попытался частично вынести более сложную логику по работе с бд и некоторые функции хелперы
@@ -98,19 +99,6 @@ class TournamentService:
 
 
 class MatchService:
-    @staticmethod
-    def ban_map(match, team, map_to_ban):
-        if len(match.bans.maps) == 1:
-            raise serializers.ValidationError("Ты пытался забанить карту, которую уже выбрали, ты еблан???")
-        if not map_to_ban.upper() in match.bans.maps:
-            raise serializers.ValidationError("wrong map name")
-        if match.bans.previous_team == team.id:
-            raise serializers.ValidationError("Wait for other team to ban")
-        match.bans.maps.remove(map_to_ban.upper())
-        match.bans.previous_team = team.id
-        if len(match.bans.maps) == 1:
-            set_match_active(match)
-        match.bans.save()
 
     @staticmethod
     def claim_match_result(match, team_id, result):
@@ -175,6 +163,7 @@ class MatchService:
         next_match.save()
         if len(list(next_match.participants.values())) == 2:
             print("WTF MAN")
+            print(next_match.id)
             set_match_start_bans(next_match.id)
 
 

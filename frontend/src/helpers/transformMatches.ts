@@ -34,10 +34,7 @@ export interface Match {
     bans?: Bans,
     lobby: {
         id: number;
-        match: any;
-        chat: {
-            id: number;
-        };
+        chat: number
     } | null;
     id: number;
     state: string;

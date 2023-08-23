@@ -3,23 +3,33 @@ import random
 import dramatiq
 from rest_framework import serializers
 
-from turiki.models import *
 from apscheduler.schedulers.background import BackgroundScheduler
-from datetime import datetime, timezone, timedelta
-from turiki.models import Chat, Lobby, Match, Team, Participant
+import datetime
+from turiki.models import Chat, Lobby, Match, Team, Participant, MapBan
 
-MSK_TIMEZONE = timezone(timedelta(hours=3))
-IN_A_MINUTE = datetime.now() + timedelta(minutes=0.5)
+MSK_TIMEZONE = datetime.timezone(datetime.timedelta(hours=3))
+IN_A_MINUTE = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
 
 
 @dramatiq.actor
 def set_match_start_bans(match_id: int):
     match = Match.objects.get(pk=match_id)
+    if match.teams.count() != 2:
+        return
     if match.state == "NO_SHOW":
         match.state = "BANS"
-        rand_team = random.choice(list(match.teams.values()))["id"]
-        bans = MapBan.objects.create(match=match, previous_team=rand_team)
+        print(match.participants.values(), 4)
+        [team1, team2] = [Team.objects.get(pk=match.participants.values()[0]["team_id"]),
+                          Team.objects.get(pk=match.participants.values()[1]["team_id"])]
+        initial_timestamps = [match.starts + datetime.timedelta(minutes=1)]
+        bans = MapBan.objects.create(match=match, previous_team=team1.id, timestamps=initial_timestamps,
+                                     time_to_select_map=datetime.timedelta(seconds=3))
+        exec_task_on_date(ban_map, [match.id, team2.id, match.bans.maps[-1], "AUTO",
+                                    MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps)],
+                          datetime.datetime.now() + match.bans.time_to_select_map)
+
         match.bans = bans
+        bans.save()
         match.save()
 
 
@@ -30,18 +40,62 @@ def set_match_active(match):
     match.save()
 
 
-def exec_task_on_date(func, args: list, when=datetime.now()):
+def exec_task_on_date(func, args: list, when=datetime.datetime.now()):
     scheduler = BackgroundScheduler()
-    scheduler.add_job(func.send, 'date', run_date=when, args=args, misfire_grace_time=10 ** 6)
-    print(when)
+    scheduler.add_job(func.send, 'date', run_date=when, args=args, misfire_grace_time=300)
     try:
         scheduler.start()
     except KeyboardInterrupt:
         scheduler.shutdown()
 
 
+@dramatiq.actor
+def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
+    start = datetime.datetime.now()
+    team = Team.objects.get(pk=team_id)
+    print(map_to_ban, who_banned, match_id)
+    match = Match.objects.get(pk=match_id)
+
+    """Я в афиге.... чсно гря"""
+    if len(match.bans.maps) == 1:
+        return
+        raise serializers.ValidationError(
+            "Ты пытался забанить карту, которую уже выбрали, ты еблан??? теперь уже играй на ней, лох")
+
+    if not map_to_ban.upper() in match.bans.maps:
+        return
+        raise serializers.ValidationError("wrong map name")
+
+    if match.bans.previous_team == team_id:
+        return
+        raise serializers.ValidationError("Wait for other team to ban")
+
+    try:
+        if match.bans.ban_log[move] == MapBan.CAPTAIN:
+            print('CAPTAIN VOTED FOR MAPBAN, AUTO BAN CANCELLED')
+            return "xd"
+    except:
+        pass
+    a = list(match.participants.values())
+
+    other_team_id = a[0]["team_id"] if a[0]["team_id"] != team.id else a[1]["team_id"]
+
+    other_team = Team.objects.get(pk=other_team_id)
+    match.bans.maps.remove(map_to_ban.upper())
+    match.bans.previous_team = team.id
+    match.bans.timestamps.append(datetime.datetime.now() + datetime.timedelta(seconds=1))
+    match.bans.ban_log.append(who_banned)
+    if len(match.bans.maps) == 1:
+        set_match_active(match)
+    exec_task_on_date(ban_map, [match.id, other_team.id, match.bans.maps[-1], "AUTO",
+                                MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps)],
+                      datetime.datetime.now() + match.bans.time_to_select_map)
+    match.bans.save()
+    match.save()
+    print("!!!!!!!!", datetime.datetime.now() - start)
+
+
 # py manage.py shell
-# from turiki.tasks import *
 # [exec_task_on_date(set_match_state, [56, f"ACTIVE{i*10123}"], IN_A_MINUTE) for i in range(10)]
 # py manage.py rundramatiq --threads 8 --processes 8
 @dramatiq.actor
@@ -103,6 +157,7 @@ def set_initial_matches(tournament):
         participant2 = Participant.objects.create(
             team=team2, match=match_object, status="NO_SHOW", result_text="TBD"
         )
+        exec_task_on_date(set_match_start_bans, [match_object.id], when=match_object.starts)
         match_object.participants.add(participant1)
         match_object.participants.add(participant2)
 
@@ -120,7 +175,7 @@ def create_bracket(tournament, rounds):
 
 
 @dramatiq.actor
-def create_match(next_round_count, rounds, tournament, next_match=None, starts=datetime.now()):
+def create_match(next_round_count, rounds, tournament, next_match=None, starts=datetime.datetime.now()):
     """
     Создает турнирную сетку
     кол-во раундов определяет глубину сетки:
@@ -139,9 +194,7 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             tournament=tournament,
             starts=starts
         )
-        time_to_start_match_from_beginning_of_tournament = timedelta(minutes=(next_round_count - 1) * 60)
-        exec_task_on_date(set_match_start_bans, [final_match.id],
-                          when=starts + time_to_start_match_from_beginning_of_tournament)
+        time_to_start_match_from_beginning_of_tournament = datetime.timedelta(minutes=(next_round_count - 1) * 60)
         create_match(next_round_count - 1, rounds, tournament, final_match, starts)
     else:
         match1 = Match.objects.create(
@@ -160,7 +213,6 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             tournament=tournament,
             starts=starts
         )
-        exec_task_on_date(set_match_start_bans, [match1.id], when=starts)
-        exec_task_on_date(set_match_start_bans, [match2.id], when=starts)
+
         create_match(next_round_count - 1, rounds, tournament, match1, starts)
         create_match(next_round_count - 1, rounds, tournament, match2, starts)

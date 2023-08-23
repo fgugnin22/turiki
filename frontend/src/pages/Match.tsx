@@ -24,7 +24,7 @@ const Match = () => {
         isSuccess: isGetMessagesSuccess,
         isError: isGetMessagesError
     } = tournamentAPI.useGetChatMessagesQuery(
-        { chatId: match?.lobby?.chat?.id },
+        { chatId: match?.lobby?.chat },
         { skip: isFetching || !match?.lobby }
     );
     const messages = chat?.messages;
@@ -132,7 +132,7 @@ const Match = () => {
                     {isGetMessagesSuccess && isAuthenticated && (
                         <Chat
                             messages={messages}
-                            chatId={match?.lobby?.chat?.id!}
+                            chatId={match?.lobby?.chat!}
                         />
                     )}
                 </div>

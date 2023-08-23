@@ -54,7 +54,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    command: sh -c "python manage.py rundramatiq --processes 2 --threads 2"
+    command: sh -c "python manage.py rundramatiq --processes 6 --threads 6"
     depends_on:
       - redis
       - rabbit

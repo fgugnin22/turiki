@@ -56,10 +56,12 @@ class BansSerializer(serializers.ModelSerializer):
 
 
 class LobbySerializer(serializers.ModelSerializer):
+    chat = serializers.PrimaryKeyRelatedField(read_only=True)
+
     class Meta:
         model = Lobby
         depth = 1
-        fields = ("chat",)
+        fields = ("chat", "id")
 
 
 class ParticipantSerializer(serializers.ModelSerializer):

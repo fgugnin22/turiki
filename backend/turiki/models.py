@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.postgres import fields
@@ -67,6 +69,14 @@ class MapBan(models.Model):
     SKYSCRAPER = "SKYSCRAPER"
     THEMEPARK = "THEMEPARK"
     VILLA = "VILLA"
+    ADMIN = "ADMIN"
+    CAPTAIN = "CAPTAIN"
+    AUTO = "AUTO"
+    WHO_CAN_BAN = (
+        (ADMIN, ADMIN.lower()),
+        (CAPTAIN, CAPTAIN.lower()),
+        (AUTO, AUTO.lower()),
+    )
 
     DEFAULT_COMPETITIVE_MAP_CHOICES_TUPLE = (
         (CHALET, CHALET.lower()),
@@ -94,12 +104,30 @@ class MapBan(models.Model):
         ]
 
     DEFAULT_MAP_POOL_SIZE = len(DEFAULT_COMPETITIVE_MAP_CHOICES_TUPLE)
+
+    def get_init_ban_log(self=None):
+        return [] * (MapBan.DEFAULT_MAP_POOL_SIZE - 1)
+
+    time_to_select_map = models.DurationField(default=datetime.timedelta(seconds=15))
     previous_team = models.IntegerField(default=0)
+    timestamps = fields.ArrayField(
+        base_field=models.DateTimeField(blank=True),
+        size=DEFAULT_MAP_POOL_SIZE,
+        default=list
+    )
+    ban_log = fields.ArrayField(
+        base_field=models.CharField(max_length=15, choices=WHO_CAN_BAN),
+        size=DEFAULT_MAP_POOL_SIZE - 1,
+        default=get_init_ban_log
+    )
     maps = fields.ArrayField(
         base_field=models.CharField(max_length=30, choices=DEFAULT_COMPETITIVE_MAP_CHOICES_TUPLE, default=None,
                                     null=True),
         size=DEFAULT_MAP_POOL_SIZE,
         default=get_default_map_pool)
+
+    def __str__(self):
+        return f"{self.id}"
 
 
 class Match(models.Model):

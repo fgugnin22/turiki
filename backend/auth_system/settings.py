@@ -214,6 +214,7 @@ GRAPH_MODELS = {
 }
 
 # настройки очереди DRAMATIQ
+DRAMATIQ_AUTODISCOVER_MODULES = ["tasks", "services"]
 DRAMATIQ_BROKER = {
     "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
     "OPTIONS": {
