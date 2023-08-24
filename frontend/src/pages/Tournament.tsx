@@ -1,8 +1,8 @@
 import useWindowSize from "../hooks/useWindowSize";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
-import transformMatches, { Root, Team } from "../helpers/transformMatches.js";
+import { Team } from "../helpers/transformMatches.js";
 import { Layout } from "../processes/Layout.js";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useAppSelector } from "../shared/rtk/store";
 import { ROUTES } from "../app/RouteTypes";
 import RegisterTeamModal from "../features/RegisterTeamModal";

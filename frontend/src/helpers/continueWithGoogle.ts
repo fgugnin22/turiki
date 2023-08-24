@@ -9,6 +9,6 @@ export const continueWithGoogle = async () => {
     console.log(res.data.authorization_url);
     window.location.replace(res.data.authorization_url);
   } catch (err) {
-    console.log("Google Auth error");
+    console.error("Google Auth error");
   }
 };

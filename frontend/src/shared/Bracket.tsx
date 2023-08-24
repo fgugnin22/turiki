@@ -22,7 +22,7 @@ const sortMatchesForBracket = (matches: Match[] | undefined) => {
                     if (!match2.next_match) {
                         return -1;
                     }
-                    return match1.next_match?.id - match2.next_match?.id;
+                    return match1.next_match - match2.next_match
                 })
         );
     }
@@ -86,9 +86,13 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
                                     2 ** (Number(match.name) - 1)
                             };
                             const hasChildMatches = tournament.matches.some(
-                                (otherMatch) =>
-                                    otherMatch.next_match?.id === match.id
+                                (otherMatch) => {
+                                    return (
+                                        otherMatch.next_match === match.id
+                                    );
+                                }
                             );
+                            console.log(hasChildMatches);
                             return (
                                 <DynamicBracketMatch
                                     key={match.id}

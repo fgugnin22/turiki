@@ -87,6 +87,7 @@ const DynamicBracketMatch = ({
         );
     };
     const timeStarts = new Date(timeString);
+    console.log(hasChildMatches, matchId)
     return (
         <div
             className="flex items-center ml-[150px] last-of-type:mr-[150px]"
