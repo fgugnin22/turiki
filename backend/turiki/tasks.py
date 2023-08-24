@@ -21,12 +21,12 @@ def set_match_start_bans(match_id: int):
         print(match.participants.values(), 4)
         [team1, team2] = [Team.objects.get(pk=match.participants.values()[0]["team_id"]),
                           Team.objects.get(pk=match.participants.values()[1]["team_id"])]
-        initial_timestamps = [match.starts + datetime.timedelta(minutes=1)]
+        initial_timestamps = [match.starts + datetime.timedelta(seconds=1)]
         bans = MapBan.objects.create(match=match, previous_team=team1.id, timestamps=initial_timestamps,
                                      time_to_select_map=datetime.timedelta(seconds=3))
         exec_task_on_date(ban_map, [match.id, team2.id, match.bans.maps[-1], "AUTO",
                                     MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps)],
-                          datetime.datetime.now() + match.bans.time_to_select_map)
+                          initial_timestamps[-1] + match.bans.time_to_select_map)
 
         match.bans = bans
         bans.save()
@@ -77,9 +77,7 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
     except:
         pass
     a = list(match.participants.values())
-
     other_team_id = a[0]["team_id"] if a[0]["team_id"] != team.id else a[1]["team_id"]
-
     other_team = Team.objects.get(pk=other_team_id)
     match.bans.maps.remove(map_to_ban.upper())
     match.bans.previous_team = team.id
@@ -92,12 +90,9 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
                       datetime.datetime.now() + match.bans.time_to_select_map)
     match.bans.save()
     match.save()
-    print("!!!!!!!!", datetime.datetime.now() - start)
+    print(f"Время выполнения бана: {datetime.datetime.now() - start}")
 
 
-# py manage.py shell
-# [exec_task_on_date(set_match_state, [56, f"ACTIVE{i*10123}"], IN_A_MINUTE) for i in range(10)]
-# py manage.py rundramatiq --threads 8 --processes 8
 @dramatiq.actor
 def set_active(match):  # self-explanatory fr tho
     if match.state == "BANS":

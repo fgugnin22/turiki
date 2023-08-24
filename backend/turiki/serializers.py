@@ -122,6 +122,23 @@ class TournamentSerializer(serializers.ModelSerializer):
             model = Team
             fields = ("id", "name")
 
+    class TournamentMatchSerializer(serializers.ModelSerializer):
+        participants = ParticipantSerializer(many=True)
+        next_match = serializers.PrimaryKeyRelatedField(read_only=True)
+
+        class Meta:
+            depth = 2
+            model = Match
+            fields = (
+                "id",
+                "state",
+                "round_text",
+                "starts",
+                "participants",
+                "next_match",
+                "name",
+            )
+
     class PlayerSerializer(serializers.ModelSerializer):
         name = serializers.CharField()
         id = serializers.IntegerField(read_only=True)
@@ -132,7 +149,7 @@ class TournamentSerializer(serializers.ModelSerializer):
             fields = ["team_id", "id", "name"]
 
     teams = TournamentTeamSerializer(many=True)
-    matches = MatchSerializer(many=True)
+    matches = TournamentMatchSerializer(many=True)
     players = PlayerSerializer(many=True)
 
     class Meta:

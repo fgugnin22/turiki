@@ -58,7 +58,6 @@ class TournamentAPIView(ModelViewSet):
     queryset = Tournament.objects.prefetch_related(
         "matches", "matches__lobby", "matches__participants", "matches__participants__team",
         "matches__participants__team__tournaments",
-        "matches__lobby__chat",
         "matches__next_match",
         "players",
         "teams"
