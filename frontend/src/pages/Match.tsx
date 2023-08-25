@@ -1,23 +1,25 @@
 import { useParams } from "react-router-dom";
 import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
-import { useAppSelector } from "../shared/rtk/store";
+import { useAppSelector, useAppDispatch } from "../shared/rtk/store";
 import Chat from "../features/Chat";
 import TeamPlayerList from "../features/TeamPlayerList";
 import MatchResultBar from "../features/MatchResultBar";
 import MatchResultVote from "../features/MatchResultVote";
 import { Participant } from "../helpers/transformMatches";
 import MapBans from "../shared/MapBans";
+import { useCountdown } from "../hooks/useCountDown";
+import { useEffect } from "react";
 const Match = () => {
     const { userDetails: user, isAuthenticated } = useAppSelector(
         (state) => state.user
     );
+    const dispatch = useAppDispatch();
     const params = useParams();
     const {
         data: match,
         isSuccess,
-        isFetching,
-        isError
+        isFetching
     } = tournamentAPI.useGetMatchByIdQuery({ id: params.id! });
     const {
         data: chat,
@@ -47,7 +49,31 @@ const Match = () => {
                 ? match?.participants[1]
                 : null;
     }
-    const [banMap] = tournamentAPI.useBanMapMutation();
+    let initialDateSeconds =
+        new Date(match?.bans?.timestamps.at(-1) ?? 10).getTime() +
+        new Date(
+            "01 Jan 1970 " + match?.bans?.time_to_select_map + " GMT" ?? 10
+        ).getTime();
+    const timeBeforeMatchStart = useCountdown(starts);
+    const { seconds } = useCountdown(new Date(initialDateSeconds));
+    useEffect(() => {
+        if (seconds === 0) {
+            dispatch(tournamentAPI.util.invalidateTags(["Match"]));
+            console.log("asdfsaf", seconds);
+        }
+    }, [seconds === 0]);
+    useEffect(() => {
+        if (
+            timeBeforeMatchStart.seconds === -1 &&
+            timeBeforeMatchStart.minutes === -1 &&
+            timeBeforeMatchStart.hours === -1
+        ) {
+            dispatch(tournamentAPI.util.invalidateTags(["Match"]));
+            console.log("worked probably", timeBeforeMatchStart.seconds);
+        }
+        console.log("im schewpid", timeBeforeMatchStart);
+    }, [timeBeforeMatchStart.seconds]);
+
     return (
         <Layout>
             {isSuccess && (
@@ -60,13 +86,20 @@ const Match = () => {
                         <div>
                             Match {match.id}
                             {match.bans?.maps.length === 1 && (
-                                <span className="text-xl ml-auto block">Карта: {match.bans.maps[0]}</span>
+                                <span className="text-xl ml-auto block">
+                                    Карта: {match.bans.maps[0]}
+                                </span>
                             )}
-                            <div>
-                                {starts.toLocaleDateString().slice(0, -5) +
-                                    " " +
-                                    starts.toLocaleTimeString().slice(0, -3)}
-                            </div>
+                            {(timeBeforeMatchStart.seconds > 0 ||
+                                timeBeforeMatchStart.minutes > 0 ||
+                                timeBeforeMatchStart.hours > 0) && (
+                                <div>
+                                    До начала матча осталось:{" "}
+                                    {timeBeforeMatchStart.hours}:
+                                    {timeBeforeMatchStart.minutes}:
+                                    {timeBeforeMatchStart.seconds}
+                                </div>
+                            )}
                         </div>
                         <div className="m-auto">
                             {isSuccess &&
@@ -90,45 +123,8 @@ const Match = () => {
                             claimMatchResult={claimMatchResult}
                         />
                     </>
-                    {match?.state === "BANS" && (
-                        <div className="w-72 m-auto flex flex-col">
-                            {match.bans?.maps.map((map) => {
-                                const handleBan = () => {
-                                    if (!user?.team) {
-                                        return;
-                                    }
-                                    banMap({
-                                        teamId: user.team,
-                                        matchId: match.id,
-                                        mapName: map
-                                    });
-                                };
-                                return (
-                                    <div
-                                        key={map}
-                                        className="w-full p-2 flex items-center justify-center even:text-white even:bg-slate-700 odd:bg-slate-200 odd: text-black"
-                                    >
-                                        {map}
-                                        {(user?.team ===
-                                            match.participants[0].team.id ||
-                                            user?.team ===
-                                                match.participants[1].team
-                                                    .id) &&
-                                            user?.team_status === "CAPTAIN" &&
-                                            match.bans?.previous_team !==
-                                                user?.team && (
-                                                <button
-                                                    onClick={handleBan}
-                                                    className="p-1 rounded bg-black text-white ml-auto"
-                                                >
-                                                    Забанить
-                                                </button>
-                                            )}
-                                    </div>
-                                );
-                            })}
-                        </div>
-                    )}
+
+                    <MapBans timeRemaining={seconds} match={match} />
                     {isGetMessagesSuccess && isAuthenticated && (
                         <Chat
                             messages={messages}

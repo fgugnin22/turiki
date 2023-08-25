@@ -18,6 +18,9 @@ export interface Root {
 export interface Bans {
     id: number;
     previous_team: number;
+    timestamps: string[];
+    time_to_select_map: string;
+    ban_log: ("AUTO" | "CAPTAIN")[];
     maps: (
         | "CHALET"
         | "BANK"
@@ -31,10 +34,10 @@ export interface Bans {
     )[];
 }
 export interface Match {
-    bans?: Bans,
+    bans?: Bans;
     lobby?: {
         id: number;
-        chat: number
+        chat: number;
     } | null;
     id: number;
     state: string;
@@ -105,4 +108,3 @@ export interface Tournament2 {
     active: boolean;
     played: boolean;
 }
-

@@ -164,6 +164,8 @@ class MatchService:
         if len(list(next_match.participants.values())) == 2:
             print("WTF MAN")
             print(next_match.id)
+            next_match.starts = datetime.now() + timedelta(seconds=10)
+            next_match.save()
             set_match_start_bans(next_match.id)
 
 

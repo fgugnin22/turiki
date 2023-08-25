@@ -21,9 +21,9 @@ def set_match_start_bans(match_id: int):
         print(match.participants.values(), 4)
         [team1, team2] = [Team.objects.get(pk=match.participants.values()[0]["team_id"]),
                           Team.objects.get(pk=match.participants.values()[1]["team_id"])]
-        initial_timestamps = [match.starts + datetime.timedelta(seconds=1)]
+        initial_timestamps = [match.starts]
         bans = MapBan.objects.create(match=match, previous_team=team1.id, timestamps=initial_timestamps,
-                                     time_to_select_map=datetime.timedelta(seconds=3))
+                                     time_to_select_map=datetime.timedelta(seconds=59))
         exec_task_on_date(ban_map, [match.id, team2.id, match.bans.maps[-1], "AUTO",
                                     MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps)],
                           initial_timestamps[-1] + match.bans.time_to_select_map)
@@ -152,9 +152,12 @@ def set_initial_matches(tournament):
         participant2 = Participant.objects.create(
             team=team2, match=match_object, status="NO_SHOW", result_text="TBD"
         )
-        exec_task_on_date(set_match_start_bans, [match_object.id], when=match_object.starts)
+        print('DUDE FOR HOW LONG MAN')
+        match_object.starts = tournament.starts
+        exec_task_on_date(set_match_start_bans, [match_object.id], when=tournament.starts)
         match_object.participants.add(participant1)
         match_object.participants.add(participant2)
+        match_object.save()
 
 
 # TODO: автоматическое отложенное создание сетки перед началом за какое-то кол-во времени
@@ -164,7 +167,7 @@ def create_bracket(tournament, rounds):
     is_enough_teams_to_start_tournament = len(list(tournament.teams.values())) == 2 ** rounds and len(
         list(tournament.matches.values())) == 0
     if is_enough_teams_to_start_tournament:
-        create_match(rounds, rounds, tournament, None)
+        create_match(rounds, rounds, tournament, None, tournament.starts)
         return tournament
     raise serializers.ValidationError("Недостаточно команд для старта турнира")
 
@@ -187,11 +190,12 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             round_text=f"Матч за {rounds - next_round_count + 1} место",
             state="NO_SHOW",
             tournament=tournament,
-            starts=starts
+            starts=None
         )
         time_to_start_match_from_beginning_of_tournament = datetime.timedelta(minutes=(next_round_count - 1) * 60)
         create_match(next_round_count - 1, rounds, tournament, final_match, starts)
     else:
+        starts = None
         match1 = Match.objects.create(
             next_match=next_match,
             name=f"{rounds - next_round_count + 1}",
