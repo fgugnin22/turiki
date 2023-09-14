@@ -9,16 +9,16 @@ from rest_framework.permissions import (
 from django.forms.models import model_to_dict
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
-from turiki.models import Team, Tournament, Chat, MapBan, Match, UserAccount
-from turiki.permissons import IsAdminUserOrReadOnly, IsCaptainOfThisTeamOrAdmin
-from turiki.serializers import (
+from turiki_app.models import Team, Tournament, Chat, MapBan, Match, UserAccount
+from turiki_app.permissons import IsAdminUserOrReadOnly, IsCaptainOfThisTeamOrAdmin
+from turiki_app.serializers import (
     TournamentSerializer,
     MatchSerializer,
     TeamSerializer,
     ChatSerializer, MapBanSerializer,
 )
-from turiki.services import TeamService, MatchService, TournamentService
-from turiki.tasks import create_bracket, set_initial_matches, ban_map
+from turiki_app.services import TeamService, MatchService, TournamentService
+from turiki_app.tasks import create_bracket, set_initial_matches, ban_map
 from rest_framework.views import APIView
 
 """

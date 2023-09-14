@@ -1,21 +1,23 @@
 import os
 from datetime import timedelta
 from pathlib import Path
-import environ
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-env = environ.Env()
-environ.Env.read_env(env_file=os.path.join(BASE_DIR, ".env"))
+
+load_dotenv()
+
+MY_ENV_VAR = os.getenv('MY_ENV_VAR')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # Используется для шифрования jwt-токенов -> берется json-payload токена, смешивается шифрованием с этим ключом и получается электронная подпись токена(3 часть)
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEBUG")
+DEBUG = os.getenv("DEBUG")
 
 INSTALLED_APPS = [
     "daphne",
@@ -28,7 +30,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",  # ЭТО СУПЕР ВАЖНО ДЛЯ КОРСА!!! ИНАЧЕ НИЧЕ РАБОТАТЬ НЕ БУДЕТ!
-    "turiki",
+    "turiki_app",
     "djoser",
     "social_django",
     "rest_framework_simplejwt",
@@ -41,7 +43,7 @@ ALLOWED_HOSTS = ["*"]
 CORS_ORIGIN_ALLOW_ALL = True
 
 MIDDLEWARE = [
-    "auth_system.middleware.StatsMiddleware",
+    "core.middleware.StatsMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -53,7 +55,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 # Где находится роутинг для http запросов
-ROOT_URLCONF = "auth_system.urls"
+ROOT_URLCONF = "core.urls"
 # я хз как именно это работает и как взаимодействует с 49-54 строкой
 CSRF_COOKIE_SECURE = True
 CORS_ALLOW_CREDENTIALS = True
@@ -77,8 +79,8 @@ TEMPLATES = [
     },
 ]
 # wsgi - синхронный сервер, asgi - и синхронный и асинхронный
-WSGI_APPLICATION = "auth_system.wsgi.application"
-ASGI_APPLICATION = "auth_system.asgi.application"
+WSGI_APPLICATION = "core.wsgi.application"
+ASGI_APPLICATION = "core.asgi.application"
 # Настройка RedisDB для websocket(нужна для кеширования типа(я его еще не сделал))
 CHANNEL_LAYERS = {
     "default": {
@@ -95,8 +97,8 @@ DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",
         "NAME": "TurikiCore",
-        "USER": env("PG_USER"),
-        "PASSWORD": env("PG_PASSWORD"),
+        "USER": os.getenv("PG_USER"),
+        "PASSWORD": os.getenv("PG_PASSWORD"),
         "HOST": "pgdb",
         "PORT": "5432",
     }
@@ -127,9 +129,9 @@ LANGUAGE_CODE = "ru"
 
 TIME_ZONE = "UTC"
 
-USE_I18N = True  # эт я хз
+USE_I18N = True
 
-USE_TZ = True  # тоже самое
+USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -140,14 +142,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, "assets")
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"  # хз
 
-AUTH_USER_MODEL = "turiki.UserAccount"  # модель юзера для авторизации что тут сказать
+AUTH_USER_MODEL = "turiki_app.UserAccount"  # модель юзера для авторизации что тут сказать
 
 # настройка почтовой рассылки через мой гугл акк
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = "smtp.gmail.com"
-EMAIL_PORT = env('EMAIL_PORT')
-EMAIL_HOST_USER = env('EMAIL_HOST_USER')
-EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
 EMAIL_USE_TLS = True
 
 # настройка DRF
@@ -186,20 +188,21 @@ DJOSER = {
     "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [
         "http://localhost:8000",
         "http://localhost:5173",
+        "*"
     ],
     "SERIALIZERS": {
-        "user_create": "turiki.serializers.UserSerializer",
-        "user": "turiki.serializers.UserSerializer",
-        "current_user": "turiki.serializers.UserSerializer",
+        "user_create": "turiki_app.serializers.UserSerializer",
+        "user": "turiki_app.serializers.UserSerializer",
+        "current_user": "turiki_app.serializers.UserSerializer",
         "user_delete": "djoser.serializers.UserDeleteSerializer",
     },
 }
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
-    "469560879923-f4qjktjcuijubkmjaigj6crk0o360hgu.apps.googleusercontent.com"
+    os.getenv("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = "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"
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/userinfo.profile",

@@ -5,7 +5,7 @@ from channels.db import database_sync_to_async
 import jwt
 from .models import Tournament, Team, MapBan, Match, Participant, UserAccount, Lobby, Chat, Message
 from rest_framework import serializers
-from turiki.tasks import set_match_active, set_match_start_bans, exec_task_on_date
+from turiki_app.tasks import set_match_active, set_match_start_bans, exec_task_on_date
 
 """
 В этот файл я попытался частично вынести более сложную логику по работе с бд и некоторые функции хелперы
@@ -256,7 +256,7 @@ class TeamService:
 @database_sync_to_async
 def async_return_user(token):
     # асинхронное доставание UserAccount по jwt токену из БД для consumers.py -> websocket
-    from auth_system.settings import SECRET_KEY
+    from core.settings import SECRET_KEY
 
     try:
         payload = jwt.decode(token, SECRET_KEY, algorithms=["HS256"])

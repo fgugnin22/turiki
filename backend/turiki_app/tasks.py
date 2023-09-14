@@ -5,7 +5,7 @@ from rest_framework import serializers
 
 from apscheduler.schedulers.background import BackgroundScheduler
 import datetime
-from turiki.models import Chat, Lobby, Match, Team, Participant, MapBan
+from turiki_app.models import Chat, Lobby, Match, Team, Participant, MapBan
 
 MSK_TIMEZONE = datetime.timezone(datetime.timedelta(hours=3))
 IN_A_MINUTE = datetime.datetime.now() + datetime.timedelta(minutes=0.5)

@@ -1,5 +1,5 @@
 """
-ASGI config for auth_system project.
+ASGI config for core project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -13,9 +13,9 @@ from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from django.core.asgi import get_asgi_application
 
-import turiki.routing
+import turiki_app.routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'auth_system.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'core.settings')
 # Initialize Django ASGI application early to ensure the AppRegistry
 # is populated before importing code that may import ORM models.
 django_asgi_app = get_asgi_application()
@@ -25,7 +25,7 @@ application = ProtocolTypeRouter({
     "websocket":
         AuthMiddlewareStack(
             URLRouter(
-                turiki.routing.websocket_urlpatterns
+                turiki_app.routing.websocket_urlpatterns
             )
         ),
 })

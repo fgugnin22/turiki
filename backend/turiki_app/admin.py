@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from turiki.models import UserAccount, Team, Tournament, Match, Participant, Chat, Lobby, MapBan
+from turiki_app.models import UserAccount, Team, Tournament, Match, Participant, Chat, Lobby, MapBan
 
 # Регистриция моделей на админ панели django (/admin)
 admin.site.register(UserAccount)

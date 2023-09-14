@@ -1,5 +1,5 @@
 """
-URL configuration for auth_system project.
+URL configuration for core project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.2/topics/http/urls/
@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
-from turiki.views import TournamentAPIView, MatchAPIView, TeamAPIView, ChatAPIView, UserAPIView
+from turiki_app.views import TournamentAPIView, MatchAPIView, TeamAPIView, ChatAPIView, UserAPIView
 from rest_framework.routers import DefaultRouter
 from .yasg import urlpatterns as doc_urls
 

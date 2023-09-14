@@ -3,7 +3,7 @@ from datetime import datetime
 from djoser.serializers import UserCreateSerializer
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from turiki.models import *
+from turiki_app.models import *
 
 """
 В этом файле описывается как отсылаем на клиент и принимаем с клиента информацию о моделях из бд
