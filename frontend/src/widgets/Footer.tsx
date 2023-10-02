@@ -1,132 +1,126 @@
 const Footer = () => {
-    return (
-        // <!-- Footer container -->
-        <footer className="mt-auto bg-neutral-100 text-center text-neutral-600 dark:bg-neutral-600 dark:text-neutral-200 lg:text-left">
-            {/* <!-- Main container div: holds the entire content of the footer, including four sections (Tailwind Elements, Products, Useful links, and Contact), with responsive styling and appropriate padding/margins. --> */}
-            <div className="mx-6 py-4 text-center md:text-left">
-                <div className="grid-1 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-                    {/* <!-- Tailwind Elements section --> */}
-                    <div className="">
-                        <h6 className="mb-4 flex items-center justify-center font-semibold uppercase md:justify-start">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                className="mr-3 h-4 w-4"
-                            >
-                                <path d="M12.378 1.602a.75.75 0 00-.756 0L3 6.632l9 5.25 9-5.25-8.622-5.03zM21.75 7.93l-9 5.25v9l8.628-5.032a.75.75 0 00.372-.648V7.93zM11.25 22.18v-9l-9-5.25v8.57a.75.75 0 00.372.648l8.628 5.033z" />
-                            </svg>
-                            Tailwind ELEMENTS
-                        </h6>
-                        <p>
-                            Here you can use rows and columns to organize your
-                            footer content. Lorem ipsum dolor sit amet,
-                            consectetur adipisicing elit.
-                        </p>
-                    </div>
-                    {/* <!-- Products section --> */}
-                    {/* <div className=""></div> */}
-                    {/* <!-- Useful links section --> */}
-                    <div className="">
-                        <h6 className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
-                            Useful links
-                        </h6>
-                        <p className="">
-                            <a
-                                href="#!"
-                                className=" text-neutral-600 dark:text-neutral-200"
-                            >
-                                <svg
-                                    className="mx-auto my-4 md:mx-0"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="32"
-                                    height="32"
-                                    fill="currentColor"
-                                    //   className="bi bi-discord"
-                                    viewBox="0 0 16 16"
-                                >
-                                    <path d="M13.545 2.907a13.227 13.227 0 0 0-3.257-1.011.05.05 0 0 0-.052.025c-.141.25-.297.577-.406.833a12.19 12.19 0 0 0-3.658 0 8.258 8.258 0 0 0-.412-.833.051.051 0 0 0-.052-.025c-1.125.194-2.22.534-3.257 1.011a.041.041 0 0 0-.021.018C.356 6.024-.213 9.047.066 12.032c.001.014.01.028.021.037a13.276 13.276 0 0 0 3.995 2.02.05.05 0 0 0 .056-.019c.308-.42.582-.863.818-1.329a.05.05 0 0 0-.01-.059.051.051 0 0 0-.018-.011 8.875 8.875 0 0 1-1.248-.595.05.05 0 0 1-.02-.066.051.051 0 0 1 .015-.019c.084-.063.168-.129.248-.195a.05.05 0 0 1 .051-.007c2.619 1.196 5.454 1.196 8.041 0a.052.052 0 0 1 .053.007c.08.066.164.132.248.195a.051.051 0 0 1-.004.085 8.254 8.254 0 0 1-1.249.594.05.05 0 0 0-.03.03.052.052 0 0 0 .003.041c.24.465.515.909.817 1.329a.05.05 0 0 0 .056.019 13.235 13.235 0 0 0 4.001-2.02.049.049 0 0 0 .021-.037c.334-3.451-.559-6.449-2.366-9.106a.034.034 0 0 0-.02-.019Zm-8.198 7.307c-.789 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.45.73 1.438 1.613 0 .888-.637 1.612-1.438 1.612Zm5.316 0c-.788 0-1.438-.724-1.438-1.612 0-.889.637-1.613 1.438-1.613.807 0 1.451.73 1.438 1.613 0 .888-.631 1.612-1.438 1.612Z" />
-                                </svg>
-                            </a>
-                        </p>
-                        <p className="">
-                            <a
-                                href="#!"
-                                className="mr-6 text-neutral-600 dark:text-neutral-200"
-                            >
-                                <svg
-                                    className="mx-auto md:mx-0"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    width="36"
-                                    height="36"
-                                    viewBox="0 0 512 512"
-                                >
-                                    <title>ionicons-v5_logos</title>
-                                    <path
-                                        d="M484.7,132c3.56-11.28,0-19.48-15.75-19.48H416.58c-13.21,0-19.31,7.18-22.87,14.86,0,0-26.94,65.6-64.56,108.13-12.2,12.3-17.79,16.4-24.4,16.4-3.56,0-8.14-4.1-8.14-15.37V131.47c0-13.32-4.06-19.47-15.25-19.47H199c-8.14,0-13.22,6.15-13.22,12.3,0,12.81,18.81,15.89,20.84,51.76V254c0,16.91-3,20-9.66,20-17.79,0-61-66.11-86.92-141.44C105,117.64,99.88,112,86.66,112H33.79C18.54,112,16,119.17,16,126.86c0,13.84,17.79,83.53,82.86,175.77,43.21,63,104.72,96.86,160.13,96.86,33.56,0,37.62-7.69,37.62-20.5V331.33c0-15.37,3.05-17.93,13.73-17.93,7.62,0,21.35,4.09,52.36,34.33C398.28,383.6,404.38,400,424.21,400h52.36c15.25,0,22.37-7.69,18.3-22.55-4.57-14.86-21.86-36.38-44.23-62-12.2-14.34-30.5-30.23-36.09-37.92-7.62-10.25-5.59-14.35,0-23.57-.51,0,63.55-91.22,70.15-122"
-                                        fill="currentColor"
-                                    ></path>
-                                </svg>
-                            </a>
-                        </p>
-                    </div>
-                    {/* <!-- Contact section --> */}
-                    <div>
-                        <h6 className="mb-4 flex justify-center font-semibold uppercase md:justify-start">
-                            Contact
-                        </h6>
-                        <p className="mb-4 flex items-center justify-center md:justify-start">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                className="mr-3 h-5 w-5"
-                            >
-                                <path d="M11.47 3.84a.75.75 0 011.06 0l8.69 8.69a.75.75 0 101.06-1.06l-8.689-8.69a2.25 2.25 0 00-3.182 0l-8.69 8.69a.75.75 0 001.061 1.06l8.69-8.69z" />
-                                <path d="M12 5.432l8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 01-.75-.75v-4.5a.75.75 0 00-.75-.75h-3a.75.75 0 00-.75.75V21a.75.75 0 01-.75.75H5.625a1.875 1.875 0 01-1.875-1.875v-6.198a2.29 2.29 0 00.091-.086L12 5.43z" />
-                            </svg>
-                            Somewhere deep in Saint-Petersburg's swamps
-                        </p>
-                        <p className="mb-4 flex items-center justify-center md:justify-start">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                className="mr-3 h-5 w-5"
-                            >
-                                <path d="M1.5 8.67v8.58a3 3 0 003 3h15a3 3 0 003-3V8.67l-8.928 5.493a3 3 0 01-3.144 0L1.5 8.67z" />
-                                <path d="M22.5 6.908V6.75a3 3 0 00-3-3h-15a3 3 0 00-3 3v.158l9.714 5.978a1.5 1.5 0 001.572 0L22.5 6.908z" />
-                            </svg>
-                            fedorgugnin22@gmail.com
-                        </p>
-                        <p className="mb-4 flex items-center justify-center md:justify-start">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                                fill="currentColor"
-                                className="mr-3 h-5 w-5"
-                            >
-                                <path
-                                    fillRule="evenodd"
-                                    d="M1.5 4.5a3 3 0 013-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 01-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 006.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 011.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 01-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5z"
-                                    clipRule="evenodd"
-                                />
-                            </svg>
-                            +7 981 891 02 18
-                        </p>
-                    </div>
-                </div>
-            </div>
+  return (
+    // <!-- Footer container -->
 
-            {/* <!--Copyright section--> */}
-            <div className="bg-neutral-200 px-6 py-4 text-center dark:bg-neutral-700">
-                <span>© 2023 Copyright: </span>
-                <p className="font-semibold text-neutral-600 dark:text-neutral-400">
-                    Самый низ футера емае
-                </p>
-            </div>
-        </footer>
-    );
+    <footer className="bg-white mt-auto dark:bg-gray-800 w-full pt-8 pb-4">
+      <div className="max-w-screen-xl px-4 mx-auto">
+        <ul className="flex flex-wrap justify-between max-w-screen-md mx-auto text-lg font-light">
+          <li className="my-2">
+            <a
+              className="text-gray-400 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white transition-colors duration-200"
+              href="#"
+            >
+              FAQ
+            </a>
+          </li>
+          <li className="my-2">
+            <a
+              className="text-gray-400 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white transition-colors duration-200"
+              href="#"
+            >
+              Configuration
+            </a>
+          </li>
+          <li className="my-2">
+            <a
+              className="text-gray-400 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white transition-colors duration-200"
+              href="#"
+            >
+              Github
+            </a>
+          </li>
+          <li className="my-2">
+            <a
+              className="text-gray-400 hover:text-gray-800 dark:text-gray-300 dark:hover:text-white transition-colors duration-200"
+              href="#"
+            >
+              LinkedIn
+            </a>
+          </li>
+        </ul>
+        <div className="pt-8 flex max-w-xs mx-auto items-center justify-between">
+          <a
+            href="#"
+            className="text-gray-400 transition-colors duration-200 hover:text-gray-800 dark:hover:text-white"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="currentColor"
+              className="text-xl transition-colors duration-200 hover:text-gray-800 dark:hover:text-white"
+              viewBox="0 0 1792 1792"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M1343 12v264h-157q-86 0-116 36t-30 108v189h293l-39 296h-254v759h-306v-759h-255v-296h255v-218q0-186 104-288.5t277-102.5q147 0 228 12z"></path>
+            </svg>
+          </a>
+          <a
+            href="#"
+            className="text-gray-400 transition-colors duration-200 hover:text-gray-800 dark:hover:text-white"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="currentColor"
+              className="text-xl transition-colors duration-200 hover:text-gray-800 dark:hover:text-white"
+              viewBox="0 0 1792 1792"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M1684 408q-67 98-162 167 1 14 1 42 0 130-38 259.5t-115.5 248.5-184.5 210.5-258 146-323 54.5q-271 0-496-145 35 4 78 4 225 0 401-138-105-2-188-64.5t-114-159.5q33 5 61 5 43 0 85-11-112-23-185.5-111.5t-73.5-205.5v-4q68 38 146 41-66-44-105-115t-39-154q0-88 44-163 121 149 294.5 238.5t371.5 99.5q-8-38-8-74 0-134 94.5-228.5t228.5-94.5q140 0 236 102 109-21 205-78-37 115-142 178 93-10 186-50z"></path>
+            </svg>
+          </a>
+          <a
+            href="#"
+            className="text-gray-400 transition-colors duration-200 hover:text-gray-800 dark:hover:text-white"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="currentColor"
+              className="text-xl transition-colors duration-200 hover:text-gray-800 dark:hover:text-white"
+              viewBox="0 0 1792 1792"
+            >
+              <path d="M896 128q209 0 385.5 103t279.5 279.5 103 385.5q0 251-146.5 451.5t-378.5 277.5q-27 5-40-7t-13-30q0-3 .5-76.5t.5-134.5q0-97-52-142 57-6 102.5-18t94-39 81-66.5 53-105 20.5-150.5q0-119-79-206 37-91-8-204-28-9-81 11t-92 44l-38 24q-93-26-192-26t-192 26q-16-11-42.5-27t-83.5-38.5-85-13.5q-45 113-8 204-79 87-79 206 0 85 20.5 150t52.5 105 80.5 67 94 39 102.5 18q-39 36-49 103-21 10-45 15t-57 5-65.5-21.5-55.5-62.5q-19-32-48.5-52t-49.5-24l-20-3q-21 0-29 4.5t-5 11.5 9 14 13 12l7 5q22 10 43.5 38t31.5 51l10 23q13 38 44 61.5t67 30 69.5 7 55.5-3.5l23-4q0 38 .5 88.5t.5 54.5q0 18-13 30t-40 7q-232-77-378.5-277.5t-146.5-451.5q0-209 103-385.5t279.5-279.5 385.5-103zm-477 1103q3-7-7-12-10-3-13 2-3 7 7 12 9 6 13-2zm31 34q7-5-2-16-10-9-16-3-7 5 2 16 10 10 16 3zm30 45q9-7 0-19-8-13-17-6-9 5 0 18t17 7zm42 42q8-8-4-19-12-12-20-3-9 8 4 19 12 12 20 3zm57 25q3-11-13-16-15-4-19 7t13 15q15 6 19-6zm63 5q0-13-17-11-16 0-16 11 0 13 17 11 16 0 16-11zm58-10q-2-11-18-9-16 3-14 15t18 8 14-14z"></path>
+            </svg>
+          </a>
+          <a
+            href="#"
+            className="text-gray-400 transition-colors duration-200 hover:text-gray-800 dark:hover:text-white"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="currentColor"
+              className="text-xl transition-colors duration-200 hover:text-gray-800 dark:hover:text-white"
+              viewBox="0 0 1792 1792"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M477 625v991h-330v-991h330zm21-306q1 73-50.5 122t-135.5 49h-2q-82 0-132-49t-50-122q0-74 51.5-122.5t134.5-48.5 133 48.5 51 122.5zm1166 729v568h-329v-530q0-105-40.5-164.5t-126.5-59.5q-63 0-105.5 34.5t-63.5 85.5q-11 30-11 81v553h-329q2-399 2-647t-1-296l-1-48h329v144h-2q20-32 41-56t56.5-52 87-43.5 114.5-15.5q171 0 275 113.5t104 332.5z"></path>
+            </svg>
+          </a>
+          <a
+            href="#"
+            className="text-gray-400 transition-colors duration-200 hover:text-gray-800 dark:hover:text-white"
+          >
+            <svg
+              width="20"
+              height="20"
+              fill="currentColor"
+              className="text-xl transition-colors duration-200 hover:text-gray-800 dark:hover:text-white"
+              viewBox="0 0 1792 1792"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path d="M1551 1476q15-6 26-3t11 17.5-15 33.5q-13 16-44 43.5t-95.5 68-141 74-188 58-229.5 24.5q-119 0-238-31t-209-76.5-172.5-104-132.5-105-84-87.5q-8-9-10-16.5t1-12 8-7 11.5-2 11.5 4.5q192 117 300 166 389 176 799 90 190-40 391-135zm207-115q11 16 2.5 69.5t-28.5 102.5q-34 83-85 124-17 14-26 9t0-24q21-45 44.5-121.5t6.5-98.5q-5-7-15.5-11.5t-27-6-29.5-2.5-35 0-31.5 2-31 3-22.5 2q-6 1-13 1.5t-11 1-8.5 1-7 .5h-10l-3-.5-2-1.5-1.5-3q-6-16 47-40t103-30q46-7 108-1t76 24zm-394-443q0 31 13.5 64t32 58 37.5 46 33 32l13 11-227 224q-40-37-79-75.5t-58-58.5l-19-20q-11-11-25-33-38 59-97.5 102.5t-127.5 63.5-140 23-137.5-21-117.5-65.5-83-113-31-162.5q0-84 28-154t72-116.5 106.5-83 122.5-57 130-34.5 119.5-18.5 99.5-6.5v-127q0-65-21-97-34-53-121-53-6 0-16.5 1t-40.5 12-56 29.5-56 59.5-48 96l-294-27q0-60 22-119t67-113 108-95 151.5-65.5 190.5-24.5q100 0 181 25t129.5 61.5 81 83 45 86 12.5 73.5v589zm-672 21q0 86 70 133 66 44 139 22 84-25 114-123 14-45 14-101v-162q-59 2-111 12t-106.5 33.5-87 71-32.5 114.5z"></path>
+            </svg>
+          </a>
+        </div>
+        <div className="text-center text-gray-500 dark:text-gray-200 pt-10 sm:pt-12 font-light flex items-center justify-center">
+          Created by avg_wannabe_it_guy
+        </div>
+      </div>
+    </footer>
+  );
 };
 
 export default Footer;

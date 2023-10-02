@@ -1,10 +1,12 @@
 import React, { useEffect } from "react";
-import NavBar from "../widgets/NavBar";
 import Footer from "../widgets/Footer";
 import { getParameterByName } from "../helpers/getParameterByName";
 import { checkAuth, googleAuthenticate } from "../shared/rtk/user";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
-export const Layout = (props: {children: React.ReactNode[] | React.ReactNode}) => {
+import Header from "../widgets/Header";
+export const Layout = (props: {
+  children: React.ReactNode[] | React.ReactNode;
+}) => {
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const dispatch = useAppDispatch();
   const state = getParameterByName("state");
@@ -22,10 +24,9 @@ export const Layout = (props: {children: React.ReactNode[] | React.ReactNode}) =
 
   return (
     <div className="flex min-h-screen flex-col">
-      <NavBar />
+      <Header />
       {props.children}
       <Footer />
     </div>
   );
 };
-
