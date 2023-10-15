@@ -7,8 +7,6 @@ from dotenv import load_dotenv
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
-
-MY_ENV_VAR = os.getenv('MY_ENV_VAR')
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
@@ -140,7 +138,7 @@ STATIC_URL = "/assets/"
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "dist/assets")]
 STATIC_ROOT = os.path.join(BASE_DIR, "assets")
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"  # хз
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "turiki_app.UserAccount"  # модель юзера для авторизации что тут сказать
 

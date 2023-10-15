@@ -5,7 +5,7 @@ import { ROUTES } from "../app/RouteTypes";
 import { useAppSelector } from "../shared/rtk/store";
 import { useState } from "react";
 import RegisterTeamModal from "../features/RegisterTeamModal";
-import { Team } from "../helpers/transformMatches";
+import { Team, Tournament } from "../helpers/transformMatches";
 import React from "react";
 const TournamentList = () => {
   const [createBracket] = tournamentAPI.useCreateBracketMutation();
@@ -15,6 +15,7 @@ const TournamentList = () => {
     tournamentAPI.useGetAllTournamentsQuery(null);
   const [teamIds, setTeamIds] = useState<any[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
+  const [showAdminModal, setShowAdminModal] = useState(false);
   const handleChange = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     setTeamIds((prev) => {
@@ -30,8 +31,8 @@ const TournamentList = () => {
       return [...prev];
     });
   };
-  const handleManagingClick = (e: MouseEvent) => {
-    e.stopPropagation();
+  const handleManagingClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    setShowAdminModal((prev) => !prev);
   };
   const { userDetails } = useAppSelector((state) => state.user);
   return (
@@ -40,15 +41,15 @@ const TournamentList = () => {
         <section>
           <h1 className="text-5xl text-center mt-8">Турниры</h1>
           {isSuccess && data?.length > 0 ? (
-            <div className="m-auto mt-12 w-[70vw]">
+            <div className="mx-auto mt-12">
               {data?.map((tourn, index) => (
-                <div className="flex space-x-2" key={index}>
+                <div className="flex gap-x-2" key={index}>
                   <Link
                     to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.buildPath({
                       id: data[index]["id"]
                     })}
                     className={`shadow ${
-                      userDetails?.is_staff ? "w-[55vw]" : "w-[70vw]"
+                      userDetails?.is_staff ? "w-full" : "w-[70%]"
                     } relative border mb-4 hover:bg-slate-200 transition h-24 bg-white dark:bg-gray-800 rounded-md grid grid-cols-5 text-center items-center`}
                   >
                     <h2 className="text-lg">{tourn.name}</h2>
@@ -62,40 +63,34 @@ const TournamentList = () => {
                     <h3 className=" font-light text-md">
                       Раундов: {tourn.max_rounds}
                     </h3>
+                  </Link>
 
-                    {/* {userDetails?.is_staff && (
+                  {userDetails?.is_staff && (
                     <>
-                      <div>
-                        <button
-                          onClick={() => createBracket(tourn.id)}
-                          className="p-2 bg-zinc-400"
-                        >
-                          Create Bracket
-                        </button>
-                        <button
-                          onClick={() => initializeMatches(tourn.id)}
-                          className="p-2 ml-auto bg-zinc-400"
-                        >
-                          Initialize Matches
-                        </button>
-                      </div>
-                      <div className="ml-auto flex w-1/3">
-                        {teams[index] && (
-                          <div
-                            className="self-end mt-auto"
-                            key={teams[index].id}
+                      <button
+                        onClick={handleManagingClick}
+                        className="block rounded h-24 border p-3 hover:bg-slate-100 transition active:bg-purple-700"
+                      >
+                        Управление
+                      </button>
+                      {userDetails?.is_staff && showAdminModal && (
+                        <div className="md:grid grid-cols-2 gap-1 mb-4 w-44 lg:max-w-full hidden">
+                          <button
+                            onClick={() => createBracket(tourn.id)}
+                            className=" hover:underline text-xs hover:text-blue-600 border border-gray-600 rounded-lg p-1 hover:bg-slate-100"
                           >
-                            <RegisterTeamModal
-                              tournamentId={tourn.id}
-                              team={teams[index]}
-                            />
-                          </div>
-                        )}
-                        <div className="flex flex-col ml-auto self-end border-4 border-blue-800 rounded">
+                            Create Bracket
+                          </button>
+                          <button
+                            onClick={() => initializeMatches(tourn.id)}
+                            className=" hover:underline text-xs hover:text-blue-600 border border-gray-600 rounded-lg p-1 hover:bg-slate-100"
+                          >
+                            Initialize Matches
+                          </button>
                           <button
                             id={String(index)}
                             onClick={handleTeamSubmit}
-                            className="p-2 bg-zinc-400 text-sm h-10 w-52 ml-auto"
+                            className=" hover:underline text-xs hover:text-blue-600 border border-gray-600 rounded-lg p-1 hover:bg-slate-100"
                           >
                             Найти команду
                           </button>
@@ -103,22 +98,24 @@ const TournamentList = () => {
                             id={String(index)}
                             value={teamIds[index]}
                             onChange={handleChange}
-                            className="h-10 w-52 text-xl ml-auto"
+                            className="h-10 w-[100%] text-xs ml-auto border border-gray-600 rounded-lg p-1"
                             type="number"
-                            placeholder="Введите id команды"
+                            placeholder="Id команды"
                           />
+                          {teams[index] && (
+                            <div
+                              className="self-end mt-auto col-span-2"
+                              key={teams[index].id}
+                            >
+                              <RegisterTeamModal
+                                tournamentId={tourn.id}
+                                team={teams[index]}
+                              />
+                            </div>
+                          )}
                         </div>
-                      </div>
+                      )}
                     </>
-                  )} */}
-                  </Link>
-                  {userDetails?.is_staff && (
-                    <button
-                      onClick={handleManagingClick}
-                      className="block rounded h-24 border p-3"
-                    >
-                      Управление
-                    </button>
                   )}
                 </div>
               ))}

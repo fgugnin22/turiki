@@ -139,7 +139,7 @@ const UserChangeForm = ({
             <h2 className="max-w-sm mx-auto md:w-4/12">Введите пароль</h2>
             <span>
               <input
-                id="user-info-password"
+                id="user-info-new-password"
                 className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                 type="password"
                 placeholder="Новый пароль"
@@ -150,7 +150,7 @@ const UserChangeForm = ({
 
               <input
                 className="mt-6 rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                id="user-info-password"
+                id="user-info-old-password"
                 type="password"
                 placeholder="Текущий пароль"
                 name="password"

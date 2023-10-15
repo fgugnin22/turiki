@@ -22,7 +22,7 @@ const Home = () => {
         ) : (
           <section className="">
             <h1 className="text-6xl text-center font-normal">
-              Учавствуйте в нашем первом турнире!
+              Участвуйте в нашем первом турнире!
             </h1>
             <p className="w-full block text-center mt-12">
               <button
@@ -32,7 +32,7 @@ const Home = () => {
                   clicked ? "animate-pulse" : ""
                 }  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-lg lg:text-xl font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg `}
               >
-                Зарегистрироваться и учавствовать!
+                Зарегистрироваться и участвовать!
               </button>
             </p>
           </section>
