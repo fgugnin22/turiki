@@ -42,13 +42,28 @@ const TournamentList = () => {
           <h1 className="text-5xl text-center mt-8">Турниры</h1>
           {isSuccess && data?.length > 0 ? (
             <div className="mx-auto mt-12">
+              {!userDetails?.is_staff && (
+                <div className={`grid mx-auto w-[70%] grid-cols-5 mb-4`}>
+                  <h2 className="text-md font-light text-center">Название</h2>
+                  <h2 className="text-md font-light text-center">
+                    Призовой фонд
+                  </h2>
+                  <h2 className="text-md font-light text-center">
+                    Количество команд
+                  </h2>
+                  <h2 className="text-md font-light text-center">Статус</h2>
+                  <h2 className="text-md font-light text-center">
+                    Количество раундов
+                  </h2>
+                </div>
+              )}
               {data?.map((tourn, index) => (
                 <div className="flex gap-x-2" key={index}>
                   <Link
                     to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.buildPath({
                       id: data[index]["id"]
                     })}
-                    className={`shadow ${
+                    className={`shadow mx-auto ${
                       userDetails?.is_staff ? "w-full" : "w-[70%]"
                     } relative border mb-4 hover:bg-slate-200 transition h-24 bg-white dark:bg-gray-800 rounded-md grid grid-cols-5 text-center items-center`}
                   >
