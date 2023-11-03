@@ -65,17 +65,22 @@ const TournamentList = () => {
                     })}
                     className={`shadow mx-auto ${
                       userDetails?.is_staff ? "w-full" : "w-[70%]"
-                    } relative border mb-4 hover:bg-slate-200 transition h-24 bg-white dark:bg-gray-800 rounded-md grid grid-cols-5 text-center items-center`}
+                    } relative border mb-4 hover:bg-slate-200 transition h-24 bg-white dark:bg-gray-800 rounded-md flex text-center justify-between  items-center `}
                   >
-                    <h2 className="text-lg">{tourn.name}</h2>
-                    <h3 className="text-lg text-orange-600 font-light inline">
+                    <h2 className="text-sm md:text-lg w-[20%] min-w-[110px]">
+                      {tourn.name}
+                    </h2>
+                    <h3 className="md:text-lg text-orange-600 font-light inline w-[15%]">
                       {tourn.prize}
                     </h3>
-                    <h3 className=" font-light text-md">
+                    <h3 className="text-sm  font-light md:text-md w-[15%]">
                       Команд: {tourn.teams.length}/{2 ** tourn.max_rounds}
                     </h3>
-                    <h3 className=" font-light text-md">{tourn.status}</h3>
-                    <h3 className=" font-light text-md">
+                    <h3 className="text-sm  font-light md:text-md w-[25%] min-w-[100px]">
+                      {tourn.status === "REGISTRATION_OPENED" &&
+                        "Регистрация открыта"}
+                    </h3>
+                    <h3 className="text-sm  font-light md:text-md w-[20%]">
                       Раундов: {tourn.max_rounds}
                     </h3>
                   </Link>
@@ -84,7 +89,7 @@ const TournamentList = () => {
                     <>
                       <button
                         onClick={handleManagingClick}
-                        className="block rounded h-24 border p-3 hover:bg-slate-100 transition active:bg-purple-700"
+                        className="md:block rounded h-24 border p-3 hover:bg-slate-100 transition active:bg-purple-700 hidden"
                       >
                         Управление
                       </button>
