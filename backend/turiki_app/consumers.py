@@ -52,7 +52,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def disconnect(self, close_code):
         """
         Закрываем соединение с WS
-        я не знаю почему
+        я не знаю почему, надо
         """
         await self.channel_layer.group_discard(
             self.chat_id_group_name, self.channel_name

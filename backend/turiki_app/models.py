@@ -172,13 +172,15 @@ class Participant(models.Model):
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     objects = UserAccountManager()
-
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.SET_NULL, related_name="players")
     team_status = models.CharField(max_length=31, null=True, blank=True)
+    game_name = models.CharField(max_length=63, null=True,
+                                 blank=True,
+                                 unique=True)  # здесь пока что будет игровой ник, в будущем будет несколько полей, каждое для своей игры
     USERNAME_FIELD = 'email'  # что является логином
     REQUIRED_FIELDS = ['name']  # обязательные поля
 

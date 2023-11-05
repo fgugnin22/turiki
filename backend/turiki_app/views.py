@@ -15,11 +15,10 @@ from turiki_app.serializers import (
     TournamentSerializer,
     MatchSerializer,
     TeamSerializer,
-    ChatSerializer, MapBanSerializer,
+    ChatSerializer,
 )
 from turiki_app.services import TeamService, MatchService, TournamentService
 from turiki_app.tasks import create_bracket, set_initial_matches, ban_map
-from rest_framework.views import APIView
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
@@ -31,15 +30,11 @@ View - представление, которое отвечает за обра
 class UserAPIView(GenericViewSet):
     @action(methods=["PATCH"], detail=False, permission_classes=[IsAuthenticated])
     def credentials(self, request):
-        # {
-        #     "old_password": string,
-        #     "new_password": string,
-        #     ...
-        # }
         new_password = request.data.get("new_password")
         old_password = request.data.get("old_password")
         new_email = request.data.get("email")
         new_name = request.data.get('name')
+        new_game_name = request.data.get('game_name')
         user = request.user
         if user.check_password(old_password):
             if new_password is not None and len(new_password) > 7:
@@ -48,6 +43,8 @@ class UserAPIView(GenericViewSet):
                 user.email = new_email
             if new_name is not None:
                 user.name = new_name
+            if new_game_name is not None:
+                user.game_name = new_game_name
             user.save()
             print(user.name, user.emal)
             return Response("credentials updated successfully", 200)

@@ -34,40 +34,55 @@ const Header = () => {
               <div className="hidden md:block">
                 <div className="flex items-baseline ml-10 space-x-4">
                   <Link
-                    className="text-gray-300 transition-colors  hover:text-gray-800 dark:hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                    className=" text-gray-800 focus:text-blue-700 focus:underline hover:text-blue-700 hover:underline w-full transition ease-in duration-200 text-center text-sm font-normal"
                     to={ROUTES.DASHBOARD.path}
                   >
-                    Home
+                    На главную
                   </Link>
                 </div>
               </div>
             </div>
             {isAuthenticated && (
-              <div className="flex ml-auto">
-                <Link
-                  to={ROUTES.DASHBOARD.path}
-                  className="py-2 pl-3 pr-2  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-l-lg "
-                  role="menuitem"
+              <>
+                {!userDetails?.team && (
+                  <div className="flex ml-auto">
+                    <Link
+                      to={ROUTES.TEAMS.CREATE.path}
+                      className=" text-gray-800 focus:text-blue-700 focus:underline hover:text-blue-700 hover:underline w-full transition ease-in duration-200 text-center text-sm font-normal"
+                      role="menuitem"
+                    >
+                      <span className="flex flex-col">
+                        Создать или найти команду
+                      </span>
+                    </Link>
+                  </div>
+                )}
+                <div
+                  className={`flex ${!userDetails?.team ? "ml-6" : "ml-auto"}`}
                 >
-                  <span className="flex flex-col">
-                    <span>{userDetails?.name}</span>
-                  </span>
-                </Link>
-                <button
-                  onClick={() => {
-                    dispatch(logout());
-                  }}
-                  className="py-2 pr-3 pl-2  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-r-lg "
-                  role="menuitem"
-                >
-                  Выйти
-                </button>
-              </div>
+                  <Link
+                    to={ROUTES.DASHBOARD.path}
+                    className="py-2 pl-3 pr-2  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-l-lg "
+                    role="menuitem"
+                  >
+                    <span className="flex flex-col">{userDetails?.name}</span>
+                  </Link>
+                  <button
+                    onClick={() => {
+                      dispatch(logout());
+                    }}
+                    className="py-2 pr-3 pl-2  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-full transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-r-lg "
+                    role="menuitem"
+                  >
+                    Выйти
+                  </button>
+                </div>
+              </>
             )}
 
             <div className="block">
               <div className="flex items-center ml-4 md:ml-6 ">
-                {isAuthenticated ? null : (
+                {!isAuthenticated && (
                   <>
                     <Link
                       to={ROUTES.LOGIN.path}

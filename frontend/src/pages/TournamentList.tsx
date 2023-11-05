@@ -44,9 +44,7 @@ const TournamentList = () => {
             <div className="mx-auto mt-12">
               {!userDetails?.is_staff && (
                 <div
-                  className={`shadow mx-auto ${
-                    userDetails?.is_staff ? "w-full" : "md:w-[70%]"
-                  } w-full relative mb-4  rounded-md flex text-center justify-between items-center gap-x-2`}
+                  className={`shadow mx-auto w-full md:w-[70%] relative mb-4 py-2  rounded-md flex text-center justify-between items-center gap-x-2`}
                 >
                   <h2 className="text-sm md:text-lg w-[20%] min-w-[110px]">
                     Название

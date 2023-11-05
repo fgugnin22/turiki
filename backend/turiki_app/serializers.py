@@ -37,6 +37,7 @@ class UserSerializer(UserCreateSerializer):
             "team",
             "team_status",
             "is_staff",
+            "game_name"
         )
 
     def update(self, instance, validated_data):
