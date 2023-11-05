@@ -43,16 +43,22 @@ const TournamentList = () => {
           {isSuccess && data?.length > 0 ? (
             <div className="mx-auto mt-12">
               {!userDetails?.is_staff && (
-                <div className={`grid mx-auto w-[70%] grid-cols-5 mb-4`}>
-                  <h2 className="text-md font-light text-center">Название</h2>
-                  <h2 className="text-md font-light text-center">
-                    Призовой фонд
+                <div
+                  className={`shadow mx-auto ${
+                    userDetails?.is_staff ? "w-full" : "md:w-[70%]"
+                  } w-full relative mb-4  rounded-md flex text-center justify-between items-center gap-x-2`}
+                >
+                  <h2 className="text-sm md:text-lg w-[20%] min-w-[110px]">
+                    Название
                   </h2>
-                  <h2 className="text-md font-light text-center">
+                  <h2 className="text-sm md:text-lg w-[15%]">Призовой фонд</h2>
+                  <h2 className="text-sm md:text-lg w-[15%]">
                     Количество команд
                   </h2>
-                  <h2 className="text-md font-light text-center">Статус</h2>
-                  <h2 className="text-md font-light text-center">
+                  <h2 className="text-sm md:text-lg w-[25%] min-w-[110px]">
+                    Статус
+                  </h2>
+                  <h2 className="text-sm md:text-lg w-[20%]">
                     Количество раундов
                   </h2>
                 </div>
@@ -64,8 +70,8 @@ const TournamentList = () => {
                       id: data[index]["id"]
                     })}
                     className={`shadow mx-auto ${
-                      userDetails?.is_staff ? "w-full" : "w-[70%]"
-                    } relative border mb-4 hover:bg-slate-200 transition h-24 bg-white dark:bg-gray-800 rounded-md flex text-center justify-between  items-center `}
+                      userDetails?.is_staff ? "w-full" : "md:w-[70%]"
+                    } w-full relative border mb-4 hover:bg-slate-200 transition h-24 bg-white dark:bg-gray-800 rounded-md flex text-center justify-between  items-center `}
                   >
                     <h2 className="text-sm md:text-lg w-[20%] min-w-[110px]">
                       {tourn.name}

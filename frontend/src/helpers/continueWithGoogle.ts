@@ -7,9 +7,9 @@ export const continueWithGoogle = async () => {
         }`
       )
     ).json();
-    console.log(res.data.authorization_url);
-    window.location.replace(res.data.authorization_url);
+    console.log(res.authorization_url);
+    window.location.replace(res.authorization_url);
   } catch (err) {
-    console.error("Google Auth error");
+    console.error(err);
   }
 };
