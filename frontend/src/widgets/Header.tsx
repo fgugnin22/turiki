@@ -80,7 +80,7 @@ const Header = () => {
                     )}
                   <Link
                     to={ROUTES.DASHBOARD.path}
-                    className="py-2 pl-3 pr-2  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white w-24 transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-l-lg "
+                    className="py-2 pl-3 pr-2  bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white min-w-24 transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-l-lg "
                     role="menuitem"
                   >
                     <span className="flex flex-col">{userDetails?.name}</span>
@@ -111,7 +111,7 @@ const Header = () => {
                     <Link
                       to={ROUTES.REGISTER_ACCOUNT.path}
                       type="button"
-                      className="py-2 pr-3 pl-2  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-24 transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-r-lg "
+                      className="py-2 pr-3 pl-2  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white w-44 transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-r-lg "
                     >
                       Зарегистрироваться
                     </Link>
