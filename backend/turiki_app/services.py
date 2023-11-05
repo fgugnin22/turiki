@@ -198,6 +198,8 @@ class TeamService:
     @staticmethod
     def remove_from_team(team, player):
         try:
+            if team.players.count() == 1:
+                team.delete()
             player.team = None
             player.team_status = None
             player.save()

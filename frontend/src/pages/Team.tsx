@@ -1,11 +1,12 @@
 import React from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import FileInput from "../shared/FileUploadSingle";
 import FileUploadSingle from "../shared/FileUploadSingle";
 import { getUser } from "../shared/rtk/user";
+import { ROUTES } from "../app/RouteTypes";
 
 const Team = () => {
   const dispatch = useAppDispatch();
@@ -19,7 +20,7 @@ const Team = () => {
   const [applyForTeam] = tournamentAPI.useApplyForTeamMutation();
   const { data, isLoading, isError, isSuccess } =
     tournamentAPI.useGetTeamByIdQuery(params.id);
-
+  const navigate = useNavigate();
   return (
     <Layout>
       <h2 className="mx-auto my-8 text-xl">{data?.name}</h2>
@@ -84,13 +85,19 @@ const Team = () => {
                     user?.team === data?.id && (
                       <button
                         onClick={async () => {
-                          await kickPlayerFromTeam({
+                          const res = await kickPlayerFromTeam({
                             teamId: Number(params.id),
                             player_id: player.id
                           });
                           await dispatch(
                             getUser(localStorage.getItem("access")!)
                           );
+                          console.log(res);
+                          if (data.players.length === 1) {
+                            return navigate(ROUTES.DASHBOARD.path, {
+                              replace: true
+                            });
+                          }
                         }}
                         className="w-10 h-10 text-sm font-light py-2 bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white min-w-24 transition ease-in duration-200 text-center shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg"
                       >
