@@ -191,9 +191,9 @@ class UserService:
             if new_game_name is not None:
                 user.game_name = new_game_name
             user.save()
-            print(user.name, user.emal)
+            print(user.name, user.email)
             return Response("credentials updated successfully", 200)
-        if user.check_password(old_password):
+        elif user.check_password(old_password):
             if new_password is not None and len(new_password) > 7:
                 user.set_password(new_password)
             if new_email is not None:
@@ -203,7 +203,7 @@ class UserService:
             if new_game_name is not None:
                 user.game_name = new_game_name
             user.save()
-            print(user.name, user.emal)
+            print(user.name, user.email)
             return Response("credentials updated successfully", 200)
         return Response("very bad response", 400)
 

@@ -13,7 +13,7 @@ type UserCredentials = {
 type ModifyUserCredentials = {
   name?: string;
   email?: string;
-  old_password: string;
+  old_password?: string;
   new_password?: string;
 };
 export const modifyUserCredentials = createAsyncThunk(

@@ -26,6 +26,24 @@ const UserChangeForm = ({
     e.preventDefault();
     const access = localStorage.getItem("access");
     const refresh = localStorage.getItem("refresh");
+    if (!user?.name) {
+      const body = {
+        name: userName === "" ? undefined : userName,
+        email: email === "" ? undefined : email,
+        game_name: gameName === "" ? undefined : gameName,
+        new_password: newPassword
+      };
+      setFormData({
+        email: "",
+        password: "",
+        userName: "",
+        newPassword: "",
+        gameName: ""
+      });
+      await dispatch(modifyUserCredentials(body));
+      dispatch(getUser(access!));
+      return;
+    }
     await dispatch(login({ email: user?.email!, password, keepTokens: false }));
     if (localStorage.getItem("access")) {
       const body = {
@@ -129,6 +147,7 @@ const UserChangeForm = ({
                     onChange={(e: React.FormEvent<HTMLInputElement>) =>
                       onChange(e)
                     }
+                    required={!user?.name}
                     minLength={3}
                   />
                 </div>
@@ -161,7 +180,9 @@ const UserChangeForm = ({
           <hr />
 
           <div className="items-center w-full p-4 space-y-4 text-gray-700 md:inline-flex md:space-y-0">
-            <h2 className="max-w-sm mx-auto md:w-4/12">Введите пароль</h2>
+            <h2 className="max-w-sm mx-auto md:w-4/12 ml-2">
+              {user?.name ? "Введите пароль" : "Введите новый пароль"}
+            </h2>
             <span>
               <input
                 id="user-info-new-password"
@@ -173,16 +194,20 @@ const UserChangeForm = ({
                 onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e)}
               />
 
-              <input
-                className="mt-6 rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                id="user-info-old-password"
-                type="password"
-                placeholder="Текущий пароль"
-                name="password"
-                value={password}
-                onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e)}
-                required
-              />
+              {user?.name && (
+                <input
+                  className="mt-6 rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  id="user-info-old-password"
+                  type="password"
+                  placeholder="Текущий пароль"
+                  name="password"
+                  value={password}
+                  onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                    onChange(e)
+                  }
+                  required={!!user?.name}
+                />
+              )}
             </span>
           </div>
           <hr />
