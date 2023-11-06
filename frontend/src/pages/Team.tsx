@@ -3,13 +3,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
-import FileInput from "../shared/FileUploadSingle";
-import FileUploadSingle from "../shared/FileUploadSingle";
-import { getUser } from "../shared/rtk/user";
+import { getUser, uploadTeamImage, uploadUserImage } from "../shared/rtk/user";
 import { ROUTES } from "../app/RouteTypes";
+const serverURL = import.meta.env.VITE_API_URL;
 
 const Team = () => {
   const dispatch = useAppDispatch();
+  const navigate = useNavigate();
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
@@ -20,12 +20,52 @@ const Team = () => {
   const [applyForTeam] = tournamentAPI.useApplyForTeamMutation();
   const { data, isLoading, isError, isSuccess } =
     tournamentAPI.useGetTeamByIdQuery(params.id);
-  const navigate = useNavigate();
+  const onImageSubmit = async (e: React.FormEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const target = e.target as HTMLInputElement;
+    if (!target.files || !data) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("image", target.files[0]);
+    console.log(target.files[0]);
+    await dispatch(uploadTeamImage({ formData, teamId: data.id }));
+    window.location.reload();
+  };
   return (
     <Layout>
-      <h2 className="mx-auto my-8 text-xl">{data?.name}</h2>
       {isSuccess && (
         <>
+          <div className="flex max-w-md mx-auto mt-8 flex-wrap">
+            <h2 className="ml-12 mr-44 my-8 text-2xl">{data.name}</h2>
+            <img
+              alt="profil"
+              src={serverURL + "/" + data?.image}
+              className="object-cover rounded-full h-16 w-16 mt-4 border-2 border-green-600 mx-4"
+            />
+            <div className="mt-4 mx-auto max-w-sm w-[80%] mb-8">
+              <label
+                className="block bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white mr-4 text-center py-auto py-3 px-4 rounded-md border-0 text-sm font-semibold cursor-pointer"
+                htmlFor="file_input"
+              >
+                Загрузить картинку
+              </label>
+              <input
+                onChange={onImageSubmit}
+                id="file_input"
+                type="file"
+                accept="image/png"
+                hidden
+              />
+              <p
+                className="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                id="file_input_help"
+              >
+                PNG (макс. 800x400px).
+              </p>
+            </div>
+          </div>
           {data.players.map((player, i: number) => {
             if (player.team_status == "PENDING") {
               return (
@@ -35,7 +75,9 @@ const Team = () => {
                 >
                   {/* Иконка игрока */}
                   <span className="my-2 mx-4">{player.name}</span>
-                  <p className="font-thin text-[10px] mr-auto">в ожидании</p>
+                  <p className="font-thin text-[10px] mr-auto">
+                    в ожидании {player.id === user?.id && "(Вы)"}
+                  </p>
                   {user?.team_status === "CAPTAIN" &&
                     user?.team === data?.id && (
                       <button
@@ -79,7 +121,8 @@ const Team = () => {
                   <p className="font-thin text-[10px] mr-auto">
                     {player?.team_status === "CAPTAIN"
                       ? "капитан"
-                      : "в составе"}
+                      : "в составе"}{" "}
+                    {player.id === user?.id && "(Вы)"}
                   </p>
                   {user?.team_status === "CAPTAIN" &&
                     user?.team === data?.id && (
@@ -92,7 +135,6 @@ const Team = () => {
                           await dispatch(
                             getUser(localStorage.getItem("access")!)
                           );
-                          console.log(res);
                           if (data.players.length === 1) {
                             return navigate(ROUTES.DASHBOARD.path, {
                               replace: true

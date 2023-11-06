@@ -35,6 +35,28 @@ export const uploadUserImage = createAsyncThunk(
     }
   }
 );
+export const uploadTeamImage = createAsyncThunk(
+  "users/image",
+  async (
+    { formData, teamId }: { formData: FormData; teamId: number },
+    thunkAPI
+  ) => {
+    try {
+      const res = await fetch(`${server_URL}/api/v2/team/${teamId}/photo/`, {
+        method: "PUT",
+        headers: {
+          Authorization: `JWT ${localStorage.getItem("access")}`
+        },
+        body: formData
+      });
+      if (res.status === 200) {
+        return thunkAPI.fulfillWithValue("image uploaded");
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 export const modifyUserCredentials = createAsyncThunk(
   "users/modify",
   async (credentials: ModifyUserCredentials, thunkAPI) => {

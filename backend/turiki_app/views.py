@@ -45,7 +45,7 @@ class UserAPIView(GenericViewSet):
             user = request.user
             img_name = f'assets/img/user{user.id}.png'
             user.image = img_name
-            file = File(image, name=img_name)
+            file = File(image, name=img_name)  # TODO: this is not very safe
             if file.name[-4:] == ".png":
                 with open(STATICFILES_DIRS[0] + f"/img/user{user.id}.png", "wb+") as f:
                     f.writelines(file.readlines())
@@ -55,19 +55,8 @@ class UserAPIView(GenericViewSet):
             else:
                 return Response(status=415)
         except TypeError:
-            # image = request.data.get("image").file
-            # user = request.user
-            # img_name = f'assets/img/user{user.id}.png'
-            # user.image = img_name
-            # if image == ".png":
-            #     with open(STATICFILES_DIRS[0] + f"/img/user{user.id}.png", "wb+") as f:
-            #         f.writelines(image)
-            #         f.close()
-            #     user.save()
-            #     return Response(status=200)
-            # else:
-            #     return Response(status=415)
             return Response(status=400)
+
 
 class TournamentAPIView(ModelViewSet):
     queryset = Tournament.objects.prefetch_related(
@@ -192,6 +181,28 @@ class TeamAPIView(ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser]
+
+    @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
+    def photo(self, request, pk=None):
+        try:
+            image = request.data.get("image").file
+            team = self.get_object()
+            if request.user.team_status != "CAPTAIN" or request.user.team.id != team.id:
+                return Response(status=403)
+            img_name = f'assets/img/team{team.id}.png'
+            team.image = img_name
+            file = File(image, name=img_name)  # TODO: this is not very safe
+            if file.name[-4:] == ".png":
+                with open(STATICFILES_DIRS[0] + f"/img/team{team.id}.png", "wb+") as f:
+                    f.writelines(file.readlines())
+                    f.close()
+                team.save()
+                return Response(status=200)
+            else:
+                return Response(status=415)
+        except TypeError:
+            return Response(status=400)
 
     @action(methods=["PATCH"], detail=True, permission_classes=[IsAuthenticated])
     def player_status(self, request, pk=None):
