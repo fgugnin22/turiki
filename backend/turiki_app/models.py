@@ -171,6 +171,11 @@ class Participant(models.Model):
 
 
 class UserAccount(AbstractBaseUser, PermissionsMixin):
+    def is_google_oauth2(self):
+        if self.name is None:
+            return True
+        return False
+
     objects = UserAccountManager()
     email = models.EmailField(max_length=255, unique=True)
     name = models.CharField(max_length=255, unique=True)
@@ -178,6 +183,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.SET_NULL, related_name="players")
     team_status = models.CharField(max_length=31, null=True, blank=True)
+    google_oauth2 = models.BooleanField(default=False)
     game_name = models.CharField(max_length=63, null=True,
                                  blank=True,
                                  unique=True)  # здесь пока что будет игровой ник, в будущем будет несколько полей, каждое для своей игры

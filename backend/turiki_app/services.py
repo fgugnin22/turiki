@@ -3,6 +3,8 @@ from datetime import timedelta, datetime
 import dramatiq
 from channels.db import database_sync_to_async
 import jwt
+from rest_framework.response import Response
+
 from .models import Tournament, Team, MapBan, Match, Participant, UserAccount, Lobby, Chat, Message
 from rest_framework import serializers
 from turiki_app.tasks import set_match_active, set_match_start_bans, exec_task_on_date
@@ -167,6 +169,43 @@ class MatchService:
             next_match.starts = datetime.now() + timedelta(seconds=10)
             next_match.save()
             set_match_start_bans(next_match.id)
+
+
+class UserService:
+    @staticmethod
+    def update_credentials(request):
+        new_password = request.data.get("new_password")
+        old_password = request.data.get("old_password")
+        new_email = request.data.get("email")
+        new_name = request.data.get('name')
+        new_game_name = request.data.get('game_name')
+        user = request.user
+        if user.name is None or len(user.name) == 0:
+            user.google_oauth2 = True
+            user.name = new_name
+            if new_password is not None and len(new_password) > 7:
+                user.set_password(new_password)
+                user.google_oauth2 = False
+            if new_email is not None:
+                user.email = new_email
+            if new_game_name is not None:
+                user.game_name = new_game_name
+            user.save()
+            print(user.name, user.emal)
+            return Response("credentials updated successfully", 200)
+        if user.check_password(old_password):
+            if new_password is not None and len(new_password) > 7:
+                user.set_password(new_password)
+            if new_email is not None:
+                user.email = new_email
+            if new_name is not None:
+                user.name = new_name
+            if new_game_name is not None:
+                user.game_name = new_game_name
+            user.save()
+            print(user.name, user.emal)
+            return Response("credentials updated successfully", 200)
+        return Response("very bad response", 400)
 
 
 class TeamService:
