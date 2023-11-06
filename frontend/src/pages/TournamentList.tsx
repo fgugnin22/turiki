@@ -144,9 +144,7 @@ const TournamentList = () => {
                 </div>
               ))}
             </div>
-          ) : (
-            <p className="text-xl p-2 bg-slate-300">Турниров нет!</p>
-          )}
+          ) : null}
         </section>
       }
     </Layout>

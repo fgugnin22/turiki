@@ -16,6 +16,25 @@ type ModifyUserCredentials = {
   old_password?: string;
   new_password?: string;
 };
+export const uploadUserImage = createAsyncThunk(
+  "users/image",
+  async (formData: FormData, thunkAPI) => {
+    try {
+      const res = await fetch(`${server_URL}/api/v2/user/photo/`, {
+        method: "PUT",
+        headers: {
+          Authorization: `JWT ${localStorage.getItem("access")}`
+        },
+        body: formData
+      });
+      if (res.status === 200) {
+        return thunkAPI.fulfillWithValue("image uploaded");
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
 export const modifyUserCredentials = createAsyncThunk(
   "users/modify",
   async (credentials: ModifyUserCredentials, thunkAPI) => {

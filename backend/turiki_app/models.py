@@ -1,13 +1,20 @@
 import datetime
+import os
 
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.postgres import fields
 
+from core.settings import BASE_DIR
+
 """
 В этом файле описывается структура сущностей в базе данных, их взаимодействие друг с другом
 По этому файлу django автоматически строит миграции в бд (py manage.py makemigrations -> py manage.py migrate)
 """
+
+
+def images_path():
+    return os.path.join(BASE_DIR, "dist/assets/img")
 
 
 # модель пользователя с логином - почтой(у жанго по умолчанию логин - имя пользователя)
@@ -52,6 +59,8 @@ class Team(models.Model):
     name = models.CharField(max_length=255, null=True, blank=True, unique=True)
     tournaments = models.ManyToManyField(Tournament, related_name="teams", blank=True)
     next_member = models.CharField(null=True, blank=True, max_length=255)
+    image = models.FilePathField(path=images_path(), blank=True, null=True,
+                                 default="assets/images/default_team_icon.png")
 
     def __str__(self):
         return self.name
@@ -184,6 +193,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.SET_NULL, related_name="players")
     team_status = models.CharField(max_length=31, null=True, blank=True)
     google_oauth2 = models.BooleanField(default=False)
+    image = models.FilePathField(path=images_path(), blank=True, null=True,
+                                 default="assets/images/default_user_icon.png")
     game_name = models.CharField(max_length=63, null=True,
                                  blank=True,
                                  unique=True)  # здесь пока что будет игровой ник, в будущем будет несколько полей, каждое для своей игры

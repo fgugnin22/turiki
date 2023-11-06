@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { getUser, login, modifyUserCredentials } from "../shared/rtk/user";
+import {
+  getUser,
+  login,
+  modifyUserCredentials,
+  uploadUserImage
+} from "../shared/rtk/user";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
-const UserChangeForm = ({
-  name,
-  imgURL
-}: {
-  name: string;
-  imgURL?: string;
-}) => {
+const serverURL = import.meta.env.VITE_API_URL;
+const UserChangeForm = ({ name }: { name: string }) => {
+  const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -15,7 +16,6 @@ const UserChangeForm = ({
     newPassword: "",
     gameName: ""
   });
-  const dispatch = useAppDispatch();
   let { userDetails: user, loading } = useAppSelector((state) => state.user);
   const { email, password, userName, newPassword, gameName } = formData;
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
@@ -66,6 +66,19 @@ const UserChangeForm = ({
     localStorage.setItem("refresh", refresh!);
     dispatch(getUser(access!));
   };
+  const onImageSubmit = async (e: React.FormEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const target = e.target as HTMLInputElement;
+    if (!target.files) {
+      return;
+    }
+    const formData = new FormData();
+    formData.append("image", target.files[0]);
+    console.log(target.files[0]);
+    await dispatch(uploadUserImage(formData));
+    window.location.reload();
+  };
   return (
     <section className="h-screen mt-[5%]">
       <form
@@ -73,17 +86,38 @@ const UserChangeForm = ({
         className="container max-w-2xl mx-auto shadow-md md:w-3/4"
       >
         <div className="p-4 border-t-2 border-indigo-400 rounded-lg bg-gray-100/5 ">
-          <div className="max-w-sm mx-auto md:w-full md:mx-0">
-            {/* <div className="inline-flex items-center space-x-4">
-              <a href="#" className="relative block">
-                <img
-                  alt="profil"
-                  src="./static/bg.jpg"
-                  className="mx-auto object-cover rounded-full h-16 w-16 "
+          <div className="mx-auto md:w-full ml-0">
+            <div className="inline-flex w-full items-center space-x-4">
+              <img
+                alt="profil"
+                src={serverURL + "/" + user?.image}
+                className="object-cover rounded-full h-16 w-16 "
+              />
+              <div className="mt-2 ml-auto">
+                <label
+                  className="block bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white mr-4 text-center py-auto py-3 px-4 rounded-md border-0 text-sm font-semibold cursor-pointer"
+                  htmlFor="file_input"
+                >
+                  Загрузить картинку
+                </label>
+                <input
+                  onChange={onImageSubmit}
+                  id="file_input"
+                  type="file"
+                  accept="image/png"
+                  hidden
                 />
-              </a>
-              <h1 className="text-gray-600">{name}</h1>
-            </div> */}
+                <p
+                  className="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                  id="file_input_help"
+                >
+                  PNG (макс. 800x400px).
+                </p>
+              </div>
+              <h1 className="text-gray-600 text-2xl text-right pr-8 grow">
+                {name}
+              </h1>
+            </div>
           </div>
         </div>
         <div className="space-y-6 bg-white">

@@ -30,6 +30,7 @@ export interface IUser {
   team: number;
   is_staff: boolean;
   game_name: string;
+  image?: string;
   team_status: "CAPTAIN" | "REJECTED" | "ACTIVE" | "MANAGER" | "PENDING" | null;
 }
 export interface IRegisterTeam {

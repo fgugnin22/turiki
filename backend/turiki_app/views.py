@@ -1,6 +1,9 @@
+from django.core.files import File
+from django.core.files.uploadedfile import TemporaryUploadedFile
 from django.db.models import Prefetch
 from rest_framework import serializers
 from rest_framework.decorators import action
+from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
     IsAdminUser,
@@ -19,6 +22,7 @@ from turiki_app.serializers import (
 )
 from turiki_app.services import TeamService, MatchService, TournamentService, UserService
 from turiki_app.tasks import create_bracket, set_initial_matches, ban_map
+from core.settings import STATICFILES_DIRS
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
@@ -28,10 +32,42 @@ View - представление, которое отвечает за обра
 
 
 class UserAPIView(GenericViewSet):
+    parser_classes = [MultiPartParser]
+
     @action(methods=["PATCH"], detail=False, permission_classes=[IsAuthenticated])
     def credentials(self, request):
         return UserService.update_credentials(request)
 
+    @action(methods=["PUT"], detail=False, permission_classes=[IsAuthenticated])
+    def photo(self, request):
+        try:
+            image = request.data.get("image").file
+            user = request.user
+            img_name = f'assets/img/user{user.id}.png'
+            user.image = img_name
+            file = File(image, name=img_name)
+            if file.name[-4:] == ".png":
+                with open(STATICFILES_DIRS[0] + f"/img/user{user.id}.png", "wb+") as f:
+                    f.writelines(file.readlines())
+                    f.close()
+                user.save()
+                return Response(status=200)
+            else:
+                return Response(status=415)
+        except TypeError:
+            # image = request.data.get("image").file
+            # user = request.user
+            # img_name = f'assets/img/user{user.id}.png'
+            # user.image = img_name
+            # if image == ".png":
+            #     with open(STATICFILES_DIRS[0] + f"/img/user{user.id}.png", "wb+") as f:
+            #         f.writelines(image)
+            #         f.close()
+            #     user.save()
+            #     return Response(status=200)
+            # else:
+            #     return Response(status=415)
+            return Response(status=400)
 
 class TournamentAPIView(ModelViewSet):
     queryset = Tournament.objects.prefetch_related(

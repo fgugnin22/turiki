@@ -37,7 +37,8 @@ class UserSerializer(UserCreateSerializer):
             "team",
             "team_status",
             "is_staff",
-            "game_name"
+            "game_name",
+            "image"
         )
 
     def update(self, instance, validated_data):
@@ -121,7 +122,7 @@ class TournamentSerializer(serializers.ModelSerializer):
         class Meta:
             depth = 1
             model = Team
-            fields = ("id", "name")
+            fields = ("id", "name", "image")
 
     class TournamentMatchSerializer(serializers.ModelSerializer):
         participants = ParticipantSerializer(many=True)
