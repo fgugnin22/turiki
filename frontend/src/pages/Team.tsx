@@ -44,9 +44,9 @@ const Team = () => {
               src={serverURL + "/" + data?.image}
               className="object-cover rounded-full h-16 w-16 border-2 border-green-600 ml-auto mr-4"
             />
-            <div className="mt-4 mx-auto max-w-sm w-[80%] mb-8">
+            <div className="mt-4 mx-auto max-w-sm w-[80%] mb-8 flex flex-wrap items-center">
               <label
-                className="block bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white mr-4 text-center py-auto py-3 px-4 rounded-md border-0 text-sm font-semibold cursor-pointer"
+                className="grow w-full block mr-0 ml-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white text-center py-auto py-3 px-4 rounded-md border-0 text-sm font-semibold cursor-pointer"
                 htmlFor="file_input"
               >
                 Загрузить картинку
@@ -59,7 +59,7 @@ const Team = () => {
                 hidden
               />
               <p
-                className="mt-1 text-sm text-gray-500 dark:text-gray-300"
+                className="mt-1 text-sm text-gray-500 dark:text-gray-300 mx-auto"
                 id="file_input_help"
               >
                 PNG (макс. 800x400px).
