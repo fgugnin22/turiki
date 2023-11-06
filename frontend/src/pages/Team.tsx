@@ -37,12 +37,12 @@ const Team = () => {
     <Layout>
       {isSuccess && (
         <>
-          <div className="flex max-w-md mx-auto mt-8 flex-wrap">
-            <h2 className="ml-12 mr-44 my-8 text-2xl">{data.name}</h2>
+          <div className="flex max-w-md mx-auto mt-8 flex-wrap items-center">
+            <h2 className="ml-12 mr-auto text-2xl">{data.name}</h2>
             <img
               alt="profil"
               src={serverURL + "/" + data?.image}
-              className="object-cover rounded-full h-16 w-16 mt-4 border-2 border-green-600 mx-4"
+              className="object-cover rounded-full h-16 w-16 border-2 border-green-600 ml-auto mr-4"
             />
             <div className="mt-4 mx-auto max-w-sm w-[80%] mb-8">
               <label
