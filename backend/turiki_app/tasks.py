@@ -1,6 +1,7 @@
 import random
 
 import dramatiq
+import pytz
 from rest_framework import serializers
 
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -14,6 +15,7 @@ IN_A_MINUTE = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
 @dramatiq.actor
 def set_match_start_bans(match_id: int):
     match = Match.objects.get(pk=match_id)
+
     if match.teams.count() != 2:
         return
     if match.state == "NO_SHOW":
@@ -50,26 +52,37 @@ def exec_task_on_date(func, args: list, when=datetime.datetime.now()):
 
 
 @dramatiq.actor
+def check_for_teams_in_lobby(match_id):
+    match = Match.objects.get(pk=match_id)
+    [p1, p2] = list(match.participants.values())
+
+    p1 = Participant.objects.get(pk=p1["id"])
+    p2 = Participant.objects.get(pk=p2["id"])
+    if p1.in_lobby and p2.in_lobby:
+        return
+    if p1.in_lobby and not p2.in_lobby:
+        pass
+        # make p1 win and p2 lose
+    if not p1.in_lobby and p2.in_lobby:
+        pass
+        # make p2 win and p1 lose
+
+
+@dramatiq.actor
 def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
+    """Я в афиге.... чсно гря"""
     start = datetime.datetime.now()
     team = Team.objects.get(pk=team_id)
-    print(map_to_ban, who_banned, match_id)
     match = Match.objects.get(pk=match_id)
 
-    """Я в афиге.... чсно гря"""
     if len(match.bans.maps) == 1:
         return
-        raise serializers.ValidationError(
-            "Ты пытался забанить карту, которую уже выбрали, ты еблан??? теперь уже играй на ней, лох")
 
     if not map_to_ban.upper() in match.bans.maps:
         return
-        raise serializers.ValidationError("wrong map name")
 
     if match.bans.previous_team == team_id:
         return
-        raise serializers.ValidationError("Wait for other team to ban")
-
     try:
         if match.bans.ban_log[move] == MapBan.CAPTAIN:
             print('CAPTAIN VOTED FOR MAPBAN, AUTO BAN CANCELLED')
@@ -84,7 +97,10 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
     match.bans.timestamps.append(datetime.datetime.now() + datetime.timedelta(seconds=1))
     match.bans.ban_log.append(who_banned)
     if len(match.bans.maps) == 1:
+        # TODO: we doing it here
+
         set_match_active(match)
+
     exec_task_on_date(ban_map, [match.id, other_team.id, match.bans.maps[-1], "AUTO",
                                 MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps)],
                       datetime.datetime.now() + match.bans.time_to_select_map)
@@ -96,8 +112,8 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
 @dramatiq.actor
 def set_active(match):  # self-explanatory fr tho
     if match.state == "BANS":
-        match.state = "ACTIVE"
-        print("BLACK MEN SHAKING THEIR BOOTY CHEEKS")
+        match.started = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow'))
+        match.state = "IN_GAME_LOBBY_CREATION"
         match.save()
 
 

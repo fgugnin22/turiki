@@ -7,8 +7,10 @@ from rest_framework.response import Response
 
 from .models import Tournament, Team, MapBan, Match, Participant, UserAccount, Lobby, Chat, Message
 from rest_framework import serializers
-from turiki_app.tasks import set_match_active, set_match_start_bans, exec_task_on_date
+from turiki_app.tasks import set_match_start_bans, set_match_active
+import pytz
 
+utc = pytz.UTC
 """
 В этот файл я попытался частично вынести более сложную логику по работе с бд и некоторые функции хелперы
 """
@@ -101,6 +103,25 @@ class TournamentService:
 
 
 class MatchService:
+    @staticmethod
+    def team_enter_lobby(request, match):
+        can_confirm_team_in_lobby = match.started is not None and match.started + timedelta(
+            minutes=30) >= datetime.now(tz=pytz.timezone('Europe/Moscow'))
+        print(can_confirm_team_in_lobby)
+        if can_confirm_team_in_lobby:
+            user = request.user
+            [p1, p2] = list(match.participants.values())
+            p1 = Participant.objects.get(pk=p1["id"])
+            p2 = Participant.objects.get(pk=p2["id"])
+            participant_in_question = p1 if p1.team.id == user.team.id else p2
+            participant_in_question.in_lobby = True
+            participant_in_question.save()
+            if p1.in_lobby and p2.in_lobby:
+                if match.state == "IN_GAME_LOBBY_CREATION":
+                    match.state = "ACTIVE"
+                    match.save()
+            return Response(status=200)
+        return Response(status=400)
 
     @staticmethod
     def claim_match_result(match, team_id, result):

@@ -137,6 +137,17 @@ class MatchAPIView(ModelViewSet):
         return Response(status=404)
 
     @action(
+        methods=["PUT"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin]
+    )
+    def team_in_lobby(self, request, pk=None):
+        # {
+        #     "team": {
+        #         "team_id": int
+        #     }
+        # }
+        return MatchService.team_enter_lobby(request, self.get_object())
+
+    @action(
         methods=["POST", "PATCH", "PUT"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin]
     )
     def ban(self, request, pk=None):

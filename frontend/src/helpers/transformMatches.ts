@@ -34,6 +34,7 @@ export interface Bans {
   )[];
 }
 export interface Match {
+  started: string;
   bans?: Bans;
   lobby?: {
     id: number;
@@ -68,6 +69,8 @@ export interface Participant {
   result_text: any;
   team: Team;
   match: Match2;
+  in_lobby: boolean;
+  res_image: string;
 }
 
 export interface Team {
@@ -79,6 +82,7 @@ export interface Team {
   image: string;
 }
 export interface Match2 {
+  started: string;
   id: number;
   name: string;
   round_text: string;

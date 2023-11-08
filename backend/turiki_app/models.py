@@ -147,7 +147,8 @@ class Match(models.Model):
     name = models.CharField(max_length=127, blank=True, null=True)
     round_text = models.CharField(max_length=31, blank=True, null=True)  # ПОРЯДОК СЛЕДОВАНИЯ МАТЧЕЙ
     # В ТУРНИРЕ, Т.Е. 1 - ПЕРВЫЕ МАТЧИ В ТУРНИРЕ, 2 - ВТОРЫЕ И ТД. п.с. на самом деле это не обязательно, просто рекомендация)))
-    state = models.CharField(max_length=31, null=True, blank=True)  #
+    state = models.CharField(max_length=31, null=True, blank=True)
+    started = models.DateTimeField(blank=True, null=True)
     starts = models.DateTimeField(blank=True, null=True)
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="matches",
                                    null=True, blank=True, )
@@ -174,6 +175,8 @@ class Participant(models.Model):
     status = models.CharField(max_length=31, null=True, blank=True)
     is_winner = models.BooleanField(null=True, blank=True)
     result_text = models.CharField(max_length=31, null=True, blank=True)
+    in_lobby = models.BooleanField(default=False)
+    res_image = models.FilePathField(path=images_path(), blank=True, null=True)
 
     def __str__(self):
         return f"{self.team}_{self.match}"

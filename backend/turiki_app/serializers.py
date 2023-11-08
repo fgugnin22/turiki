@@ -70,7 +70,7 @@ class ParticipantSerializer(serializers.ModelSerializer):
     class Meta:
         depth = 1
         model = Participant
-        fields = ("id", "is_winner", "result_text", "status", "team")
+        fields = ("id", "is_winner", "result_text", "status", "team", "in_lobby", "res_image")
 
 
 class MatchSerializer(serializers.ModelSerializer):
@@ -93,7 +93,8 @@ class MatchSerializer(serializers.ModelSerializer):
             "next_match",
             "name",
             "lobby",
-            "bans"
+            "bans",
+            "started"
         )
 
 

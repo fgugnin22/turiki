@@ -25,18 +25,27 @@ class IsCaptainOfThisTeamOrAdmin(IsAdminUser):
 
             if is_admin:
                 return True
-            players = list(view.get_object().players.values())
-            is_captain = any(
-                player["team_id"] == request.user.team.id and player["team_status"] == "CAPTAIN" for player in
-                players)
-            xd = False
+            # TODO: this sucks, needs to be rewritten in the near future
+            try:
+                players = list(view.get_object().players.values())
+
+                is_captain = any(
+                    player["team_id"] == request.user.team.id and player["team_status"] == "CAPTAIN" for player in
+                    players)
+
+                return is_captain
+            except:
+                pass
+
             try:
                 xd = request.data["team"][
                          "team_id"] == request.user.team.id and request.user.team_status == "CAPTAIN"
+                return xd
             except:
                 pass
-            return xd or is_captain
+            return False
         except:
+            # if request.user.team.id
             return False
 # class IsCaptainAndPlayingThisMatch:
 #     def has_permission(self, request, view) -> bool:

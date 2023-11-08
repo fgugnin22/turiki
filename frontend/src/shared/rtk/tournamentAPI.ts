@@ -34,7 +34,7 @@ export const tournamentAPI = createApi({
         matchId: number | string;
       }) => {
         const body = {
-          team_id: teamId,
+          team: { team_id: teamId },
           map: mapName
         };
         return {
@@ -62,6 +62,24 @@ export const tournamentAPI = createApi({
         };
       },
       invalidatesTags: ["Match", "Tournament"]
+    }),
+    confirmTeamInLobby: build.mutation<
+      null,
+      { matchId: number | string; teamId: number | string }
+    >({
+      query: ({ matchId, teamId }) => {
+        const body = JSON.stringify({
+          team: {
+            team_id: teamId
+          }
+        });
+        return {
+          method: "PUT",
+          url: `match/${matchId}/team_in_lobby/`,
+          body
+        };
+      },
+      invalidatesTags: ["Match"]
     }),
     getMatchById: build.query<Match, { id: number | string }>({
       query: (search) => {
