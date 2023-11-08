@@ -3,7 +3,7 @@ from django.core.files.uploadedfile import TemporaryUploadedFile
 from django.db.models import Prefetch
 from rest_framework import serializers
 from rest_framework.decorators import action
-from rest_framework.parsers import FileUploadParser, MultiPartParser, JSONParser
+from rest_framework.parsers import MultiPartParser, JSONParser
 from rest_framework.permissions import (
     IsAuthenticatedOrReadOnly,
     IsAdminUser,
@@ -12,6 +12,8 @@ from rest_framework.permissions import (
 from django.forms.models import model_to_dict
 from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
+
+from turiki_app.match_services import claim_match_result
 from turiki_app.models import Team, Tournament, Chat, MapBan, Match, UserAccount
 from turiki_app.permissons import IsAdminUserOrReadOnly, IsCaptainOfThisTeamOrAdmin
 from turiki_app.serializers import (
@@ -178,7 +180,7 @@ class MatchAPIView(ModelViewSet):
             result = request.data["team"]["result"]
             if type(result) != bool:
                 return Response("type of match result must be boolean", status=400)
-            MatchService.claim_match_result(match, team_id, result)
+            claim_match_result(match, team_id, result)
             return Response("Match result has been claimed")
         except:
             return Response("data types mismatch", status=400)

@@ -6,6 +6,8 @@ from rest_framework import serializers
 
 from apscheduler.schedulers.background import BackgroundScheduler
 import datetime
+
+from turiki_app.match_services import claim_match_result
 from turiki_app.models import Chat, Lobby, Match, Team, Participant, MapBan
 
 MSK_TIMEZONE = datetime.timezone(datetime.timedelta(hours=3))
@@ -61,10 +63,12 @@ def check_for_teams_in_lobby(match_id):
     if p1.in_lobby and p2.in_lobby:
         return
     if p1.in_lobby and not p2.in_lobby:
-        pass
+        claim_match_result(match, p1.team.id, True)
+        claim_match_result(match, p2.team.id, False)
         # make p1 win and p2 lose
     if not p1.in_lobby and p2.in_lobby:
-        pass
+        claim_match_result(match, p2.team.id, True)
+        claim_match_result(match, p1.team.id, False)
         # make p2 win and p1 lose
 
 
@@ -98,7 +102,8 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
     match.bans.ban_log.append(who_banned)
     if len(match.bans.maps) == 1:
         # TODO: we doing it here
-
+        exec_task_on_date(check_for_teams_in_lobby, [match.id],
+                          datetime.datetime.now(tz=pytz.timezone("Europe/Moscow")) + datetime.timedelta(minutes=10))
         set_match_active(match)
 
     exec_task_on_date(ban_map, [match.id, other_team.id, match.bans.maps[-1], "AUTO",
