@@ -6,7 +6,8 @@ npm i
 npm run build
 cd ..
 Copy-Item  $pwd"\frontend\dist" -Destination $pwd"\backend" -Recurse
-cd  $pwd"\backend"
-md $pwd"\backend\dist\assets\img"
+cd $pwd"\backend\dist\assets"
+md "img"
+cd ..
+cd ..
 docker-compose up
-cd $pwd
