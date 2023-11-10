@@ -7,7 +7,6 @@ export const continueWithGoogle = async () => {
         }`
       )
     ).json();
-    console.log(res.authorization_url);
     window.location.replace(res.authorization_url);
   } catch (err) {
     console.error(err);

@@ -38,40 +38,47 @@ const Team = () => {
       {isSuccess && (
         <>
           <div className="flex max-w-md mx-auto mt-8 flex-wrap items-center">
-            <h2 className="ml-12 mr-auto text-2xl">{data.name}</h2>
             <img
               alt="profil"
               src={serverURL + "/" + data?.image}
-              className="object-cover rounded-full h-16 w-16 border-2 border-green-600 ml-auto mr-4"
+              className="object-cover rounded-full h-16 w-16 border-2 border-slate-600 ml-auto mr-4"
             />
-            <div className="mt-4 mx-auto max-w-sm w-[80%] mb-8 flex flex-wrap items-center">
-              <label
-                className="grow w-full block mr-0 ml-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white text-center py-auto py-3 px-4 rounded-md border-0 text-sm font-semibold cursor-pointer"
-                htmlFor="file_input"
-              >
-                Загрузить картинку
-              </label>
-              <input
-                onChange={onImageSubmit}
-                id="file_input"
-                type="file"
-                accept="image/png"
-                hidden
-              />
-              <p
-                className="mt-1 text-sm text-gray-500 dark:text-gray-300 mx-auto"
-                id="file_input_help"
-              >
-                PNG (макс. 800x400px).
-              </p>
-            </div>
+            <h2 className="ml-2 mr-auto text-2xl">{data.name}</h2>
+
+            {user?.team_status === "CAPTAIN" &&
+              user?.team === Number(params.id) && (
+                <div className="mt-4 mx-auto max-w-sm w-[80%] flex flex-wrap items-center">
+                  <label
+                    className="grow w-full block mr-0 ml-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white text-center py-auto py-3 px-4 rounded-md border-0 text-sm font-semibold cursor-pointer"
+                    htmlFor="file_input"
+                  >
+                    Загрузить картинку
+                  </label>
+                  <input
+                    onChange={onImageSubmit}
+                    id="file_input"
+                    type="file"
+                    accept="image/png"
+                    hidden
+                  />
+                  <p
+                    className="mt-1 text-sm text-gray-500 dark:text-gray-300 mx-auto"
+                    id="file_input_help"
+                  >
+                    PNG (макс. 800x400px).
+                  </p>
+                </div>
+              )}
           </div>
+          <p className="mx-auto relative right-4 mt-4">
+            {data.players.length && "Игроки:"}
+          </p>
           {data.players.map((player, i: number) => {
             if (player.team_status == "PENDING") {
               return (
                 <div
                   key={player.id}
-                  className="shadow h-10  mx-auto w-72 relative mb-4 py-2 rounded-md flex text-center justify-between items-center gap-x-2"
+                  className="shadow h-10 mt-2 mx-auto w-72 relative mb-4 py-2 rounded-md flex text-center justify-between items-center gap-x-2"
                 >
                   {/* Иконка игрока */}
                   <span className="my-2 mx-4">{player.name}</span>
@@ -114,7 +121,7 @@ const Team = () => {
               return (
                 <div
                   key={player.id}
-                  className="shadow h-10 mx-auto w-72 relative mb-4 py-2 rounded-md flex text-center justify-between items-center gap-x-2"
+                  className="shadow h-10 mt-2 mx-auto w-72 relative mb-4 py-2 rounded-md flex text-center justify-between items-center gap-x-2"
                 >
                   {/* Иконка игрока */}
                   <span className="my-2 mx-4">{player.name}</span>

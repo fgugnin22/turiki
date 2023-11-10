@@ -58,22 +58,11 @@ const Match = () => {
   const timeBeforeMatchStart = useCountdown(starts);
   const { seconds } = useCountdown(new Date(initialDateSeconds));
   useEffect(() => {
-    if (seconds === 0) {
+    if (seconds === -1) {
       dispatch(tournamentAPI.util.invalidateTags(["Match"]));
-      //   console.log("asdfsaf", seconds);
+      console.log("asdfsaf", seconds);
     }
-  }, [seconds === 0]);
-  useEffect(() => {
-    if (
-      timeBeforeMatchStart.seconds === -1 &&
-      timeBeforeMatchStart.minutes === -1 &&
-      timeBeforeMatchStart.hours === -1
-    ) {
-      dispatch(tournamentAPI.util.invalidateTags(["Match"]));
-      //   console.log("worked probably", timeBeforeMatchStart.seconds);
-    }
-    // console.log("im schewpid", timeBeforeMatchStart);
-  }, [timeBeforeMatchStart.seconds]);
+  }, [seconds === -1]);
 
   return (
     <Layout>
@@ -116,7 +105,7 @@ const Match = () => {
             />
           </>
 
-          <MapBans timeRemaining={seconds} match={match} />
+          <MapBans secondsRemaining={seconds} match={match} />
           {isGetMessagesSuccess && isAuthenticated && (
             <Chat messages={messages} chatId={match?.lobby?.chat!} />
           )}
