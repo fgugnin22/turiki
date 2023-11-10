@@ -3,7 +3,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
-import { getUser, uploadTeamImage, uploadUserImage } from "../shared/rtk/user";
+import { getUser, uploadTeamImage } from "../shared/rtk/user";
 import { ROUTES } from "../app/RouteTypes";
 const serverURL = import.meta.env.VITE_API_URL;
 

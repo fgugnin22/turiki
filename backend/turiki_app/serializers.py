@@ -104,10 +104,12 @@ class TeamSerializer(serializers.ModelSerializer):
     class PlayerSerializer(serializers.ModelSerializer):
         name = serializers.CharField()
         id = serializers.IntegerField(read_only=True)
-
+        game_name = serializers.CharField()
+        image = serializers.CharField()
+        
         class Meta:
             model = User
-            fields = ["team_status", "id", "name"]
+            fields = ["team_status", "id", "name", "game_name", "image"]
 
     players = PlayerSerializer(many=True)
 

@@ -11,8 +11,8 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
   return (
     <>
       {match?.state === "BANS" && (
-        <div className="w-72 m-auto flex flex-col">
-          <span>
+        <div className="w-72 place-self-center mx-auto flex flex-col col-span-1 shadow-xl mt-4">
+          <span className="mx-auto">
             Осталось {secondsRemaining >= 0 ? secondsRemaining : "..."}{" "}
             {secondsRemaining % 10 > 4 ||
             secondsRemaining % 10 === 0 ||
@@ -36,9 +36,9 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
             return (
               <div
                 key={map}
-                className="w-full p-2 flex items-center justify-center even:text-white even:bg-slate-700 odd:bg-slate-200 odd: text-black"
+                className="w-full border-b-1 border-b-black border last-of-type:border-none first-of-type:rounded-t-lg last-of-type:rounded-b-lg p-2 flex items-center justify-center even:bg-gray-300 odd:bg-gray-100 text-black"
               >
-                {map}
+                <p className="mr-auto">{map}</p>
                 {(user?.team === match.participants[0].team.id ||
                   user?.team === match.participants[1].team.id) &&
                   user?.team_status === "CAPTAIN" &&

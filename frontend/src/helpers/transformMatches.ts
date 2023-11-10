@@ -65,7 +65,7 @@ export interface Tournament {
 export interface Participant {
   id: number;
   status: any;
-  is_winner: any;
+  is_winner: boolean;
   result_text: any;
   team: Team;
   match: Match2;

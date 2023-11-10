@@ -266,4 +266,4 @@ def async_create_message(user, chat_id, content):
     if len(content) == 0:
         raise serializers.ValidationError("Content must not be an empty string")
     chat.save()
-    return Message.objects.create(user=user, chat=chat, content=content)
+    return Message.objects.create(user=user, chat=chat, content=content, created_at=datetime.now(tz=pytz.timezone('Europe/Moscow')))

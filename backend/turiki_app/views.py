@@ -34,7 +34,7 @@ View - представление, которое отвечает за обра
 
 
 class UserAPIView(GenericViewSet):
-    parser_classes = [MultiPartParser]
+    parser_classes = [MultiPartParser, JSONParser]
 
     @action(methods=["PATCH"], detail=False, permission_classes=[IsAuthenticated])
     def credentials(self, request):
@@ -134,6 +134,30 @@ class MatchAPIView(ModelViewSet):
     queryset = Match.objects.all()
     serializer_class = MatchSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    parser_classes = [MultiPartParser, JSONParser]
+
+    @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
+    def photo(self, request, pk=None):
+        try:
+            user = request.user
+            match = self.get_object()
+            if user.team_status != "CAPTAIN" or user.team.id != match.teams.first().id and user.team.id != match.teams.last().id:
+                return Response(status=403)
+            image = request.data.get("image").file
+            img_name = f'assets/img/team{user.team.id}_match{match.id}.png'
+            participant = match.participants.first() if match.participants.first().team.id == user.team.id else match.participants.last()
+            participant.res_image = img_name
+            file = File(image, name=img_name)  # TODO: this is not very safe
+            if file.name[-4:] == ".png":
+                with open(STATICFILES_DIRS[0] + f"/img/team{user.team.id}_match{match.id}.png", "wb+") as f:
+                    f.writelines(file.readlines())
+                    f.close()
+                participant.save()
+                return Response(status=200)
+            else:
+                return Response(status=415)
+        except TypeError:
+            return Response(status=400)
 
     def create(self, request, *args, **kwargs):
         return Response(status=404)
@@ -194,7 +218,7 @@ class TeamAPIView(ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
     permission_classes = [IsAuthenticated]
-    parser_classes = [MultiPartParser]
+    parser_classes = [MultiPartParser, JSONParser]
 
     @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
     def photo(self, request, pk=None):
