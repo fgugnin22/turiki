@@ -60,6 +60,7 @@ def end_match(match):
             tournament = match.tournament
             tournament.status = "PLAYED"
             tournament.save()
+            return
         update_next_match(next_match, p1)
         return
     p2.result_text = "WON"
@@ -71,6 +72,7 @@ def end_match(match):
         tournament = match.tournament
         tournament.status = "PLAYED"
         tournament.save()
+        return
     update_next_match(next_match, p2)
 
 
