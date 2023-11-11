@@ -21,6 +21,9 @@ export interface Bans {
   timestamps: string[];
   time_to_select_map: string;
   ban_log: ("AUTO" | "CAPTAIN")[];
+  time_to_enter_lobby: string;
+  time_results_locked: string;
+  time_to_confirm_results: string;
   maps: (
     | "CHALET"
     | "BANK"
@@ -34,6 +37,10 @@ export interface Bans {
   )[];
 }
 export interface Match {
+  first_result_claimed: string;
+  time_to_enter_lobby: string;
+  time_results_locked: string;
+  time_to_confirm_results: string;
   started: string;
   bans?: Bans;
   lobby?: {
@@ -82,6 +89,7 @@ export interface Team {
   image: string;
 }
 export interface Match2 {
+  first_result_claimed: string;
   started: string;
   id: number;
   name: string;

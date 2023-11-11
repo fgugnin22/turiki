@@ -103,7 +103,7 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
     if len(match.bans.maps) == 1:
         # TODO: we doing it here
         exec_task_on_date(check_for_teams_in_lobby, [match.id],
-                          datetime.datetime.now(tz=pytz.timezone("Europe/Moscow")) + datetime.timedelta(minutes=10))
+                          datetime.datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_enter_lobby)
         set_match_active(match)
 
     exec_task_on_date(ban_map, [match.id, other_team.id, match.bans.maps[-1], "AUTO",
@@ -120,6 +120,13 @@ def set_active(match):  # self-explanatory fr tho
         match.started = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow'))
         match.state = "IN_GAME_LOBBY_CREATION"
         match.save()
+
+
+@dramatiq.actor
+def auto_finish_match(match_id, team_id, result):
+    match = Match.objects.get(pk=match_id)
+    from turiki_app.match_services import claim_match_result
+    claim_match_result(match, team_id, result)
 
 
 # TODO: сделать отложенную активацию матча и создание лобби

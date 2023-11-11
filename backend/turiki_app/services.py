@@ -104,9 +104,18 @@ class TournamentService:
 
 class MatchService:
     @staticmethod
+    def submit_results(request, match):
+        user = request.user
+        p1 = match.teams.first()
+        p2 = match.teams.last()
+        self_participant = p1 if p1.team.id == user.team.id else p2 if p2.team.id == user.team.id else None
+        if self_participant is None:
+            return Response(status=403)
+
+    @staticmethod
     def team_enter_lobby(request, match):
-        can_confirm_team_in_lobby = match.started is not None and match.started + timedelta(
-            minutes=10) >= datetime.now(tz=pytz.timezone('Europe/Moscow'))
+        can_confirm_team_in_lobby = match.started is not None and match.started + match.time_to_enter_lobby >= datetime.now(
+            tz=pytz.timezone('Europe/Moscow'))
         if can_confirm_team_in_lobby:
             user = request.user
             [p1, p2] = list(match.participants.values())
@@ -117,7 +126,8 @@ class MatchService:
             participant_in_question.save()
             if p1.in_lobby and p2.in_lobby:
                 if match.state == "IN_GAME_LOBBY_CREATION":
-                    match.state = "ACTIVE"
+                    match.state = "RES_SEND_LOCKED"
+                    match.started = datetime.now(tz=pytz.timezone('Europe/Moscow'))
                     match.save()
             return Response(status=200)
         return Response(status=400)
@@ -266,4 +276,5 @@ def async_create_message(user, chat_id, content):
     if len(content) == 0:
         raise serializers.ValidationError("Content must not be an empty string")
     chat.save()
-    return Message.objects.create(user=user, chat=chat, content=content, created_at=datetime.now(tz=pytz.timezone('Europe/Moscow')))
+    return Message.objects.create(user=user, chat=chat, content=content,
+                                  created_at=datetime.now(tz=pytz.timezone('Europe/Moscow')))

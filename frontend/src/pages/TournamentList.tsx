@@ -89,7 +89,6 @@ const TournamentList = () => {
                       Раундов: {tourn.max_rounds}
                     </h3>
                   </Link>
-
                   {userDetails?.is_staff && (
                     <>
                       <button

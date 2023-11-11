@@ -150,6 +150,10 @@ class Match(models.Model):
     state = models.CharField(max_length=31, null=True, blank=True)
     started = models.DateTimeField(blank=True, null=True)
     starts = models.DateTimeField(blank=True, null=True)
+    first_result_claimed = models.DateTimeField(blank=True, null=True)
+    time_to_enter_lobby = models.DurationField(default=datetime.timedelta(minutes=10))
+    time_results_locked = models.DurationField(default=datetime.timedelta(minutes=1))
+    time_to_confirm_results = models.DurationField(default=datetime.timedelta(minutes=2))
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="matches",
                                    null=True, blank=True, )
 
@@ -226,5 +230,6 @@ class Message(models.Model):
     user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     content = models.CharField(max_length=255, blank=False, null=False)
     created_at = models.DateTimeField(blank=True, null=True)
+
     def __str__(self):
         return f"{self.user}_{self.content}_at_{self.created_at}_{self.chat}"

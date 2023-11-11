@@ -204,7 +204,9 @@ class MatchAPIView(ModelViewSet):
             result = request.data["team"]["result"]
             if type(result) != bool:
                 return Response("type of match result must be boolean", status=400)
-            claim_match_result(match, team_id, result)
+            res = claim_match_result(match, team_id, result)
+            if res is not None:
+                return res
             return Response("Match result has been claimed")
         except:
             return Response("data types mismatch", status=400)

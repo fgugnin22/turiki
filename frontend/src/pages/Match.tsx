@@ -38,11 +38,12 @@ const Match = () => {
     tournamentAPI.useGetTeamByIdQuery(match?.participants[1]?.team.id, {
       skip: isFetching || !match?.participants[1]?.team
     });
-  const [claimMatchResult, {}] = tournamentAPI.useClaimMatchResultMutation();
   const [confirmTeamInLobby] = tournamentAPI.useConfirmTeamInLobbyMutation();
   const starts = new Date(match?.starts!);
   const started = new Date(match?.started!);
-  started.setMinutes(started.getMinutes() + 10);
+  started.setMinutes(
+    started.getMinutes() + Number(match?.time_results_locked.split(":")[1])
+  );
   let selfParticipant: Participant | null = null;
   if (isSuccess) {
     selfParticipant =
@@ -52,18 +53,17 @@ const Match = () => {
         ? match?.participants[1]
         : null;
   }
-  let initialDateSeconds =
+  let timeToBan =
     new Date(match?.bans?.timestamps.at(-1) ?? 10).getTime() +
     new Date(
       "01 Jan 1970 " + match?.bans?.time_to_select_map + " GMT" ?? 10
     ).getTime();
   const timeBeforeMatchStart = useCountdown(starts);
-  const timeToGetInLobby = useCountdown(started);
-  const { seconds } = useCountdown(new Date(initialDateSeconds));
+  const timeToNextAction = useCountdown(started);
+  const { seconds } = useCountdown(new Date(timeToBan));
   useEffect(() => {
     if (seconds === -1) {
       dispatch(tournamentAPI.util.invalidateTags(["Match"]));
-      console.log("asdfsaf", seconds);
     }
   }, [seconds === -1]);
 
@@ -97,30 +97,26 @@ const Match = () => {
                 <TeamPlayerList team={team2} />
               )}
 
-              <MatchResultVote
-                isCompromised={
-                  match.participants[0].is_winner === true &&
-                  match.participants[1].is_winner === true
-                }
-                opponentTeamResImage={
-                  match.participants[0].id === selfParticipant?.id
-                    ? match.participants[1].res_image
-                    : match.participants[0].res_image
-                }
-                selfTeamResImage={selfParticipant?.res_image}
-                starts={starts}
-                isActive={match.state === "ACTIVE"}
-                isCaptain={user?.team_status === "CAPTAIN"}
-                matchId={match?.id}
-                teamId={selfParticipant?.team.id}
-                isWinner={selfParticipant?.is_winner}
-                claimMatchResult={claimMatchResult}
-                hasOpponentWon={
-                  match.participants[0].id === selfParticipant?.id
-                    ? match.participants[1].is_winner
-                    : match.participants[0].is_winner
-                }
-              />
+              {match?.state === "RES_SEND_LOCKED" &&
+              timeToNextAction.minutes < 0 &&
+              timeToNextAction.seconds < 0 ? (
+                <MatchResultVote
+                  selfParticipant={selfParticipant!}
+                  match={match}
+                  isCaptain={user?.team_status === "CAPTAIN"}
+                  teamId={selfParticipant?.team.id}
+                />
+              ) : (
+                match?.state === "RES_SEND_LOCKED" && (
+                  <div className="text-center mt-8 text-lg">
+                    До разблокировки отправки результатов осталось:{" "}
+                    {timeToNextAction.minutes}:
+                    {timeToNextAction.seconds > 9
+                      ? timeToNextAction.seconds
+                      : `0${timeToNextAction.seconds}`}
+                  </div>
+                )
+              )}
               {match?.state === "BANS" && (
                 <>
                   <div></div>
@@ -138,10 +134,10 @@ const Match = () => {
               !selfParticipant?.in_lobby && (
                 <div className="flex w-full flex-col">
                   <p className="text-center mt-4">
-                    На заход в лобби осталось: {timeToGetInLobby.minutes}:
-                    {timeToGetInLobby.seconds > 9
-                      ? timeToGetInLobby.seconds
-                      : "0" + timeToGetInLobby.seconds}
+                    На заход в лобби осталось: {timeToNextAction.minutes}:
+                    {timeToNextAction.seconds > 9
+                      ? timeToNextAction.seconds
+                      : "0" + timeToNextAction.seconds}
                   </p>
                   <button
                     onClick={() =>

@@ -94,7 +94,11 @@ class MatchSerializer(serializers.ModelSerializer):
             "name",
             "lobby",
             "bans",
-            "started"
+            "started",
+            "time_to_enter_lobby",
+            "time_results_locked",
+            "time_to_confirm_results",
+            "first_result_claimed"
         )
 
 
@@ -106,7 +110,7 @@ class TeamSerializer(serializers.ModelSerializer):
         id = serializers.IntegerField(read_only=True)
         game_name = serializers.CharField()
         image = serializers.CharField()
-        
+
         class Meta:
             model = User
             fields = ["team_status", "id", "name", "game_name", "image"]
