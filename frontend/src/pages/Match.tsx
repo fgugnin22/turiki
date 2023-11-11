@@ -121,9 +121,17 @@ const Match = () => {
                     : match.participants[0].is_winner
                 }
               />
-              <MapBans secondsRemaining={seconds} match={match} />
+              {match?.state === "BANS" && (
+                <>
+                  <div></div>
+                  <MapBans secondsRemaining={seconds} match={match} />
+                </>
+              )}
             </>
-
+            {match.state === "IN_GAME_LOBBY_CREATION" &&
+              user?.team &&
+              user.team_status === "CAPTAIN" &&
+              selfParticipant?.in_lobby && <div></div>}
             {match.state === "IN_GAME_LOBBY_CREATION" &&
               user?.team &&
               user.team_status === "CAPTAIN" &&
@@ -131,7 +139,9 @@ const Match = () => {
                 <div className="flex w-full flex-col">
                   <p className="text-center mt-4">
                     На заход в лобби осталось: {timeToGetInLobby.minutes}:
-                    {timeToGetInLobby.seconds}
+                    {timeToGetInLobby.seconds > 9
+                      ? timeToGetInLobby.seconds
+                      : "0" + timeToGetInLobby.seconds}
                   </p>
                   <button
                     onClick={() =>
@@ -146,6 +156,7 @@ const Match = () => {
                   </button>
                 </div>
               )}
+            {match?.state === "SCORE_DONE" && <div></div>}
             {isGetMessagesSuccess && isAuthenticated && selfParticipant && (
               <Chat messages={messages} chatId={match?.lobby?.chat!} />
             )}

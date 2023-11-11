@@ -81,8 +81,9 @@ const TournamentList = () => {
                       Команд: {tourn.teams.length}/{2 ** tourn.max_rounds}
                     </h3>
                     <h3 className="text-sm  font-light md:text-md w-[25%] min-w-[100px]">
-                      {tourn.status === "REGISTRATION_OPENED" &&
-                        "Регистрация открыта"}
+                      {(tourn.status === "REGISTRATION_OPENED" &&
+                        "Регистрация открыта") ||
+                        (tourn.status === "PLAYED" && "Сыгран")}
                     </h3>
                     <h3 className="text-sm  font-light md:text-md w-[20%]">
                       Раундов: {tourn.max_rounds}

@@ -226,7 +226,5 @@ class Message(models.Model):
     user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
     content = models.CharField(max_length=255, blank=False, null=False)
     created_at = models.DateTimeField(blank=True, null=True)
-
-    # file = models.FileField(verbose_name="Файл")
     def __str__(self):
         return f"{self.user}_{self.content}_at_{self.created_at}_{self.chat}"

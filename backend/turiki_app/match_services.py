@@ -41,7 +41,9 @@ def end_match(match):
         p1.save()
         p2.save()
         if next_match is None:
-            return
+            tournament = match.tournament
+            tournament.status = "PLAYED"
+            tournament.save()
         update_next_match(next_match, p1)
         return
     p2.result_text = "WON"
@@ -50,7 +52,9 @@ def end_match(match):
     p1.save()
     p2.save()
     if next_match is None:
-        return
+       tournament = match.tournament
+       tournament.status = "PLAYED"
+       tournament.save()
     update_next_match(next_match, p2)
 
 
@@ -63,9 +67,7 @@ def update_next_match(next_match, winner):
     next_match.participants.add(next_participant)
     next_match.save()
     if len(list(next_match.participants.values())) == 2:
-        print("WTF MAN")
-        print(next_match.id)
         next_match.starts = datetime.now() + timedelta(seconds=10)
         next_match.save()
-        from tasks import set_match_start_bans
+        from turiki_app.tasks import set_match_start_bans
         set_match_start_bans(next_match.id)

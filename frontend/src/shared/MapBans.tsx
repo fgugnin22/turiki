@@ -10,7 +10,7 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
   const [banMap] = tournamentAPI.useBanMapMutation();
   return (
     <>
-      {match?.state === "BANS" && (
+      {
         <div className="w-72 place-self-center mx-auto flex flex-col col-span-1 shadow-xl mt-4">
           <span className="mx-auto">
             Осталось {secondsRemaining >= 0 ? secondsRemaining : "..."}{" "}
@@ -54,7 +54,7 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
             );
           })}
         </div>
-      )}
+      }
     </>
   );
 };

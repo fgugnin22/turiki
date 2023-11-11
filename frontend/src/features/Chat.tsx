@@ -107,7 +107,7 @@ const Chat = (props: ChatProps) => {
           <input
             type="text"
             id="chat"
-            className="w-full px-2 py-1 text-sm  rounded-md mr-1 border-2 border-slate-500 focus:[&:invalid]:outline-none focus:[&:invalid]:border-red-400"
+            className="w-full px-2 py-1 text-sm  rounded-lg mr-1 border-2 border-slate-500 focus:[&:invalid]:outline-none"
             value={message}
             onChange={(e: React.FormEvent<HTMLInputElement>) =>
               onChangeMessage(e)
