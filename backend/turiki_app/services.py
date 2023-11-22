@@ -114,13 +114,12 @@ class MatchService:
 
     @staticmethod
     def team_enter_lobby(request, match):
-        can_confirm_team_in_lobby = match.started is not None and match.started + match.time_to_enter_lobby >= datetime.now(
-            tz=pytz.timezone('Europe/Moscow'))
+        user = request.user
+        [p1, p2] = list(match.participants.values())
+        p1 = Participant.objects.get(pk=p1["id"])
+        p2 = Participant.objects.get(pk=p2["id"])
+        can_confirm_team_in_lobby = match.state == "IN_GAME_LOBBY_CREATION"
         if can_confirm_team_in_lobby:
-            user = request.user
-            [p1, p2] = list(match.participants.values())
-            p1 = Participant.objects.get(pk=p1["id"])
-            p2 = Participant.objects.get(pk=p2["id"])
             participant_in_question = p1 if p1.team.id == user.team.id else p2
             participant_in_question.in_lobby = True
             participant_in_question.save()

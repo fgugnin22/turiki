@@ -11,7 +11,7 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
   return (
     <>
       {
-        <div className="w-72 place-self-center mx-auto flex flex-col col-span-1 shadow-xl mt-4">
+        <div className="w-72 place-self-center mx-auto flex flex-col col-span-1 shadow-xl mt-4 rounded-lg">
           <span className="mx-auto">
             Осталось {secondsRemaining >= 0 ? secondsRemaining : "..."}{" "}
             {secondsRemaining % 10 > 4 ||

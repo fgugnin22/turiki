@@ -65,12 +65,15 @@ def check_for_teams_in_lobby(match_id):
     if p1.in_lobby and not p2.in_lobby:
         claim_match_result(match, p1.team.id, True)
         claim_match_result(match, p2.team.id, False)
+        return
         # make p1 win and p2 lose
     if not p1.in_lobby and p2.in_lobby:
         claim_match_result(match, p2.team.id, True)
         claim_match_result(match, p1.team.id, False)
+        return
         # make p2 win and p1 lose
-
+    print("nobody enter lobby, retrying again in (amount of time to enter the lobby)")
+    exec_task_on_date(check_for_teams_in_lobby, [match.id], datetime.datetime.now(tz=pytz.timezone('Europe/Moscow')) + match.time_to_enter_lobby)
 
 @dramatiq.actor
 def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):

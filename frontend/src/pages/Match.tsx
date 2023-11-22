@@ -62,11 +62,15 @@ const Match = () => {
   const timeToNextAction = useCountdown(started);
   const { seconds } = useCountdown(new Date(timeToBan));
   useEffect(() => {
-    if (seconds === -1) {
+    if (seconds === -1 || seconds % 10 === 1) {
       dispatch(tournamentAPI.util.invalidateTags(["Match"]));
     }
-  }, [seconds === -1]);
-
+  }, [seconds]);
+  useEffect(() => {
+    if (timeBeforeMatchStart.seconds === -1) {
+      dispatch(tournamentAPI.util.invalidateTags(["Match"]));
+    }
+  }, [timeBeforeMatchStart.seconds]);
   return (
     <Layout>
       {isSuccess && (
@@ -129,8 +133,8 @@ const Match = () => {
               user.team_status === "CAPTAIN" &&
               selfParticipant?.in_lobby && <div></div>}
             {match.state === "IN_GAME_LOBBY_CREATION" &&
-              user?.team &&
-              user.team_status === "CAPTAIN" &&
+              user?.team === selfParticipant?.team.id &&
+              user?.team_status === "CAPTAIN" &&
               !selfParticipant?.in_lobby && (
                 <div className="flex w-full flex-col">
                   <p className="text-center mt-4">
@@ -143,7 +147,7 @@ const Match = () => {
                     onClick={() =>
                       confirmTeamInLobby({
                         matchId: match.id,
-                        teamId: user?.team
+                        teamId: user.team
                       })
                     }
                     className="py-2 max-h-10 px-4 mx-auto mt-4 max-w-3xl block bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
