@@ -4,7 +4,7 @@ import os
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
 from django.contrib.postgres import fields
-
+from django.utils.timezone import now
 from core.settings import BASE_DIR
 
 """
@@ -43,13 +43,24 @@ class UserAccountManager(BaseUserManager):
 
 
 class Tournament(models.Model):
-    name = models.CharField(max_length=255, default=f"test_tournamentpy mana")
+    allowed_statuses = ["REGISTRATION_CLOSED_BEFORE_REG",
+                        "REGISTRATION_OPENED",
+                        "REGISTRATION_CLOSED_AFTER_REG",
+                        "CHECK_IN"
+                        "CHECK_IN_CLOSED",
+                        "ACTIVE",
+                        "PLAYED"]
+    name = models.CharField(max_length=255, default=f"Tounrmaent")
     prize = models.IntegerField(default=0)
-    status = models.CharField(default="REGISTRATION_OPENED", max_length=255)
+    status = models.CharField(default="REGISTRATION_CLOSED_BEFORE_REG", max_length=255)
     starts = models.DateTimeField(blank=True, null=True)
     # teams = models.ManyToManyField("Team", through="IDK KAK BUDET NAZIVATSYA") <-- TODO: SDELAT' типо что была итоговая таблица команд кто какое место занял какой приз получил и тд
     players = models.ManyToManyField("UserAccount", blank=True)
     max_rounds = models.IntegerField(default=1)
+    # time_to_register = models.DurationField(default=datetime.timedelta(minutes=3))
+    time_to_check_in = models.DurationField(default=datetime.timedelta(minutes=3))
+    reg_starts = models.DateTimeField(default=now())
+    max_players_in_team = models.SmallIntegerField(default=5)
 
     def __str__(self):
         return self.name

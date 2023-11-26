@@ -32,17 +32,14 @@ def end_match(match):
     p2 = Participant.objects.get(pk=p2["id"])
     next_match = match.next_match
     if p1.is_winner == p2.is_winner:
-        print("compromised results!!!".upper())
         return
     from turiki_app.tasks import exec_task_on_date, auto_finish_match
     if p1.is_winner is None and p2.is_winner:
         match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
-        print(1, 'WHAWJENTAOWIENTIJWENTIJAWEBTIKAJW4FGIJWAEBGKHJAERWBFJKHAWERBFHJAW')
         exec_task_on_date(auto_finish_match, [match.id, p1.team.id, False],
                           datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_confirm_results)
     elif p2.is_winner is None and p1.is_winner:
         match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
-        print(2, 'WHAWJENTAOWIENTIJWENTIJAWEBTIKAJW4FGIJWAEBGKHJAERWBFJKHAWERBFHJAW')
         exec_task_on_date(auto_finish_match, [match.id, p2.team.id, False],
                           datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_confirm_results)
     if p1.is_winner is None or p2.is_winner is None:
@@ -58,7 +55,7 @@ def end_match(match):
         p2.save()
         if next_match is None:
             tournament = match.tournament
-            tournament.status = "PLAYED"
+            tournament.status = match.tournament.allowed_statuses[-1]
             tournament.save()
             return
         update_next_match(next_match, p1)
@@ -70,7 +67,7 @@ def end_match(match):
     p2.save()
     if next_match is None:
         tournament = match.tournament
-        tournament.status = "PLAYED"
+        tournament.status = match.tournament.allowed_statuses[-1]
         tournament.save()
         return
     update_next_match(next_match, p2)

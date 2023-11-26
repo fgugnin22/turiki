@@ -115,8 +115,7 @@ class TournamentAPIView(ModelViewSet):
 
     @action(methods=["PATCH"], detail=True, permission_classes=[IsAdminUser])
     def status(self, request, pk=None):
-        # TODO: Заебать Андрея Ситникова
-        pass
+        TournamentService.update_status(self.get_object(), request.data['status'])
 
     @action(methods=["POST"], detail=True, permission_classes=[IsAdminUser])
     def bracket(self, request, pk=None):

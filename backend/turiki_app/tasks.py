@@ -8,7 +8,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import datetime
 
 from turiki_app.match_services import claim_match_result
-from turiki_app.models import Chat, Lobby, Match, Team, Participant, MapBan
+from turiki_app.models import Chat, Lobby, Match, Team, Participant, MapBan, Tournament
 
 MSK_TIMEZONE = datetime.timezone(datetime.timedelta(hours=3))
 IN_A_MINUTE = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
@@ -73,7 +73,9 @@ def check_for_teams_in_lobby(match_id):
         return
         # make p2 win and p1 lose
     print("nobody enter lobby, retrying again in (amount of time to enter the lobby)")
-    exec_task_on_date(check_for_teams_in_lobby, [match.id], datetime.datetime.now(tz=pytz.timezone('Europe/Moscow')) + match.time_to_enter_lobby)
+    exec_task_on_date(check_for_teams_in_lobby, [match.id],
+                      datetime.datetime.now(tz=pytz.timezone('Europe/Moscow')) + match.time_to_enter_lobby)
+
 
 @dramatiq.actor
 def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
@@ -148,7 +150,8 @@ def create_lobby(match):
 
 
 @dramatiq.actor
-def set_tournament_status(tournament, status):
+def set_tournament_status(tournament_id, status):
+    tournament = Tournament.objects.get(pk=tournament_id)
     tournament.status = status
     tournament.save()
 
@@ -167,6 +170,7 @@ def set_initial_matches(tournament):
         raise serializers.ValidationError("Неверное кол-во команд для наполнения начальных матчей")
     random.shuffle(teams)
     initial_matches = []
+    exec_task_on_date(set_tournament_status, [tournament.allowed_statuses[-2]], when=tournament.starts)
     for match in matches:
         is_match_initial = int(match["name"]) == int(tournament.max_rounds)
         if is_match_initial:
@@ -183,12 +187,13 @@ def set_initial_matches(tournament):
         participant2 = Participant.objects.create(
             team=team2, match=match_object, status="NO_SHOW", result_text="TBD"
         )
-        print('DUDE FOR HOW LONG MAN')
         match_object.starts = tournament.starts
         exec_task_on_date(set_match_start_bans, [match_object.id], when=tournament.starts)
+
         match_object.participants.add(participant1)
         match_object.participants.add(participant2)
         match_object.save()
+    tournament.save()
 
 
 # TODO: автоматическое отложенное создание сетки перед началом за какое-то кол-во времени

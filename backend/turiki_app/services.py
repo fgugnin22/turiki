@@ -3,11 +3,12 @@ from datetime import timedelta, datetime
 import dramatiq
 from channels.db import database_sync_to_async
 import jwt
+from django.utils.timezone import now
 from rest_framework.response import Response
 
 from .models import Tournament, Team, MapBan, Match, Participant, UserAccount, Lobby, Chat, Message
 from rest_framework import serializers
-from turiki_app.tasks import set_match_start_bans, set_match_active
+from turiki_app.tasks import set_match_start_bans, set_match_active, exec_task_on_date, set_tournament_status
 import pytz
 
 utc = pytz.UTC
@@ -30,12 +31,48 @@ class TournamentService:
             return "wtf tournament no good wehn creating"
 
     @staticmethod
-    def register_team(tournament, team, players_ids, action):
+    def update_status(tournament: Tournament, status):
+        if status in tournament.allowed_statuses:
+            if status == tournament.allowed_statuses[3]:
+                tournament.status = status
+                exec_task_on_date(set_tournament_status, [tournament.id, tournament.allowed_statuses[4]],
+                                  when=now() + tournament.time_to_check_in)
+                tournament.save()
+                return
+            if status in tournament.allowed_statuses[1:3]:
+                tournament.status = status
+                tournament.save()
+                return
+            raise serializers.ValidationError(f'Unsupported/Wrong Status: `{status}`')
+
+    @staticmethod
+    def register_team(tournament: Tournament, team, players_ids, action):
         """
         Регистрация команды вместе с игроками
         """
-        if tournament.status != "REGISTRATION_OPENED":
+        if tournament.status != tournament.allowed_statuses[1] and tournament.status != tournament.allowed_statuses[3]:
             raise serializers.ValidationError("registration cancelled")
+        if tournament.status == tournament.allowed_statuses[3]:
+            if action == "CHANGE_PLAYERS":
+                teams = map(lambda x: x["id"], list(tournament.teams.values()))
+                if team.id not in teams:
+                    return "registration changing cancelled"
+                new_players = []
+                for i, player_id in enumerate(players_ids):
+                    try:
+                        user_obj = UserAccount.objects.get(pk=player_id)
+                        if user_obj.team.id == team.id and (
+                                user_obj.team_status != "REJECTED"
+                                or user_obj.team_status != "PENDING"
+                        ):
+                            new_players.append(user_obj)
+                    except:
+                        raise serializers.ValidationError('services line 70')
+                tournament.players.set(new_players)
+                tournament.save()
+                return "players changed successfully"
+            else:
+                raise serializers.ValidationError('services line 75')
         if action == "REGISTER":
             teams = map(lambda x: x["id"], list(tournament.teams.values()))
             if team.id in teams:
