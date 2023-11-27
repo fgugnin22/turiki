@@ -29,7 +29,6 @@ class UserAccountManager(BaseUserManager):
         user.save()
         return user
 
-    # создать админа
     def create_superuser(self, email, password=None, **extra_fields):
         if not email:
             raise ValueError('Email required!')
@@ -46,7 +45,7 @@ class Tournament(models.Model):
     allowed_statuses = ["REGISTRATION_CLOSED_BEFORE_REG",
                         "REGISTRATION_OPENED",
                         "REGISTRATION_CLOSED_AFTER_REG",
-                        "CHECK_IN"
+                        "CHECK_IN",
                         "CHECK_IN_CLOSED",
                         "ACTIVE",
                         "PLAYED"]
