@@ -14,7 +14,7 @@ const Header = () => {
   } = useAppSelector((state) => state.user);
   return (
     <div>
-      <nav className="bg-white dark:bg-gray-800  shadow ">
+      <nav className="bg-dark dark:bg-gray-800  shadow ">
         <div className="px-8 mx-auto max-w-7xl">
           <div className="flex items-center justify-between h-16">
             <div className=" flex items-center">
@@ -46,25 +46,24 @@ const Header = () => {
               <>
                 {(!userDetails?.team ||
                   userDetails?.team_status === "PENDING") && (
-                  <div className="flex ml-auto">
-                    <Link
-                      to={ROUTES.TEAMS.CREATE.path}
-                      className=" text-gray-800 focus:text-blue-700 focus:underline hover:text-blue-700 hover:underline w-24 transition ease-in duration-200 text-center text-sm font-normal"
-                      role="menuitem"
-                    >
-                      <span className="flex flex-col">
-                        Создать или найти команду
-                      </span>
-                    </Link>
-                  </div>
-                )}
+                    <div className="flex ml-auto">
+                      <Link
+                        to={ROUTES.TEAMS.CREATE.path}
+                        className=" text-gray-800 focus:text-blue-700 focus:underline hover:text-blue-700 hover:underline w-24 transition ease-in duration-200 text-center text-sm font-normal"
+                        role="menuitem"
+                      >
+                        <span className="flex flex-col">
+                          Создать или найти команду
+                        </span>
+                      </Link>
+                    </div>
+                  )}
 
                 <div
-                  className={`flex ${
-                    !userDetails?.team || userDetails?.team_status === "PENDING"
+                  className={`flex ${!userDetails?.team || userDetails?.team_status === "PENDING"
                       ? "ml-6"
                       : "ml-auto"
-                  }`}
+                    }`}
                 >
                   {userDetails?.team &&
                     userDetails?.team_status !== "PENDING" && (

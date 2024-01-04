@@ -23,7 +23,7 @@ export const Layout = (props: {
   }, [location, isAuthenticated]);
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col bg-dark">
       <Header />
       {props.children}
       <Footer />

@@ -3,11 +3,15 @@ import { Layout } from "../processes/Layout";
 import { ROUTES } from "../app/RouteTypes";
 import UserChangeForm from "../features/UserChangeForm";
 import { useState } from "react";
+import ButtonMain from "../shared/ButtonMain";
+import ButtonSecondary from "../shared/ButtonSecondary";
 const Home = () => {
   const [clicked, setClicked] = useState(false);
   let { userDetails: user } = useAppSelector((state) => state.user);
-  const handleRedirect = () => {
+  const handleRedirect = (e: React.MouseEvent) => {
     setClicked(true);
+    const target = e.target as HTMLButtonElement
+    target.focus()
     setTimeout(() => {
       window.location.replace(ROUTES.REGISTER_ACCOUNT.path);
     }, 700);
@@ -25,15 +29,7 @@ const Home = () => {
               Участвуйте в нашем первом турнире!
             </h1>
             <p className="w-full block text-center mt-12">
-              <button
-                onClick={handleRedirect}
-                type="button"
-                className={`py-4  px-6 w-96 lg:w-[500px] ${
-                  clicked ? "animate-pulse" : ""
-                }  bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500 focus:ring-offset-indigo-200 text-white transition ease-in duration-200 text-center text-lg lg:text-xl font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg `}
-              >
-                Зарегистрироваться и участвовать!
-              </button>
+              <ButtonMain text="Зарегистрироваться и участвовать!" onClick={handleRedirect} />
             </p>
           </section>
         )}

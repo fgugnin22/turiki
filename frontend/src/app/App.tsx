@@ -25,6 +25,7 @@ function App() {
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
+          {/* По хорошему надо сделать админку отдельной страницой */}
           <Route path={ROUTES.ADMINPAGE.path} element={<AdminBoard />}></Route>
           <Route path={ROUTES.DASHBOARD.path} element={<Home />}></Route>
           <Route path={ROUTES.LOGIN.path} element={<Login />}></Route>
