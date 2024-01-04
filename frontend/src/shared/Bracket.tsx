@@ -1,6 +1,5 @@
 import { ReactElement, useRef } from "react";
 import { Match, Tournament } from "../helpers/transformMatches";
-import { tournamentAPI } from "./rtk/tournamentAPI";
 import { DraggableParent } from "./DraggableParent";
 import DynamicBracketMatch from "./DynamicBracketMatch";
 const sortMatchesForBracket = (matches: Match[] | undefined) => {
@@ -45,17 +44,16 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
             <div
                 key={i}
                 style={{
-                    width: `${
-                        (bracketSize.width - 150) / tournament.max_rounds - 150
-                    }px`
+                    width: `${(bracketSize.width - 150) / tournament.max_rounds - 150
+                        }px`
                 }}
                 className="h-12 ml-[150px] flex items-center justify-center bg-black text-white text-lg font-semibold"
             >
                 {i + 1 === tournament.max_rounds
                     ? "Финал"
                     : i + 1 === tournament.max_rounds - 1
-                    ? "Полуфинал"
-                    : `1/${2 ** (tournament.max_rounds - i - 1)} финала`}
+                        ? "Полуфинал"
+                        : `1/${2 ** (tournament.max_rounds - i - 1)} финала`}
             </div>
         );
     }
@@ -108,37 +106,37 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
                                     participants={[
                                         match.participants[0]
                                             ? {
-                                                  teamId: match.participants[0]
-                                                      .team.id,
-                                                  name: match.participants[0]
-                                                      .team.name,
-                                                  status:
-                                                      match.participants[0]
-                                                          .status === "PLAYED"
-                                                          ? match
-                                                                .participants[0]
-                                                                .is_winner
-                                                              ? "WON"
-                                                              : "LOST"
-                                                          : "TBD"
-                                              }
+                                                teamId: match.participants[0]
+                                                    .team.id,
+                                                name: match.participants[0]
+                                                    .team.name,
+                                                status:
+                                                    match.participants[0]
+                                                        .status === "PLAYED"
+                                                        ? match
+                                                            .participants[0]
+                                                            .is_winner
+                                                            ? "WON"
+                                                            : "LOST"
+                                                        : "TBD"
+                                            }
                                             : null,
                                         match.participants[1]
                                             ? {
-                                                  teamId: match.participants[1]
-                                                      .team.id,
-                                                  name: match.participants[1]
-                                                      .team.name,
-                                                  status:
-                                                      match.participants[1]
-                                                          .status === "PLAYED"
-                                                          ? match
-                                                                .participants[1]
-                                                                .is_winner
-                                                              ? "WON"
-                                                              : "LOST"
-                                                          : "TBD"
-                                              }
+                                                teamId: match.participants[1]
+                                                    .team.id,
+                                                name: match.participants[1]
+                                                    .team.name,
+                                                status:
+                                                    match.participants[1]
+                                                        .status === "PLAYED"
+                                                        ? match
+                                                            .participants[1]
+                                                            .is_winner
+                                                            ? "WON"
+                                                            : "LOST"
+                                                        : "TBD"
+                                            }
                                             : null
                                     ]}
                                 />

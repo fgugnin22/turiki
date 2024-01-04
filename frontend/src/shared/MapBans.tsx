@@ -15,12 +15,12 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
           <span className="mx-auto">
             Осталось {secondsRemaining >= 0 ? secondsRemaining : "..."}{" "}
             {secondsRemaining % 10 > 4 ||
-            secondsRemaining % 10 === 0 ||
-            secondsRemaining === 14
+              secondsRemaining % 10 === 0 ||
+              secondsRemaining === 14
               ? "секунд"
               : secondsRemaining % 10 > 1
-              ? "секунды"
-              : "секунда"}
+                ? "секунды"
+                : "секунда"}
           </span>
           {match.bans?.maps.map((map) => {
             const handleBan = () => {

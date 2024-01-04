@@ -1,0 +1,16 @@
+.neonshadow {
+    filter: drop-shadow(0 0 2px #4cf2f8) !important;
+}
+
+.neonshadowborder::after {
+    position: absolute !important;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    border: 2px solid #21DBD3;
+    border-radius: inherit;
+    z-index: 0;
+    content: "";
+    filter: drop-shadow(0 0 2px #4cf2f8) !important;
+}
