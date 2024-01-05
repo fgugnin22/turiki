@@ -19,6 +19,7 @@ import { ROUTES } from "./RouteTypes";
 import AdminBoard from "../pages/AdminBoard";
 import BracketExample from "../shared/Bracket";
 import BracketPage from "../pages/BracketPage";
+import Test from "../pages/Test";
 // import Test from "./pages/Test";
 function App() {
   return (
@@ -72,6 +73,7 @@ function App() {
             path={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.BRACKET.path}
             element={<BracketPage />}
           ></Route>
+          <Route path={"/test"} element={<Test />}></Route>
         </Routes>
       </BrowserRouter>
     </Provider>
