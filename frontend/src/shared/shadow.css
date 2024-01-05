@@ -2,6 +2,10 @@
     filter: drop-shadow(0 0 2px #4cf2f8) !important;
 }
 
+.neonshadow:hover {
+    filter: drop-shadow(0 0 3px #4cf2f8) !important;
+}
+
 .neonshadowborder::after {
     position: absolute !important;
     top: 0;

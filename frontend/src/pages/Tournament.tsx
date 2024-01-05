@@ -5,6 +5,7 @@ import { Link, useParams } from "react-router-dom";
 import { useAppSelector } from "../shared/rtk/store";
 import { ROUTES } from "../app/RouteTypes";
 import RegisterTeamModal from "../features/RegisterTeamModal";
+import ButtonMain from "../shared/ButtonMain";
 export interface IMatch {
   id: number;
   nextMatchId: number | null;
@@ -17,9 +18,7 @@ export interface IMatch {
 export const Tournament = () => {
   const params = useParams();
   const tournId = Number(params["id"]);
-  const { userDetails: user, isAuthenticated } = useAppSelector(
-    (state) => state.user
-  );
+  const { userDetails: user } = useAppSelector((state) => state.user);
   const {
     data: tournament,
     error,
@@ -33,36 +32,59 @@ export const Tournament = () => {
     isSuccess &&
     tournament &&
     !tournament.teams.some((team: Team) => Number(team.id) === user.team);
-  const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
-    skip: !isTeamNotRegistered
-  });
+  // const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
+  //   skip: !isTeamNotRegistered
+  // });
 
   return (
     <Layout>
-      <div className="flex justify-center">
-        <div className="w-full bg-slate-400">
-          {isTeamNotRegistered && (
-            <RegisterTeamModal tournamentId={tournId} team={team!} />
-          )}
-        </div>
-        {isSuccess &&
-        Object.keys(tournament).length > 0 &&
-        tournament.matches.length > 0 ? (
-          <Link
-            className="p-3 bg-slate-600 text-white flex items-center text-center"
-            to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.BRACKET.buildPath({
-              id: tournament.id
-            })}
-          >
-            Смотреть турнирную сетку
-          </Link>
-        ) : (
-          <span className="py-full text-center w-[20%] bg-orange-600 text-xl">
-            Tournament bracket in process
-          </span>
-        )}
-        <div className="w-full bg-slate-400"></div>
-      </div>
+      {isSuccess && (
+        <>
+          <div className=" px-12 bg-gradient-to-b from-slate-700 to-dark text-lightgray flex align-bottom pt-56 flex-wrap">
+            <div className=" w-1/2 bg-transparent flex flex-col gap-4">
+              <p>
+                {tournament.status} - {/* tournament.starts*/}
+                {"еще столько то минут"}
+              </p>
+              <p>{tournament.name}</p>
+            </div>
+            <div className="w-1/2 bg-transparent flex flex-wrap justify-end">
+              <p className="w-full text-right">
+                До конца регистрации:{" "}
+                <span className=" text-lightblue">столько то минут</span>
+              </p>
+              <button className=" px-3 py-1 text-sm bg-lightblue rounded-[10px]">
+                Зарегистрировать команду
+              </button>
+              <button className=" rounded-[10px] bg-lightgray p-4 ml-2 relative"></button>
+            </div>
+            <div className="w-full">
+              <div className=" flex justify-center gap-12">
+                <a className=" underline text-turquoise" href="">
+                  Обзор
+                </a>
+                <a className=" underline text-turquoise" href="">
+                  Сетка
+                </a>
+                <a className=" underline text-turquoise" href="">
+                  Участники
+                </a>
+                <a className=" underline text-turquoise" href="">
+                  Правила
+                </a>
+                <a className=" underline text-lightblue" href="">
+                  Мб еще ссылка
+                </a>
+              </div>
+            </div>
+          </div>
+          <div className=" w-full h-[1px] bg-lightgray neonshadow mt-2"></div>
+
+          <div className=" px-12 bg-gradient-to-b from-dark to-slate-700 grow flex items-center justify-center text-lightgray text-5xl">
+            Контент ссылки
+          </div>
+        </>
+      )}
     </Layout>
   );
 };
