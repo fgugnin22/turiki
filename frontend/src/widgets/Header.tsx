@@ -41,7 +41,7 @@ const Header = () => {
             </div>
             {isAuthenticated ? (
                 <>
-                    <button
+                    <div
                         // to={ROUTES.DASHBOARD.path}
                         className=" flex justify-between items-center gap-[20px] rounded-[10px] transition-colors hover:bg-turquoise hover:bg-opacity-20 py-2 px-3 relative"
                         role="menuitem"
@@ -100,7 +100,7 @@ const Header = () => {
                                 </button>
                             </div>
                         )}
-                    </button>
+                    </div>
                 </>
             ) : (
                 <div className="flex justify-between items-center gap-3">

@@ -4,6 +4,22 @@ import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { register } from "../shared/rtk/user";
 import { continueWithGoogle } from "../helpers/continueWithGoogle";
 import { ROUTES } from "../app/RouteTypes";
+import ButtonMain from "../shared/ButtonMain";
+import ButtonSecondary from "../shared/ButtonSecondary";
+const Angle = () => (
+    <svg
+        className="absolute z-30 right-2 top-2"
+        width="12"
+        height="13"
+        viewBox="0 0 12 13"
+        fill="none"
+    >
+        <path
+            d="M10.6413 0.46167H1.59531C0.718152 0.46167 0.266014 1.51048 0.86824 2.14823L9.91421 11.7279C10.5354 12.3857 11.6413 11.9461 11.6413 11.0413V1.46167C11.6413 0.909385 11.1936 0.46167 10.6413 0.46167Z"
+            fill="#21DBD3"
+        />
+    </svg>
+);
 const RegistrationForm = () => {
     const dispatch = useAppDispatch();
     const { isAuthenticated } = useAppSelector((state) => state.user);
@@ -36,45 +52,86 @@ const RegistrationForm = () => {
         navigate(ROUTES.LOGIN.path, { replace: true });
     }
     return (
-        <div>
-            <div>Зарегистрироваться</div>
-            <span>
-                Уже есть аккаунт?
-                <Link to={ROUTES.LOGIN.path}>Войти</Link>
-            </span>
+        <div
+            className="min-w-[500px] leading-10 relative after:absolute after:opacity-[0.15] after:inset-0 
+          mx-auto my-auto rounded-[10px] after:rounded-[10px] 
+          border border-turquoise after:bg-gradient-to-b after:from-transparent 
+        after:to-darkturquoise after:z-[-1] neonshadow hover:!drop-shadow-[0_0_1px_#4cf2f8] !drop-shadow-[0_0_1px_#4cf2f8] py-[52px] flex flex-col"
+        >
+            <h2
+                data-content="Зарегистрироваться"
+                className="before:text-[44px] before:inset-0  w-full text-center text-[44px] before:w-full  before:text-center before:font-extrabold before:bg-gradient-to-r 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+            >
+                Зарегистрироваться
+            </h2>
+            <p className="w-full text-center font-light text-lg leading-10">
+                <span className=" text-lightgray !filter-none">
+                    Уже есть аккаунт?
+                </span>{" "}
+                <Link
+                    data-content="Войти"
+                    className="before:w-full before:text-center before:bg-gradient-to-r 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:absolute relative before:content-[attr(data-content)] before:hover:bg-lightblue before:hover:bg-none"
+                    to={ROUTES.LOGIN.path}
+                >
+                    Войти
+                </Link>
+            </p>
 
             <div>
                 <form onSubmit={onSubmit}>
-                    <div>
-                        <div>
-                            <input
-                                type="text"
-                                name="name"
-                                value={name}
-                                onChange={(
-                                    e: React.FormEvent<HTMLInputElement>
-                                ) => onChange(e)}
-                                placeholder="Ник"
-                            />
-                        </div>
+                    <div
+                        className="rounded-[10px] relative after:absolute 
+                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                               mt-7 w-4/5 mx-auto"
+                    >
+                        <input
+                            type="text"
+                            name="name"
+                            value={name}
+                            onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                                onChange(e)
+                            }
+                            placeholder="Ник"
+                            className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray"
+                        />
+                        <Angle />
                     </div>
-                    <div>
-                        <div>
-                            <input
-                                type="text"
-                                onChange={(
-                                    e: React.FormEvent<HTMLInputElement>
-                                ) => onChange(e)}
-                                name="email"
-                                value={email}
-                                id="create-account-email"
-                                placeholder="Почта"
-                            />
-                        </div>
+                    <div
+                        className="rounded-[10px] relative after:absolute 
+                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                               mt-7 w-4/5 mx-auto"
+                    >
+                        <input
+                            type="text"
+                            onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                                onChange(e)
+                            }
+                            name="email"
+                            value={email}
+                            id="create-account-email"
+                            placeholder="Почта"
+                            className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray"
+                        />
+                        <Angle />
                     </div>
-                    <div>
-                        <div>
+                    <div className="flex justify-center gap-[15px]">
+                        <div
+                            className="rounded-[10px] relative after:absolute 
+                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                               mt-7 w-[calc(40%-7.5px)]"
+                        >
                             <input
+                                className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray"
                                 type="password"
                                 onChange={(
                                     e: React.FormEvent<HTMLInputElement>
@@ -84,9 +141,17 @@ const RegistrationForm = () => {
                                 placeholder="Пароль"
                                 required
                             />
+                            <Angle />
                         </div>
-                        <div>
+                        <div
+                            className="rounded-[10px] relative after:absolute 
+                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                               mt-7 w-[calc(40%-7.5px)]"
+                        >
                             <input
+                                className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray"
                                 type="password"
                                 name="re_password"
                                 placeholder="Пароль еще раз"
@@ -97,26 +162,30 @@ const RegistrationForm = () => {
                                 minLength={6}
                                 required
                             />
+                            <Angle />
                         </div>
                     </div>
 
-                    <div>
-                        <button type="submit">Создать аккаунт</button>
-                    </div>
-                    <div>
-                        <button type="button" onClick={continueWithGoogle}>
-                            <svg
-                                width="20"
-                                height="20"
-                                fill="currentColor"
-                                viewBox="0 0 1792 1792"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path d="M896 786h725q12 67 12 128 0 217-91 387.5t-259.5 266.5-386.5 96q-157 0-299-60.5t-245-163.5-163.5-245-60.5-299 60.5-299 163.5-245 245-163.5 299-60.5q300 0 515 201l-209 201q-123-119-306-119-129 0-238.5 65t-173.5 176.5-64 243.5 64 243.5 173.5 176.5 238.5 65q87 0 160-24t120-60 82-82 51.5-87 22.5-78h-436v-264z"></path>
-                            </svg>
-                            Google
-                        </button>
-                    </div>
+                    <ButtonMain
+                        className="py-[5px] w-3/5 block mx-auto mt-8 focus:py-[3.5px] focus:px-[unset] duration-200"
+                        type="submit"
+                    >
+                        Cоздать аккаунт
+                    </ButtonMain>
+                    <ButtonSecondary
+                        type="button"
+                        onClick={continueWithGoogle}
+                        className="flex items-center justify-center w-3/5 py-[5px] mx-auto mt-8 text-center"
+                    >
+                        <span
+                            data-content="Войти через Google"
+                            className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
+                        >
+                            Войти через Google
+                        </span>
+                    </ButtonSecondary>
                 </form>
             </div>
         </div>
