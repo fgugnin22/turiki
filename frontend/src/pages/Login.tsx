@@ -4,15 +4,13 @@ import { Layout } from "../processes/Layout";
 import LoginForm from "../widgets/LoginForm";
 
 const Login = () => {
-  return (
-    <Layout>
-      <div className="flex justify-center my-[5%]">
-        <div className="w-[450px]">
-          <LoginForm />
-        </div>
-      </div>
-    </Layout>
-  );
+    return (
+        <Layout>
+            <div className="flex justify-center items-center grow">
+                <LoginForm />
+            </div>
+        </Layout>
+    );
 };
 
 export default Login;

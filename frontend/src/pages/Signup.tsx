@@ -8,13 +8,13 @@ import { continueWithGoogle } from "../helpers/continueWithGoogle";
 import { ROUTES } from "../app/RouteTypes";
 import RegistrationForm from "../widgets/RegistrationForm";
 const Signup = () => {
-  return (
-    <Layout>
-      <div className="flex justify-center my-[5%]">
-        <RegistrationForm />
-      </div>
-    </Layout>
-  );
+    return (
+        <Layout>
+            <div className="flex justify-center items-center grow">
+                <RegistrationForm />
+            </div>
+        </Layout>
+    );
 };
 
 export default Signup;
