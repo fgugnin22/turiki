@@ -41,23 +41,21 @@ ALLOWED_HOSTS = ["*"]
 CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware", 
     "core.middleware.StatsMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    "corsheaders.middleware.CorsMiddleware",  # ЭТО СУПЕР ВАЖНО ДЛЯ КОРСА!!! ИНАЧЕ НИЧЕ РАБОТАТЬ НЕ БУДЕТ!
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
-# Где находится роутинг для http запросов
 ROOT_URLCONF = "core.urls"
-# я хз как именно это работает и как взаимодействует с 49-54 строкой
 CSRF_COOKIE_SECURE = True
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "http://localhost:8000"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "http://localhost:8000", 'http://46.32.68.44:8000/']
 # html templates
 TEMPLATES = [
     {
@@ -79,7 +77,6 @@ TEMPLATES = [
 # wsgi - синхронный сервер, asgi - и синхронный и асинхронный
 WSGI_APPLICATION = "core.wsgi.application"
 ASGI_APPLICATION = "core.asgi.application"
-# Настройка RedisDB для websocket(нужна для кеширования типа(я его еще не сделал))
 CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
