@@ -2,6 +2,10 @@ import React, { useEffect, useRef, useState } from "react";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 
 import { Team } from "../helpers/transformMatches";
+import ButtonMain from "../shared/ButtonMain";
+import ButtonSecondary from "../shared/ButtonSecondary";
+const serverURL = import.meta.env.VITE_API_URL;
+const checkURL = `url(${serverURL}/assets/img/check.svg)`;
 const RegisterTeamModal = ({
   team,
   tournamentId
@@ -15,6 +19,8 @@ const RegisterTeamModal = ({
   const checkHandler = (e: React.FormEvent<HTMLInputElement>) => {
     setSubmitError(false);
     const target = e.target as HTMLInputElement;
+    target.style.backgroundImage = target.checked ? checkURL : "";
+    target.style.backgroundPositionY = "2px";
     setFormState((prev) => {
       prev[Number(target.value)] = !prev[Number(target.value)];
       return [...prev];
@@ -36,7 +42,6 @@ const RegisterTeamModal = ({
       .map((player) => player.id);
 
     if (assignedPlayers?.length !== stackLength) {
-      console.log("there", stackLength === assignedPlayers?.length);
       setSubmitError(`Выберите ${stackLength} игроков`);
       return;
     }
@@ -54,118 +59,94 @@ const RegisterTeamModal = ({
       });
     setShowModal(false);
   };
-  const buttonColors = useRef<string>(
-    `#${parseInt(String(Math.round(10 * Math.random())), 16)}${parseInt(
-      String(Math.round(10 * Math.random())),
-      16
-    )}${parseInt(String(Math.round(10 * Math.random())), 16)}`
-  );
-  useEffect(() => {
-    buttonColors.current = `#${parseInt(
-      String(Math.round(10 * Math.random())),
-      16
-    )}${parseInt(String(Math.round(10 * Math.random())), 16)}${parseInt(
-      String(Math.round(10 * Math.random())),
-      16
-    )}`;
-  }, [team]);
-
+  window.addEventListener("keydown", (e) => {
+    if (e.code === "Escape") {
+      setShowModal(false);
+    }
+  });
   return (
     <>
-      <div
+      <button
         onMouseOver={() => setSubmitError(false)}
-        className="flex items-center justify-center"
+        className=""
+        type="button"
+        onClick={() => {
+          setSubmitError(false);
+          setShowModal(true);
+        }}
       >
-        <button
-          style={
-            !submitError
-              ? {
-                  color: `${buttonColors.current}`
-                }
-              : undefined
-          }
-          className={` text-xs hover:underline ${
-            submitError ? "text-red" : ``
-          } duration-300 transition-colors active:bg-sky-700 rounded-md`}
-          type="button"
-          onClick={() => {
-            setSubmitError(false);
-            setShowModal(true);
-          }}
-        >
-          {submitError ? submitError : "Зарегистрировать команду"}
-        </button>
-      </div>
+        {submitError ? submitError : "Зарегистрировать команду"}
+      </button>
       {showModal ? (
         <>
-          <div className="fixed inset-0 z-10 overflow-y-auto">
+          <div className="fixed inset-0 z-10 overflow-y-auto flex items-center pb-48 ">
             <div
-              className="fixed inset-0 w-full h-full bg-black opacity-10"
+              className="fixed inset-0 w-full h-full bg-lightblue opacity-10"
               onClick={() => setShowModal(false)}
             ></div>
-            <div className="flex items-center min-h-screen px-4 py-8">
-              <div className="relative w-full max-w-lg p-4 mx-auto bg-white rounded-md shadow-lg">
-                <div className="mt-3 sm:flex">
-                  <div className="mt-2 text-center sm:ml-4 sm:text-left">
-                    <h4 className="text-lg font-medium text-gray-800">
-                      Выберите с кем будете играть
-                    </h4>
-                    <form onSubmit={sumbitHandler}>
-                      <ul className="w-48 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-lg dark:bg-gray-700 dark:border-gray-600 dark:text-white">
-                        {
-                          team &&
-                            team.players.map((player, index) => {
-                              // if (
-                              //     player.id ===
-                              //     userDetails?.id
-                              // ) {
-                              //     return;
-                              // }
-                              return (
-                                <li
-                                  key={player.id}
-                                  className="w-full border-b border-gray-200 rounded-t-lg dark:border-gray-600"
-                                >
-                                  <div className="flex items-center pl-3">
-                                    <input
-                                      id={String(player.id)}
-                                      type="checkbox"
-                                      checked={formState[index]}
-                                      onChange={checkHandler}
-                                      value={index}
-                                      className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded  dark:ring-offset-gray-700   dark:bg-gray-600 dark:border-gray-500"
-                                    />
-                                    <label
-                                      htmlFor={String(player.id)}
-                                      className="w-full py-3 ml-2 text-md font-medium text-gray-900 dark:text-gray-300"
-                                    >
-                                      {player.name}
-                                    </label>
-                                  </div>
-                                </li>
-                              );
-                            }) /*  */
-                        }
-                      </ul>
-                      <div className="items-center gap-2 mt-3 sm:flex">
-                        <button
-                          type="submit"
-                          className="w-full mt-2 p-2.5 flex-1 text-white bg-lime-600 rounded-md outline-none"
+            <div
+              className="rounded-[10px] mx-auto my-auto relative after:absolute 
+            before:absolute after:inset-0 before:inset-[2px] after:bg-gradient-to-r
+          after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+            before:z-10 z-20 before:bg-dark before:rounded-[8px] 
+            before:bg-gradient-to-b before:from-transparent before:to-darkturquoise before:to-[350%] py-9 px-12 flex flex-col max-w-[460px]"
+            >
+              <h2
+                data-content="Выберите с кем будете играть"
+                className="before:text-[28px] z-50 before:left-0 top-0  w-full text-center text-[28px]  before:text-center before:font-semibold before:bg-gradient-to-r 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:relative relative before:content-[attr(data-content)]"
+              ></h2>
+              <form className=" z-50" onSubmit={sumbitHandler}>
+                <ul className="mt-8 mb-8 flex flex-col gap-7">
+                  {team &&
+                    team.players.map((player, index) => {
+                      return (
+                        <li
+                          key={player.id}
+                          className=" flex justify-start flex-nowrap gap-5 items-center"
                         >
-                          Зарегистрировать
-                        </button>
-                        <button
-                          type="button"
-                          className="w-full mt-2 p-2.5 flex-1 text-gray-800 rounded-md outline-none border ring-offset-2 ring-indigo-600 focus:ring-2"
-                          onClick={() => setShowModal(false)}
-                        >
-                          Отмена
-                        </button>
-                      </div>
-                    </form>
-                  </div>
+                          <input
+                            id={String(player.id)}
+                            type="checkbox"
+                            checked={formState[index]}
+                            onChange={checkHandler}
+                            value={index}
+                            data-url={checkURL}
+                            className={`appearance-none w-[30px] h-[30px] rounded-[10px] border border-lightgray
+                             bg-opacity-0 checked:bg-opacity-100
+                             hover:border-turquoise transition duration-200 checked:border-lightblue neonshadow`}
+                          />
+                          <label
+                            htmlFor={String(player.id)}
+                            className="hover:text-turquoise transition active:text-lightblue text-xl"
+                          >
+                            {player.name}
+                          </label>
+                        </li>
+                      );
+                    })}
+                </ul>
+                <div className="flex justify-between">
+                  <ButtonMain className="py-3 px-[19px] focus:py-[10px] focus:px-[18px] active:py-[10px] active:px-[18px] text-xl font-semibold">
+                    Зарегистрировать
+                  </ButtonMain>
+                  <ButtonSecondary
+                    type="button"
+                    onClick={() => setShowModal(false)}
+                    className="py-3 px-[19px] text-xl font-semibold text-lightgray"
+                  >
+                    <span
+                      data-content="Отмена"
+                      className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
+                    >
+                      Отмена
+                    </span>
+                  </ButtonSecondary>
                 </div>
-              </div>
+              </form>
             </div>
           </div>
         </>

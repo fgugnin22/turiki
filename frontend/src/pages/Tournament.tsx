@@ -6,6 +6,7 @@ import { useAppSelector } from "../shared/rtk/store";
 import { ROUTES } from "../app/RouteTypes";
 import RegisterTeamModal from "../features/RegisterTeamModal";
 import ButtonMain from "../shared/ButtonMain";
+import { useState } from "react";
 export interface IMatch {
   id: number;
   nextMatchId: number | null;
@@ -19,6 +20,7 @@ export const Tournament = () => {
   const params = useParams();
   const tournId = Number(params["id"]);
   const { userDetails: user } = useAppSelector((state) => state.user);
+  const [isOpen, setIsOpen] = useState(false);
   const {
     data: tournament,
     error,
@@ -32,9 +34,9 @@ export const Tournament = () => {
     isSuccess &&
     tournament &&
     !tournament.teams.some((team: Team) => Number(team.id) === user.team);
-  // const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
-  //   skip: !isTeamNotRegistered
-  // });
+  const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
+    skip: !isTeamNotRegistered
+  });
 
   return (
     <Layout>
@@ -53,9 +55,9 @@ export const Tournament = () => {
                 До конца регистрации:{" "}
                 <span className=" text-lightblue">столько то минут</span>
               </p>
-              <button className=" px-3 py-1 text-sm bg-lightblue rounded-[10px]">
-                Зарегистрировать команду
-              </button>
+              {isTeamNotRegistered && (
+                <RegisterTeamModal tournamentId={tournId} team={team!} />
+              )}
               <button className=" rounded-[10px] bg-lightgray p-4 ml-2 relative"></button>
             </div>
             <div className="w-full">
