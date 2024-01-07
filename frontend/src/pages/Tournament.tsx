@@ -71,7 +71,7 @@ export const Tournament = () => {
             style={{
               backgroundImage: `linear-gradient(to bottom, transparent, #141318 90%), url(${serverURL}/assets/img/siege1.png)`
             }}
-            className=" text-lightgray flex align-bottom pt-56 flex-wrap"
+            className=" text-lightgray flex align-bottom pt-56 flex-wrap bg-cover bg-center"
           >
             <div className="mx-auto w-full lg:w-4/5 xl:w-[1100px] flex align-bottom flex-wrap">
               <div className=" w-1/2 bg-transparent flex flex-col">
