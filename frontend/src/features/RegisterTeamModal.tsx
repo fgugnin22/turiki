@@ -66,9 +66,9 @@ const RegisterTeamModal = ({
   });
   return (
     <>
-      <button
+      <ButtonMain
         onMouseOver={() => setSubmitError(false)}
-        className=""
+        className=" py-1 px-2 focus:py-[2px] focus:px-[6px] active:py-[2px] active:px-[6px]"
         type="button"
         onClick={() => {
           setSubmitError(false);
@@ -76,7 +76,7 @@ const RegisterTeamModal = ({
         }}
       >
         {submitError ? submitError : "Зарегистрировать команду"}
-      </button>
+      </ButtonMain>
       {showModal ? (
         <>
           <div className="fixed inset-0 z-10 overflow-y-auto flex items-center pb-48 ">

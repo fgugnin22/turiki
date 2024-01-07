@@ -24,7 +24,7 @@ export const Layout = (props: {
 
   return (
     <div className="flex min-h-screen flex-col bg-dark">
-      <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1000px] min-h-full grow flex flex-col justify-between">
+      <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] min-h-full grow flex flex-col justify-between">
         <Header />
         {props.children}
         <Footer />

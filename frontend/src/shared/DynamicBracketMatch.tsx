@@ -117,7 +117,7 @@ const DynamicBracketMatch = ({
             </span>
           </p>
           <ButtonSecondary
-            className="h-full px-7 rounded-[5px] rounded-tr-[10px] after:rounded-[5px] after:rounded-tr-[10px] before:rounded-[4px] before:rounded-tr-[9px]"
+            className="h-full px-7 rounded-[5px] rounded-tr-[10px] after:rounded-[5px] after:rounded-tr-[10px] before:!rounded-[4px] before:!rounded-tr-[9px] "
             onClick={handleMatchClick}
           >
             <span
