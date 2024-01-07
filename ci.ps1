@@ -7,4 +7,3 @@ npm run build
 cd ..
 Copy-Item  $pwd"\frontend\dist" -Destination $pwd"\backend" -Recurse
 Copy-Item  $pwd"\img" -Destination $pwd"\backend\dist\assets" -Recurse
-Remove-Item $pwd"\img" -Recurse
