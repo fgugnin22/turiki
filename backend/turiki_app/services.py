@@ -20,12 +20,15 @@ utc = pytz.UTC
 class TournamentService:
     @staticmethod
     def create_tournament(
-            name, prize, max_rounds, starts=datetime.now() + timedelta(hours=3)
+            name, prize, max_rounds, reg_starts, time_to_check_in, starts=datetime.now() + timedelta(hours=3),
     ):
         try:
-            tourn = Tournament.objects.create(
-                name=name, prize=prize, max_rounds=max_rounds, starts=starts
+            tourn: Tournament = Tournament.objects.create(
+                name=name, prize=prize, max_rounds=max_rounds, starts=starts, reg_starts=reg_starts,
+                time_to_check_in=time_to_check_in
             )
+            print('bruh')
+            exec_task_on_date(set_tournament_status, [tourn.id, Tournament.allowed_statuses[1]], tourn.reg_starts)
             return tourn
         except:
             return "wtf tournament no good wehn creating"
@@ -67,12 +70,12 @@ class TournamentService:
                         ):
                             new_players.append(user_obj)
                     except:
-                        raise serializers.ValidationError('services line 70')
+                        raise serializers.ValidationError('code bruh-1')
                 tournament.players.set(new_players)
                 tournament.save()
                 return "players changed successfully"
             else:
-                raise serializers.ValidationError('services line 75')
+                raise serializers.ValidationError('code bruh-2')
         if action == "REGISTER":
             teams = map(lambda x: x["id"], list(tournament.teams.values()))
             if team.id in teams:

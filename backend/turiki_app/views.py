@@ -1,3 +1,5 @@
+import datetime
+
 from django.core.files import File
 from django.core.files.uploadedfile import TemporaryUploadedFile
 from django.db.models import Prefetch
@@ -73,21 +75,24 @@ class TournamentAPIView(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            name, prize, max_rounds = (
-                request.data.pop("name"),
-                request.data.pop("prize"),
-                request.data.pop("max_rounds"),
-            )
+            # name, prize, max_rounds,  = (
+            #     request.data.pop("name"),
+            #     request.data.pop("prize"),
+            #     request.data.pop("max_rounds"),
+            # )
 
-            name = (
-                name
-                if name is not None
-                else "You forgot to name the tournament dumbass"
-            )
-            prize = prize if prize is not None else "Prize too xd"
-            max_rounds = max_rounds if max_rounds is not None else 1000
+            # name = (
+            #     name
+            #     if name is not None
+            #     else "You forgot to name the tournament dumbass"
+            # )
+            # prize = prize if prize is not None else "Prize too xd"
+            # max_rounds = max_rounds if max_rounds is not None else 1000
 
-            tourn = TournamentService.create_tournament(name, prize, max_rounds)
+            # tourn = TournamentService.create_tournament(name, prize, max_rounds)
+            request.data["reg_starts"] = datetime.datetime.strptime(request.data["reg_starts"], "%Y-%m-%dT%H:%M:%S%z")
+            request.data["starts"] = datetime.datetime.strptime(request.data["starts"], "%Y-%m-%dT%H:%M:%S%z")
+            tourn = TournamentService.create_tournament(**request.data)
             return Response(model_to_dict(tourn), 201)
         except:
             return Response("something went wrong when creating the tournament", 400)
@@ -116,6 +121,7 @@ class TournamentAPIView(ModelViewSet):
     @action(methods=["PATCH"], detail=True, permission_classes=[IsAdminUser])
     def status(self, request, pk=None):
         TournamentService.update_status(self.get_object(), request.data['status'])
+        return Response(status=204)
 
     @action(methods=["POST"], detail=True, permission_classes=[IsAdminUser])
     def bracket(self, request, pk=None):

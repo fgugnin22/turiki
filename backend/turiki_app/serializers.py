@@ -174,6 +174,8 @@ class TournamentSerializer(serializers.ModelSerializer):
             "max_rounds",
             "status",
             "players",
+            "time_to_check_in",
+            "reg_starts",
         )
 
 

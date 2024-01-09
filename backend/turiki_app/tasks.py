@@ -170,7 +170,7 @@ def set_initial_matches(tournament):
         raise serializers.ValidationError("Неверное кол-во команд для наполнения начальных матчей")
     random.shuffle(teams)
     initial_matches = []
-    exec_task_on_date(set_tournament_status, [tournament.allowed_statuses[-2]], when=tournament.starts)
+    exec_task_on_date(set_tournament_status, [tournament.id, tournament.allowed_statuses[-2]], when=tournament.starts)
     for match in matches:
         is_match_initial = int(match["name"]) == int(tournament.max_rounds)
         if is_match_initial:
@@ -200,6 +200,8 @@ def set_initial_matches(tournament):
 @dramatiq.actor
 def create_bracket(tournament, rounds):
     # вызывает функцию create_match я хз зачем так непонятно сделал с именами, потом переделаю TODO:!!!
+    if tournament.status != tournament.allowed_statuses[4]:
+        raise serializers.ValidationError("Создать сетку можно ТОЛЬКО после чек-ин'а")
     is_enough_teams_to_start_tournament = len(list(tournament.teams.values())) == 2 ** rounds and len(
         list(tournament.matches.values())) == 0
     if is_enough_teams_to_start_tournament:
