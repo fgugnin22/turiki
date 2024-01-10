@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { Link, NavLink } from "react-router-dom";
 import { ROUTES } from "../app/RouteTypes";
@@ -7,13 +7,14 @@ const serverURL = import.meta.env.VITE_API_URL;
 const Header = () => {
     const [isDropDownVisible, setIsDropDownVisible] = useState(false);
     const dispatch = useAppDispatch();
-    const {
-        userDetails,
-        isAuthenticated,
-        userDetails: user
-    } = useAppSelector((state) => state.user);
+    const isAuthenticated = useAppSelector(
+        (state) => state.user.isAuthenticated
+    );
+    const image = useAppSelector((state) => state.user.userDetails?.image);
+    const name = useAppSelector((state) => state.user.userDetails?.name);
+    const team = useAppSelector((state) => state.user.userDetails?.team);
     return (
-        <header className="flex justify-between text-lightgray items-center h-[70px] relative gap-8">
+        <header className="flex justify-between text-lightgray items-center h-[78px] relative gap-8">
             <Link className="" to={ROUTES.TOURNAMENTS.path}>
                 <img
                     width="40"
@@ -28,12 +29,12 @@ const Header = () => {
                     data-content="На главную"
                     className=" text-lightgray text-lg 
                     before:hover:bg-gradient-to-r
-                    before:hover:from-turquoise transition before:opacity-0 
+                    before:hover:from-turquoise transition duration-300 before:opacity-0 
                     hover:before:opacity-100 before:hover:to-lightblue
                      before:hover:bg-clip-text 
                     hover:text-opacity-0 before:font-medium font-medium
                     hover:before:content-[attr(data-content)] hover:relative
-                    hover:before:absolute neonshadow"
+                    hover:before:absolute  hover:!drop-shadow-[0_0_1px_#4cf2f8]"
                     to={ROUTES.DASHBOARD.path}
                 >
                     На главную
@@ -43,7 +44,7 @@ const Header = () => {
                 <>
                     <div
                         className=" absolute flex flex-col
-                        right-0 top-1"
+                        right-0 top-2"
                         role="menuitem"
                         onClick={() => setIsDropDownVisible((prev) => !prev)}
                     >
@@ -56,19 +57,19 @@ const Header = () => {
                         >
                             <img
                                 src={
-                                    userDetails?.image
-                                        ? `${serverURL}/${userDetails.image}`
+                                    image
+                                        ? `${serverURL}/${image}`
                                         : `${serverURL}/assets/img/userdefaultloggedin.svg`
                                 }
                                 alt=""
                                 className=" rounded-full w-[45px] h-[45px]"
                             />
                             <span
-                                data-content={userDetails?.name}
+                                data-content={name}
                                 className="before:text-lg text-lg before:font-semibold before:bg-gradient-to-r before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                         before:absolute relative before:content-[attr(data-content)] neonshadow"
                             >
-                                {userDetails?.name}
+                                {name}
                             </span>
 
                             <img
@@ -85,46 +86,41 @@ const Header = () => {
                                     " relative flex flex-col justify-between items-center rounded-b-[10px] transition-colors hover:bg-turquoise hover:bg-opacity-20 "
                                 }
                             >
-                                <button
-                                    onClick={() => {
-                                        dispatch(logout());
-                                    }}
-                                    className="text-base font-medium text-left w-full grow py-[10px] hover:bg-turquoise hover:bg-opacity-20 transition px-4"
-                                    role="menuitem"
+                                <NavLink
+                                    to={ROUTES.DASHBOARD.buildPath({})}
+                                    className={({ isActive }) =>
+                                        (isActive &&
+                                            "text-turquoise bg-turquoise bg-opacity-20") +
+                                        " text-base  font-medium text-left w-full grow py-[9px] hover:text-turquoise hover:bg-turquoise hover:bg-opacity-20 transition px-4"
+                                    }
                                 >
-                                    <span className=" hover:text-turquoise transition">
-                                        Мой профиль
-                                    </span>
-                                </button>
+                                    Мой профиль
+                                </NavLink>
                                 <NavLink
                                     to={
-                                        userDetails?.team
+                                        team
                                             ? ROUTES.TEAMS.TEAM_BY_ID.buildPath(
-                                                  { id: userDetails.team }
+                                                  { id: team }
                                               )
                                             : ROUTES.TEAMS.CREATE.buildPath({})
                                     }
                                     className={({ isActive }) =>
-                                        "text-base font-medium text-left w-full grow py-[9px] hover:bg-turquoise hover:bg-opacity-20 transition px-4"
+                                        (isActive &&
+                                            "text-turquoise bg-turquoise bg-opacity-20") +
+                                        " text-base  font-medium text-left w-full grow py-[9px] hover:text-turquoise hover:bg-turquoise hover:bg-opacity-20 transition px-4"
                                     }
                                     role="menuitem"
                                 >
-                                    <span className=" hover:text-turquoise transition">
-                                        {userDetails?.team
-                                            ? "Команда"
-                                            : "Создать/найти команду"}
-                                    </span>
+                                    {team ? "Команда" : "Создать/найти команду"}
                                 </NavLink>
                                 <button
                                     onClick={() => {
                                         dispatch(logout());
                                     }}
-                                    className="text-base font-medium text-left w-full grow py-[9px] hover:bg-turquoise hover:bg-opacity-20 transition px-4 rounded-b-[10px]"
+                                    className="text-base font-medium text-left w-full grow py-[9px] hover:text-turquoise hover:bg-turquoise hover:bg-opacity-20 transition px-4 rounded-b-[10px]"
                                     role="menuitem"
                                 >
-                                    <span className=" hover:text-turquoise transition">
-                                        Выйти
-                                    </span>
+                                    Выйти
                                 </button>
                             </div>
                         )}

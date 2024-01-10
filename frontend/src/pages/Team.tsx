@@ -10,9 +10,16 @@ const serverURL = import.meta.env.VITE_API_URL;
 const Team = () => {
     const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const { userDetails: user, isAuthenticated } = useAppSelector(
-        (state) => state.user
+    const { userDetails: user } = useAppSelector((state) => state.user);
+    const isAuthenticated = useAppSelector(
+        (state) => state.user.isAuthenticated
     );
+    const team = useAppSelector((state) => state.user.userDetails?.team);
+    const team_status = useAppSelector(
+        (state) => state.user.userDetails?.team_status
+    );
+    const id = useAppSelector((state) => state.user.userDetails?.id);
+
     const params = useParams();
     const [acceptPlayerToTeam] = tournamentAPI.useInvitePlayerToTeamMutation();
     const [kickPlayerFromTeam] = tournamentAPI.useKickPlayerFromTeamMutation();
@@ -45,8 +52,8 @@ const Team = () => {
                         />
                         <h2 className="ml-2 mr-auto text-2xl">{data.name}</h2>
 
-                        {user?.team_status === "CAPTAIN" &&
-                            user?.team === Number(params.id) && (
+                        {team_status === "CAPTAIN" &&
+                            team === Number(params.id) && (
                                 <div className="mt-4 mx-auto max-w-sm w-[80%] flex flex-wrap items-center">
                                     <label
                                         className="grow w-full block mr-0 ml-4 bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white text-center py-auto py-3 px-4 rounded-md border-0 text-sm font-semibold cursor-pointer"
@@ -85,11 +92,10 @@ const Team = () => {
                                         {player.name}
                                     </span>
                                     <p className="font-thin text-[10px] mr-auto">
-                                        в ожидании{" "}
-                                        {player.id === user?.id && "(Вы)"}
+                                        в ожидании {player.id === id && "(Вы)"}
                                     </p>
-                                    {user?.team_status === "CAPTAIN" &&
-                                        user?.team === data?.id && (
+                                    {team_status === "CAPTAIN" &&
+                                        team === data?.id && (
                                             <button
                                                 onClick={() => {
                                                     acceptPlayerToTeam({
@@ -104,10 +110,10 @@ const Team = () => {
                                                 +
                                             </button>
                                         )}
-                                    {player.id === user?.id && (
+                                    {player.id === id && (
                                         <button
                                             onClick={async () => {
-                                                if (!user || !params) {
+                                                if (id || !params) {
                                                     return;
                                                 }
                                                 await leaveFromTeam(
@@ -142,10 +148,10 @@ const Team = () => {
                                         {player?.team_status === "CAPTAIN"
                                             ? "капитан"
                                             : "в составе"}{" "}
-                                        {player.id === user?.id && "(Вы)"}
+                                        {player.id === id && "(Вы)"}
                                     </p>
-                                    {user?.team_status === "CAPTAIN" &&
-                                        user?.team === data?.id && (
+                                    {team_status === "CAPTAIN" &&
+                                        team === data?.id && (
                                             <button
                                                 onClick={async () => {
                                                     const res =
@@ -187,7 +193,7 @@ const Team = () => {
                             );
                         }
                     })}
-                    {isSuccess && isAuthenticated && !user?.team_status && (
+                    {isSuccess && isAuthenticated && !team_status && (
                         <button
                             className="py-2 px-4 w-20 mx-auto mb-4 block bg-green-600 hover:bg-green-700 focus:ring-green-500 focus:ring-offset-green-200 text-white transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 rounded-lg "
                             onClick={async () => {
