@@ -146,6 +146,7 @@ class TournamentSerializer(serializers.ModelSerializer):
                 "participants",
                 "next_match",
                 "name",
+
             )
 
     class PlayerSerializer(serializers.ModelSerializer):
@@ -176,6 +177,7 @@ class TournamentSerializer(serializers.ModelSerializer):
             "players",
             "time_to_check_in",
             "reg_starts",
+            "max_players_in_team"
         )
 
 

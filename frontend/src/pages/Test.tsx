@@ -1,29 +1,37 @@
 import { Layout } from "../processes/Layout";
 
 const Test = () => {
-  return (
-    <Layout>
-      <div
-        className="w-64 h-96 relative after:absolute after:opacity-[0.15] after:inset-0 
+    return (
+        <Layout>
+            <div
+                className="w-64 h-96 relative after:absolute after:opacity-[0.15] after:inset-0 
             neonshadow mx-auto my-auto mb-24 rounded-[10px] after:rounded-[10px] 
             border border-turquoise after:bg-gradient-to-b after:from-transparent 
           after:to-darkturquoise "
-      ></div>
-      <div
-        className="w-64 h-96 rounded-[10px] mx-auto my-auto relative after:absolute 
+            ></div>
+            <div
+                className="w-64 h-96 rounded-[10px] mx-auto my-auto relative after:absolute 
             before:absolute after:inset-0 before:inset-[2px] after:bg-gradient-to-r
           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
             before:z-10 z-20 before:bg-dark before:rounded-[8px]"
-      ></div>
-      <div
-        className="w-64 h-96 rounded-[10px] mx-auto my-auto relative after:absolute 
+            ></div>
+            <div
+                className="w-64 h-96 rounded-[10px] mx-auto my-auto relative after:absolute 
             before:absolute after:inset-0 before:inset-[2px] after:bg-gradient-to-r
           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
             before:z-10 z-20 before:bg-dark before:rounded-[8px] 
             before:bg-gradient-to-b before:from-transparent before:to-darkturquoise before:to-[350%]"
-      ></div>
-    </Layout>
-  );
+            ></div>
+            <p
+                data-content="Турниры"
+                className="before:text-lg before:inset-0  w-full text-center text-lg before:w-full font-medium  before:text-center before:bg-gradient-to-l 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+            >
+                Турниры
+            </p>
+        </Layout>
+    );
 };
 
 export default Test;

@@ -8,12 +8,13 @@ const serverURL = import.meta.env.VITE_API_URL;
 const checkURL = `url(${serverURL}/assets/img/check.svg)`;
 const RegisterTeamModal = ({
     team,
-    tournamentId
+    tournamentId,
+    maxPlayers
 }: {
     team: Team;
     tournamentId: number;
+    maxPlayers: number;
 }) => {
-    const stackLength = Number(import.meta.env.VITE_STACK_LENGTH);
     const [submitError, setSubmitError] = useState<any>(false);
     const [formState, setFormState] = useState<boolean[]>([]);
     const checkHandler = (e: React.FormEvent<HTMLInputElement>) => {
@@ -39,8 +40,8 @@ const RegisterTeamModal = ({
             })
             .map((player) => player.id);
 
-        if (assignedPlayers?.length !== stackLength) {
-            setSubmitError(`Выберите ${stackLength} игроков`);
+        if (assignedPlayers?.length !== maxPlayers) {
+            setSubmitError(`Выберите ${maxPlayers} игроков`);
             return;
         }
         registerTeam({

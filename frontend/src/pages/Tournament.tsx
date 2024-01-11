@@ -119,6 +119,9 @@ export const Tournament = () => {
                                     <RegisterTeamModal
                                         tournamentId={tournId}
                                         team={team!}
+                                        maxPlayers={
+                                            tournament.max_players_in_team
+                                        }
                                     />
                                 )}
                                 <ButtonSecondary className=" bg-lightblue z-50 w-[32px] h-[32px] ml-2 flex items-center justify-center fill-lightblue hover:fill-turquoise transition neonshadow">
