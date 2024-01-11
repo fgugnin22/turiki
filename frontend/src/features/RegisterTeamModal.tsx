@@ -19,8 +19,6 @@ const RegisterTeamModal = ({
     const checkHandler = (e: React.FormEvent<HTMLInputElement>) => {
         setSubmitError(false);
         const target = e.target as HTMLInputElement;
-        target.style.backgroundImage = target.checked ? checkURL : "";
-        target.style.backgroundPositionY = "2px";
         setFormState((prev) => {
             prev[Number(target.value)] = !prev[Number(target.value)];
             return [...prev];
@@ -107,23 +105,33 @@ const RegisterTeamModal = ({
                                                     className=" flex justify-start flex-nowrap gap-5 items-center"
                                                 >
                                                     <input
-                                                        id={String(player.id)}
+                                                        id={
+                                                            String(player.id) +
+                                                            "input"
+                                                        }
                                                         type="checkbox"
                                                         checked={
                                                             formState[index]
                                                         }
+                                                        style={{
+                                                            backgroundImage:
+                                                                checkURL,
+                                                            backgroundSize:
+                                                                "19px"
+                                                        }}
                                                         onChange={checkHandler}
                                                         value={index}
                                                         data-url={checkURL}
                                                         className={`appearance-none w-[30px] h-[30px] rounded-[10px] border border-lightgray
-                             bg-opacity-0 checked:bg-opacity-100
-                             hover:border-turquoise transition duration-200 checked:border-lightblue neonshadow`}
+                             bg-opacity-0 
+                             hover:border-turquoise transition duration-200 bg-no-repeat !bg-[1000px] checked:!bg-[5px] checked:bg-darkturquoise checked:bg-opacity-30 checked:border-lightblue`}
                                                     />
                                                     <label
-                                                        htmlFor={String(
-                                                            player.id
-                                                        )}
-                                                        className="hover:text-turquoise transition active:text-lightblue text-xl"
+                                                        htmlFor={
+                                                            String(player.id) +
+                                                            "input"
+                                                        }
+                                                        className="hover:text-turquoise text-lightgray transition active:text-lightblue text-xl"
                                                     >
                                                         {player.name}
                                                     </label>
