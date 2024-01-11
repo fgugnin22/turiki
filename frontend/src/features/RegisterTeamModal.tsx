@@ -67,7 +67,7 @@ const RegisterTeamModal = ({
         <>
             <ButtonMain
                 onMouseOver={() => setSubmitError(false)}
-                className=" py-1 px-2 focus:py-[2px] focus:px-[6px] active:py-[2px] active:px-[6px]"
+                className=" py-1 px-2 focus:py-[2px] focus:px-[6px] active:py-[2px] active:px-[6px] after:!bg-gradient-to-l"
                 type="button"
                 onClick={() => {
                     setSubmitError(false);

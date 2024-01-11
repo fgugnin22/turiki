@@ -13,6 +13,7 @@ import Header from "../widgets/Header";
 import Footer from "../widgets/Footer";
 import ButtonSecondary from "../shared/ButtonSecondary";
 import Bracket from "../shared/Bracket";
+import { useTournamentStatus } from "../hooks/useTournamentStatus";
 const serverURL = import.meta.env.VITE_API_URL;
 
 export interface IMatch {
@@ -59,6 +60,7 @@ export const Tournament = () => {
     const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
         skip: !isTeamNotRegistered
     });
+    const statusString = useTournamentStatus(tournament?.status);
 
     return (
         <div className="flex min-h-screen flex-col bg-dark grow justify-start">
@@ -76,26 +78,7 @@ export const Tournament = () => {
                         <div className="mx-auto w-full lg:w-4/5 xl:w-[1100px] flex align-bottom flex-wrap">
                             <div className=" w-1/2 bg-transparent flex flex-col">
                                 <p className=" text-white opacity-50 leading-6">
-                                    {(tournament.status ===
-                                        "REGISTRATION_CLOSED_BEFORE_REG" &&
-                                        "Регистрация ещё закрыта") ||
-                                        (tournament.status ===
-                                            "REGISTRATION_OPENED" &&
-                                            "Регистрация открыта") ||
-                                        (tournament.status ===
-                                            "REGISTRATION_CLOSED_AFTER_REG" &&
-                                            "Регистрация уже закрыта") ||
-                                        (tournament.status === "CHECK_IN" &&
-                                            "Подтверждение(check-in)") ||
-                                        (tournament.status ===
-                                            "CHECK_IN_CLOSED" &&
-                                            "Скоро начнётся") ||
-                                        (tournament.status === "ACTIVE" &&
-                                            "Активен") ||
-                                        (tournament.status === "PLAYED" &&
-                                            "Сыгран") ||
-                                        "fgugnin22 где то ошибся"}{" "}
-                                    - {"еще столько то минут"}
+                                    {statusString} - {"еще столько то минут"}
                                 </p>
                                 <p
                                     data-content={tournament.name}
@@ -124,7 +107,14 @@ export const Tournament = () => {
                                         }
                                     />
                                 )}
-                                <ButtonSecondary className=" bg-lightblue z-50 w-[32px] h-[32px] ml-2 flex items-center justify-center fill-lightblue hover:fill-turquoise transition neonshadow">
+                                <ButtonSecondary
+                                    onClick={async () =>
+                                        await navigator.clipboard.writeText(
+                                            location.href
+                                        )
+                                    }
+                                    className=" bg-lightblue z-50 w-[32px] h-[32px] ml-2 flex items-center justify-center fill-lightblue hover:fill-turquoise transition neonshadow"
+                                >
                                     <svg
                                         className="z-[99] relative left-[-1px]"
                                         viewBox="0,0,256,256"
