@@ -1,7 +1,7 @@
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { Layout } from "../processes/Layout";
 import { Link } from "react-router-dom";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 import { useAppSelector } from "../shared/rtk/store";
 import { useState } from "react";
 import RegisterTeamModal from "../features/RegisterTeamModal";

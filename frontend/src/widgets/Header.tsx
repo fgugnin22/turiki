@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { Link, NavLink } from "react-router-dom";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 import { logout } from "../shared/rtk/user";
 const serverURL = import.meta.env.VITE_API_URL;
 const Header = () => {

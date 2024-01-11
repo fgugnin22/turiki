@@ -1,6 +1,6 @@
 import { useAppSelector } from "../shared/rtk/store";
 import { Layout } from "../processes/Layout";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 import UserChangeForm from "../features/UserChangeForm";
 import { useState } from "react";
 import ButtonMain from "../shared/ButtonMain";

@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { tournamentAPI } from "./rtk/tournamentAPI";
 import BracketConnecter from "./BracketConnecter";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "./RouteTypes";
 import { useAppSelector } from "./rtk/store";
 import ButtonSecondary from "./ButtonSecondary";
 

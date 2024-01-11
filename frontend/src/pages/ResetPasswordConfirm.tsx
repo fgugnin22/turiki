@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import {Layout} from "../processes/Layout";
+import { Layout } from "../processes/Layout";
 import { Navigate, useParams } from "react-router-dom";
 import { resetPasswordConfirm } from "../shared/rtk/user";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 const ResetPasswordConfirm = () => {
     const inputClasses = `block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-400`;
     const dispatch = useAppDispatch();

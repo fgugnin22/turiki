@@ -3,7 +3,7 @@ import { Layout } from "../processes/Layout";
 import { Navigate, useParams } from "react-router-dom";
 import { activate } from "../shared/rtk/user";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 import ButtonMain from "../shared/ButtonMain";
 const Activate = () => {
     const dispatch = useAppDispatch();

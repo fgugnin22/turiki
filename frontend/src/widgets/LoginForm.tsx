@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { login, resetRegistered } from "../shared/rtk/user";
 import { Link, useNavigate } from "react-router-dom";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 import { continueWithGoogle } from "../helpers/continueWithGoogle";
 import ButtonMain from "../shared/ButtonMain";
 import { Angle } from "../shared/Angle";

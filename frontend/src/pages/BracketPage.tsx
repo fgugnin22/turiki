@@ -3,7 +3,7 @@ import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { Link, useParams } from "react-router-dom";
 import Bracket from "../shared/Bracket";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 
 const BracketPage = () => {
     const { data: tournament, isSuccess } =

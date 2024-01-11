@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { register } from "../shared/rtk/user";
 import { Navigate } from "react-router-dom";
 import { continueWithGoogle } from "../helpers/continueWithGoogle";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 import RegistrationForm from "../widgets/RegistrationForm";
 const Signup = () => {
     return (

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../shared/rtk/store";
 import { Link } from "react-router-dom";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 import useWebSocket from "react-use-websocket";
 interface chatArgs {
     chatId: number;

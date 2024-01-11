@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { getUser, uploadTeamImage } from "../shared/rtk/user";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 const serverURL = import.meta.env.VITE_API_URL;
 
 const Team = () => {

@@ -3,7 +3,7 @@ import { Team } from "../helpers/transformMatches.js";
 import { Layout } from "../processes/Layout.js";
 import { Link, NavLink, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
-import { ROUTES } from "../app/RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 import RegisterTeamModal from "../features/RegisterTeamModal";
 import ButtonMain from "../shared/ButtonMain";
 import { useEffect, useState } from "react";

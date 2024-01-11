@@ -14,7 +14,7 @@ import NoMatch from "../pages/NoMatch";
 import TeamCreateOrFind from "../pages/TeamCreateOrFind";
 import TeamList from "../pages/TeamList";
 import TournmanetList from "../pages/TournamentList";
-import { ROUTES } from "./RouteTypes";
+import { ROUTES } from "../shared/RouteTypes";
 import AdminBoard from "../pages/AdminBoard";
 import BracketPage from "../pages/BracketPage";
 import Test from "../pages/Test";
