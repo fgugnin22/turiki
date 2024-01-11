@@ -18,6 +18,7 @@ import { ROUTES } from "../shared/RouteTypes";
 import AdminBoard from "../pages/AdminBoard";
 import BracketPage from "../pages/BracketPage";
 import Test from "../pages/Test";
+import AccountPage from "../pages/AccountPage";
 
 function App() {
     return (
@@ -30,8 +31,12 @@ function App() {
                         element={<AdminBoard />} // этого пока нет
                     ></Route>
                     <Route
-                        path={ROUTES.DASHBOARD.path}
+                        path={ROUTES.LANDING.path}
                         element={<Home />} // это лендинг( там где надпись наш первый турнир)
+                    ></Route>
+                    <Route
+                        path={ROUTES.DASHBOARD.path}
+                        element={<AccountPage />} // это лендинг( там где надпись наш первый турнир)
                     ></Route>
                     <Route path={ROUTES.LOGIN.path} element={<Login />}></Route>
                     <Route

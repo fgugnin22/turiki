@@ -35,7 +35,7 @@ const Header = () => {
                     hover:text-opacity-0 before:font-medium font-medium
                     hover:before:content-[attr(data-content)] hover:relative
                     hover:before:absolute  hover:!drop-shadow-[0_0_1px_#4cf2f8]"
-                    to={ROUTES.DASHBOARD.path}
+                    to={ROUTES.LANDING.path}
                 >
                     На главную
                 </Link>
