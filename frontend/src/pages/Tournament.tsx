@@ -14,6 +14,7 @@ import Footer from "../widgets/Footer";
 import ButtonSecondary from "../shared/ButtonSecondary";
 import Bracket from "../shared/Bracket";
 import { useTournamentStatus } from "../hooks/useTournamentStatus";
+import { useCountdown } from "../hooks/useCountDown";
 const serverURL = import.meta.env.VITE_API_URL;
 
 export interface IMatch {
@@ -27,6 +28,7 @@ export interface IMatch {
 
 export const Tournament = () => {
     const { isAuthenticated } = useAppSelector((state) => state.user);
+
     const dispatch = useAppDispatch();
     const state = getParameterByName("state");
     const code = getParameterByName("code"); //get code and state from google oauth2
@@ -43,7 +45,6 @@ export const Tournament = () => {
     const params = useParams();
     const tournId = Number(params["id"]);
     const { userDetails: user } = useAppSelector((state) => state.user);
-    const [isOpen, setIsOpen] = useState(false);
     const {
         data: tournament,
         error,
@@ -61,7 +62,8 @@ export const Tournament = () => {
         skip: !isTeamNotRegistered
     });
     const statusString = useTournamentStatus(tournament?.status);
-
+    const date = new Date(tournament?.reg_starts ?? 0);
+    // const time = useCountdown(date);
     return (
         <div className="flex min-h-screen flex-col bg-dark grow justify-start">
             <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
@@ -71,14 +73,22 @@ export const Tournament = () => {
                 <>
                     <div
                         style={{
-                            backgroundImage: `linear-gradient(to bottom, transparent, #141318 90%), url(${serverURL}/assets/img/siege1.png)`
+                            backgroundImage: `linear-gradient(to bottom, transparent, #141318 90%), url(${serverURL}/assets/img/siege1.webp)`
                         }}
                         className=" text-lightgray flex align-bottom pt-56 flex-wrap bg-cover bg-center"
                     >
                         <div className="mx-auto w-full lg:w-4/5 xl:w-[1100px] flex align-bottom flex-wrap">
                             <div className=" w-1/2 bg-transparent flex flex-col">
                                 <p className=" text-white opacity-50 leading-6">
-                                    {statusString} - {"еще столько то минут"}
+                                    {(tournament.status ===
+                                        "REGISTRATION_CLOSED_BEFORE_REG" &&
+                                        `Регистрация открется ${date.toLocaleDateString(
+                                            "ru"
+                                        )} в ${date.toLocaleTimeString(
+                                            "ru"
+                                        )}`) ||
+                                        statusString}
+                                    {}
                                 </p>
                                 <p
                                     data-content={tournament.name}
@@ -91,22 +101,24 @@ export const Tournament = () => {
                             </div>
                             <div className="w-1/2 bg-transparent flex flex-wrap justify-end">
                                 <p className="w-full text-right text-white">
-                                    <span className=" opacity-50">
+                                    <span className=" opacity-50 opacity-0">
                                         До конца регистрации:{" "}
                                     </span>
-                                    <span className=" text-lightblue">
+                                    <span className=" text-lightblue opacity-0">
                                         00:12:32
                                     </span>
                                 </p>
-                                {isTeamNotRegistered && (
-                                    <RegisterTeamModal
-                                        tournamentId={tournId}
-                                        team={team!}
-                                        maxPlayers={
-                                            tournament.max_players_in_team
-                                        }
-                                    />
-                                )}
+                                {isTeamNotRegistered &&
+                                    tournament.status ===
+                                        "REGISTRATION_OPENED" && (
+                                        <RegisterTeamModal
+                                            tournamentId={tournId}
+                                            team={team!}
+                                            maxPlayers={
+                                                tournament.max_players_in_team
+                                            }
+                                        />
+                                    )}
                                 <ButtonSecondary
                                     onClick={async () =>
                                         await navigator.clipboard.writeText(

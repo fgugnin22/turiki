@@ -79,7 +79,7 @@ class MatchSerializer(serializers.ModelSerializer):
     bans = BansSerializer()
     lobby = LobbySerializer(many=False)
     next_match = serializers.PrimaryKeyRelatedField(read_only=True)
-
+    tournament = serializers.PrimaryKeyRelatedField(read_only=True)
     class Meta:
         depth = 2
         model = Match
@@ -134,7 +134,6 @@ class TournamentSerializer(serializers.ModelSerializer):
     class TournamentMatchSerializer(serializers.ModelSerializer):
         participants = ParticipantSerializer(many=True)
         next_match = serializers.PrimaryKeyRelatedField(read_only=True)
-
         class Meta:
             depth = 2
             model = Match

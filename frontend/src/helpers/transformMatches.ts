@@ -51,7 +51,7 @@ export interface Match {
     state: string;
     round_text: string;
     starts: string;
-    tournament?: Tournament;
+    tournament?: number;
     participants: Participant[];
     next_match?: number | null;
     name: string;

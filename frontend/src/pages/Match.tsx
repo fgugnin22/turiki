@@ -75,41 +75,98 @@ const Match = () => {
         <Layout>
             {isSuccess && (
                 <>
-                    <MatchResultBar
+                    {/* <MatchResultBar
                         match={match}
                         selfParticipant={selfParticipant}
-                    />
-                    <div className="text-center my-4">
-                        <span className="text-xl ml-auto">
-                            Матч {match.id}, 1/{2 ** Number(match.name)}
-                        </span>
-                        {match.bans?.maps.length === 1 && (
-                            <span className="ml-4 text-xl">
-                                Карта: {match.bans.maps[0]}
-                            </span>
-                        )}
-                        {(timeBeforeMatchStart.seconds > 0 ||
-                            timeBeforeMatchStart.minutes > 0 ||
-                            timeBeforeMatchStart.hours > 0) && (
-                            <span className="text-xl ml-2">
-                                До начала матча осталось:{" "}
-                                {timeBeforeMatchStart.hours}:
-                                {timeBeforeMatchStart.minutes}:
-                                {timeBeforeMatchStart.seconds}
-                            </span>
-                        )}
+                    /> */}
+                    <div className="text-center mt-12 text-2xl">
+                        <p
+                            data-content={`Матч ${match.id}, 1/${
+                                2 ** Number(match.name)
+                            }`}
+                            className="before:text-2xl before:font-semibold before:drop-shadow-[0_0_1px_#4cf2f8] before:inset-0 
+                            w-full text-center text-2xl before:w-full font-medium  before:text-center before:bg-gradient-to-l 
+              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+                        >
+                            {`Матч ${match.id}, 1/${2 ** Number(match.name)}`}
+                        </p>
+                        {(match.bans?.maps.length === 1 && (
+                            <p className="text-lg font-normal text-lightgray">
+                                Карта:{" "}
+                                <span
+                                    data-content={match.bans.maps[0]}
+                                    className="before:text-lg before:-top-[3px] before:drop-shadow-[0_0_1px_#4cf2f8] before:inset-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+                                >
+                                    {match.bans.maps[0]}
+                                </span>
+                            </p>
+                        )) ||
+                            ((timeBeforeMatchStart.seconds > 0 ||
+                                timeBeforeMatchStart.minutes > 0 ||
+                                timeBeforeMatchStart.hours > 0) && (
+                                <p className="text-lg font-normal text-lightgray mb-4">
+                                    <span>До начала матча осталось: </span>
+                                    <span
+                                        data-content={`${
+                                            timeBeforeMatchStart.hours > 9
+                                                ? timeBeforeMatchStart.hours
+                                                : "0" +
+                                                  timeBeforeMatchStart.hours
+                                        }:${
+                                            timeBeforeMatchStart.minutes > 9
+                                                ? timeBeforeMatchStart.minutes
+                                                : "0" +
+                                                  timeBeforeMatchStart.minutes
+                                        }:${
+                                            timeBeforeMatchStart.seconds > 9
+                                                ? timeBeforeMatchStart.seconds
+                                                : "0" +
+                                                  timeBeforeMatchStart.seconds
+                                        }`}
+                                        className="before:text-lg before:-top-[3px] before:drop-shadow-[0_0_1px_#4cf2f8] before:inset-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
+          before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+            before:absolute relative before:content-[attr(data-content)]"
+                                    >
+                                        {`${
+                                            timeBeforeMatchStart.hours > 9
+                                                ? timeBeforeMatchStart.hours
+                                                : "0" +
+                                                  timeBeforeMatchStart.hours
+                                        }:${
+                                            timeBeforeMatchStart.minutes > 9
+                                                ? timeBeforeMatchStart.minutes
+                                                : "0" +
+                                                  timeBeforeMatchStart.minutes
+                                        }:${
+                                            timeBeforeMatchStart.seconds > 9
+                                                ? timeBeforeMatchStart.seconds
+                                                : "0" +
+                                                  timeBeforeMatchStart.seconds
+                                        }`}
+                                    </span>
+                                </p>
+                            ))}
                     </div>
-                    <div className="grid grid-cols-2 space-x-4">
+                    <div className="grid grid-cols-2 justify-center gap-x-[140px]">
                         <>
                             {isSuccess &&
                                 match.participants[0] &&
                                 isTeam1Success && (
-                                    <TeamPlayerList team={team1} />
+                                    <TeamPlayerList
+                                        match={match}
+                                        team={team1}
+                                    />
                                 )}
                             {isSuccess &&
                                 match.participants[1] &&
                                 isTeam2Success && (
-                                    <TeamPlayerList team={team2} />
+                                    <TeamPlayerList
+                                        match={match}
+                                        team={team2}
+                                    />
                                 )}
 
                             {match?.state === "RES_SEND_LOCKED" &&
@@ -171,15 +228,18 @@ const Match = () => {
                                     </button>
                                 </div>
                             )}
-                        {match?.state === "SCORE_DONE" && <div></div>}
-                        {isGetMessagesSuccess &&
-                            isAuthenticated &&
-                            selfParticipant && (
-                                <Chat
-                                    messages={messages}
-                                    chatId={match?.lobby?.chat!}
-                                />
-                            )}
+                        {match?.state === "SCORE_DONE" && (
+                            <div className=""></div>
+                        )}
+                        {((user?.is_staff && isGetMessagesSuccess) ||
+                            (isGetMessagesSuccess &&
+                                isAuthenticated &&
+                                selfParticipant)) && (
+                            <Chat
+                                messages={messages}
+                                chatId={match?.lobby?.chat!}
+                            />
+                        )}
                     </div>
                 </>
             )}
