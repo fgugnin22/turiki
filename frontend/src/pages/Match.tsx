@@ -4,12 +4,13 @@ import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { useAppSelector, useAppDispatch } from "../shared/rtk/store";
 import Chat from "../features/Chat";
 import TeamPlayerList from "../features/TeamPlayerList";
-import MatchResultBar from "../features/MatchResultBar";
 import MatchResultVote from "../features/MatchResultVote";
 import { Participant } from "../helpers/transformMatches";
 import MapBans from "../shared/MapBans";
 import { useCountdown } from "../hooks/useCountDown";
 import { useEffect } from "react";
+const serverURL = import.meta.env.VITE_API_URL;
+
 const Match = () => {
     const { userDetails: user, isAuthenticated } = useAppSelector(
         (state) => state.user
@@ -150,7 +151,11 @@ const Match = () => {
                                 </p>
                             ))}
                     </div>
-                    <div className="grid grid-cols-2 justify-center gap-x-[140px]">
+                    <div className="grid grid-cols-2 justify-center gap-x-[140px] relative">
+                        <img
+                            src={`${serverURL}/assets/img/versus.svg`}
+                            className="absolute z-50 top-[calc(50%-27px)] left-[calc(50%-25px)]"
+                        />
                         <>
                             {isSuccess &&
                                 match.participants[0] &&
