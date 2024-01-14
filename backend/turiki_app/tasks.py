@@ -27,7 +27,7 @@ def set_match_start_bans(match_id: int):
                           Team.objects.get(pk=match.participants.values()[1]["team_id"])]
         initial_timestamps = [match.starts]
         bans = MapBan.objects.create(match=match, previous_team=team1.id, timestamps=initial_timestamps,
-                                     time_to_select_map=datetime.timedelta(seconds=59))
+                                     time_to_select_map=datetime.timedelta(seconds=120))
         exec_task_on_date(ban_map, [match.id, team2.id, match.bans.maps[-1], "AUTO",
                                     MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps)],
                           initial_timestamps[-1] + match.bans.time_to_select_map)

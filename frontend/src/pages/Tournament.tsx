@@ -101,10 +101,10 @@ export const Tournament = () => {
                             </div>
                             <div className="w-1/2 bg-transparent flex flex-wrap justify-end">
                                 <p className="w-full text-right text-white">
-                                    <span className=" opacity-50 opacity-0">
+                                    <span className="opacity-50 !opacity-0">
                                         До конца регистрации:{" "}
                                     </span>
-                                    <span className=" text-lightblue opacity-0">
+                                    <span className=" text-lightblue !opacity-0">
                                         00:12:32
                                     </span>
                                 </p>

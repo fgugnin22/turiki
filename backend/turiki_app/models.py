@@ -231,15 +231,16 @@ class Lobby(models.Model):
 
 
 class Chat(models.Model):
-    def __str__(self):
-        return f"{self.lobby}"
+    pass
+    # def __str__(self):
+    #     return f"{self.lobby}"
 
 
 class Message(models.Model):
     chat = models.ForeignKey(Chat, on_delete=models.CASCADE, related_name="messages")
     user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
-    content = models.CharField(max_length=255, blank=False, null=False)
+    content = models.CharField(max_length=512, blank=False, null=False)
     created_at = models.DateTimeField(blank=True, null=True)
-
+    type = models.CharField(max_length=31, default="message")
     def __str__(self):
         return f"{self.user}_{self.content}_at_{self.created_at}_{self.chat}"

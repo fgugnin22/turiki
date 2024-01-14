@@ -1,10 +1,8 @@
-from asgiref.sync import async_to_sync, sync_to_async
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 import json
 from turiki_app.services import async_return_user, async_create_message
 
 
-# noinspection PyBroadException
 # consumers - аналог django views для websocket'ов
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
@@ -30,7 +28,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # и отправляем его обратно всей группе(т.е. всем в этом чате, кроме, видимо, автора)
         await self.channel_layer.group_send(
             self.chat_id_group_name, {
-                "type": "chat_message",
+                "type": content["type"],
                 # По значению ключа type отрабатывает одноименная функция в этом классе причем она обязательна
                 # т.е. в этом случае значение type - chat_message, отрабатывает функция ниже def chat_message
                 # такая функция должна существовать иначе будет ошибка
@@ -54,7 +52,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         Закрываем соединение с WS
         я не знаю почему, надо
         """
-        await self.channel_layer.group_discard(
-            self.chat_id_group_name, self.channel_name
-        )
+        # await self.channel_layer.group_discard(
+        #     self.chat_id_group_name, self.channel_name
+        # )
         await self.close(code=1231)

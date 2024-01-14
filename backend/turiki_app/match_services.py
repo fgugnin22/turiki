@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 import pytz
+from django.forms import model_to_dict
 from rest_framework.response import Response
 
-from turiki_app.models import Participant
+from turiki_app.models import Participant, Message, Match, UserAccount
 
 
 def claim_match_result(match, team_id, result):
@@ -15,30 +16,51 @@ def claim_match_result(match, team_id, result):
         if team_id == p1.team.id:
             p1.is_winner = result
             p1.save()
+            if not result:
+                notify(match, f"Команда {p1.team.name} выставила свой результат: поражение!")
         else:
             p2 = Participant.objects.get(pk=p2["id"])
             p2.is_winner = result
             p2.save()
+            if not result:
+                notify(match, f"Команда {p2.team.name} выставила свой результат: поражение!")
         end_match(match)
     except:
         print("something went wrong when trying updating match results")
         return
 
 
-def end_match(match):
+def notify(match, content):
+    chat = match.lobby.chat
+    user: UserAccount = UserAccount.objects.filter(is_superuser=True)[0]
+    msg_type = "notification"
+    msg = Message(chat=chat,
+                  user=user,
+                  content=content,
+                  type=msg_type)
+    msg.save()
+    chat.messages.add(msg)
+    chat.save()
+    print(model_to_dict(msg), user)
+
+
+def end_match(match: Match):
     # ставит результат матча с валидацией на одинаковые результаты обеих команд и в случае успеха обновляет след матч
     [p1, p2] = list(match.participants.values())
     p1 = Participant.objects.get(pk=p1["id"])
     p2 = Participant.objects.get(pk=p2["id"])
     next_match = match.next_match
     if p1.is_winner == p2.is_winner:
+        notify(match, "Результат матча оспорен!")
         return
     from turiki_app.tasks import exec_task_on_date, auto_finish_match
     if p1.is_winner is None and p2.is_winner:
+        notify(match, f"Команда {p2.team.name} выставила свой результат: победа!")
         match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
         exec_task_on_date(auto_finish_match, [match.id, p1.team.id, False],
                           datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_confirm_results)
     elif p2.is_winner is None and p1.is_winner:
+        notify(match, f"Команда {p1.team.name} выставила свой результат: победа!")
         match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
         exec_task_on_date(auto_finish_match, [match.id, p2.team.id, False],
                           datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_confirm_results)
@@ -47,12 +69,14 @@ def end_match(match):
         return
     match.state = "SCORE_DONE"
     match.save()
+
     if p1.is_winner:
         p1.result_text = "WON"
         p2.result_text = "LOST"
         p1.status, p2.status = "PLAYED", "PLAYED"
         p1.save()
         p2.save()
+        notify(match, f"Команда {p1.team.name} выиграла!")
         if next_match is None:
             tournament = match.tournament
             tournament.status = match.tournament.allowed_statuses[-1]
@@ -65,6 +89,7 @@ def end_match(match):
     p1.status, p2.status = "PLAYED", "PLAYED"
     p1.save()
     p2.save()
+    notify(match, f"Команда {p2.team.name} выиграла!")
     if next_match is None:
         tournament = match.tournament
         tournament.status = match.tournament.allowed_statuses[-1]

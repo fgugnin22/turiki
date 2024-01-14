@@ -1,6 +1,5 @@
 from datetime import timedelta, datetime
 
-import dramatiq
 from channels.db import database_sync_to_async
 import jwt
 from django.utils.timezone import now
@@ -143,26 +142,31 @@ class TournamentService:
 
 
 class MatchService:
-    @staticmethod
-    def submit_results(request, match):
-        user = request.user
-        p1 = match.teams.first()
-        p2 = match.teams.last()
-        self_participant = p1 if p1.team.id == user.team.id else p2 if p2.team.id == user.team.id else None
-        if self_participant is None:
-            return Response(status=403)
+    # @staticmethod
+    # def submit_results(request, match):
+    #     user = request.user
+    #     p1 = match.teams.first()
+    #     p2 = match.teams.last()
+    #     self_participant = p1 if p1.team.id == user.team.id else p2 if p2.team.id == user.team.id else None
+    #     if self_participant is None:
+    #         return Response(status=403)
 
     @staticmethod
     def team_enter_lobby(request, match):
         user = request.user
         [p1, p2] = list(match.participants.values())
-        p1 = Participant.objects.get(pk=p1["id"])
-        p2 = Participant.objects.get(pk=p2["id"])
+        p1: Participant = Participant.objects.get(pk=p1["id"])
+        p2: Participant = Participant.objects.get(pk=p2["id"])
         can_confirm_team_in_lobby = match.state == "IN_GAME_LOBBY_CREATION"
+        from .match_services import notify
+
         if can_confirm_team_in_lobby:
             participant_in_question = p1 if p1.team.id == user.team.id else p2
+            if not participant_in_question.in_lobby:
+                notify(match, f"Команда {participant_in_question.team.name} в лобби!")
             participant_in_question.in_lobby = True
             participant_in_question.save()
+            
             if p1.in_lobby and p2.in_lobby:
                 if match.state == "IN_GAME_LOBBY_CREATION":
                     match.state = "RES_SEND_LOCKED"
