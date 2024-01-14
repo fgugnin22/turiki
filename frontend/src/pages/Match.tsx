@@ -96,25 +96,26 @@ const Match = () => {
             >
               {`Матч ${match.id}, 1/${2 ** Number(match.name)}`}
             </p>
-            {selfParticipant?.is_winner !== undefined && (
-              <p
-                data-content={`${
-                  selfParticipant?.is_winner
-                    ? "Ваша команда выиграла!"
-                    : "Ваша команда проиграла!"
-                }`}
-                className="before:text-[20px] before:font-medium  before:inset-0 
+            {selfParticipant?.is_winner !== undefined &&
+              selfParticipant?.is_winner !== null && (
+                <p
+                  data-content={`${
+                    selfParticipant?.is_winner
+                      ? "Ваша команда выиграла!"
+                      : "Ваша команда проиграла!"
+                  }`}
+                  className="before:text-[20px] before:font-medium  before:inset-0 
                             w-full text-center text-[20px] before:w-full font-medium  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
-              >
-                {`${
-                  selfParticipant?.is_winner
-                    ? "Ваша команда выиграла!"
-                    : "Ваша команда проиграла!"
-                }`}
-              </p>
-            )}
+                >
+                  {`${
+                    selfParticipant?.is_winner
+                      ? "Ваша команда выиграла!"
+                      : "Ваша команда проиграла!"
+                  }`}
+                </p>
+              )}
             {(match.bans?.maps.length === 1 ? (
               <p className="text-lg font-normal text-lightgray">
                 Карта:{" "}

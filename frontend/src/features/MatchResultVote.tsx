@@ -94,38 +94,6 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
                     : `0${timeBeforeAutoRes.seconds}`}{" "}
                 </p>
               )}
-            {/* {props.} */}
-            {
-              (isWinner === null || isWinner === undefined) && null
-              // <div className="mt-4">
-              //   <button
-              //     className={``}
-              //     onClick={() =>
-              //       claimMatchResult({
-              //         isWinner: true,
-              //         matchId: props.match.id,
-              //         teamId: props.teamId ?? 0
-              //       }).unwrap()
-              //     }
-              //   >
-              //     {hasOpponentWon
-              //       ? "Оспорить результат"
-              //       : "Моя команда выиграла"}
-              //   </button>
-              //   <button
-              //     className=" ml-8 py-2 px-3  bg-red-600 hover:bg-red-700 focus:ring-red-500 focus:ring-offset-red-200 text-white w-48 mt-4 transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg"
-              // onClick={() =>
-              //   claimMatchResult({
-              //     isWinner: false,
-              //     matchId: props.match.id,
-              //     teamId: props.teamId ?? 0
-              //   })
-              // }
-              //   >
-              //     Моя команда проиграла
-              //   </button>
-              // </div>
-            }
             <div className="flex gap-10 justify-evenly mt-10">
               {!selfResImage ? (
                 <label
@@ -151,7 +119,8 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
                 accept="image/png"
                 hidden
               />
-              {props.selfParticipant.is_winner === undefined && (
+              {(props.selfParticipant.is_winner === undefined ||
+                props.selfParticipant.is_winner === null) && (
                 <div className="flex flex-col justify-center gap-10 items-start">
                   <div>
                     <input

@@ -18,4 +18,4 @@ export type AppDispatch = typeof store.dispatch;
 export type AppStore = typeof store;
 export const useAppDispatch = () => useDispatch<AppDispatch>();
 export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
-// setupListeners(store.dispatch);
+setupListeners(store.dispatch);
