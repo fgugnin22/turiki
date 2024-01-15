@@ -76,14 +76,14 @@ const TournamentList = () => {
                           {tourn.name}
                         </p>
                       </div>
-                      <p className="z-30">
+                      <p className="z-30 relative -top-[1px]">
                         <span
-                          data-content="Призовой фонд:"
+                          data-content="Призовой фонд: "
                           className="before:text-lg before:inset-0 text-center text-lg before:w-full font-medium  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
-                before:absolute relative before:content-[attr(data-content)] grow z-30 w-full block leading-6"
+                before:absolute relative before:content-[attr(data-content)] grow z-30 leading-6"
                         >
-                          Призовой фонд:
+                          Призовой фонд:{" "}
                         </span>
 
                         <span
@@ -117,7 +117,7 @@ const TournamentList = () => {
                         data-content={`Раундов: ${tourn.max_rounds}`}
                         className="before:text-lg before:inset-0 text-center text-lg before:w-full font-medium  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
-                before:absolute relative before:content-[attr(data-content)] z-30 min-w-[18%]"
+                before:absolute relative before:content-[attr(data-content)] z-30 min-w-[13%]"
                       >
                         Раундов: {tourn.max_rounds}
                       </p>

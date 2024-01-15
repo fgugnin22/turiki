@@ -185,7 +185,17 @@ class UserService:
         new_name = request.data.get('name')
         new_game_name = request.data.get('game_name')
         user = request.user
-        if user.name is None or len(user.name) == 0:
+        if new_password is None or len(new_password) == 0:
+            if new_email is not None:
+                user.email = new_email
+            if new_name is not None:
+                user.name = new_name
+            if new_game_name is not None:
+                user.game_name = new_game_name
+            print('1')
+            user.save()
+            return Response("credentials updated successfully", 200)
+        if user.name is None or len(user.name) == 0 or user.google_oauth2:
             user.google_oauth2 = True
             user.name = new_name
             if new_password is not None and len(new_password) > 7:
@@ -196,7 +206,7 @@ class UserService:
             if new_game_name is not None:
                 user.game_name = new_game_name
             user.save()
-            print(user.name, user.email)
+            print('2')
             return Response("credentials updated successfully", 200)
         elif user.check_password(old_password):
             if new_password is not None and len(new_password) > 7:
@@ -208,7 +218,7 @@ class UserService:
             if new_game_name is not None:
                 user.game_name = new_game_name
             user.save()
-            print(user.name, user.email)
+            print(3)
             return Response("credentials updated successfully", 200)
         return Response("very bad response", 400)
 

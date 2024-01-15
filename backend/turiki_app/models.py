@@ -211,7 +211,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     team_status = models.CharField(max_length=31, null=True, blank=True)
     google_oauth2 = models.BooleanField(default=False)
     image = models.FilePathField(path=images_path(), blank=True, null=True,
-                                 default="assets/images/default_user_icon.png")
+                                 default="assets/images/userdefaultloggedin.svg")
     game_name = models.CharField(max_length=63, null=True,
                                  blank=True,
                                  unique=True)  # здесь пока что будет игровой ник, в будущем будет несколько полей, каждое для своей игры

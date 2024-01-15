@@ -31,6 +31,7 @@ export interface IUser {
   is_staff: boolean;
   game_name: string;
   image?: string;
+  google_oauth2: boolean;
   team_status: "CAPTAIN" | "REJECTED" | "ACTIVE" | "MANAGER" | "PENDING" | null;
 }
 export interface IRegisterTeam {

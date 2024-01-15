@@ -6,8 +6,14 @@ import {
   uploadUserImage
 } from "../shared/rtk/user";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
+import ButtonMain from "../shared/ButtonMain";
+import ButtonSecondary from "../shared/ButtonSecondary";
 const serverURL = import.meta.env.VITE_API_URL;
 const UserChangeForm = ({ name }: { name: string }) => {
+  const [nameOpened, setNameOpened] = useState(false);
+  const [newPasswordOpened, setNewPasswordOpened] = useState(false);
+  const [oldPasswordOpened, setOldPasswordOpened] = useState(false);
+
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     email: "",
@@ -26,12 +32,29 @@ const UserChangeForm = ({ name }: { name: string }) => {
     e.preventDefault();
     const access = localStorage.getItem("access");
     const refresh = localStorage.getItem("refresh");
-    if (!user?.name) {
+    if (!user?.name || user?.google_oauth2) {
       const body = {
-        name: userName === "" ? undefined : userName,
-        email: email === "" ? undefined : email,
-        game_name: gameName === "" ? undefined : gameName,
+        name: userName === "" ? user?.name : userName,
+        email: email === "" ? user?.email : email,
+        game_name: gameName === "" ? user?.game_name : gameName,
         new_password: newPassword
+      };
+      setFormData({
+        email: "",
+        password: "",
+        userName: "",
+        newPassword: "",
+        gameName: ""
+      });
+      await dispatch(modifyUserCredentials(body));
+      dispatch(getUser(access!));
+      return;
+    }
+    if (!newPassword) {
+      const body = {
+        name: userName === "" ? user?.name : userName,
+        email: email === "" ? user?.email : email,
+        game_name: gameName === "" ? user?.game_name : gameName
       };
       setFormData({
         email: "",
@@ -47,9 +70,9 @@ const UserChangeForm = ({ name }: { name: string }) => {
     await dispatch(login({ email: user?.email!, password, keepTokens: false }));
     if (localStorage.getItem("access")) {
       const body = {
-        name: userName === "" ? undefined : userName,
-        email: email === "" ? undefined : email,
-        game_name: gameName === "" ? undefined : gameName,
+        name: userName === "" ? user?.name : userName,
+        email: email === "" ? user?.email : email,
+        game_name: gameName === "" ? user?.game_name : gameName,
         old_password: password,
         new_password: newPassword
       };
@@ -79,158 +102,299 @@ const UserChangeForm = ({ name }: { name: string }) => {
     await dispatch(uploadUserImage(formData));
     window.location.reload();
   };
+  window.addEventListener("keydown", (ev) => {
+    if (ev.code === "Escape") {
+      if (oldPasswordOpened) {
+        setOldPasswordOpened(false);
+      } else if (newPasswordOpened) {
+        setNewPasswordOpened(false);
+      }
+    }
+  });
   return (
-    <section className="h-screen mt-[5%]">
-      <form
-        onSubmit={onSubmit}
-        className="container max-w-2xl mx-auto shadow-md md:w-3/4"
-      >
-        <div className="p-4 border-t-2 border-indigo-400 rounded-lg bg-gray-100/5 ">
-          <div className="mx-auto md:w-full ml-0">
-            <div className="inline-flex w-full items-center space-x-4">
+    <section
+      className="w-full sm:w-4/5 lg:w-3/5 relative after:absolute after:inset-0 
+      hover:after:!drop-shadow-[0_0_2px_#4cf2f8] after:!drop-shadow-[0_0_2px_#4cf2f8] mx-auto my-auto mb-24 rounded-[10px] after:rounded-[10px] 
+    after:border after:border-turquoise after:bg-gradient-to-b after:from-transparent 
+  after:to-darkturquoise after:from-[-30%] after:to-[2000%]"
+    >
+      <form className="relative z-30 px-14 py-10" onSubmit={onSubmit}>
+        <div className="flex gap-0 sm:gap-10 justify-between items-center lg:justify-start">
+          <label
+            style={{
+              gridTemplateAreas: "a"
+            }}
+            className="grid w-36 h-36"
+            htmlFor="file_input"
+          >
+            {user?.image && (
               <img
+                style={{ gridArea: "a" }}
                 alt="profil"
                 src={serverURL + "/" + user?.image}
-                className="object-cover rounded-full h-16 w-16 "
+                className="object-cover object-center rounded-full ml-[3%] mt-[3%] h-[94%] w-[94%] opacity-80 relative z-10 aspect-square	"
               />
-              <div className="mt-2 ml-auto">
-                <label
-                  className="block bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white mr-4 text-center py-auto py-3 px-4 rounded-md border-0 text-sm font-semibold cursor-pointer"
-                  htmlFor="file_input"
+            )}
+            <img
+              style={{ gridArea: "a" }}
+              src={serverURL + "/assets/img/uploadround.svg"}
+              className="object-cover object-center rounded-full h-full w-full opacity-100 relative z-30 hover:!drop-shadow-[0_0_1px_#4cf2f8] transition aspect-square	"
+              alt=""
+            />
+          </label>
+          <input
+            onChange={onImageSubmit}
+            id="file_input"
+            type="file"
+            accept="image/png"
+            hidden
+          />
+          <div className="mb-8 lg:grow">
+            <button
+              type="button"
+              onClick={() => setNameOpened((p) => !p)}
+              className="font-semibold text-lg hover:text-lightblue transition"
+              id="file_input_help"
+            >
+              {nameOpened ? (
+                <span
+                  data-content="Редактировать профиль"
+                  className="z-40 before:w-full before:text-center before:bg-gradient-to-l 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
                 >
-                  Загрузить картинку
-                </label>
-                <input
-                  onChange={onImageSubmit}
-                  id="file_input"
-                  type="file"
-                  accept="image/png"
-                  hidden
-                />
-                <p
-                  className="mt-1 text-sm text-gray-500 dark:text-gray-300"
-                  id="file_input_help"
-                >
-                  PNG (макс. 800x400px).
-                </p>
-              </div>
-              <h1 className="text-gray-600 text-2xl text-right pr-8 grow">
-                {name}
-              </h1>
-            </div>
-          </div>
-        </div>
-        <div className="space-y-6 bg-white">
-          <div className="items-center w-full p-4 space-y-4 text-gray-700 md:inline-flex md:space-y-0">
-            <h2 className="max-w-sm mx-auto md:w-1/3">Почта</h2>
-            <div className="max-w-sm mx-auto md:w-2/3">
-              {/* <button
-                className="py-2 w-full px-3 bg-black hover:bg-gray-800  text-white rounded transition duration-300 flex justify-center"
-                type="submit"
+                  Редактировать профиль
+                </span>
+              ) : (
+                "Редактировать профиль"
+              )}
+            </button>
+            {nameOpened ? (
+              <div
+                className="rounded-[10px] relative after:absolute 
+                            before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                          after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+                            before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                            mt-1 w-full mx-auto"
               >
-                {loading ? (
-                  <div role="status">
-                    <svg
-                      aria-hidden="true"
-                      className="w-6 h-6 mr-2 text-gray-200 animate-spin dark:text-gray-600 fill-blue-600"
-                      viewBox="0 0 100 101"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
-                        fill="currentColor"
-                      />
-                      <path
-                        d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
-                        fill="currentFill"
-                      />
-                    </svg>
-                    <span className="sr-only">Loading...</span>
-                  </div>
-                ) : (
-                  "Изменить данные профиля"
-                )}
-              </button> */}
-              <div className=" relative ">
                 <input
-                  className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                  type="email"
-                  placeholder={`${user?.email}`}
-                  name="email"
-                  value={email}
+                  type="text"
+                  placeholder={`${user?.name}`}
+                  name="userName"
+                  value={userName}
                   onChange={(e: React.FormEvent<HTMLInputElement>) =>
                     onChange(e)
                   }
+                  required={!user?.name}
+                  minLength={3}
+                  className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
                 />
               </div>
-            </div>
+            ) : (
+              <p
+                data-content={name}
+                className="before:text-[28px] mt-[9px] before:font-semibold before:inset-0 
+                            w-full text-left text-[28px] before:w-full font-medium  before:text-left before:bg-gradient-to-b
+              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+              >
+                {name}
+              </p>
+            )}
           </div>
-          <hr />
-          <div className="items-center w-full p-4 space-y-4 text-gray-700 md:inline-flex md:space-y-0">
-            <h2 className="max-w-sm mx-auto md:w-1/3">Никнейм</h2>
-            <div className="max-w-sm mx-auto space-y-5 md:w-2/3">
-              <div>
-                <div className=" relative ">
-                  <input
-                    type="text"
-                    className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                    placeholder={`${user?.name}`}
-                    name="userName"
-                    value={userName}
-                    onChange={(e: React.FormEvent<HTMLInputElement>) =>
-                      onChange(e)
-                    }
-                    required={!user?.name}
-                    minLength={3}
+        </div>
+        <div className="">
+          <label
+            data-content="Почта"
+            className="before:text-xl before:font-medium before:inset-0 
+                            w-full text-left text-xl before:w-full font-medium  before:text-left before:bg-gradient-to-b
+              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+            htmlFor="emailinput"
+          >
+            Почта
+          </label>
+          <div
+            className="rounded-[10px] relative after:absolute 
+                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                               mt-1 w-full mx-auto mb-4"
+          >
+            <input
+              id="emailinput"
+              type="email"
+              placeholder={`${user?.email}`}
+              name="email"
+              value={email}
+              onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e)}
+              className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
+            />
+          </div>
+          <label
+            data-content="Ник в R6S"
+            className="before:text-xl before:font-medium before:inset-0 
+                            w-full text-xl before:w-full font-medium before:bg-gradient-to-b
+              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+            htmlFor="gamenameinput"
+          >
+            Ник в R6S
+          </label>
+          <div
+            className="rounded-[10px] relative after:absolute 
+                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                               mt-1 w-full mx-auto"
+          >
+            <input
+              id="gamenameinput"
+              type="text"
+              placeholder={`${user?.game_name ?? "игровой никнейм"}`}
+              name="gameName"
+              value={gameName}
+              onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e)}
+              minLength={3}
+              className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
+            />
+          </div>
+          {!nameOpened && !newPasswordOpened ? (
+            <div className="flex justify-between w-full">
+              <ButtonMain
+                type="submit"
+                className="font-semibold text-lg py-3 mt-[60px] px-9 focus:py-[10px] w-[45%]"
+              >
+                Сохранить
+              </ButtonMain>
+              <ButtonMain
+                onClick={() => setNewPasswordOpened(true)}
+                type="button"
+                className="font-semibold text-lg py-3 mt-[60px] px-9 focus:py-[10px] active:py-[10px] w-[45%]"
+              >
+                Изменить пароль
+              </ButtonMain>
+            </div>
+          ) : nameOpened ? (
+            <div className="flex justify-between w-full">
+              <ButtonMain
+                type="submit"
+                className="font-semibold text-lg py-3 mt-[60px] px-9 focus:py-[10px] w-[45%]"
+              >
+                Сохранить
+              </ButtonMain>
+              <ButtonSecondary
+                type="reset"
+                onClick={() => {
+                  setNameOpened(false);
+                  setNewPasswordOpened(false);
+                }}
+                className="font-semibold text-lg py-3 mt-[60px] px-9 focus:py-[10px] w-[45%]"
+              >
+                <span
+                  data-content="Отмена"
+                  className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
+                >
+                  Отмена
+                </span>
+              </ButtonSecondary>
+            </div>
+          ) : !oldPasswordOpened ? (
+            <>
+              <label
+                data-content="Новый пароль"
+                className="before:text-xl block mt-4 before:font-medium before:inset-0 
+                            w-full text-left text-xl before:w-full font-medium  before:text-left before:bg-gradient-to-b
+              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+                htmlFor="emailinput"
+              >
+                Новый пароль
+              </label>
+              <div
+                className="rounded-[10px] relative after:absolute 
+                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                               mt-1 w-full mx-auto mb-4"
+              >
+                <svg
+                  id="imrarded"
+                  onClick={() => setOldPasswordOpened(true)}
+                  className="absolute z-30 h-full right-0 fill-turquoise transition hover:fill-lightblue"
+                  viewBox="0 0 57 44"
+                >
+                  <path
+                    d="M0 0H47C52.5228 0 57 4.47715 57 10V34C57 39.5228 52.5228 44 47 44H0V0Z"
+                    // fill="#21DBD3"
                   />
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr />
-          <div className="items-center w-full p-4 space-y-4 text-gray-700 md:inline-flex md:space-y-0">
-            <h2 className="max-w-sm mx-auto md:w-1/3">
-              Ник в R6S (обязателен для участия в турнирах)
-            </h2>
-            <div className="max-w-sm mx-auto space-y-5 md:w-2/3">
-              <div>
-                <div className=" relative ">
-                  <input
-                    type="text"
-                    className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                    placeholder={`${user?.game_name ?? "игровой никнейм"}`}
-                    name="gameName"
-                    value={gameName}
-                    onChange={(e: React.FormEvent<HTMLInputElement>) =>
-                      onChange(e)
-                    }
-                    minLength={3}
+                  <path
+                    d="M26.6498 28.9912L22 24.4448M22 24.4448L26.6498 19.8983M22 24.4448H32.7C34.9091 24.4448 36.7 22.6539 36.7 20.4448V15.6445"
+                    stroke="#D5E6EF"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   />
-                </div>
-              </div>
-            </div>
-          </div>
-          <hr />
+                </svg>
 
-          <div className="items-center w-full p-4 space-y-4 text-gray-700 md:inline-flex md:space-y-0">
-            <h2 className="max-w-sm mx-auto md:w-4/12 ml-2">
-              {user?.name ? "Введите пароль" : "Введите новый пароль"}
-            </h2>
-            <span>
-              <input
-                id="user-info-new-password"
-                className=" rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
-                type="password"
-                placeholder="Новый пароль"
-                name="newPassword"
-                value={newPassword}
-                onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e)}
-              />
-
-              {user?.name && (
                 <input
-                  className="mt-6 rounded-lg border-transparent flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                  id="user-info-new-password"
+                  type="password"
+                  placeholder="Новый пароль"
+                  name="newPassword"
+                  value={newPassword}
+                  onChange={(e: React.FormEvent<HTMLInputElement>) =>
+                    onChange(e)
+                  }
+                  className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
+                  required
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <label
+                data-content="Подтвердите текущий пароль"
+                className="before:text-xl block mt-4 before:font-medium before:inset-0 
+                            w-full text-left text-xl before:w-full font-medium  before:text-left before:bg-gradient-to-b
+              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+                htmlFor="emailinput"
+              >
+                Подтвердите текущий пароль
+              </label>
+              <div
+                className="rounded-[10px] relative after:absolute 
+                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                               mt-1 w-full mx-auto mb-4"
+              >
+                <button
+                  type="submit"
+                  onClick={() => {
+                    setOldPasswordOpened(false);
+                    setNewPasswordOpened(false);
+                  }}
+                  className="absolute z-50 block w-[62px] h-full right-0"
+                >
+                  <svg
+                    className="absolute z-30 h-full right-0 top-0 fill-turquoise transition hover:fill-lightblue"
+                    viewBox="0 0 57 44"
+                  >
+                    <path d="M0 0H47C52.5228 0 57 4.47715 57 10V34C57 39.5228 52.5228 44 47 44H0V0Z" />
+                    <path
+                      d="M26.6498 28.9912L22 24.4448M22 24.4448L26.6498 19.8983M22 24.4448H32.7C34.9091 24.4448 36.7 22.6539 36.7 20.4448V15.6445"
+                      stroke="#D5E6EF"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                </button>
+                <input
                   id="user-info-old-password"
                   type="password"
                   placeholder="Текущий пароль"
@@ -240,19 +404,11 @@ const UserChangeForm = ({ name }: { name: string }) => {
                     onChange(e)
                   }
                   required={!!user?.name}
+                  className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
                 />
-              )}
-            </span>
-          </div>
-          <hr />
-          <div className="w-full px-4 pb-4 ml-auto text-gray-700 md:w-1/3">
-            <button
-              type="submit"
-              className="py-2 px-4  bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-full transition ease-in duration-200 text-center text-base font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg "
-            >
-              Сохранить
-            </button>
-          </div>
+              </div>
+            </>
+          )}
         </div>
       </form>
     </section>

@@ -38,7 +38,8 @@ class UserSerializer(UserCreateSerializer):
             "team_status",
             "is_staff",
             "game_name",
-            "image"
+            "image",
+            "google_oauth2"
         )
 
     def update(self, instance, validated_data):

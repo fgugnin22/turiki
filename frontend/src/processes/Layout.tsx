@@ -7,7 +7,7 @@ import Header from "../widgets/Header";
 export const Layout = (props: {
   children: React.ReactNode[] | React.ReactNode;
 }) => {
-  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
+  // const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
   const dispatch = useAppDispatch();
   const state = getParameterByName("state");
   const code = getParameterByName("code"); //get code and state from google oauth2
@@ -20,7 +20,7 @@ export const Layout = (props: {
         dispatch(checkAuth(access));
       }
     }
-  }, [location, isAuthenticated]);
+  }, [location]);
 
   return (
     <div className="flex min-h-screen flex-col bg-dark">
