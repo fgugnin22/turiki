@@ -16,13 +16,13 @@ def claim_match_result(match, team_id, result):
         if team_id == p1.team.id:
             p1.is_winner = result
             p1.save()
-            if not result:
+            if not result and match.state != "SCORE_DONE":
                 notify(match, f"Команда {p1.team.name} выставила свой результат: поражение!")
         else:
             p2 = Participant.objects.get(pk=p2["id"])
             p2.is_winner = result
             p2.save()
-            if not result:
+            if not result and match.state != "SCORE_DONE":
                 notify(match, f"Команда {p2.team.name} выставила свой результат: поражение!")
         end_match(match)
     except:
@@ -41,7 +41,6 @@ def notify(match, content):
     msg.save()
     chat.messages.add(msg)
     chat.save()
-    print(model_to_dict(msg), user)
 
 
 def end_match(match: Match):
@@ -55,12 +54,14 @@ def end_match(match: Match):
         return
     from turiki_app.tasks import exec_task_on_date, auto_finish_match
     if p1.is_winner is None and p2.is_winner:
-        notify(match, f"Команда {p2.team.name} выставила свой результат: победа!")
+        if match.state != "SCORE_DONE":
+            notify(match, f"Команда {p2.team.name} выставила свой результат: победа!")
         match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
         exec_task_on_date(auto_finish_match, [match.id, p1.team.id, False],
                           datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_confirm_results)
     elif p2.is_winner is None and p1.is_winner:
-        notify(match, f"Команда {p1.team.name} выставила свой результат: победа!")
+        if match.state != "SCORE_DONE":
+            notify(match, f"Команда {p1.team.name} выставила свой результат: победа!")
         match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
         exec_task_on_date(auto_finish_match, [match.id, p2.team.id, False],
                           datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_confirm_results)
