@@ -1,5 +1,3 @@
-import React from "react";
-import { Layout } from "../processes/Layout";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../shared/RouteTypes";
 const NoMatch = () => {
