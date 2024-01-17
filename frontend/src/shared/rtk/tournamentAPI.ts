@@ -252,6 +252,18 @@ export const tournamentAPI = createApi({
         };
       },
       providesTags: ["Chat"]
+    }),
+    changeTeamName: build.mutation<null, { teamId: number; newName: string }>({
+      query: ({ teamId, newName }) => {
+        return {
+          method: "PATCH",
+          url: `team/${teamId}/change_name/`,
+          body: {
+            name: newName
+          }
+        };
+      },
+      invalidatesTags: ["Team"]
     })
   })
 });

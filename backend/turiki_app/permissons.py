@@ -20,6 +20,7 @@ class IsCaptainOfThisTeamOrAdmin(IsAdminUser):
     """
 
     def has_permission(self, request, view) -> bool:
+        print('huh123')
         try:
             is_admin = super().has_permission(request, view)
 

@@ -8,7 +8,7 @@ const possible_statuses = [
   "PLAYED"
 ] as const;
 export const useTournamentStatus = (
-  status: (typeof possible_statuses)[number]
+  status?: (typeof possible_statuses)[number]
 ) => {
   return (
     (status === "REGISTRATION_CLOSED_BEFORE_REG" &&

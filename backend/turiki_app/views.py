@@ -286,9 +286,10 @@ class TeamAPIView(ModelViewSet):
         permission_classes=[IsCaptainOfThisTeamOrAdmin],
     )
     def change_name(self, request, pk=None):
+        print('huh')
         try:
             team = self.get_object()
-            name = request.data.pop("name")
+            name = request.data.get("name", team.name)
             res = TeamService.change_team_name(team, name)
             return Response(res, 200)
         except:

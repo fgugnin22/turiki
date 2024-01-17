@@ -29,7 +29,7 @@ matchRouter = DefaultRouter()
 matchRouter.register(r'api/v2/match', MatchAPIView, basename='match')
 
 teamRouter = DefaultRouter()
-teamRouter.register(r'api/v2/team', TeamAPIView, basename='team')
+teamRouter.register('api/v2/team', TeamAPIView, basename='team')
 
 chatRouter = DefaultRouter()
 chatRouter.register(r'api/v2/chat', ChatAPIView, basename='chat')
@@ -44,7 +44,7 @@ urlpatterns = [
     path('auth/', include('djoser.social.urls')),
 
 ]
-urlpatterns += doc_urls
+# urlpatterns += doc_urls
 urlpatterns += [re_path(r'^((?!api/v2).)*$', TemplateView.as_view(template_name='index.html'))]
 urlpatterns += tournamentRouter.urls
 urlpatterns += matchRouter.urls
