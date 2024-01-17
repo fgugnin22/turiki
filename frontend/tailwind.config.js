@@ -20,6 +20,7 @@ module.exports = {
         turquoise: "#21DBD3",
         lightgray: "#D5E6EF",
         darkturquoise: "#19A8A2",
+        darkestturq: "#192C2E"
       },
       backgroundImage: theme => ({
         check: "url('/icons/check.svg')",

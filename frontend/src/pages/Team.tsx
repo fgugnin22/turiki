@@ -53,8 +53,9 @@ const Team = () => {
             className="rounded-[10px] mt-16 relative after:absolute 
         before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
       after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
-        before:z-10 z-20 before:bg-dark before:rounded-[9px] 
-        before:bg-gradient-to-b before:from-transparent before:bg-opacity-90 py-4 px-6 sm:py-12 sm:px-16 w-full sm:w-[70%] lg:w-1/2 mx-auto"
+        before:z-10 z-20 
+        py-4 px-6 sm:py-12 sm:px-16 w-full sm:w-[70%] lg:w-1/2 mx-auto before:bg-dark before:rounded-[9px]  
+        before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%]"
           >
             <button
               onClick={() => setDropdown((p) => !p)}
@@ -66,7 +67,7 @@ const Team = () => {
               <Dots />
             </button>
             {dropdown && teamId === data?.id && (
-              <div className="absolute  transition z-[90] flex flex-col gap-1 py-[15px] px-4 right-4 top-[58px] bg-turquoise bg-opacity-30 rounded-[10px]">
+              <div className="absolute  transition z-[90] flex flex-col gap-1 py-[15px] px-4 right-4 top-[58px] bg-darkestturq rounded-[10px]">
                 <button
                   onClick={() => leaveFromTeam(Number(params?.id))}
                   className="hover:text-lightblue active:text-turquoise transition font-medium"
@@ -127,7 +128,7 @@ const Team = () => {
                       className="rounded-[10px] relative right-3 after:absolute 
                             before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
                           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
-                            before:z-10 z-40 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                            before:z-10 z-40 before:bg-darkestturq bg-transparent h-12
                             w-full mx-auto"
                     >
                       <form
@@ -274,7 +275,7 @@ const Team = () => {
                         )}
                         {playerDropdowns === player.id &&
                           team_status === "CAPTAIN" && (
-                            <div className="absolute transition z-[90] flex flex-col gap-[1px] py-2 px-3 right-0 bottom-10 bg-turquoise bg-opacity-30 rounded-[10px]">
+                            <div className="absolute transition z-[90] flex flex-col gap-[1px] py-2 px-3 right-0 bottom-10 bg-darkestturq rounded-[10px]">
                               <button
                                 onClick={() =>
                                   kickPlayerFromTeam({

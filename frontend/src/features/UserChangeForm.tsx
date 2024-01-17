@@ -174,7 +174,8 @@ const UserChangeForm = ({ name }: { name: string }) => {
                 className="rounded-[10px] relative after:absolute 
                             before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
                           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
-                            before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                            before:z-10 z-20 before:bg-dark before:rounded-[8px] 
+                            before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%] bg-transparent h-12
                             mt-1 w-full mx-auto"
               >
                 <input

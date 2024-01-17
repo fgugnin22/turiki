@@ -53,7 +53,7 @@ const Chat = (props: ChatProps) => {
     before:absolute after:inset-0 before:inset-[2px] after:bg-gradient-to-r
   after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
     before:z-10 z-20 before:bg-dark before:rounded-[8px] 
-    before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[360%]"
+    before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%]"
     >
       <div className="w-full bg-gradient-to-r from-lightblue z-10 to-turquoise p-3 text-center text-2xl font-semibold">
         Общий чат
