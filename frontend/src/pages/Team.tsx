@@ -68,7 +68,7 @@ const Team = () => {
               <Dots />
             </button>
             {dropdown && teamId === data?.id && (
-              <div className="absolute  transition z-[90] flex flex-col gap-1 py-[15px] px-4 right-4 top-[58px] bg-darkestturq rounded-[10px]">
+              <div className="absolute  transition z-[90] flex flex-col gap-1 py-[15px] px-4 right-[60px] top-4 bg-darkestturq rounded-[10px]">
                 <button
                   onClick={() => leaveFromTeam(Number(params?.id))}
                   className="hover:text-lightblue active:text-turquoise transition font-medium"
@@ -281,7 +281,7 @@ const Team = () => {
                         )}
                         {playerDropdowns === player.id &&
                           team_status === "CAPTAIN" && (
-                            <div className="absolute transition z-[90] flex flex-col gap-[1px] py-2 px-3 right-0 bottom-10 bg-darkestturq rounded-[10px]">
+                            <div className="absolute transition z-[90] flex flex-col gap-[1px] py-2 px-3 right-10 top-[2px] bg-darkestturq rounded-[10px]">
                               <button
                                 onClick={() =>
                                   kickPlayerFromTeam({
