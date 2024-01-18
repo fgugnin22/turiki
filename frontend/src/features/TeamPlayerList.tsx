@@ -2,6 +2,9 @@ import { IUser } from "../shared";
 import { Angle } from "../shared/Angle";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { Match } from "../helpers/transformMatches";
+import { getImagePath } from "../helpers/getImagePath";
+import { ROUTES } from "../shared/RouteTypes";
+import { Link } from "react-router-dom";
 const serverURL = import.meta.env.VITE_API_URL;
 
 export type Player = Omit<IUser, "email" | "is_active" | "team">;
@@ -43,13 +46,13 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
           >
             {props.team.name}{" "}
           </p>
-          <a href="#" className="">
+          <Link to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({ id: props.team.id })}>
             <img
               alt="profil"
-              src={`${serverURL}/${props.team.image}`}
+              src={`${serverURL}/${getImagePath(props.team.image)}`}
               className="object-cover rounded-full h-10 w-10 "
             />
-          </a>
+          </Link>
         </div>
         <div className="bg-gradient-to-r from-lightblue to-turquoise h-[1px] neonshadow mx-9 mt-5"></div>
         <ul className="flex flex-wrap gap-y-7 my-7 mx-12">
@@ -61,9 +64,11 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
               return (
                 <li key={i} className="flex items-center space-x-4">
                   <img
-                    src={`${serverURL}/${
-                      player.image ?? "assets/img/userdefaultloggedin.svg"
-                    }`}
+                    src={
+                      Number(player?.image?.length) > 0
+                        ? serverURL + "/" + getImagePath(player.image!)
+                        : serverURL + "/assets/img/userdefaultloggedin.svg"
+                    }
                     className="w-10 h-10 rounded-full"
                   />
                   <div className="flex flex-wrap  text-lightblue font-medium">

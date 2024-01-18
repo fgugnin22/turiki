@@ -7,6 +7,7 @@ import { getUser, uploadTeamImage } from "../shared/rtk/user";
 import { ROUTES } from "../shared/RouteTypes";
 import Dots from "../shared/Dots";
 import ButtonMain from "../shared/ButtonMain";
+import { getImagePath } from "../helpers/getImagePath";
 const serverURL = import.meta.env.VITE_API_URL;
 
 const Team = () => {
@@ -99,7 +100,7 @@ const Team = () => {
                     <img
                       style={{ gridArea: "a" }}
                       alt="profil"
-                      src={serverURL + "/" + data?.image}
+                      src={serverURL + "/" + getImagePath(data.image)}
                       className="object-cover  object-center rounded-full ml-[3%] mt-[3%] h-[94%] w-[94%]  relative z-10 aspect-square	"
                     />
                   )}
@@ -243,7 +244,12 @@ const Team = () => {
                       >
                         <img
                           className="w-10 h-10 rounded-full"
-                          src={serverURL + "/" + player.image}
+                          src={
+                            Number(player?.image?.length) > 0
+                              ? serverURL + "/" + getImagePath(player.image!)
+                              : serverURL +
+                                "/assets/img/userdefaultloggedin.svg"
+                          }
                           alt=""
                         />
                         <div className="flex items-center justify-start gap-[10px]">
@@ -359,8 +365,8 @@ const Team = () => {
                     <img
                       className="w-10 h-10 rounded-full"
                       src={
-                        player.image
-                          ? serverURL + "/" + player.image
+                        Number(player?.image?.length) > 0
+                          ? serverURL + "/" + getImagePath(player.image!)
                           : serverURL + "/assets/img/userdefaultloggedin.svg"
                       }
                       alt=""

@@ -8,6 +8,7 @@ import {
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import ButtonMain from "../shared/ButtonMain";
 import ButtonSecondary from "../shared/ButtonSecondary";
+import { getImagePath } from "../helpers/getImagePath";
 const serverURL = import.meta.env.VITE_API_URL;
 const UserChangeForm = ({ name }: { name: string }) => {
   const [nameOpened, setNameOpened] = useState(false);
@@ -131,7 +132,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
               <img
                 style={{ gridArea: "a" }}
                 alt="profil"
-                src={serverURL + "/" + user?.image}
+                src={serverURL + "/" + getImagePath(user.image)}
                 className="object-cover object-center rounded-full ml-[3%] mt-[3%] h-[94%] w-[94%] opacity-80 relative z-10 aspect-square	"
               />
             )}
