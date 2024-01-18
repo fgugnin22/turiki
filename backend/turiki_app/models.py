@@ -14,7 +14,8 @@ from core.settings import BASE_DIR
 
 
 def images_path():
-    return os.path.join(BASE_DIR, "dist/assets/img")
+    return "dist/assets/img"
+    # return os.path.join(BASE_DIR, "dist/assets/img")
 
 
 # модель пользователя с логином - почтой(у жанго по умолчанию логин - имя пользователя)

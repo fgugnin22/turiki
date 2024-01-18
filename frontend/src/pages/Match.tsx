@@ -180,10 +180,10 @@ const Match = () => {
             />
             <>
               {isSuccess && match.participants[0] && isTeam1Success && (
-                <TeamPlayerList match={match} team={team1} />
+                <TeamPlayerList tournamentId={match.tournament!} team={team1} />
               )}
               {isSuccess && match.participants[1] && isTeam2Success && (
-                <TeamPlayerList match={match} team={team2} />
+                <TeamPlayerList tournamentId={match.tournament!} team={team2} />
               )}
 
               {match?.state === "RES_SEND_LOCKED" &&

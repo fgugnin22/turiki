@@ -1,11 +1,9 @@
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { Team } from "../helpers/transformMatches.js";
-import { Layout } from "../processes/Layout.js";
-import { Link, NavLink, useParams } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { ROUTES } from "../shared/RouteTypes";
 import RegisterTeamModal from "../features/RegisterTeamModal";
-import ButtonMain from "../shared/ButtonMain";
 import { useEffect, useState } from "react";
 import { getParameterByName } from "../helpers/getParameterByName";
 import { checkAuth, googleAuthenticate } from "../shared/rtk/user";
@@ -15,6 +13,8 @@ import ButtonSecondary from "../shared/ButtonSecondary";
 import Bracket from "../shared/Bracket";
 import { useTournamentStatus } from "../hooks/useTournamentStatus";
 import { useCountdown } from "../hooks/useCountDown";
+import TournamentTeamPlayerList from "../features/TournamentTeamPlayerList";
+
 const serverURL = import.meta.env.VITE_API_URL;
 
 export interface IMatch {
@@ -25,13 +25,10 @@ export interface IMatch {
   state: string;
   participants: Team[];
 }
-
 export const Tournament = () => {
   const { isAuthenticated } = useAppSelector((state) => state.user);
+  const [page, setPage] = useState(0);
 
-  const dispatch = useAppDispatch();
-  const state = getParameterByName("state");
-  const code = getParameterByName("code"); //get code and state from google oauth2
   useEffect(() => {
     if (state && code) {
       dispatch(googleAuthenticate({ state, code }));
@@ -42,7 +39,11 @@ export const Tournament = () => {
       }
     }
   }, [location, isAuthenticated]);
+  const dispatch = useAppDispatch();
+  const state = getParameterByName("state");
+  const code = getParameterByName("code"); //get code and state from google oauth2
   const params = useParams();
+
   const tournId = Number(params["id"]);
   const { userDetails: user } = useAppSelector((state) => state.user);
   const {
@@ -63,7 +64,7 @@ export const Tournament = () => {
   });
   const statusString = useTournamentStatus(tournament?.status);
   const date = new Date(tournament?.reg_starts ?? 0);
-  // const time = useCountdown(date);
+  const section = params["*"];
   return (
     <div className="flex min-h-screen flex-col bg-dark grow justify-start">
       <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
@@ -141,16 +142,20 @@ export const Tournament = () => {
                   </svg>
                 </ButtonSecondary>
               </div>
-              <div className="w-full font-medium text-base flex justify-center gap-12 items-center">
+              <div className="w-full font-medium text-base flex justify-start gap-24 items-center mt-5">
                 <NavLink
                   className={({ isActive }) =>
                     `${
                       isActive
-                        ? "underline underline-offset-[9px] !text-lightblue"
+                        ? "underline underline-offset-[13px] !text-lightblue"
                         : ""
-                    }` + "  text-lightgray transition hover:!text-turquoise"
+                    }` +
+                    "  text-lightgray transition hover:!text-turquoise relative z-50"
                   }
-                  to="./"
+                  end
+                  to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.buildPath({
+                    id: tournId
+                  })}
                 >
                   Обзор
                 </NavLink>
@@ -158,11 +163,13 @@ export const Tournament = () => {
                   className={({ isActive }) =>
                     `${
                       isActive
-                        ? "underline underline-offset-[9px] !text-lightblue"
+                        ? "underline underline-offset-[13px] !text-lightblue"
                         : ""
                     }` + "  text-lightgray transition hover:!text-turquoise"
                   }
-                  to="."
+                  to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.BRACKET.buildPath({
+                    id: tournId
+                  })}
                 >
                   Сетка
                 </NavLink>
@@ -170,11 +177,15 @@ export const Tournament = () => {
                   className={({ isActive }) =>
                     `${
                       isActive
-                        ? "underline underline-offset-[9px] !text-lightblue"
+                        ? "underline underline-offset-[13px] !text-lightblue"
                         : ""
                     }` + "  text-lightgray transition hover:!text-turquoise"
                   }
-                  to="./participants"
+                  to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.PARTICIPANTS.buildPath(
+                    {
+                      id: tournId
+                    }
+                  )}
                 >
                   Участники
                 </NavLink>
@@ -182,36 +193,89 @@ export const Tournament = () => {
                   className={({ isActive }) =>
                     `${
                       isActive
-                        ? "underline underline-offset-[9px] !text-lightblue"
+                        ? "underline underline-offset-[13px] !text-lightblue"
                         : ""
                     }` + "  text-lightgray transition hover:!text-turquoise"
                   }
-                  to="./rules"
+                  to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.RULES.buildPath({
+                    id: tournId
+                  })}
                 >
                   Правила
-                </NavLink>
-                <NavLink
-                  className={({ isActive }) =>
-                    `${
-                      isActive
-                        ? "underline underline-offset-[9px] !text-lightblue"
-                        : ""
-                    }` + "  text-lightgray transition hover:!text-turquoise"
-                  }
-                  to="./somewhere"
-                >
-                  Мб еще ссылка
                 </NavLink>
               </div>
             </div>
           </div>
           <div className=" w-full h-[1px] bg-gradient-to-r from-lightblue to-turquoise neonshadow mt-2"></div>
-          <div className="mx-auto grow flex flex-col justify-between">
-            <Bracket tournament={tournament} />
-          </div>
+
+          {section === "bracket" ? (
+            <div className="mx-auto max-w-full flex flex-col justify-between">
+              <Bracket tournament={tournament} />{" "}
+            </div>
+          ) : section === "participants" ? (
+            <>
+              <div className="mx-auto pt-12 grid grid-cols-2 sm:grid-cols-3 gap-10 lg:grid-cols-3 w-full lg:w-4/5 xl:w-[1100px] min-h-[378px]">
+                {tournament.teams
+                  .slice(page * 12, page * 12 + 12)
+                  .map((team) => {
+                    return (
+                      <TournamentTeamPlayerList
+                        key={team.name + "team"}
+                        tournamentId={tournament.id}
+                        team={team}
+                      />
+                    );
+                  })}
+              </div>
+              <div className="w-full flex justify-center items-center mt-6 gap-[10px] text-turquoise text-base font-medium">
+                <button
+                  onClick={() =>
+                    setPage((p) => {
+                      return Math.max(p - 1, 0);
+                    })
+                  }
+                >
+                  <svg width="7" height="9" viewBox="0 0 7 9" fill="none">
+                    <path
+                      d="M0.859853 5.25251C0.40462 4.85411 0.40462 4.14589 0.859853 3.74749L4.62594 0.451531C5.2725 -0.114319 6.28452 0.344842 6.28452 1.20405V7.79596C6.28452 8.65516 5.2725 9.11432 4.62594 8.54847L0.859853 5.25251Z"
+                      fill="#21DBD3"
+                    />
+                  </svg>
+                </button>
+                <span>
+                  {page + 1} / {Math.ceil(tournament.teams.length / 12)}
+                </span>
+                <button
+                  onClick={() =>
+                    setPage((p) => {
+                      return Math.min(
+                        p + 1,
+                        Math.ceil(tournament.teams.length / 12) - 1
+                      );
+                    })
+                  }
+                >
+                  <svg
+                    width="6"
+                    height="9"
+                    viewBox="0 0 6 9"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M5.42482 3.74749C5.88005 4.14589 5.88005 4.85411 5.42482 5.25251L1.65873 8.54847C1.01217 9.11432 0.000151634 8.65516 0.000151634 7.79595L0.000151634 1.20404C0.000151634 0.344841 1.01216 -0.11432 1.65873 0.45153L5.42482 3.74749Z"
+                      fill="#21DBD3"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </>
+          ) : (
+            <div></div>
+          )}
         </>
       )}
-      <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
+      <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between relative z-0">
         <Footer />
       </div>
     </div>

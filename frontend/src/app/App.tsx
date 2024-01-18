@@ -64,7 +64,7 @@ function App() {
             element={<Match />} // пока пропущу
           ></Route>
           <Route
-            path={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.path}
+            path={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.path + "/*"}
             element={<Tournament />} // страница турнира
           ></Route>
           <Route

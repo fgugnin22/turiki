@@ -15,13 +15,13 @@ type TeamPlayerListProps = {
     tournaments: any[];
     image: string;
   };
-  match: Match;
+  tournamentId: string | number;
 };
 
 const TeamPlayerList = (props: TeamPlayerListProps) => {
   const { data: tournament, isSuccess } =
     tournamentAPI.useGetTournamentByIdQuery({
-      id: props.match.tournament ?? -1
+      id: props.tournamentId
     });
   return (
     <div
@@ -85,27 +85,6 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
         </ul>
       </div>
     </div>
-
-    // <div classNameName="p-2 rounded-lg bg-slate-100">
-    //     <Link
-    //         // to={`/team/${props.team.id}`}
-    //         to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({id: props.team.id})}
-    //         classNameName="p-3 rounded-md bg-slate-300 m-2 text-xl hover:bg-slate-400 block transition-colors"
-    //     >
-    //         <div>{props.team.name}</div>
-    //     </Link>
-    //     {props.team &&
-    //         props.team.players.map((player) => (
-    //             <Link
-    //                 key={player.id as Key}
-    //                 to="#"
-    //                 // to={`/player/${player.id}`}
-    //                 classNameName="p-2 bg-zinc-400 block rounded-sm hover:bg-slate-400 "
-    //             >
-    //                 <div>{player.name}</div>
-    //             </Link>
-    //         ))}
-    // </div>
   );
 };
 
