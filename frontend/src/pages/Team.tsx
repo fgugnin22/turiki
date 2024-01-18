@@ -229,9 +229,9 @@ const Team = () => {
         scrollbar-track-transparent scrollbar-corner-transparent overflow-y-scroll relative"
               >
                 {data.players
-                  .toSorted((plr) => {
-                    return plr.team_status === "CAPTAIN" ? -12 : 12;
-                  })
+                  // .toSorted((plr) => {
+                  //   return plr.team_status === "CAPTAIN" ? -12 : 12;
+                  // })
                   .map((player, i: number) => {
                     if (player.team_status === "PENDING") {
                       return;

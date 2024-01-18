@@ -19,6 +19,7 @@ DEBUG = os.getenv("DEBUG")
 
 INSTALLED_APPS = [
     "daphne",
+    "corsheaders",  # ЭТО СУПЕР ВАЖНО ДЛЯ КОРСА!!! ИНАЧЕ НИЧЕ РАБОТАТЬ НЕ БУДЕТ!
     "django_dramatiq",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -27,7 +28,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",
-    "corsheaders",  # ЭТО СУПЕР ВАЖНО ДЛЯ КОРСА!!! ИНАЧЕ НИЧЕ РАБОТАТЬ НЕ БУДЕТ!
     "turiki_app",
     "djoser",
     "social_django",
@@ -37,7 +37,7 @@ INSTALLED_APPS = [
     "django_extensions",
 ]
 # Откуда могут приходить запросы на сервер
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS=['*']
 CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
