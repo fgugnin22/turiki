@@ -270,6 +270,58 @@ export const Tournament = () => {
                 </button>
               </div>
             </>
+          ) : section === "rules" ? (
+            <>
+              <h2 className="mx-auto bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent mt-[70px] text-2xl font-medium">
+                Скачать файл
+              </h2>
+              <p className="mx-auto bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent mt-4 text-base font-medium w-[343px] text-center">
+                Файл содержит правила, которым должны следовать участники
+                данного турнира
+              </p>
+              <a
+                className="w-[170px] h-[170px] rounded-[10px] mx-auto my-auto relative after:absolute 
+            before:absolute after:inset-0 before:inset-[2px] after:bg-gradient-to-r
+          after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+            before:z-10 z-20 before:bg-dark before:transition hover:before:bg-opacity-80 before:rounded-[8px] flex items-center justify-center"
+                target="_blank"
+                href={serverURL + "/assets/files/file.pdf"}
+              >
+                <svg
+                  className="relative z-50"
+                  width="66"
+                  height="116"
+                  viewBox="0 0 66 116"
+                  fill="none"
+                >
+                  <path
+                    d="M3 48.7665L3 62.5969C3 64.6929 3.79018 66.7031 5.1967 68.1852C6.60322 69.6674 8.51088 70.5 10.5 70.5H55.5C57.4891 70.5 59.3968 69.6674 60.8033 68.1852C62.2098 66.7031 63 64.6929 63 62.5969V48.7665M33.0042 3V47.7842M33.0042 47.7842L50.147 30.6724M33.0042 47.7842L15.8613 30.6724"
+                    stroke="url(#paint0_linear_0_1)"
+                    strokeWidth="5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <path
+                    d="M1.17045 116V89.8182H10.017C12.071 89.8182 13.75 90.1889 15.054 90.9304C16.3665 91.6634 17.3381 92.6562 17.9688 93.9091C18.5994 95.1619 18.9148 96.5597 18.9148 98.1023C18.9148 99.6449 18.5994 101.047 17.9688 102.308C17.3466 103.57 16.3835 104.575 15.0795 105.325C13.7756 106.067 12.1051 106.438 10.0682 106.438H3.72727V103.625H9.96591C11.3722 103.625 12.5014 103.382 13.3537 102.896C14.206 102.411 14.8239 101.754 15.2074 100.928C15.5994 100.092 15.7955 99.1506 15.7955 98.1023C15.7955 97.054 15.5994 96.1165 15.2074 95.2898C14.8239 94.4631 14.2017 93.8153 13.3409 93.3466C12.4801 92.8693 11.3381 92.6307 9.91477 92.6307H4.34091V116H1.17045ZM32.1016 116H24.022V89.8182H32.4595C34.9993 89.8182 37.1726 90.3423 38.9794 91.3906C40.7862 92.4304 42.1712 93.9261 43.1342 95.8778C44.0973 97.821 44.5788 100.148 44.5788 102.858C44.5788 105.585 44.093 107.933 43.1215 109.902C42.1499 111.862 40.7351 113.371 38.8771 114.428C37.0192 115.476 34.7607 116 32.1016 116ZM27.1925 113.188H31.897C34.0618 113.188 35.8558 112.77 37.2791 111.935C38.7024 111.099 39.7635 109.911 40.4624 108.368C41.1612 106.825 41.5107 104.989 41.5107 102.858C41.5107 100.744 41.1655 98.9247 40.4751 97.3991C39.7848 95.8651 38.7536 94.6889 37.3814 93.8707C36.0092 93.044 34.3004 92.6307 32.255 92.6307H27.1925V113.188ZM49.897 116V89.8182H65.5959V92.6307H53.0675V101.477H64.4197V104.29H53.0675V116H49.897Z"
+                    fill="#18A3DC"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_0_1"
+                      x1="55.5"
+                      y1="3"
+                      x2="3"
+                      y2="71"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="#21DBD3" />
+                      <stop offset="1" stopColor="#18A3DC" />
+                      <stop offset="1" stopColor="#18A3DC" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </a>
+            </>
           ) : (
             <div></div>
           )}

@@ -136,12 +136,18 @@ const Test = () => {
               {match.isSuccess &&
                 match.data.participants[0] &&
                 team1?.isSuccess && (
-                  <TeamPlayerList match={match.data} team={team1.data} />
+                  <TeamPlayerList
+                    tournamentId={match.data.tournament ?? -1}
+                    team={team1.data}
+                  />
                 )}
               {match.isSuccess &&
                 match.data.participants[0] &&
                 team1?.isSuccess && (
-                  <TeamPlayerList match={match.data} team={team1.data} />
+                  <TeamPlayerList
+                    tournamentId={match.data.tournament ?? -1}
+                    team={team1.data}
+                  />
                 )}
 
               {/* {
