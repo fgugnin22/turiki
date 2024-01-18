@@ -29,7 +29,11 @@ const UserChangeForm = ({ name }: { name: string }) => {
     const target = e.target as HTMLInputElement;
     return setFormData({ ...formData, [target.name]: target.value });
   };
-  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (
+    e:
+      | React.FormEvent<HTMLFormElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
     e.preventDefault();
     const access = localStorage.getItem("access");
     const refresh = localStorage.getItem("refresh");
@@ -117,7 +121,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
       className="w-full sm:w-4/5 lg:w-3/5 relative after:absolute after:inset-0 
       hover:after:!drop-shadow-[0_0_2px_#4cf2f8] after:!drop-shadow-[0_0_2px_#4cf2f8] mx-auto my-auto mb-24 rounded-[10px] after:rounded-[10px] 
     after:border after:border-turquoise after:bg-gradient-to-b after:from-transparent 
-  after:to-darkturquoise after:from-[-30%] after:to-[2000%]"
+  after:to-darkturquoise after:from-[-30%] after:to-[3000%]"
     >
       <form className="relative z-30 px-14 py-10" onSubmit={onSubmit}>
         <div className="flex gap-0 sm:gap-10 justify-between items-center lg:justify-start">
@@ -376,9 +380,10 @@ const UserChangeForm = ({ name }: { name: string }) => {
               >
                 <button
                   type="submit"
-                  onClick={() => {
+                  onClick={(e) => {
                     setOldPasswordOpened(false);
                     setNewPasswordOpened(false);
+                    onSubmit(e);
                   }}
                   className="absolute z-50 block w-[62px] h-full right-0"
                 >

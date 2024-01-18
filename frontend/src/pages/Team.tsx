@@ -56,7 +56,7 @@ const Team = () => {
       after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
         before:z-10 z-20 
         py-4 px-6 sm:py-12 sm:px-16 w-full sm:w-[70%] lg:w-1/2 mx-auto before:bg-dark before:rounded-[9px]  
-        before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%]"
+        before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[3000%]"
           >
             <button
               onClick={() => setDropdown((p) => !p)}
