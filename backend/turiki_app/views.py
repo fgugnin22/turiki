@@ -92,9 +92,12 @@ class TournamentAPIView(ModelViewSet):
             # tourn = TournamentService.create_tournament(name, prize, max_rounds)
             request.data["reg_starts"] = datetime.datetime.strptime(request.data["reg_starts"], "%Y-%m-%dT%H:%M:%S%z")
             request.data["starts"] = datetime.datetime.strptime(request.data["starts"], "%Y-%m-%dT%H:%M:%S%z")
+            print(request.data["starts"])
             tourn = TournamentService.create_tournament(**request.data)
             return Response(model_to_dict(tourn), 201)
-        except:
+        except serializers.ValidationError as e:
+            raise e
+        except Exception:
             return Response("something went wrong when creating the tournament", 400)
 
     @action(

@@ -323,7 +323,9 @@ export const Tournament = () => {
               </a>
             </>
           ) : (
-            <div></div>
+            <div className=" text-6xl text-center font-semibold py-12 text-lightblue">
+              Обзор
+            </div>
           )}
         </>
       )}

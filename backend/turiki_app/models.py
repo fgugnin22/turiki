@@ -41,8 +41,10 @@ class UserAccountManager(BaseUserManager):
         user.save()
         return user
 
-
+def default_starts():
+    return now() + datetime.timedelta(minutes=1)
 class Tournament(models.Model):
+    
     allowed_statuses = ["REGISTRATION_CLOSED_BEFORE_REG",
                         "REGISTRATION_OPENED",
                         "REGISTRATION_CLOSED_AFTER_REG",
@@ -59,9 +61,12 @@ class Tournament(models.Model):
     max_rounds = models.IntegerField(default=1)
     # time_to_register = models.DurationField(default=datetime.timedelta(minutes=3))
     time_to_check_in = models.DurationField(default=datetime.timedelta(minutes=3))
-    reg_starts = models.DateTimeField(default=now())
+    reg_starts = models.DateTimeField(default=default_starts)
     max_players_in_team = models.SmallIntegerField(default=5)
-
+    time_to_enter_lobby = models.DurationField(default=datetime.timedelta(minutes=10))
+    time_results_locked = models.DurationField(default=datetime.timedelta(minutes=1))
+    time_to_confirm_results = models.DurationField(default=datetime.timedelta(minutes=2))
+    time_to_select_map = models.DurationField(default=datetime.timedelta(minutes=2))
     def __str__(self):
         return self.name
 
@@ -158,8 +163,8 @@ class Match(models.Model):
     round_text = models.CharField(max_length=31, blank=True, null=True)  # ПОРЯДОК СЛЕДОВАНИЯ МАТЧЕЙ
     # В ТУРНИРЕ, Т.Е. 1 - ПЕРВЫЕ МАТЧИ В ТУРНИРЕ, 2 - ВТОРЫЕ И ТД. п.с. на самом деле это не обязательно, просто рекомендация)))
     state = models.CharField(max_length=31, null=True, blank=True)
-    started = models.DateTimeField(blank=True, null=True)
-    starts = models.DateTimeField(blank=True, null=True)
+    started = models.DateTimeField(blank=True, null=True) # начинается игра в матче
+    starts = models.DateTimeField(blank=True, null=True) # начинается матч
     first_result_claimed = models.DateTimeField(blank=True, null=True)
     time_to_enter_lobby = models.DurationField(default=datetime.timedelta(minutes=10))
     time_results_locked = models.DurationField(default=datetime.timedelta(minutes=1))

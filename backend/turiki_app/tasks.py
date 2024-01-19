@@ -27,7 +27,7 @@ def set_match_start_bans(match_id: int):
                           Team.objects.get(pk=match.participants.values()[1]["team_id"])]
         initial_timestamps = [match.starts]
         bans = MapBan.objects.create(match=match, previous_team=team1.id, timestamps=initial_timestamps,
-                                     time_to_select_map=datetime.timedelta(seconds=120))
+                                     time_to_select_map=match.tournament.time_to_select_map)
         exec_task_on_date(ban_map, [match.id, team2.id, match.bans.maps[-1], "AUTO",
                                     MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps)],
                           initial_timestamps[-1] + match.bans.time_to_select_map)
@@ -228,7 +228,10 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             round_text=f"Матч за {rounds - next_round_count + 1} место",
             state="NO_SHOW",
             tournament=tournament,
-            starts=None
+            starts=None,
+            time_to_enter_lobby=tournament.time_to_enter_lobby,
+            time_results_locked=tournament.time_results_locked,
+            time_to_confirm_results=tournament.time_to_confirm_results,
         )
         time_to_start_match_from_beginning_of_tournament = datetime.timedelta(minutes=(next_round_count - 1) * 60)
         create_match(next_round_count - 1, rounds, tournament, final_match, starts)
@@ -240,7 +243,10 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             round_text=f"Матч за {rounds - next_round_count + 1} место",
             state="NO_SHOW",
             tournament=tournament,
-            starts=starts
+            starts=starts,
+            time_to_enter_lobby=tournament.time_to_enter_lobby,
+            time_results_locked=tournament.time_results_locked,
+            time_to_confirm_results=tournament.time_to_confirm_results,
         )
         match2 = Match.objects.create(
             next_match=next_match,
@@ -248,7 +254,10 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             round_text=f"Матч за {rounds - next_round_count + 1} место",
             state="NO_SHOW",
             tournament=tournament,
-            starts=starts
+            starts=starts,
+            time_to_enter_lobby=tournament.time_to_enter_lobby,
+            time_results_locked=tournament.time_results_locked,
+            time_to_confirm_results=tournament.time_to_confirm_results,
         )
 
         create_match(next_round_count - 1, rounds, tournament, match1, starts)

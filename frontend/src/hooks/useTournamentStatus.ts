@@ -1,4 +1,4 @@
-const possible_statuses = [
+export const possible_statuses = [
   "REGISTRATION_CLOSED_BEFORE_REG",
   "REGISTRATION_OPENED",
   "REGISTRATION_CLOSED_AFTER_REG",

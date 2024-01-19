@@ -1,6 +1,5 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { Match, Team, Tournament } from "../../helpers/transformMatches";
-import { IChangeSelfTeamStatus, ICreateTeam, IRegisterTeam } from "..";
 
 export const tournamentAPI = createApi({
   reducerPath: "tournamentAPI",
@@ -148,17 +147,21 @@ export const tournamentAPI = createApi({
     createTournament: build.mutation<
       Tournament,
       {
-        prize: number | string;
         name: string;
-        max_rounds: number | string;
+        prize: number & string;
+        max_rounds: number & string;
+        reg_starts: string;
+        time_to_check_in: string;
+        time_to_enter_lobby: string;
+        time_results_locked: string;
+        time_to_confirm_results: string;
+        time_to_select_map: string;
+        starts: string;
+        max_player: number & string;
       }
     >({
-      query: ({ prize, name, max_rounds }) => {
-        const body = JSON.stringify({
-          name,
-          prize,
-          max_rounds
-        });
+      query: (formData) => {
+        const body = JSON.stringify(formData);
         return {
           url: `tournament/`,
           method: "POST",
@@ -264,6 +267,21 @@ export const tournamentAPI = createApi({
         };
       },
       invalidatesTags: ["Team"]
+    }),
+    changeTournamentStatus: build.mutation<
+      null,
+      { id: number; status: string }
+    >({
+      query: ({ id, status }) => {
+        return {
+          method: "PATCH",
+          url: `tournament/${id}/status/`,
+          body: JSON.stringify({
+            status
+          })
+        };
+      },
+      invalidatesTags: ["Tournament"]
     })
   })
 });
