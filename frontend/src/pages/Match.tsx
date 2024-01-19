@@ -12,7 +12,7 @@ import { useEffect } from "react";
 import useWebSocket from "react-use-websocket";
 import ButtonMain from "../shared/ButtonMain";
 const serverURL = import.meta.env.VITE_API_URL;
-
+const websocketURL = import.meta.env.VITE_WEBSCOKET_ENDPOINT;
 const Match = () => {
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
@@ -77,7 +77,7 @@ const Match = () => {
     }
   }, [timeBeforeMatchStart.seconds]);
   const { sendMessage, lastMessage } = useWebSocket(
-    `ws://localhost:8000/ws/chat/${
+    `${websocketURL}/ws/chat/${
       match?.lobby?.chat
     }/?token=${localStorage.getItem("access")}`,
     {}

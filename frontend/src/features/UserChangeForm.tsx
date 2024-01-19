@@ -143,7 +143,10 @@ const UserChangeForm = ({ name }: { name: string }) => {
             <img
               style={{ gridArea: "a" }}
               src={serverURL + "/assets/img/uploadround.svg"}
-              className="object-cover object-center rounded-full h-full w-full opacity-100 relative z-30 hover:!drop-shadow-[0_0_1px_#4cf2f8] transition aspect-square	"
+              className={
+                "object-cover object-center rounded-full h-full w-full opacity-100 relative z-30 transition aspect-square	" +
+                (user?.image ? "!opacity-0 hover:!opacity-100" : "")
+              }
               alt=""
             />
           </label>

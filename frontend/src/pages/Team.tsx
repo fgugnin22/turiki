@@ -109,7 +109,7 @@ const Team = () => {
                       style={{ gridArea: "a" }}
                       src={serverURL + "/assets/img/uploadround.svg"}
                       className={
-                        "object-cover opacity-0 hover:opacity-100 object-center rounded-full h-full w-full relative z-30 hover:!drop-shadow-[0_0_1px_#4cf2f8] transition aspect-square	" +
+                        "object-cover opacity-0 hover:opacity-100 object-center rounded-full h-full w-full relative z-30 transition aspect-square	" +
                         (!data?.image ? " !opacity-100" : " opacity-0")
                       }
                       alt=""
@@ -130,7 +130,7 @@ const Team = () => {
                             before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
                           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                             before:z-10 z-40 before:bg-darkestturq bg-transparent h-12
-                            w-full mx-auto"
+                            w-full mx-auto before:rounded-[9px]"
                     >
                       <form
                         onSubmit={(e: React.FormEvent<HTMLFormElement>) => {
@@ -152,7 +152,7 @@ const Team = () => {
                             setNewTeamName(target.value);
                           }}
                           minLength={3}
-                          className="absolute inset-0 z-40 bg-transparent outline-none px-3 text-lightgray text-2xl"
+                          className="absolute inset-0 z-40 bg-transparent outline-none px-3 text-lightgray rounded-[10px] text-2xl"
                         />
                         <button
                           type="submit"
