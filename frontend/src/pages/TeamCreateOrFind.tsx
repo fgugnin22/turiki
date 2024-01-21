@@ -188,7 +188,7 @@ const TeamCreateOrFind = () => {
                               {"Игроков: " + team.players.length}
                             </p>
                           </div>
-                          {
+                          {team.is_open ? (
                             <button
                               onClick={async () => {
                                 if (!user) {
@@ -249,7 +249,36 @@ const TeamCreateOrFind = () => {
                                 </defs>
                               </svg>
                             </button>
-                          }
+                          ) : (
+                            <svg
+                              className="w-6 h-6 mr-2 flex items-center justify-center"
+                              width="16"
+                              height="21"
+                              viewBox="0 0 16 21"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                d="M2.75 7.22222V6.33333C2.75 3.37884 5.09167 1 8 1C10.9083 1 13.25 3.37884 13.25 6.33333V7.22222M2.75 7.22222C1.7875 7.22222 1 8.02222 1 9V17.8889C1 18.8667 1.7875 19.6667 2.75 19.6667H13.25C14.2125 19.6667 15 18.8667 15 17.8889V9C15 8.02222 14.2125 7.22222 13.25 7.22222M2.75 7.22222H13.25M8 14.4167V12.0833"
+                                stroke="url(#paint0_linear_466_1251)"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                              />
+                              <defs>
+                                <linearGradient
+                                  id="paint0_linear_466_1251"
+                                  x1="14.8057"
+                                  y1="0.611206"
+                                  x2="1.19464"
+                                  y2="20.0556"
+                                  gradientUnits="userSpaceOnUse"
+                                >
+                                  <stop stopColor="#21DBD3" />
+                                  <stop offset="1" stopColor="#18A3DC" />
+                                </linearGradient>
+                              </defs>
+                            </svg>
+                          )}
                         </div>
                       </div>
                     );

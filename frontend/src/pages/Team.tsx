@@ -25,6 +25,7 @@ const Team = () => {
   const [leaveFromTeam] = tournamentAPI.useLeaveFromTeamMutation();
   const [applyForTeam] = tournamentAPI.useApplyForTeamMutation();
   const [changeTeamName] = tournamentAPI.useChangeTeamNameMutation();
+  const [openOrCloseTeam] = tournamentAPI.useTeamOpennessMutation();
   const { data, isLoading, isError, isSuccess } =
     tournamentAPI.useGetTeamByIdQuery(params.id);
   const [inviteClicked, setInviteClicked] = useState(false);
@@ -46,6 +47,11 @@ const Team = () => {
     await dispatch(uploadTeamImage({ formData, teamId: data.id }));
     window.location.reload();
   };
+  if ((isSuccess && data.players.length === 0) || isError) {
+    dispatch(getUser(localStorage.getItem("access")!))
+      .unwrap()
+      .then(() => navigate(ROUTES.TEAMS.CREATE.path));
+  }
   return (
     <Layout>
       {isSuccess && (
@@ -78,11 +84,14 @@ const Team = () => {
                 {team_status === "CAPTAIN" && (
                   <button
                     onClick={() =>
-                      alert("JOKES ON YOU \nI DID NOT FINISH THIS")
+                      openOrCloseTeam({
+                        teamId: data.id,
+                        is_open: !data.is_open
+                      })
                     }
                     className="hover:text-lightblue active:text-turquoise transition font-medium"
                   >
-                    Сделать закрытой
+                    {data.is_open ? "Сделать закрытой" : "Сделать открытой"}
                   </button>
                 )}
               </div>
@@ -307,19 +316,6 @@ const Team = () => {
                     );
                   })}
               </div>
-              {/* {isSuccess && isAuthenticated && !team_status && (
-              <button
-                onClick={async () => {
-                  if (!isAuthenticated || !params) {
-                    return;
-                  }
-                  await applyForTeam(Number(params?.id));
-                  await dispatch(getUser(localStorage.getItem("access")!));
-                }}
-              >
-                +
-              </button>
-            )} */}
               {String(teamId) === String(params.id) ? (
                 <ButtonMain
                   onClick={async () => {
@@ -350,7 +346,7 @@ const Team = () => {
           <p
             data-content={"Заявки на вступление"}
             className="
-            bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent mx-auto text-center mt-16"
+            bg-gradient-to-r font-semibold text-xl from-lightblue to-turquoise bg-clip-text text-transparent mx-auto text-center mt-12"
           >
             {"Заявки на вступление"}
           </p>
@@ -444,6 +440,45 @@ const Team = () => {
                 );
               }
             })}
+            {!data.is_open && (
+              <div>
+                <svg
+                  className="w-6 h-6 mx-auto -mt-5 flex items-center justify-center opacity-60"
+                  width="16"
+                  height="21"
+                  viewBox="0 0 16 21"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M2.75 7.22222V6.33333C2.75 3.37884 5.09167 1 8 1C10.9083 1 13.25 3.37884 13.25 6.33333V7.22222M2.75 7.22222C1.7875 7.22222 1 8.02222 1 9V17.8889C1 18.8667 1.7875 19.6667 2.75 19.6667H13.25C14.2125 19.6667 15 18.8667 15 17.8889V9C15 8.02222 14.2125 7.22222 13.25 7.22222M2.75 7.22222H13.25M8 14.4167V12.0833"
+                    stroke="url(#paint0_linear_466_1251)"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                  />
+                  <defs>
+                    <linearGradient
+                      id="paint0_linear_466_1251"
+                      x1="14.8057"
+                      y1="0.611206"
+                      x2="1.19464"
+                      y2="20.0556"
+                      gradientUnits="userSpaceOnUse"
+                    >
+                      <stop stopColor="#21DBD3" />
+                      <stop offset="1" stopColor="#18A3DC" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+                <p
+                  data-content={"Заявки закрыты"}
+                  className="
+            bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent mx-auto text-center mt-2"
+                >
+                  {"Заявки закрыты"}
+                </p>
+              </div>
+            )}
           </div>
         </>
       )}

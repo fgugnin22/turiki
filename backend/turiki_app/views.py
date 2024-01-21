@@ -1,8 +1,6 @@
 import datetime
 
 from django.core.files import File
-from django.core.files.uploadedfile import TemporaryUploadedFile
-from django.db.models import Prefetch
 from rest_framework import serializers
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, JSONParser
@@ -46,14 +44,14 @@ class UserAPIView(GenericViewSet):
     def photo(self, request):
         try:
             image = request.data.get("image").file
-            user = request.user
-            img_name = f'assets/img/user{user.id}.png'
+            user: UserAccount = request.user
+            seconds = datetime.datetime.now().microsecond
+            img_name = f'assets/img/user{user.id}_{str(seconds)}.png'
             user.image = img_name
             file = File(image, name=img_name)  # TODO: this is not very safe
             if file.name[-4:] == ".png":
-                with open(STATICFILES_DIRS[0] + f"/img/user{user.id}.png", "wb+") as f:
+                with open(STATICFILES_DIRS[0] + f"/img/user{user.id}_{str(seconds)}.png", "wb+") as f:
                     f.writelines(file.readlines())
-                    f.close()
                 user.save()
                 return Response(status=200)
             else:
@@ -212,7 +210,7 @@ class MatchAPIView(ModelViewSet):
             result = request.data["team"]["result"]
             if type(result) != bool:
                 return Response("type of match result must be boolean", status=400)
-            res = claim_match_result(match, team_id, result)
+            res = claim_match_result(match.id, team_id, result)
             if res is not None:
                 return res
             return Response("Match result has been claimed")
@@ -230,6 +228,16 @@ class TeamAPIView(ModelViewSet):
     permission_classes = [IsAuthenticated]
     parser_classes = [MultiPartParser, JSONParser]
 
+    @action(methods=["PATCH"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
+    def openness(self, request, pk=None):
+        try:
+            team = self.get_object()
+            is_open = request.data["is_open"]
+            team.is_open = is_open
+            team.save()
+            return Response(status=204)
+        except Exception:
+            return Response(status=400)
     @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
     def photo(self, request, pk=None):
         try:
@@ -251,7 +259,7 @@ class TeamAPIView(ModelViewSet):
         except TypeError:
             return Response(status=400)
 
-    @action(methods=["PATCH"], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=["PATCH"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
     def player_status(self, request, pk=None):
         pass
 
@@ -289,7 +297,6 @@ class TeamAPIView(ModelViewSet):
         permission_classes=[IsCaptainOfThisTeamOrAdmin],
     )
     def change_name(self, request, pk=None):
-        print('huh')
         try:
             team = self.get_object()
             name = request.data.get("name", team.name)

@@ -7,6 +7,11 @@ export const continueWithGoogle = async () => {
         }`
       )
     ).json();
+    console.log(
+      `${import.meta.env.VITE_API_URL}/auth/o/google-oauth2/?redirect_uri=${
+        import.meta.env.VITE_API_URL
+      }`
+    );
     window.location.replace(res.authorization_url);
   } catch (err) {
     console.error(err);

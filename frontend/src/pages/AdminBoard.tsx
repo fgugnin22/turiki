@@ -61,7 +61,11 @@ const AdminBoard = () => {
     const target = e.target as HTMLInputElement;
     setFormState((p: any) => ({ ...p, [target.name]: target.value }));
   };
-  if ((user.userDetails && !user.userDetails?.is_staff) || user.loginFail) {
+  if (
+    (user.userDetails && !user.userDetails?.is_staff) ||
+    user.loginFail ||
+    !localStorage.getItem("access")
+  ) {
     navigate(ROUTES.NO_MATCH404.path, { replace: true });
   }
   const onTournamentSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -152,8 +156,8 @@ const AdminBoard = () => {
               required
               value={formState.time_to_check_in}
               onChange={onChange}
-              defaultValue={"00:01:00"}
-              placeholder={"00:01:00"}
+              defaultValue={"00:00:05"}
+              placeholder={"00:00:05"}
               id="time_to_check_in"
               name="time_to_check_in"
               type="text"
@@ -251,7 +255,7 @@ const AdminBoard = () => {
         </p>
         {isSuccess && data?.length > 0 ? (
           <div className="mx-auto mt-12 text-lightgray relative right-[200px] w-[1500px]">
-            {data?.map((tourn, index) => {
+            {data.map((tourn, index) => {
               const statusString = useTournamentStatus(tourn.status);
               return (
                 <div className="flex gap-x-2 text-black" key={index}>

@@ -76,7 +76,7 @@ class Team(models.Model):
     tournaments = models.ManyToManyField(Tournament, related_name="teams", blank=True)
     next_member = models.CharField(null=True, blank=True, max_length=255)
     image = models.FilePathField(path=images_path(), blank=True, null=True)
-
+    is_open = models.BooleanField(default=True)
     def __str__(self):
         return self.name
 
@@ -171,7 +171,7 @@ class Match(models.Model):
     time_to_confirm_results = models.DurationField(default=datetime.timedelta(minutes=2))
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="matches",
                                    null=True, blank=True, )
-
+    is_last = models.BooleanField(default=False)
     def get_participants(self):
         arr = list(self.teams.values())
         if len(arr) == 0:

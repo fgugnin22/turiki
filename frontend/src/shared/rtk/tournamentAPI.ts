@@ -167,7 +167,8 @@ export const tournamentAPI = createApi({
           method: "POST",
           body
         };
-      }
+      },
+      invalidatesTags: ["Tournament"]
     }),
     createTeam: build.mutation<Team, string>({
       query: (name) => {
@@ -263,6 +264,18 @@ export const tournamentAPI = createApi({
           url: `team/${teamId}/change_name/`,
           body: {
             name: newName
+          }
+        };
+      },
+      invalidatesTags: ["Team"]
+    }),
+    teamOpenness: build.mutation<null, { teamId: number; is_open: boolean }>({
+      query: ({ teamId, is_open }) => {
+        return {
+          method: "PATCH",
+          url: `team/${teamId}/openness/`,
+          body: {
+            is_open
           }
         };
       },

@@ -63,13 +63,13 @@ def check_for_teams_in_lobby(match_id):
     if p1.in_lobby and p2.in_lobby:
         return
     if p1.in_lobby and not p2.in_lobby:
-        claim_match_result(match, p1.team.id, True)
-        claim_match_result(match, p2.team.id, False)
+        claim_match_result(match.id, p1.team.id, True)
+        claim_match_result(match.id, p2.team.id, False)
         return
         # make p1 win and p2 lose
     if not p1.in_lobby and p2.in_lobby:
-        claim_match_result(match, p2.team.id, True)
-        claim_match_result(match, p1.team.id, False)
+        claim_match_result(match.id, p2.team.id, True)
+        claim_match_result(match.id, p1.team.id, False)
         return
         # make p2 win and p1 lose
     print("nobody enter lobby, retrying again in (amount of time to enter the lobby)")
@@ -131,7 +131,7 @@ def set_active(match):  # self-explanatory fr tho
 def auto_finish_match(match_id, team_id, result):
     match = Match.objects.get(pk=match_id)
     from turiki_app.match_services import claim_match_result
-    claim_match_result(match, team_id, result)
+    claim_match_result(match.id, team_id, result)
 
 
 # TODO: сделать отложенную активацию матча и создание лобби
@@ -156,6 +156,7 @@ def set_tournament_status(tournament_id, status):
     tournament.save()
 
 
+
 # TODO: сделать отложенное автоматическое наполнение матчей
 @dramatiq.actor
 def set_initial_matches(tournament):
@@ -165,23 +166,28 @@ def set_initial_matches(tournament):
     """
     matches = list(tournament.matches.values())
     teams = list(tournament.teams.values())
-    is_enough_teams_to_start = len(teams) == 2 ** tournament.max_rounds
-    if not is_enough_teams_to_start:
-        raise serializers.ValidationError("Неверное кол-во команд для наполнения начальных матчей")
     random.shuffle(teams)
     initial_matches = []
     exec_task_on_date(set_tournament_status, [tournament.id, tournament.allowed_statuses[-2]], when=tournament.starts)
     for match in matches:
-        is_match_initial = int(match["name"]) == int(tournament.max_rounds)
+        is_match_initial = match["is_last"]
         if is_match_initial:
             initial_matches.append(match)
-    for i, match in enumerate(initial_matches):
+    for _, match in enumerate(initial_matches):
         match_object = Match.objects.get(pk=match["id"])
         team1 = teams.pop()
         team1 = Team.objects.get(pk=team1["id"])
         participant1 = Participant.objects.create(
             team=team1, match=match_object, status="NO_SHOW", result_text="TBD"
         )
+        match_object.participants.add(participant1)
+        match_object.save()
+    for _, match in enumerate(initial_matches):
+        match_object = Match.objects.get(pk=match["id"])
+        if len(teams) == 0:
+            print(match_object.participants.values())
+            exec_task_on_date(auto_finish_match, [match_object.id, match_object.participants.first().team.id, True], when=match_object.tournament.starts)
+            continue
         team2 = teams.pop()
         team2 = Team.objects.get(pk=team2["id"])
         participant2 = Participant.objects.create(
@@ -189,8 +195,6 @@ def set_initial_matches(tournament):
         )
         match_object.starts = tournament.starts
         exec_task_on_date(set_match_start_bans, [match_object.id], when=tournament.starts)
-
-        match_object.participants.add(participant1)
         match_object.participants.add(participant2)
         match_object.save()
     tournament.save()
@@ -202,12 +206,12 @@ def create_bracket(tournament, rounds):
     # вызывает функцию create_match я хз зачем так непонятно сделал с именами, потом переделаю TODO:!!!
     if tournament.status != tournament.allowed_statuses[4]:
         raise serializers.ValidationError("Создать сетку можно ТОЛЬКО после чек-ин'а")
-    is_enough_teams_to_start_tournament = len(list(tournament.teams.values())) == 2 ** rounds and len(
-        list(tournament.matches.values())) == 0
+    is_enough_teams_to_start_tournament = (2 ** (rounds - 1) < len(list(tournament.teams.values())) <= 2 ** rounds and len(
+        list(tournament.matches.values())) == 0)
     if is_enough_teams_to_start_tournament:
         create_match(rounds, rounds, tournament, None, tournament.starts)
         return tournament
-    raise serializers.ValidationError("Недостаточно команд для старта турнира")
+    raise serializers.ValidationError("Неверное кол-во команд для заданного кол-ва раундов в турнире!")
 
 
 @dramatiq.actor
@@ -232,8 +236,9 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             time_to_enter_lobby=tournament.time_to_enter_lobby,
             time_results_locked=tournament.time_results_locked,
             time_to_confirm_results=tournament.time_to_confirm_results,
+            is_last=True
         )
-        time_to_start_match_from_beginning_of_tournament = datetime.timedelta(minutes=(next_round_count - 1) * 60)
+        # time_to_start_match_from_beginning_of_tournament = datetime.timedelta(minutes=(next_round_count - 1) * 60)
         create_match(next_round_count - 1, rounds, tournament, final_match, starts)
     else:
         starts = None
@@ -247,6 +252,7 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             time_to_enter_lobby=tournament.time_to_enter_lobby,
             time_results_locked=tournament.time_results_locked,
             time_to_confirm_results=tournament.time_to_confirm_results,
+            is_last=True
         )
         match2 = Match.objects.create(
             next_match=next_match,
@@ -258,7 +264,9 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             time_to_enter_lobby=tournament.time_to_enter_lobby,
             time_results_locked=tournament.time_results_locked,
             time_to_confirm_results=tournament.time_to_confirm_results,
+            is_last=True
         )
-
+        match1.next_match.is_last = False
+        match1.next_match.save()
         create_match(next_round_count - 1, rounds, tournament, match1, starts)
         create_match(next_round_count - 1, rounds, tournament, match2, starts)

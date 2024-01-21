@@ -21,7 +21,7 @@ const sortMatchesForBracket = (matches: Match[] | undefined) => {
           if (!match2.next_match) {
             return -1;
           }
-          return match1.next_match - match2.next_match;
+          return match2.next_match - match1.next_match;
         })
     );
   }

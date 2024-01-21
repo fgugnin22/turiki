@@ -96,6 +96,7 @@ export interface Team {
   games: any[];
   players: Player[];
   image: string;
+  is_open: boolean;
 }
 export interface Match2 {
   first_result_claimed: string;

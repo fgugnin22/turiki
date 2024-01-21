@@ -287,6 +287,8 @@ class TeamService:
 
     @staticmethod
     def apply_for_team(team, player):
+        if not team.is_open:
+            return "team is closed for applications"
         team_players_ids = map(lambda x: x["id"], list(team.players.values()))
         if player.id in team_players_ids:
             return "player already applied for this team"
