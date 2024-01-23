@@ -247,5 +247,6 @@ class Message(models.Model):
     content = models.CharField(max_length=512, blank=False, null=False)
     created_at = models.DateTimeField(blank=True, null=True)
     type = models.CharField(max_length=31, default="message")
+    seen = models.BooleanField(default=False)
     def __str__(self):
         return f"{self.user}_{self.content}_at_{self.created_at}_{self.chat}"

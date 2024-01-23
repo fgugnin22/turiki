@@ -26,8 +26,9 @@ const Team = () => {
   const [applyForTeam] = tournamentAPI.useApplyForTeamMutation();
   const [changeTeamName] = tournamentAPI.useChangeTeamNameMutation();
   const [openOrCloseTeam] = tournamentAPI.useTeamOpennessMutation();
-  const { data, isLoading, isError, isSuccess } =
-    tournamentAPI.useGetTeamByIdQuery(params.id);
+  const { data, isLoading, isError } = tournamentAPI.useGetTeamByIdQuery(
+    params.id
+  );
   const [inviteClicked, setInviteClicked] = useState(false);
   const [dropdown, setDropdown] = useState(false);
   const [playerDropdowns, setPlayerDropdowns] = useState(-1);
@@ -47,14 +48,14 @@ const Team = () => {
     await dispatch(uploadTeamImage({ formData, teamId: data.id }));
     window.location.reload();
   };
-  if ((isSuccess && data.players.length === 0) || isError) {
+  if ((data && data.players.length === 0) || isError) {
     dispatch(getUser(localStorage.getItem("access")!))
       .unwrap()
       .then(() => navigate(ROUTES.TEAMS.CREATE.path));
   }
   return (
     <Layout>
-      {isSuccess && (
+      {data && (
         <>
           <div
             className="rounded-[10px] mt-16 relative after:absolute 

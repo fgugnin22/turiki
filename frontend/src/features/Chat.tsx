@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../shared/rtk/store";
-import { SendMessage } from "react-use-websocket";
+import useWebSocket, { SendMessage } from "react-use-websocket";
+import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 interface chatArgs {
   chatId: number;
   content: string;
@@ -9,16 +10,21 @@ interface ChatProps {
   chatId: number;
   messages: any[];
   error?: string;
-  sendMessage: SendMessage;
-  lastMessage: MessageEvent | null;
 }
+const websocketURL = import.meta.env.VITE_WEBSCOKET_ENDPOINT;
 
 const Chat = (props: ChatProps) => {
-  const { sendMessage, lastMessage } = props;
+  const { sendMessage, lastMessage } = useWebSocket(
+    `${websocketURL}/ws/chat/${props.chatId}/?token=${localStorage.getItem(
+      "access"
+    )}`,
+    {}
+  );
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
   const [message, setMessage] = useState("");
+
   const onChangeMessage = (e: React.FormEvent) =>
     setMessage((e.target as HTMLInputElement).value);
   const onSubmit = (e: React.FormEvent<HTMLInputElement>) => {
@@ -40,6 +46,9 @@ const Chat = (props: ChatProps) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const [messages, setMessages] = useState(props.messages);
+  if (props.messages.length > messages.length) {
+    setMessages(props.messages);
+  }
   useEffect(scrollToBottom, [messages]);
   useEffect(() => {
     if (lastMessage !== null) {
@@ -48,7 +57,7 @@ const Chat = (props: ChatProps) => {
   }, [lastMessage]);
   return (
     <div
-      className=" justify-self-end flex flex-col grow mt-4 max-w-[calc(100%-1rem)] w-full bg-transparent text-lightgray rounded-[10px]
+      className=" justify-self-end flex flex-col grow mt-4 w-full bg-transparent text-lightgray rounded-[10px]
     overflow-hidden min-h-[400px] relative after:absolute 
     before:absolute after:inset-0 before:inset-[2px] after:bg-gradient-to-r
   after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 

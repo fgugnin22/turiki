@@ -13,12 +13,10 @@ type TournamentTeamPlayerListProps = {
 };
 
 const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
-  const { data: tournament, isSuccess } =
-    tournamentAPI.useGetTournamentByIdQuery({
-      id: props.tournamentId
-    });
-  const { data: team, isSuccess: isTeamSuccess } =
-    tournamentAPI.useGetTeamByIdQuery(props.team.id);
+  const { data: tournament } = tournamentAPI.useGetTournamentByIdQuery({
+    id: props.tournamentId
+  });
+  const { data: team } = tournamentAPI.useGetTeamByIdQuery(props.team.id);
   return (
     <div
       className="rounded-[10px] relative after:absolute 
@@ -27,7 +25,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
             before:z-10 z-20 before:bg-dark before:rounded-[9px]
             before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%] before:drop-shadow-[0_0_3px_#4cf2f8]"
     >
-      {isTeamSuccess && (
+      {team && (
         <div className="w-full relative z-50 ">
           <div className="flex items-center mt-5 mx-6 gap-3 justify-start">
             <a href="#" className="">

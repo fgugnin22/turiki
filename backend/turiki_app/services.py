@@ -353,3 +353,12 @@ def async_create_message(user, chat_id, content):
     chat.save()
     return Message.objects.create(user=user, chat=chat, content=content,
                                   created_at=datetime.now(tz=pytz.timezone('Europe/Moscow')))
+
+# @database_sync_to_async
+# def searchNotification(chat_id) -> Message and None:
+#     chat: Chat = Chat.objects.get(pk=chat_id)
+#     messages: list[Message] = chat.messages
+#     for message in messages:
+#         if message.type == 'notification' and not message.seen:
+#             return message
+#     return None

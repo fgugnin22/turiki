@@ -21,7 +21,6 @@ def claim_match_result(match_id: int, team_id, result):
             return
         if match.started + match.time_results_locked >= datetime.now(tz=pytz.timezone('Europe/Moscow')):
             return Response(status=400)
-        print(123)
         [p1, p2] = list(match.participants.values())
         p1 = Participant.objects.get(pk=p1["id"])
         if team_id == p1.team.id:
@@ -56,7 +55,6 @@ def notify(match, content):
 
 def end_match(match: Match):
     # ставит результат матча с валидацией на одинаковые результаты обеих команд и в случае успеха обновляет след матч
-    print(3)
     from turiki_app.tasks import exec_task_on_date, auto_finish_match
     if match.participants.count() == 1:
         p1 = match.participants.first()
@@ -66,7 +64,6 @@ def end_match(match: Match):
         p1.save()
         match.state = "SCORE_DONE"
         match.save()
-        print(4)
         if next_match is None:
             # this block should not run but i leave it anyways
             tournament = match.tournament
@@ -74,7 +71,6 @@ def end_match(match: Match):
             tournament.save()
             return
         update_next_match(next_match, p1)
-        print(5)
         return
     [p1, p2] = list(match.participants.values())
     p1 = Participant.objects.get(pk=p1["id"])

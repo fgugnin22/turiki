@@ -133,22 +133,18 @@ const Test = () => {
               className="absolute z-50 top-[65px] left-[calc(50%-25px)]"
             />
             <>
-              {match.isSuccess &&
-                match.data.participants[0] &&
-                team1?.isSuccess && (
-                  <TeamPlayerList
-                    tournamentId={match.data.tournament ?? -1}
-                    team={team1.data}
-                  />
-                )}
-              {match.isSuccess &&
-                match.data.participants[0] &&
-                team1?.isSuccess && (
-                  <TeamPlayerList
-                    tournamentId={match.data.tournament ?? -1}
-                    team={team1.data}
-                  />
-                )}
+              {match.data && match.data.participants[0] && team1?.data && (
+                <TeamPlayerList
+                  tournamentId={match.data.tournament ?? -1}
+                  team={team1.data}
+                />
+              )}
+              {match.data && match.data.participants[0] && team1?.data && (
+                <TeamPlayerList
+                  tournamentId={match.data.tournament ?? -1}
+                  team={team1.data}
+                />
+              )}
 
               {/* {
                 <>

@@ -26,6 +26,7 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
     tournamentAPI.useGetTournamentByIdQuery({
       id: props.tournamentId
     });
+
   return (
     <div
       className="rounded-[10px] relative after:absolute 

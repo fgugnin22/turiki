@@ -9,40 +9,38 @@ import { Participant } from "../helpers/transformMatches";
 import MapBans from "../shared/MapBans";
 import { useCountdown } from "../hooks/useCountDown";
 import { useEffect } from "react";
-import useWebSocket from "react-use-websocket";
 import ButtonMain from "../shared/ButtonMain";
 const serverURL = import.meta.env.VITE_API_URL;
-const websocketURL = import.meta.env.VITE_WEBSCOKET_ENDPOINT;
 const Match = () => {
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
 
   const params = useParams();
-  const {
-    data: match,
-    isSuccess,
-    isFetching
-  } = tournamentAPI.useGetMatchByIdQuery({ id: params.id! });
+  const { data: match, isFetching } = tournamentAPI.useGetMatchByIdQuery({
+    id: params.id!
+  });
   const [getMatch] = tournamentAPI.useLazyGetMatchByIdQuery();
-  const {
-    data: chat,
-    isSuccess: isGetMessagesSuccess,
-    isError: isGetMessagesError
-  } = tournamentAPI.useGetChatMessagesQuery(
-    { chatId: match?.lobby?.chat },
-    { skip: isFetching || !match?.lobby }
-  );
+  const { data: chat, isSuccess: isChatSuccess } =
+    tournamentAPI.useGetChatMessagesQuery(
+      { chatId: match?.lobby?.chat },
+      { skip: !match?.lobby }
+    );
+
   const messages = chat?.messages;
-  const { data: team1, isSuccess: isTeam1Success } =
-    tournamentAPI.useGetTeamByIdQuery(match?.participants[0]?.team.id, {
+  const { data: team1 } = tournamentAPI.useGetTeamByIdQuery(
+    match?.participants[0]?.team.id,
+    {
       skip: isFetching || !match?.participants[0]?.team?.id
-    });
-  const { data: team2, isSuccess: isTeam2Success } =
-    tournamentAPI.useGetTeamByIdQuery(match?.participants[1]?.team.id, {
+    }
+  );
+  const { data: team2 } = tournamentAPI.useGetTeamByIdQuery(
+    match?.participants[1]?.team.id,
+    {
       skip: isFetching || !match?.participants[1]?.team
-    });
+    }
+  );
   const [confirmTeamInLobby] = tournamentAPI.useConfirmTeamInLobbyMutation();
   const starts = new Date(match?.starts!);
   const started = new Date(match?.started!);
@@ -50,7 +48,7 @@ const Match = () => {
     started.getMinutes() + Number(match?.time_results_locked.split(":")[1])
   );
   let selfParticipant: Participant | null = null;
-  if (isSuccess) {
+  if (match) {
     selfParticipant =
       match?.participants[0]?.team.id === user?.team
         ? match?.participants[0]
@@ -76,15 +74,17 @@ const Match = () => {
       getMatch({ id: params.id! });
     }
   }, [timeBeforeMatchStart.seconds]);
-  const { sendMessage, lastMessage } = useWebSocket(
-    `${websocketURL}/ws/chat/${
-      match?.lobby?.chat
-    }/?token=${localStorage.getItem("access")}`,
-    {}
-  );
+
+  // useEffect(() => {
+  //   const a = setInterval(
+  //     () => fetchChat({ chatId: match?.lobby?.chat }),
+  //     10000
+  //   );
+  //   return () => clearInterval(a);
+  // }, []);
   return (
     <Layout>
-      {isSuccess && (
+      {match && (
         <>
           <div className="text-center mt-2 text-2xl">
             <p
@@ -179,10 +179,10 @@ const Match = () => {
               className="absolute z-50 top-[65px] left-[calc(50%-25px)]"
             />
             <>
-              {isSuccess && match.participants[0] && isTeam1Success && (
+              {match && match.participants[0] && team1 && (
                 <TeamPlayerList tournamentId={match.tournament!} team={team1} />
               )}
-              {isSuccess && match.participants[1] && isTeam2Success && (
+              {match && match.participants[1] && team2 && (
                 <TeamPlayerList tournamentId={match.tournament!} team={team2} />
               )}
 
@@ -266,14 +266,9 @@ const Match = () => {
                 </div>
               )}
             {match?.state === "SCORE_DONE" && <div className=""></div>}
-            {((user?.is_staff && isGetMessagesSuccess) ||
-              (isGetMessagesSuccess && isAuthenticated && selfParticipant)) && (
-              <Chat
-                sendMessage={sendMessage}
-                lastMessage={lastMessage}
-                messages={messages}
-                chatId={match?.lobby?.chat!}
-              />
+            {((user?.is_staff && isChatSuccess) ||
+              (isChatSuccess && isAuthenticated && selfParticipant)) && (
+              <Chat messages={messages} chatId={match?.lobby?.chat!} />
             )}
           </div>
         </>

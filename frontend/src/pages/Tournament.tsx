@@ -49,14 +49,12 @@ export const Tournament = () => {
   const {
     data: tournament,
     error,
-    isLoading,
-    isSuccess
+    isLoading
   } = tournamentAPI.useGetTournamentByIdQuery({
     id: tournId!
   });
   const isTeamNotRegistered =
     user &&
-    isSuccess &&
     tournament &&
     !tournament.teams.some((team: Team) => Number(team.id) === user.team);
   const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
@@ -70,7 +68,7 @@ export const Tournament = () => {
       <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
         <Header />
       </div>
-      {isSuccess && (
+      {tournament && (
         <>
           <div
             style={{

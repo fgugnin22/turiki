@@ -31,7 +31,7 @@ const AdminBoard = () => {
   const [initializeMatches] = tournamentAPI.useInitializeMatchesMutation();
   const [fetchTeamById] = tournamentAPI.useLazyGetTeamByIdQuery();
   const [changeStatus] = tournamentAPI.useChangeTournamentStatusMutation();
-  const { data, error, isLoading, isSuccess } =
+  const { data, error, isLoading } =
     tournamentAPI.useGetAllTournamentsQuery(null);
   const [teamIds, setTeamIds] = useState<any[]>([]);
   const [teams, setTeams] = useState<Team[]>([]);
@@ -253,7 +253,7 @@ const AdminBoard = () => {
         <p className="w-96 text-xl text-lightgray mx-auto my-12 font-medium">
           {tournData}
         </p>
-        {isSuccess && data?.length > 0 ? (
+        {data && data?.length > 0 ? (
           <div className="mx-auto mt-12 text-lightgray relative right-[200px] w-[1500px]">
             {data.map((tourn, index) => {
               const statusString = useTournamentStatus(tourn.status);

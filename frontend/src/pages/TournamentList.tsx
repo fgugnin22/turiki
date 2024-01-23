@@ -11,8 +11,7 @@ import { useTournamentStatus } from "../hooks/useTournamentStatus";
 const serverURL = import.meta.env.VITE_API_URL;
 
 const TournamentList = () => {
-  const { data, error, isLoading, isSuccess } =
-    tournamentAPI.useGetAllTournamentsQuery(null);
+  const { data } = tournamentAPI.useGetAllTournamentsQuery(null);
   return (
     <Layout>
       {
@@ -25,7 +24,7 @@ const TournamentList = () => {
           >
             Турниры
           </h2>
-          {isSuccess && data?.length > 0 ? (
+          {data && data?.length > 0 ? (
             <div className="mx-auto mt-12 text-lightgray">
               {data?.map((tourn, index) => {
                 const statusString = useTournamentStatus(tourn.status);
