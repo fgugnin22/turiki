@@ -76,19 +76,21 @@ def end_match(match: Match):
     p1 = Participant.objects.get(pk=p1["id"])
     p2 = Participant.objects.get(pk=p2["id"])
     next_match = match.next_match
+    if p1.is_winner is None and p2.is_winner:
+        if match.state != "SCORE_DONE":
+            notify(match, f"Команда {p2.team.name} выставила свой результат: победа!")
+    elif p2.is_winner is None and p1.is_winner:
+        if match.state != "SCORE_DONE":
+            notify(match, f"Команда {p1.team.name} выставила свой результат: победа!")
     if p1.is_winner == p2.is_winner:
         notify(match, "Результат матча оспорен!")
         return
     
     if p1.is_winner is None and p2.is_winner:
-        if match.state != "SCORE_DONE":
-            notify(match, f"Команда {p2.team.name} выставила свой результат: победа!")
         match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
         exec_task_on_date(auto_finish_match, [match.id, p1.team.id, False],
                           datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_confirm_results)
     elif p2.is_winner is None and p1.is_winner:
-        if match.state != "SCORE_DONE":
-            notify(match, f"Команда {p1.team.name} выставила свой результат: победа!")
         match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
         exec_task_on_date(auto_finish_match, [match.id, p2.team.id, False],
                           datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_confirm_results)

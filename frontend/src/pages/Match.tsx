@@ -18,14 +18,16 @@ const Match = () => {
   // const dispatch = useAppDispatch();
 
   const params = useParams();
-  const { data: match, isFetching } = tournamentAPI.useGetMatchByIdQuery({
-    id: params.id!
-  });
-  const [getMatch] = tournamentAPI.useLazyGetMatchByIdQuery();
+  const { data: match, isFetching } = tournamentAPI.useGetMatchByIdQuery(
+    {
+      id: params.id!
+    },
+    { pollingInterval: 3000 }
+  );
   const { data: chat, isSuccess: isChatSuccess } =
     tournamentAPI.useGetChatMessagesQuery(
       { chatId: match?.lobby?.chat },
-      { skip: !match?.lobby }
+      { skip: !match?.lobby, pollingInterval: 3000 }
     );
 
   const messages = chat?.messages;
@@ -64,24 +66,6 @@ const Match = () => {
   const timeBeforeMatchStart = useCountdown(starts);
   const timeToNextAction = useCountdown(started);
   const { seconds, minutes } = useCountdown(new Date(timeToBan));
-  useEffect(() => {
-    if (seconds === -1 || seconds % 10 === 9) {
-      getMatch({ id: params.id! });
-    }
-  }, [seconds]);
-  useEffect(() => {
-    if (timeBeforeMatchStart.seconds === -1) {
-      getMatch({ id: params.id! });
-    }
-  }, [timeBeforeMatchStart.seconds]);
-
-  // useEffect(() => {
-  //   const a = setInterval(
-  //     () => fetchChat({ chatId: match?.lobby?.chat }),
-  //     10000
-  //   );
-  //   return () => clearInterval(a);
-  // }, []);
   return (
     <Layout>
       {match && (
