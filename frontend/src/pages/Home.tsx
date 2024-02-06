@@ -1,8 +1,6 @@
 import { ROUTES } from "../shared/RouteTypes";
-// import { useState } from "react";
 import ButtonMain from "../shared/ButtonMain";
 import Header from "../widgets/Header";
-import Footer from "../widgets/Footer";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { getParameterByName } from "../helpers/getParameterByName";
 import { useEffect } from "react";
@@ -10,7 +8,6 @@ import { checkAuth, googleAuthenticate } from "../shared/rtk/user";
 const server_URL = import.meta.env.VITE_API_URL;
 
 const Home = () => {
-    // const [clicked, setClicked] = useState(false);
     const isAuthenticated = useAppSelector(
         (state) => state.user.isAuthenticated
     );
@@ -42,7 +39,7 @@ const Home = () => {
                 style={{
                     backgroundImage: `url(${server_URL}/assets/img/landingbg.webp)`
                 }}
-                className="absolute inset-0 z-0 opacity-40 bg-center bg-cover bg-no-repeat"
+                className="absolute inset-0 z-0 opacity-40 bg-center bg-cover bg-no-repeat transition"
             ></div>
             <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
                 <Header />
