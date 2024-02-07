@@ -95,7 +95,7 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
     try:
         if match.bans.ban_log[move] == MapBan.CAPTAIN:
             print('CAPTAIN VOTED FOR MAPBAN, AUTO BAN CANCELLED')
-            return "xd"
+            return
     except:
         pass
     a = list(match.participants.values())

@@ -328,3 +328,7 @@ class ChatAPIView(ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         raise serializers.ValidationError("not allowed use websocket instead")
+    
+    def destroy(self, request, *args, **kwargs):
+        raise serializers.ValidationError("nonononono, NO!")
+        return super().destroy(request, *args, **kwargs)

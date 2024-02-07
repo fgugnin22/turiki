@@ -150,7 +150,7 @@ class MapBan(models.Model):
                                     null=True),
         size=DEFAULT_MAP_POOL_SIZE,
         default=get_default_map_pool)
-    target_map_amount = models.IntegerField(default=1)
+
     def __str__(self):
         return f"{self.id}"
 
@@ -173,6 +173,7 @@ class Match(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="matches",
                                    null=True, blank=True, )
     is_last = models.BooleanField(default=False)
+    is_bo3 = models.BooleanField(default=False)
     def get_participants(self):
         arr = list(self.teams.values())
         if len(arr) == 0:

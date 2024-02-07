@@ -64,7 +64,7 @@ const Home = () => {
                         </p>
                     </h1>
                     <ButtonMain
-                        className="py-5 px-36 hover:py-5 hover:px-36 active:py-5 active:px-36 focus:py-[18px] focus:px-[142px] mr-auto"
+                        className="py-5 px-36 hover:py-5 hover:px-36 active:px-[142px] focus:py-[18px] active:py-[18px] focus:px-[142px] mr-auto"
                         onClick={handleRedirect}
                     >
                         Зарегистрироваться

@@ -5,9 +5,9 @@ import jwt
 from django.utils.timezone import now
 from rest_framework.response import Response
 
-from .models import Tournament, Team, Participant, UserAccount, Lobby, Chat, Message
+from .models import Tournament, Team, Participant, UserAccount, Chat, Message
 from rest_framework import serializers
-from turiki_app.tasks import set_match_start_bans, set_match_active, exec_task_on_date, set_tournament_status
+from turiki_app.tasks import exec_task_on_date, set_tournament_status
 import pytz
 
 utc = pytz.UTC
@@ -353,12 +353,3 @@ def async_create_message(user, chat_id, content):
     chat.save()
     return Message.objects.create(user=user, chat=chat, content=content,
                                   created_at=datetime.now(tz=pytz.timezone('Europe/Moscow')))
-
-# @database_sync_to_async
-# def searchNotification(chat_id) -> Message and None:
-#     chat: Chat = Chat.objects.get(pk=chat_id)
-#     messages: list[Message] = chat.messages
-#     for message in messages:
-#         if message.type == 'notification' and not message.seen:
-#             return message
-#     return None
