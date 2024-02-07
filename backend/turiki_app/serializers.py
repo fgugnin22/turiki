@@ -99,7 +99,11 @@ class MatchSerializer(serializers.ModelSerializer):
             "time_to_enter_lobby",
             "time_results_locked",
             "time_to_confirm_results",
-            "first_result_claimed"
+            "first_result_claimed",
+            "is_bo3",
+            "is_visible",
+            "bo3_order",
+            "current_map",
         )
 
 

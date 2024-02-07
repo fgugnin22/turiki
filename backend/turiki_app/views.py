@@ -204,7 +204,7 @@ class MatchAPIView(ModelViewSet):
         methods=["PATCH"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin]
     )
     def claim_result(self, request, pk=None):
-        try:
+        # try:
             match = self.get_object()
             team_id = request.user.team.id
             result = request.data["team"]["result"]
@@ -214,8 +214,8 @@ class MatchAPIView(ModelViewSet):
             if res is not None:
                 return res
             return Response("Match result has been claimed")
-        except:
-            return Response("data types mismatch", status=400)
+        # except:
+        #     return Response("data types mismatch", status=400)
 
     @action(methods=["PATCH"], detail=True, permission_classes=[IsAdminUser])
     def force_status(self, request, pk=None):

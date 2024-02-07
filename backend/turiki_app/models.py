@@ -174,6 +174,9 @@ class Match(models.Model):
                                    null=True, blank=True, )
     is_last = models.BooleanField(default=False)
     is_bo3 = models.BooleanField(default=False)
+    is_visible = models.BooleanField(default=True)
+    bo3_order = models.IntegerField(default=0)
+    current_map = models.CharField(null=True, blank=True)
     def get_participants(self):
         arr = list(self.teams.values())
         if len(arr) == 0:

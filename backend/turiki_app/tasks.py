@@ -22,7 +22,6 @@ def set_match_start_bans(match_id: int):
         return
     if match.state == "NO_SHOW":
         match.state = "BANS"
-        print(match.participants.values(), 4)
         [team1, team2] = [Team.objects.get(pk=match.participants.values()[0]["team_id"]),
                           Team.objects.get(pk=match.participants.values()[1]["team_id"])]
         initial_timestamps = [match.starts]
@@ -80,11 +79,10 @@ def check_for_teams_in_lobby(match_id):
 @dramatiq.actor
 def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
     """Я в афиге.... чсно гря"""
-    start = datetime.datetime.now()
     team = Team.objects.get(pk=team_id)
     match = Match.objects.get(pk=match_id)
 
-    if len(match.bans.maps) == 1:
+    if len(match.bans.maps) == 1 or (match.is_bo3 and len(match.bans.maps) == 3):
         return
 
     if not map_to_ban.upper() in match.bans.maps:
@@ -105,8 +103,11 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
     match.bans.previous_team = team.id
     match.bans.timestamps.append(datetime.datetime.now() + datetime.timedelta(seconds=1))
     match.bans.ban_log.append(who_banned)
-    if len(match.bans.maps) == 1:
-        # TODO: we doing it here
+    if len(match.bans.maps) == 1 or (match.is_bo3 and len(match.bans.maps) == 3):
+        if not match.is_bo3:
+            match.current_map = match.bans.maps[0]
+        if match.is_bo3:
+            match.current_map = match.bans.maps[0]
         exec_task_on_date(check_for_teams_in_lobby, [match.id],
                           datetime.datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_enter_lobby)
         set_match_active(match)
@@ -116,7 +117,6 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
                       datetime.datetime.now() + match.bans.time_to_select_map)
     match.bans.save()
     match.save()
-    print(f"Время выполнения бана: {datetime.datetime.now() - start}")
 
 
 @dramatiq.actor
@@ -236,7 +236,8 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             time_to_enter_lobby=tournament.time_to_enter_lobby,
             time_results_locked=tournament.time_results_locked,
             time_to_confirm_results=tournament.time_to_confirm_results,
-            is_last=True
+            is_last=True,
+            is_bo3=True
         )
         # time_to_start_match_from_beginning_of_tournament = datetime.timedelta(minutes=(next_round_count - 1) * 60)
         create_match(next_round_count - 1, rounds, tournament, final_match, starts)
