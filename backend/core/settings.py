@@ -2,7 +2,7 @@ import os
 from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
-
+import redis
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -213,16 +213,17 @@ GRAPH_MODELS = {
 
 # настройки очереди DRAMATIQ
 DRAMATIQ_AUTODISCOVER_MODULES = ["tasks", "services"]
+
 DRAMATIQ_BROKER = {
-    "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
+    "BROKER": "dramatiq.brokers.redis.RedisBroker",
     "OPTIONS": {
-        "host": "rabbit",
-        "port": 5672,
-        "heartbeat": 0,
-        "connection_attempts": 5,
+
+        "connection_pool": redis.ConnectionPool.from_url("redis://redis:6379"),
+        # "heartbeat": 0,
+        # "connection_attempts": 5,
     },
     "MIDDLEWARE": [
-        "dramatiq.middleware.Prometheus",
+        # "dramatiq.middleware.Prometheus",
         "dramatiq.middleware.AgeLimit",
         "dramatiq.middleware.TimeLimit",
         "dramatiq.middleware.Callbacks",

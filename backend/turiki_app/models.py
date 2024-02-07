@@ -96,6 +96,7 @@ class MapBan(models.Model):
     ADMIN = "ADMIN"
     CAPTAIN = "CAPTAIN"
     AUTO = "AUTO"
+    
     WHO_CAN_BAN = (
         (ADMIN, ADMIN.lower()),
         (CAPTAIN, CAPTAIN.lower()),
@@ -149,7 +150,7 @@ class MapBan(models.Model):
                                     null=True),
         size=DEFAULT_MAP_POOL_SIZE,
         default=get_default_map_pool)
-
+    target_map_amount = models.IntegerField(default=1)
     def __str__(self):
         return f"{self.id}"
 
