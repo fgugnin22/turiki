@@ -25,25 +25,20 @@ const LoginForm = () => {
     password: ""
   });
   const { email, password } = formData;
-
+  const [error, setError] = useState("");
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
+    setError("");
     return setFormData({ ...formData, [target.name]: target.value });
   };
-
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    dispatch(login({ email, password }));
+    const res = await dispatch(login({ email, password }));
+    if (res.meta.requestStatus === "rejected") {
+      setError(res.payload.detail);
+    }
   };
   const navigate = useNavigate();
-
-  const [localLoginFail, setLocalLoginFail] = useState(loginFail);
-  useEffect(() => {
-    setLocalLoginFail(loginFail);
-    if (loginFail) {
-      setTimeout(() => setLocalLoginFail(false), 1000);
-    }
-  }, [loginFail]);
   return (
     <div
       className="min-w-[500px] leading-10 relative after:absolute after:opacity-[0.04] after:inset-0 
@@ -68,11 +63,14 @@ const LoginForm = () => {
       </ButtonMain>
       <form onSubmit={onSubmit}>
         <div
-          className="rounded-[10px] relative after:absolute 
+          className={
+            `rounded-[10px] relative after:absolute 
                                 before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
-                               mt-8 w-4/5 mx-auto"
+                               mt-8 w-4/5 mx-auto ` +
+            (error?.length > 0 ? "after:!bg-warning after:!bg-none" : "")
+          }
         >
           <input
             className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
@@ -87,11 +85,14 @@ const LoginForm = () => {
           <Angle />
         </div>
         <div
-          className="rounded-[10px] relative after:absolute 
+          className={
+            `rounded-[10px] relative after:absolute 
                                 before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
-                               mt-5 w-4/5 mx-auto"
+                               mt-5 w-4/5 mx-auto ` +
+            (error?.length > 0 ? "after:!bg-warning after:!bg-none" : "")
+          }
         >
           <input
             className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
@@ -104,6 +105,9 @@ const LoginForm = () => {
             required
           />
           <Angle />
+          <span className=" absolute z-50 text-sm -bottom-5">
+            {error ? "Неверные данные учётной записи" : ""}
+          </span>
         </div>
         <Link
           data-content="Забыли пароль?"

@@ -196,7 +196,7 @@ const RegistrationForm = () => {
             className="py-[5px] w-3/5 block mx-auto mt-8 focus:py-[3.5px] focus:px-[unset] duration-200"
             type="submit"
           >
-            Cоздать аккаунт
+            Создать аккаунт
           </ButtonMain>
           <ButtonSecondary
             type="button"
