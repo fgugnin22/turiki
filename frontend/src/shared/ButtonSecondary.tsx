@@ -1,5 +1,5 @@
 import React, { ButtonHTMLAttributes, MouseEventHandler } from "react";
-import "./shadow.css";
+import "./everything.css";
 const ButtonSecondary = (
   props: ButtonHTMLAttributes<HTMLButtonElement> & {
     children?: React.ReactNode | React.ReactNode[] | string;

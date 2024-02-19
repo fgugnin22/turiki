@@ -24,7 +24,7 @@ from turiki_app.serializers import (
 )
 from turiki_app.services import TeamService, MatchService, TournamentService, UserService
 from turiki_app.tasks import create_bracket, set_initial_matches, ban_map
-from core.settings import STATICFILES_DIRS
+from core.settings import MEDIA_ROOT
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
@@ -46,11 +46,11 @@ class UserAPIView(GenericViewSet):
             image = request.data.get("image").file
             user: UserAccount = request.user
             seconds = datetime.datetime.now().microsecond
-            img_name = f'assets/img/user{user.id}_{str(seconds)}.png'
+            img_name = f'media/img/user{user.id}_{str(seconds)}.png'
             user.image = img_name
             file = File(image, name=img_name)  # TODO: this is not very safe
             if file.name[-4:] == ".png":
-                with open(STATICFILES_DIRS[0] + f"/img/user{user.id}_{str(seconds)}.png", "wb+") as f:
+                with open(MEDIA_ROOT + f"/img/user{user.id}_{str(seconds)}.png", "wb+") as f:
                     f.writelines(file.readlines())
                 user.save()
                 return Response(status=200)
@@ -150,12 +150,12 @@ class MatchAPIView(ModelViewSet):
             if user.team_status != "CAPTAIN" or user.team.id != match.teams.first().id and user.team.id != match.teams.last().id:
                 return Response(status=403)
             image = request.data.get("image").file
-            img_name = f'assets/img/team{user.team.id}_match{match.id}.png'
+            img_name = f'media/img/team{user.team.id}_match{match.id}.png'
             participant = match.participants.first() if match.participants.first().team.id == user.team.id else match.participants.last()
             participant.res_image = img_name
             file = File(image, name=img_name)  # TODO: this is not very safe
             if file.name[-4:] == ".png":
-                with open(STATICFILES_DIRS[0] + f"/img/team{user.team.id}_match{match.id}.png", "wb+") as f:
+                with open(MEDIA_ROOT + f"/img/team{user.team.id}_match{match.id}.png", "wb+") as f:
                     f.writelines(file.readlines())
                     f.close()
                 participant.save()
@@ -245,11 +245,11 @@ class TeamAPIView(ModelViewSet):
             team = self.get_object()
             if request.user.team_status != "CAPTAIN" or request.user.team.id != team.id:
                 return Response(status=403)
-            img_name = f'assets/img/team{team.id}.png'
+            img_name = f'media/img/team{team.id}.png'
             team.image = img_name
             file = File(image, name=img_name)  # TODO: this is not very safe
             if file.name[-4:] == ".png":
-                with open(STATICFILES_DIRS[0] + f"/img/team{team.id}.png", "wb+") as f:
+                with open(MEDIA_ROOT + f"/img/team{team.id}.png", "wb+") as f:
                     f.writelines(file.readlines())
                     f.close()
                 team.save()

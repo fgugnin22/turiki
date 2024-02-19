@@ -14,8 +14,7 @@ from core.settings import BASE_DIR
 
 
 def images_path():
-    return "dist/assets/img"
-    # return os.path.join(BASE_DIR, "dist/assets/img")
+    return "media/img"
 
 
 # модель пользователя с логином - почтой(у жанго по умолчанию логин - имя пользователя)
@@ -221,7 +220,7 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
     team_status = models.CharField(max_length=31, null=True, blank=True)
     google_oauth2 = models.BooleanField(default=False)
     image = models.FilePathField(path=images_path(), blank=True, null=True,
-                                 default="assets/img/userdefaultloggedin.svg")
+                                 default="media/img/userdefaultloggedin.svg")
     game_name = models.CharField(max_length=63, null=True,
                                  blank=True,
                                  unique=True)  # здесь пока что будет игровой ник, в будущем будет несколько полей, каждое для своей игры

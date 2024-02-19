@@ -14,6 +14,7 @@ import Bracket from "../shared/Bracket";
 import { useTournamentStatus } from "../hooks/useTournamentStatus";
 import { useCountdown } from "../hooks/useCountDown";
 import TournamentTeamPlayerList from "../features/TournamentTeamPlayerList";
+import TriangleLoader from "../shared/TriangleLoader";
 
 const serverURL = import.meta.env.VITE_API_URL;
 
@@ -68,11 +69,11 @@ export const Tournament = () => {
       <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
         <Header />
       </div>
-      {tournament && (
+      {tournament ? (
         <>
           <div
             style={{
-              backgroundImage: `linear-gradient(to bottom, transparent, #141318 90%), url(${serverURL}/assets/img/siege1.webp)`
+              backgroundImage: `linear-gradient(to bottom, transparent, #141318 90%), url(${serverURL}/media/img/siege1.webp)`
             }}
             className=" text-lightgray flex align-bottom pt-56 flex-wrap bg-cover bg-center"
           >
@@ -283,7 +284,7 @@ export const Tournament = () => {
           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
             before:z-10 z-20 before:bg-dark before:transition hover:before:bg-opacity-80 before:rounded-[8px] flex items-center justify-center"
                 target="_blank"
-                href={serverURL + "/assets/files/file.pdf"}
+                href={serverURL + "/media/files/file.pdf"}
               >
                 <svg
                   className="relative z-50"
@@ -326,6 +327,10 @@ export const Tournament = () => {
             </div>
           )}
         </>
+      ) : (
+        <div className=" flex items-center justify-center">
+          <TriangleLoader />
+        </div>
       )}
       <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between relative z-0">
         <Footer />

@@ -8,6 +8,7 @@ import RegisterTeamModal from "../features/RegisterTeamModal";
 import { Team, Tournament } from "../helpers/transformMatches";
 import React from "react";
 import { useTournamentStatus } from "../hooks/useTournamentStatus";
+import TriangleLoader from "../shared/TriangleLoader";
 const serverURL = import.meta.env.VITE_API_URL;
 
 const TournamentList = () => {
@@ -15,7 +16,7 @@ const TournamentList = () => {
   return (
     <Layout>
       {
-        <section>
+        <section className="">
           <h2
             data-content="Турниры"
             className="before:text-[44px] before:inset-0  w-full text-center text-[44px] before:w-full font-medium  before:text-center before:bg-gradient-to-l 
@@ -96,7 +97,7 @@ const TournamentList = () => {
                         Раундов: {tourn.max_rounds}
                       </p>
                       <img
-                        src={`${serverURL}/assets/img/forward.svg`}
+                        src={`${serverURL}/media/img/forward.svg`}
                         className="z-30 mr-8 neonshadow"
                         alt=""
                       />
@@ -105,7 +106,11 @@ const TournamentList = () => {
                 );
               })}
             </div>
-          ) : null}
+          ) : (
+            <div className=" flex items-center justify-center pt-56 pb-24 ">
+              <TriangleLoader />
+            </div>
+          )}
         </section>
       }
     </Layout>

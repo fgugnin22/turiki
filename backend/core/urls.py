@@ -14,11 +14,14 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include, re_path
 from django.views.generic import TemplateView
 from turiki_app.views import TournamentAPIView, MatchAPIView, TeamAPIView, ChatAPIView, UserAPIView
 from rest_framework.routers import DefaultRouter
+
+from . import settings
 from .yasg import urlpatterns as doc_urls
 
 # с помощью defaultrouter'а регистрируем api маршруты
@@ -45,6 +48,8 @@ urlpatterns = [
 
 ]
 # urlpatterns += doc_urls
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += [re_path(r'^((?!api/v2).)*$', TemplateView.as_view(template_name='index.html'))]
 urlpatterns += tournamentRouter.urls
 urlpatterns += matchRouter.urls

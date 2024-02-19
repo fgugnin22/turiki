@@ -174,7 +174,7 @@ const TeamCreateOrFind = () => {
                               {cap?.name}
                             </p>
                             <img
-                              src={`${serverURL}/assets/img/crown.svg`}
+                              src={`${serverURL}/media/img/crown.svg`}
                               className=""
                             />
                           </div>

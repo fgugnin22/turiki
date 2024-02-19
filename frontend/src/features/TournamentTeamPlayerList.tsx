@@ -58,7 +58,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       src={`${serverURL}/${
                         player.image
                           ? getImagePath(player.image)
-                          : "assets/img/userdefaultloggedin.svg"
+                          : "media/img/userdefaultloggedin.svg"
                       }`}
                       className="w-10 h-10 rounded-full"
                     />
@@ -66,7 +66,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       <p className="block">{player.name}</p>
                       {player.team_status === "CAPTAIN" && (
                         <img
-                          src={`${serverURL}/assets/img/crown.svg`}
+                          src={`${serverURL}/media/img/crown.svg`}
                           className="ml-1 block"
                         />
                       )}
@@ -89,7 +89,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       src={`${serverURL}/${
                         player.image
                           ? getImagePath(player.image)
-                          : "assets/img/userdefaultloggedin.svg"
+                          : "media/img/userdefaultloggedin.svg"
                       }`}
                       className="w-7 h-7 rounded-full"
                     />
@@ -97,7 +97,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       <p className="block">{player.name}</p>
                       {player.team_status === "CAPTAIN" && (
                         <img
-                          src={`${serverURL}/assets/img/crown.svg`}
+                          src={`${serverURL}/media/img/crown.svg`}
                           className="ml-1 block"
                         />
                       )}
@@ -120,7 +120,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       src={`${serverURL}/${
                         player.image
                           ? getImagePath(player.image)
-                          : "assets/img/userdefaultloggedin.svg"
+                          : "media/img/userdefaultloggedin.svg"
                       }`}
                       className="w-7 h-7 rounded-full"
                     />
@@ -128,7 +128,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       <p className="block">{player.name}</p>
                       {player.team_status === "CAPTAIN" && (
                         <img
-                          src={`${serverURL}/assets/img/crown.svg`}
+                          src={`${serverURL}/media/img/crown.svg`}
                           className="ml-1 block"
                         />
                       )}
@@ -151,7 +151,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       src={`${serverURL}/${
                         player.image
                           ? getImagePath(player.image)
-                          : "assets/img/userdefaultloggedin.svg"
+                          : "media/img/userdefaultloggedin.svg"
                       }`}
                       className="w-7 h-7 rounded-full"
                     />
@@ -159,7 +159,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       <p className="block">{player.name}</p>
                       {player.team_status === "CAPTAIN" && (
                         <img
-                          src={`${serverURL}/assets/img/crown.svg`}
+                          src={`${serverURL}/media/img/crown.svg`}
                           className="ml-1 block"
                         />
                       )}
@@ -182,7 +182,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       src={`${serverURL}/${
                         player.image
                           ? getImagePath(player.image)
-                          : "assets/img/userdefaultloggedin.svg"
+                          : "media/img/userdefaultloggedin.svg"
                       }`}
                       className="w-7 h-7 rounded-full"
                     />
@@ -190,7 +190,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       <p className="block">{player.name}</p>
                       {player.team_status === "CAPTAIN" && (
                         <img
-                          src={`${serverURL}/assets/img/crown.svg`}
+                          src={`${serverURL}/media/img/crown.svg`}
                           className="ml-1 block"
                         />
                       )}

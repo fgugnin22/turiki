@@ -117,7 +117,7 @@ const Team = () => {
                   {team_status === "CAPTAIN" && (
                     <img
                       style={{ gridArea: "a" }}
-                      src={serverURL + "/assets/img/uploadround.svg"}
+                      src={serverURL + "/media/img/uploadround.svg"}
                       className={
                         "object-cover opacity-0 hover:opacity-100 object-center rounded-full h-full w-full relative z-30 transition aspect-square	" +
                         (!data?.image ? " !opacity-100" : " opacity-0")
@@ -257,8 +257,7 @@ const Team = () => {
                           src={
                             Number(player?.image?.length) > 0
                               ? serverURL + "/" + getImagePath(player.image!)
-                              : serverURL +
-                                "/assets/img/userdefaultloggedin.svg"
+                              : serverURL + "/media/img/userdefaultloggedin.svg"
                           }
                           alt=""
                         />
@@ -268,7 +267,7 @@ const Team = () => {
                           </span>
                           {player?.team_status === "CAPTAIN" && (
                             <img
-                              src={`${serverURL}/assets/img/crown.svg`}
+                              src={`${serverURL}/media/img/crown.svg`}
                               className="ml-1 block"
                             />
                           )}
@@ -364,7 +363,7 @@ const Team = () => {
                       src={
                         Number(player?.image?.length) > 0
                           ? serverURL + "/" + getImagePath(player.image!)
-                          : serverURL + "/assets/img/userdefaultloggedin.svg"
+                          : serverURL + "/media/img/userdefaultloggedin.svg"
                       }
                       alt=""
                     />

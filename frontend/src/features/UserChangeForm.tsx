@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   getUser,
   login,
@@ -10,11 +10,12 @@ import ButtonMain from "../shared/ButtonMain";
 import ButtonSecondary from "../shared/ButtonSecondary";
 import { getImagePath } from "../helpers/getImagePath";
 const serverURL = import.meta.env.VITE_API_URL;
+
 const UserChangeForm = ({ name }: { name: string }) => {
   const [nameOpened, setNameOpened] = useState(false);
   const [newPasswordOpened, setNewPasswordOpened] = useState(false);
   const [oldPasswordOpened, setOldPasswordOpened] = useState(false);
-
+  const [error, setError] = useState("");
   const dispatch = useAppDispatch();
   const [formData, setFormData] = useState({
     email: "",
@@ -25,8 +26,9 @@ const UserChangeForm = ({ name }: { name: string }) => {
   });
   let { userDetails: user, loading } = useAppSelector((state) => state.user);
   const { email, password, userName, newPassword, gameName } = formData;
-  const onChange = (e: React.FormEvent<HTMLInputElement>) => {
+  const onChange = async (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
+    setError("");
     return setFormData({ ...formData, [target.name]: target.value });
   };
   const onSubmit = async (
@@ -53,6 +55,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
       });
       await dispatch(modifyUserCredentials(body));
       dispatch(getUser(access!));
+
       return;
     }
     if (!newPassword) {
@@ -70,9 +73,15 @@ const UserChangeForm = ({ name }: { name: string }) => {
       });
       await dispatch(modifyUserCredentials(body));
       dispatch(getUser(access!));
+
       return;
     }
-    await dispatch(login({ email: user?.email!, password, keepTokens: false }));
+    const res = await dispatch(
+      login({ email: user?.email!, password, keepTokens: false })
+    );
+    if (res.meta.requestStatus === "rejected") {
+      setError(res.payload.detail);
+    }
     if (localStorage.getItem("access")) {
       const body = {
         name: userName === "" ? user?.name : userName,
@@ -103,19 +112,25 @@ const UserChangeForm = ({ name }: { name: string }) => {
     }
     const formData = new FormData();
     formData.append("image", target.files[0]);
-    console.log(target.files[0]);
     await dispatch(uploadUserImage(formData));
     window.location.reload();
   };
-  window.addEventListener("keydown", (ev) => {
-    if (ev.code === "Escape") {
-      if (oldPasswordOpened) {
-        setOldPasswordOpened(false);
-      } else if (newPasswordOpened) {
-        setNewPasswordOpened(false);
+  useEffect(() => {
+    const listener = (ev: KeyboardEvent) => {
+      if (ev.code === "Escape") {
+        if (oldPasswordOpened) {
+          setOldPasswordOpened(false);
+        } else if (newPasswordOpened) {
+          setNewPasswordOpened(false);
+        }
       }
-    }
-  });
+    };
+    window.addEventListener("keydown", listener);
+    return () => {
+      window.removeEventListener("keydown", listener);
+    };
+  }, []);
+
   return (
     <section
       className="w-full sm:w-4/5 lg:w-3/5 relative after:absolute after:inset-0 
@@ -142,7 +157,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
             )}
             <img
               style={{ gridArea: "a" }}
-              src={serverURL + "/assets/img/uploadround.svg"}
+              src={serverURL + "/media/img/uploadround.svg"}
               className={
                 "object-cover object-center rounded-full h-full w-full opacity-100 relative z-30 transition aspect-square	" +
                 (user?.image ? "!opacity-0 hover:!opacity-100" : "")
@@ -267,6 +282,9 @@ const UserChangeForm = ({ name }: { name: string }) => {
               minLength={3}
               className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
             />
+            <span className=" absolute z-50 -bottom-7 text-warning font-medium">
+              {error?.length > 0 ? "Неправильный пароль" : ""}
+            </span>
           </div>
           {!nameOpened && !newPasswordOpened ? (
             <div className="flex justify-between w-full">

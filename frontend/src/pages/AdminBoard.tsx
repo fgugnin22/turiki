@@ -325,7 +325,7 @@ const AdminBoard = () => {
                       Раундов: {tourn.max_rounds}
                     </p>
                     <img
-                      src={`${serverURL}/assets/img/forward.svg`}
+                      src={`${serverURL}/media/img/forward.svg`}
                       className="z-30 mr-8 neonshadow"
                       alt=""
                     />

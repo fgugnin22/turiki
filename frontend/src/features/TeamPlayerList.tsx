@@ -68,7 +68,7 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
                     src={
                       Number(player?.image?.length) > 0
                         ? serverURL + "/" + getImagePath(player.image!)
-                        : serverURL + "/assets/img/userdefaultloggedin.svg"
+                        : serverURL + "/media/img/userdefaultloggedin.svg"
                     }
                     className="w-10 h-10 rounded-full"
                   />
@@ -76,7 +76,7 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
                     <p className="block">{player.name}</p>
                     {player.team_status === "CAPTAIN" && (
                       <img
-                        src={`${serverURL}/assets/img/crown.svg`}
+                        src={`${serverURL}/media/img/crown.svg`}
                         className="ml-1 block"
                       />
                     )}

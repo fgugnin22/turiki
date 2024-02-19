@@ -88,7 +88,7 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
                         className="absolute z-50 right-1 top-[6.5px]"
                       >
                         <img
-                          src={`${serverURL}/assets/img/ban.svg`}
+                          src={`${serverURL}/media/img/ban.svg`}
                           className="neonshadow hover:scale-110 active:scale-150 transition"
                         />
                       </button>

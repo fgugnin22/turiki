@@ -102,7 +102,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
                 >
                   <img
                     className="w-[200px]"
-                    src={serverURL + "/assets/img/uploadimg.svg"}
+                    src={serverURL + "/media/img/uploadimg.svg"}
                     alt=""
                   />
                 </label>
