@@ -391,6 +391,8 @@ const AdminBoard = () => {
                       {teams[index] && (
                         <div className="mt-auto" key={teams[index].id}>
                           <RegisterTeamModal
+                            isTeamNotRegistered={false}
+                            tournamentStatus={tourn.status}
                             maxPlayers={tourn.max_players_in_team}
                             tournamentId={tourn.id}
                             team={teams[index]}

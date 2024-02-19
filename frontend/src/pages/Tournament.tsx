@@ -58,9 +58,7 @@ export const Tournament = () => {
     user &&
     tournament &&
     !tournament.teams.some((team: Team) => Number(team.id) === user.team);
-  const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
-    skip: !isTeamNotRegistered
-  });
+  const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team);
   const statusString = useTournamentStatus(tournament?.status);
   const date = new Date(tournament?.reg_starts ?? 0);
   const section = params["*"];
@@ -103,9 +101,14 @@ export const Tournament = () => {
                   </span>
                   <span className=" text-lightblue !opacity-0">00:12:32</span>
                 </p>
-                {isTeamNotRegistered &&
-                  tournament.status === "REGISTRATION_OPENED" && (
+
+                {(user?.team ?? false) &&
+                  ((isTeamNotRegistered &&
+                    tournament.status === "REGISTRATION_OPENED") ||
+                    tournament.status === "CHECK_IN") && (
                     <RegisterTeamModal
+                      isTeamNotRegistered={isTeamNotRegistered ?? false}
+                      tournamentStatus={tournament.status}
                       tournamentId={tournId}
                       team={team!}
                       maxPlayers={tournament.max_players_in_team}

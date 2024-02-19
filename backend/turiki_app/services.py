@@ -80,6 +80,7 @@ class TournamentService:
                 if team.id not in teams:
                     return "registration changing cancelled"
                 new_players = []
+                is_captain_in = False
                 for i, player_id in enumerate(players_ids):
                     try:
                         user_obj = UserAccount.objects.get(pk=player_id)
@@ -87,9 +88,13 @@ class TournamentService:
                                 user_obj.team_status != "REJECTED"
                                 or user_obj.team_status != "PENDING"
                         ):
+                            if user_obj.team_status == "CAPTAIN":
+                                is_captain_in = True
                             new_players.append(user_obj)
                     except:
                         raise serializers.ValidationError('code bruh-1')
+                if not is_captain_in:
+                    raise serializers.ValidationError('Капитан обязан участвовать')
                 tournament.players.set(new_players)
                 tournament.save()
                 return "players changed successfully"
@@ -102,6 +107,8 @@ class TournamentService:
             if len(tournament.teams.values()) >= 2 ** tournament.max_rounds:
                 raise serializers.ValidationError("tournament max teams count reached")
             tournament.teams.add(team)
+            new_players = []
+            is_captain_in = False
             for i, player_id in enumerate(players_ids):
                 try:
                     user_obj = UserAccount.objects.get(pk=player_id)
@@ -109,14 +116,14 @@ class TournamentService:
                             user_obj.team_status != "REJECTED"
                             or user_obj.team_status != "PENDING"
                     ):
-                        tournament.players.add(user_obj)
-                        print("added player")
+                        if user_obj.team_status == "CAPTAIN":
+                            is_captain_in = True
+                        new_players.append(user_obj)
                 except:
-                    print(
-                        "something went wrong when adding player to tournament",
-                        player_id,
-                        user_obj,
-                    )
+                    raise serializers.ValidationError('code bruh-1')
+            if not is_captain_in:
+                raise serializers.ValidationError('Капитан обязан участвовать')
+            tournament.players.set(new_players)
             tournament.save()
             return "team registered successfully"
         elif action == "CANCEL_REGISTRATION":
@@ -141,36 +148,9 @@ class TournamentService:
                     pass
             tournament.save()
             return "team unregistered successfully"
-        elif action == "CHANGE_PLAYERS":
-            teams = map(lambda x: x["id"], list(tournament.teams.values()))
-            if team.id not in teams:
-                return "registration changing cancelled"
-            new_players = []
-            for i, player_id in enumerate(players_ids):
-                try:
-                    user_obj = UserAccount.objects.get(pk=player_id)
-                    if user_obj.team.id == team.id and (
-                            user_obj.team_status != "REJECTED"
-                            or user_obj.team_status != "PENDING"
-                    ):
-                        new_players.append(user_obj)
-                except:
-                    pass
-            tournament.players.set(new_players)
-            tournament.save()
-            return "players changed successfully"
 
 
 class MatchService:
-    # @staticmethod
-    # def submit_results(request, match):
-    #     user = request.user
-    #     p1 = match.teams.first()
-    #     p2 = match.teams.last()
-    #     self_participant = p1 if p1.team.id == user.team.id else p2 if p2.team.id == user.team.id else None
-    #     if self_participant is None:
-    #         return Response(status=403)
-
     @staticmethod
     def team_enter_lobby(request, match):
         user = request.user
@@ -256,14 +236,6 @@ class TeamService:
         return team
 
     @staticmethod
-    def is_user_in_team(user_name):
-        # состоит ли user с именем user_name в КАКОЙ-ЛИБО команде
-        user = UserAccount.objects.get(name=user_name)
-        if user.team_status is not None and user.team_status != "REJECTED":
-            print(user.team_status is None)
-            raise serializers.ValidationError("User is already in a team")
-
-    @staticmethod
     def change_team_name(team, team_name):
         team.name = team_name
         team.save()
@@ -317,17 +289,6 @@ class TeamService:
         team.next_member = player.name
         team.save()
         return "player was invited to the team"
-
-    @staticmethod
-    def add_team_player(team, user_name, status="PENDING"):
-        # добавляет user с именем user_name в команду, team - объект класса Team (models.py)
-        player = UserAccount.objects.get(name=user_name)
-        if TeamService.is_user_in_team(user_name):
-            return team
-        player.team_status = status
-        team.players.add(player)
-        player.save()
-        return team
 
 
 @database_sync_to_async

@@ -9,11 +9,15 @@ const checkURL = `url(${serverURL}/media/img/check.svg)`;
 const RegisterTeamModal = ({
   team,
   tournamentId,
-  maxPlayers
+  maxPlayers,
+  tournamentStatus,
+  isTeamNotRegistered
 }: {
   team: Team;
   tournamentId: number;
   maxPlayers: number;
+  tournamentStatus: string;
+  isTeamNotRegistered: boolean;
 }) => {
   const [submitError, setSubmitError] = useState<any>(false);
   const [formState, setFormState] = useState<boolean[]>([]);
@@ -74,7 +78,11 @@ const RegisterTeamModal = ({
           setShowModal(true);
         }}
       >
-        {submitError ? submitError : "Зарегистрировать команду"}
+        {submitError
+          ? submitError
+          : tournamentStatus === "REGISTRATION_OPENED" && isTeamNotRegistered
+          ? "Зарегистрировать команду"
+          : "Изменить регистрацию"}
       </ButtonMain>
       {showModal ? (
         <>
