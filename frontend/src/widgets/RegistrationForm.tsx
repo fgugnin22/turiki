@@ -7,15 +7,21 @@ import { ROUTES } from "../shared/RouteTypes";
 import ButtonMain from "../shared/ButtonMain";
 import ButtonSecondary from "../shared/ButtonSecondary";
 import { Angle } from "../shared/Angle";
+type FormErrors = {
+  email?: string;
+  password?: string;
+  name?: string;
+  re_password?: string;
+};
 const RegistrationForm = () => {
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const [accountCreated, setAccountCreated] = useState(false);
-  const [formErrors, setFormErrors] = useState({
-    email: false,
-    password: false,
-    name: false,
-    re_password: false
+  const [formErrors, setFormErrors] = useState<FormErrors>({
+    email: undefined,
+    password: undefined,
+    name: undefined,
+    re_password: undefined
   });
   const [formData, setFormData] = useState({
     email: "",
@@ -26,6 +32,7 @@ const RegistrationForm = () => {
   const { email, password, name, re_password } = formData;
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
+    setFormErrors((p) => ({ ...p, [target.name]: "" }));
     return setFormData({ ...formData, [target.name]: target.value });
   };
 
@@ -35,10 +42,17 @@ const RegistrationForm = () => {
       const res = await dispatch(
         register({ name, email, password, re_password })
       );
-      console.log(res);
-      // setAccountCreated(true);
+      if (res.meta.requestStatus === "rejected") {
+        setFormErrors(res.payload);
+      } else {
+        // setAccountCreated(true);
+      }
     } else {
-      setFormErrors((p) => ({ ...p, password: true, re_password: true }));
+      setFormErrors((p) => ({
+        ...p,
+        password: "",
+        re_password: "Пароли не совпадают"
+      }));
     }
   };
   const navigate = useNavigate();
@@ -53,7 +67,7 @@ const RegistrationForm = () => {
       className="min-w-[500px] leading-10 relative after:absolute after:opacity-[0.04] after:inset-0 
           mx-auto my-auto rounded-[10px] after:rounded-[10px] 
           border border-turquoise after:bg-gradient-to-b after:from-transparent 
-        after:to-darkturquoise after:z-[-1] neonshadow hover:!drop-shadow-[0_0_1px_#4cf2f8] !drop-shadow-[0_0_1px_#4cf2f8] py-[52px] flex flex-col"
+        after:to-darkturquoise after:z-[-1] hover:!drop-shadow-[0_0_1px_#4cf2f8] !drop-shadow-[0_0_1px_#4cf2f8] py-[52px] flex flex-col"
     >
       <h2
         data-content="Зарегистрироваться"
@@ -79,11 +93,14 @@ const RegistrationForm = () => {
       <div>
         <form onSubmit={onSubmit}>
           <div
-            className="rounded-[10px] relative after:absolute 
-                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
-                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
-                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
-                               mt-7 w-4/5 mx-auto"
+            className={
+              `rounded-[10px] relative after:absolute before:absolute
+            after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+            after:from-lightblue after:to-turquoise after:rounded-[10px]
+            after:z-0 before:z-10 z-20 before:bg-dark before:rounded-[9px]
+            bg-transparent h-12 mt-7 w-4/5 mx-auto ` +
+              (formErrors?.name ? "after:!bg-warning after:!bg-none" : "")
+            }
           >
             <input
               type="text"
@@ -94,13 +111,19 @@ const RegistrationForm = () => {
               className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray autofill:bg-transparent"
             />
             <Angle />
+            <span className="absolute z-50 -bottom-4 text-sm text-lightblue">
+              {formErrors?.name ?? ""}
+            </span>
           </div>
           <div
-            className="rounded-[10px] relative after:absolute 
-                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
-                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
-                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
-                               mt-7 w-4/5 mx-auto"
+            className={
+              `rounded-[10px] relative after:absolute before:absolute
+            after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+            after:from-lightblue after:to-turquoise after:rounded-[10px]
+            after:z-0 before:z-10 z-20 before:bg-dark before:rounded-[9px]
+            bg-transparent h-12 mt-7 w-4/5 mx-auto ` +
+              (formErrors?.email ? "after:!bg-warning after:!bg-none" : "")
+            }
           >
             <input
               type="text"
@@ -112,14 +135,20 @@ const RegistrationForm = () => {
               className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray"
             />
             <Angle />
+            <span className="absolute z-50 -bottom-4 text-sm text-lightblue">
+              {formErrors?.email ?? ""}
+            </span>
           </div>
           <div className="flex justify-center gap-[15px]">
             <div
-              className="rounded-[10px] relative after:absolute 
+              className={
+                `rounded-[10px] relative after:absolute 
                                 before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
-                               mt-7 w-[calc(40%-7.5px)]"
+                               mt-7 w-[calc(40%-7.5px)]` +
+                (formErrors?.password ? "after:!bg-warning after:!bg-none" : "")
+              }
             >
               <input
                 className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray"
@@ -131,13 +160,21 @@ const RegistrationForm = () => {
                 required
               />
               <Angle />
+              <span className="absolute z-50 -bottom-4 text-sm text-lightblue">
+                {formErrors?.password ?? ""}
+              </span>
             </div>
             <div
-              className="rounded-[10px] relative after:absolute 
-                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
-                             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
-                               before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
-                               mt-7 w-[calc(40%-7.5px)]"
+              className={
+                `rounded-[10px] relative after:absolute 
+                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
+                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
+                mt-7 w-[calc(40%-7.5px)] ` +
+                (formErrors?.re_password
+                  ? "after:!bg-warning after:!bg-none"
+                  : "")
+              }
             >
               <input
                 className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray"
@@ -150,6 +187,9 @@ const RegistrationForm = () => {
                 required
               />
               <Angle />
+              <span className="absolute z-50 -bottom-5 text-sm text-lightblue">
+                {formErrors?.re_password ?? ""}
+              </span>
             </div>
           </div>
           <ButtonMain
