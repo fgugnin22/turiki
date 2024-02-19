@@ -11,6 +11,12 @@ const RegistrationForm = () => {
   const dispatch = useAppDispatch();
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const [accountCreated, setAccountCreated] = useState(false);
+  const [formErrors, setFormErrors] = useState({
+    email: false,
+    password: false,
+    name: false,
+    re_password: false
+  });
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -23,14 +29,18 @@ const RegistrationForm = () => {
     return setFormData({ ...formData, [target.name]: target.value });
   };
 
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (password === re_password) {
-      dispatch(register({ name, email, password, re_password }));
-      setAccountCreated(true);
+      const res = await dispatch(
+        register({ name, email, password, re_password })
+      );
+      console.log(res);
+      // setAccountCreated(true);
+    } else {
+      setFormErrors((p) => ({ ...p, password: true, re_password: true }));
     }
   };
-  // check if authenticated -> redirect to homepage
   const navigate = useNavigate();
   if (isAuthenticated) {
     navigate(ROUTES.DASHBOARD.path, { replace: true });
