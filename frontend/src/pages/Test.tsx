@@ -3,7 +3,6 @@ import TeamPlayerList from "../features/TeamPlayerList";
 import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import ButtonMain from "../shared/ButtonMain";
-import ButtonSecondary from "../shared/ButtonSecondary";
 const serverURL = import.meta.env.VITE_API_URL;
 
 const testbans = {
@@ -145,57 +144,6 @@ const Test = () => {
                   team={team1.data}
                 />
               )}
-
-              {/* {
-                <>
-                  <div></div>
-                  <div className="place-self-center mx-auto col-span-2 shadow-xl mt-[60px] rounded-lg w-fit max-w-3/5">
-                    <p
-                      data-content="adplgamwekgw"
-                      className="before:text-[20px] before:inset-0  w-full text-center text-[20px] before:w-full font-semibold  before:text-center before:bg-gradient-to-l 
-              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
-                before:absolute relative before:content-[attr(data-content)] mb-6"
-                    >
-                      alsdjfnasdojf
-                    </p>
-                    <div
-                      className="rounded-[10px] mx-auto relative after:absolute 
-              before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
-            after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
-              before:z-10 z-20 before:bg-dark before:rounded-[9px] flex flex-wrap flex-col justify-left gap-y-8 gap-x-8 px-16 py-12 h-fit max-h-[400px]"
-                    >
-                      {testbans.bans?.maps.map((map) => {
-                        return (
-                          <div className="z-30 w-44 relative" key={map}>
-                            <p
-                              data-content={map}
-                              className="before:text-[20px] before:inset-0  w-full text-left text-[20px] before:w-full font-semibold  before:text-left before:bg-gradient-to-l 
-              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
-                before:absolute relative before:content-[attr(data-content)]"
-                            >
-                              {map}
-                            </p>
-                            {
-                              <button
-                                onClick={() => {
-                                  testbans.bans.maps.pop();
-                                  xd((p) => !p);
-                                }}
-                                className="absolute z-50 right-1 top-[6.5px]"
-                              >
-                                <img
-                                  src={`${serverURL}/assets/img/ban.svg`}
-                                  className="neonshadow hover:scale-110 active:scale-150 transition"
-                                />
-                              </button>
-                            }
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </div>
-                </>
-              } */}
             </>
             {true && true && true && true && (
               <div className="flex w-4/5 mx-auto flex-col mt-14 relative">

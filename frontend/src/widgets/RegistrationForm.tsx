@@ -38,14 +38,19 @@ const RegistrationForm = () => {
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const data = { name, email, password, re_password };
+    setFormData({
+      name: "",
+      email: "",
+      password: "",
+      re_password: ""
+    });
     if (password === re_password) {
-      const res = await dispatch(
-        register({ name, email, password, re_password })
-      );
+      const res = await dispatch(register(data));
       if (res.meta.requestStatus === "rejected") {
         setFormErrors(res.payload);
       } else {
-        // setAccountCreated(true);
+        setAccountCreated(true);
       }
     } else {
       setFormErrors((p) => ({

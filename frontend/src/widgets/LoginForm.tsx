@@ -33,7 +33,12 @@ const LoginForm = () => {
   };
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const res = await dispatch(login({ email, password }));
+    const data = {
+      email,
+      password
+    };
+    setFormData({ email: "", password: "" });
+    const res = await dispatch(login(data));
     if (res.meta.requestStatus === "rejected") {
       setError(res.payload.detail);
     }
