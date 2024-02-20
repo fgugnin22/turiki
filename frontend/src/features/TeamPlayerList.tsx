@@ -35,7 +35,7 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
             before:z-10 z-20 before:bg-dark before:rounded-[9px]
             before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%]"
     >
-      <Angle />
+      <Angle color="#21DBD3" />
       <div className="w-full h-full relative z-50">
         <div className="flex items-center mt-7 mx-14 justify-between">
           <p

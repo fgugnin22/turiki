@@ -72,7 +72,7 @@ const RegistrationForm = () => {
       className="min-w-[500px] leading-10 relative after:absolute after:opacity-[0.04] after:inset-0 
           mx-auto my-auto rounded-[10px] after:rounded-[10px] 
           border border-turquoise after:bg-gradient-to-b after:from-transparent 
-        after:to-darkturquoise after:z-[-1] hover:!drop-shadow-[0_0_1px_#4cf2f8] !drop-shadow-[0_0_1px_#4cf2f8] py-[52px] flex flex-col"
+        after:to-darkturquoise after:z-[-1] py-[52px] flex flex-col"
     >
       <h2
         data-content="Зарегистрироваться"
@@ -113,10 +113,13 @@ const RegistrationForm = () => {
               value={name}
               onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e)}
               placeholder="Ник"
-              className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray autofill:bg-transparent"
+              className={
+                "absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray autofill:bg-transparent " +
+                (formErrors?.name ? "placeholder:text-warning" : "")
+              }
             />
-            <Angle />
-            <span className="absolute z-50 -bottom-4 text-sm text-lightblue">
+            <Angle color={formErrors?.name ? "#A7652C" : "#21DBD3"} />
+            <span className=" absolute z-50 text-sm -bottom-5 text-warning">
               {formErrors?.name ?? ""}
             </span>
           </div>
@@ -137,10 +140,13 @@ const RegistrationForm = () => {
               value={email}
               id="create-account-email"
               placeholder="Почта"
-              className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray"
+              className={
+                "absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray " +
+                (formErrors?.email ? "placeholder:text-warning" : "")
+              }
             />
-            <Angle />
-            <span className="absolute z-50 -bottom-4 text-sm text-lightblue">
+            <Angle color={formErrors?.email ? "#A7652C" : "#21DBD3"} />
+            <span className=" absolute z-50 text-sm -bottom-5 text-warning">
               {formErrors?.email ?? ""}
             </span>
           </div>
@@ -156,7 +162,10 @@ const RegistrationForm = () => {
               }
             >
               <input
-                className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray"
+                className={
+                  "absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray " +
+                  (formErrors?.password ? "placeholder:text-warning" : "")
+                }
                 type="password"
                 onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e)}
                 name="password"
@@ -164,8 +173,8 @@ const RegistrationForm = () => {
                 placeholder="Пароль"
                 required
               />
-              <Angle />
-              <span className="absolute z-50 -bottom-4 text-sm text-lightblue">
+              <Angle color={formErrors?.password ? "#A7652C" : "#21DBD3"} />
+              <span className=" absolute z-50 text-sm -bottom-5 text-warning">
                 {formErrors?.password ?? ""}
               </span>
             </div>
@@ -182,7 +191,10 @@ const RegistrationForm = () => {
               }
             >
               <input
-                className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray"
+                className={
+                  "absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray " +
+                  (formErrors?.re_password ? "placeholder:text-warning" : "")
+                }
                 type="password"
                 name="re_password"
                 placeholder="Пароль еще раз"
@@ -191,8 +203,8 @@ const RegistrationForm = () => {
                 minLength={6}
                 required
               />
-              <Angle />
-              <span className="absolute z-50 -bottom-5 text-sm text-lightblue">
+              <Angle color={formErrors?.re_password ? "#A7652C" : "#21DBD3"} />
+              <span className=" absolute z-50 text-sm -bottom-5 text-warning">
                 {formErrors?.re_password ?? ""}
               </span>
             </div>
@@ -206,7 +218,7 @@ const RegistrationForm = () => {
           <ButtonSecondary
             type="button"
             onClick={continueWithGoogle}
-            className="flex items-center justify-center w-3/5 py-[5px] mx-auto mt-8 text-center !bg-transparent"
+            className="flex items-center justify-center w-3/5 py-[5px] mx-auto mt-8 text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8]"
           >
             <span
               data-content="Войти через Google"
