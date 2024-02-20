@@ -12,7 +12,7 @@
     bottom: 0;
     left: 0;
     right: 0;
-    border: 2px solid #21DBD3;
+    border: 2px solid #21dbd3;
     border-radius: inherit;
     z-index: 0;
     content: "";
@@ -21,17 +21,17 @@
 
 @keyframes loading {
     0% {
-        transform: scale(1);
+        transform: scale(0.6);
         opacity: 0.5;
     }
 
     50% {
-        transform: scale(2.4);
+        transform: scale(1.5);
         opacity: 1;
     }
 
     100% {
-        transform: scale(1);
+        transform: scale(0.6);
         opacity: 0.5;
     }
 }
