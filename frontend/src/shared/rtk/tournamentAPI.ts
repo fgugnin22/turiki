@@ -100,17 +100,14 @@ export const tournamentAPI = createApi({
     }),
     registerTeamOnTournament: build.mutation<
       null,
-      { teamId: number; players: number[]; tournamentId: number }
+      {
+        teamId: number;
+        players: number[];
+        tournamentId: number;
+        action: "REGISTER" | "CHANGE";
+      }
     >({
-      // {
-      //     "team": {
-      //         "team_id": 74,
-      //         "players": [
-      //             7
-      //         ]
-      //     }
-      // }
-      query: ({ tournamentId, players, teamId }) => {
+      query: ({ tournamentId, players, teamId, action }) => {
         const body = JSON.stringify({
           team: {
             team_id: teamId,
@@ -119,7 +116,7 @@ export const tournamentAPI = createApi({
         });
         return {
           url: `tournament/${tournamentId}/register_team/`,
-          method: "POST",
+          method: action === "REGISTER" ? "POST" : "PATCH",
           headers: {
             "Content-Type": "application/json"
           },

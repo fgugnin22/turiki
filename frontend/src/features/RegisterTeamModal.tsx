@@ -51,7 +51,11 @@ const RegisterTeamModal = ({
     registerTeam({
       tournamentId,
       players: assignedPlayers,
-      teamId: team.id
+      teamId: team.id,
+      action:
+        tournamentStatus === "REGISTRATION_OPENED" && isTeamNotRegistered
+          ? "REGISTER"
+          : "CHANGE"
     })
       .unwrap()
       .then(() => {
