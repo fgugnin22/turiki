@@ -6,7 +6,7 @@ import LoginForm from "../widgets/LoginForm";
 const Login = () => {
     return (
         <Layout>
-            <div className="flex justify-center items-center grow">
+            <div className="flex justify-center items-center grow py-16">
                 <LoginForm />
             </div>
         </Layout>
