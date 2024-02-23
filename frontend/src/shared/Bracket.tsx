@@ -6,9 +6,11 @@ const sortMatchesForBracket = (matches: Match[] | undefined) => {
   if (!matches) {
     return [];
   }
-  matches.sort((match1, match2) => {
-    return Number(match1.name) - Number(match2.name);
-  });
+  matches = matches
+    .filter((match) => match.is_visible === true)
+    .sort((match1, match2) => {
+      return Number(match1.name) - Number(match2.name);
+    });
   let sortedMatches: Match[] = [];
   for (let i = Math.max(...matches.map((m) => Number(m.name))); i > 0; i--) {
     sortedMatches = sortedMatches.concat(

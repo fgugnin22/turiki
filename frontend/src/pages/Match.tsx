@@ -15,8 +15,6 @@ const Match = () => {
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
-  // const dispatch = useAppDispatch();
-
   const params = useParams();
   const { data: match, isFetching } = tournamentAPI.useGetMatchByIdQuery(
     {

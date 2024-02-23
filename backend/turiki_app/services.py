@@ -100,7 +100,9 @@ class TournamentService:
                 return "players changed successfully"
             else:
                 raise serializers.ValidationError('code bruh-2')
+
         if action == "REGISTER":
+            print('\n\n\n\n123123123123\n\n\n\n')
             teams = map(lambda x: x["id"], list(tournament.teams.values()))
             if team.id in teams:
                 raise serializers.ValidationError("already registered")
@@ -125,6 +127,7 @@ class TournamentService:
                 raise serializers.ValidationError('Капитан обязан участвовать')
             tournament.players.set(new_players)
             tournament.save()
+
             return "team registered successfully"
         elif action == "CANCEL_REGISTRATION":
             teams = map(lambda x: x["id"], list(tournament.teams.values()))
@@ -307,7 +310,6 @@ def async_return_user(token):
 
 @database_sync_to_async
 def async_create_message(user, chat_id, content):
-    # асинхронная почти что копия create_message для consumers.py
     chat = Chat.objects.get(pk=chat_id)
     if len(content) == 0:
         raise serializers.ValidationError("Content must not be an empty string")

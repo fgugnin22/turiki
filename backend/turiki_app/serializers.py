@@ -150,6 +150,11 @@ class TournamentSerializer(serializers.ModelSerializer):
                 "participants",
                 "next_match",
                 "name",
+                "is_last",
+                "is_bo3",
+                "is_visible",
+                "bo3_order",
+                "current_map",
 
             )
 

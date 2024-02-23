@@ -123,6 +123,7 @@ def end_match(match: Match):
                 is_last=match.is_last,
                 is_bo3=True,
                 is_visible=True,
+                bo3_order=match.bo3_order+1,
                 current_map=match.bans.maps[match.bo3_order]
             )
             match.is_visible = False
@@ -162,6 +163,7 @@ def end_match(match: Match):
             is_last=match.is_last,
             is_bo3=True,
             is_visible=True,
+            bo3_order=match.bo3_order + 1,
             current_map=match.bans.maps[match.bo3_order]
         )
         match.is_visible = False
@@ -188,7 +190,6 @@ def update_next_match(next_match: Match, winner):
     next_match.participants.add(next_participant)
     next_match.save()
     if len(list(next_match.participants.values())) == 2:
-
         next_match.starts = datetime.now() + timedelta(seconds=10)
         next_match.save()
         if next_match.is_bo3 and next_match.bo3_order > 0:
@@ -205,6 +206,6 @@ def update_next_match(next_match: Match, winner):
                 print("LOBBY CREATED")
             next_match.save()
             return
-
+        print('ima a dumbass \n\n\n\n\n\n\n\n\n\n\n\n\n\n')
         from turiki_app.tasks import set_match_start_bans
         set_match_start_bans(next_match.id)

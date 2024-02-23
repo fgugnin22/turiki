@@ -53,7 +53,8 @@ const RegisterTeamModal = ({
       players: assignedPlayers,
       teamId: team.id,
       action:
-        tournamentStatus === "REGISTRATION_OPENED" && isTeamNotRegistered
+        location.pathname === "/adminboard" ||
+        (tournamentStatus === "REGISTRATION_OPENED" && isTeamNotRegistered)
           ? "REGISTER"
           : "CHANGE"
     })
