@@ -162,7 +162,7 @@ class Match(models.Model):
     name = models.CharField(max_length=127, blank=True, null=True)
     round_text = models.CharField(max_length=31, blank=True, null=True)  # ПОРЯДОК СЛЕДОВАНИЯ МАТЧЕЙ
     # В ТУРНИРЕ, Т.Е. 1 - ПЕРВЫЕ МАТЧИ В ТУРНИРЕ, 2 - ВТОРЫЕ И ТД. п.с. на самом деле это не обязательно, просто рекомендация)))
-    state = models.CharField(max_length=31, null=True, blank=True)
+    state = models.CharField(max_length=63, null=True, blank=True)
     started = models.DateTimeField(blank=True, null=True) # начинается игра в матче
     starts = models.DateTimeField(blank=True, null=True) # начинается матч
     first_result_claimed = models.DateTimeField(blank=True, null=True)

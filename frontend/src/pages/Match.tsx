@@ -19,12 +19,12 @@ const Match = () => {
     {
       id: params.id!
     },
-    { pollingInterval: 3000 }
+    { pollingInterval: 2500 }
   );
   const { data: chat, isSuccess: isChatSuccess } =
     tournamentAPI.useGetChatMessagesQuery(
       { chatId: match?.lobby?.chat },
-      { skip: !match?.lobby, pollingInterval: 3000 }
+      { skip: !match?.lobby, pollingInterval: 2500 }
     );
 
   const messages = chat?.messages;
@@ -44,7 +44,14 @@ const Match = () => {
   const starts = new Date(match?.starts!);
   const started = new Date(match?.started!);
   started.setMinutes(
-    started.getMinutes() + Number(match?.time_results_locked.split(":")[1])
+    started.getMinutes() +
+      Number(
+        match?.state === "RES_SEND_LOCKED"
+          ? match.time_results_locked.split(":")[1]
+          : match?.state === "IN_GAME_LOBBY_CREATION"
+          ? match.time_to_enter_lobby.split(":")[1]
+          : 0
+      )
   );
   started.setSeconds(
     started.getSeconds() + Number(match?.time_results_locked.split(":")[2])
@@ -65,7 +72,6 @@ const Match = () => {
     ).getTime();
   const timeBeforeMatchStart = useCountdown(starts);
   const timeToNextAction = useCountdown(started);
-  console.log(started);
   const { seconds, minutes } = useCountdown(new Date(timeToBan));
   return (
     <Layout>
@@ -189,29 +195,37 @@ const Match = () => {
                   <div className="text-center mt-8 text-lg">
                     <span>Результаты можно будет опубликовать через: </span>
                     <p
-                      data-content={`${
-                        timeToNextAction.minutes > 9
-                          ? timeToNextAction.minutes
-                          : "0" + timeToNextAction.minutes
-                      }:${
-                        timeToNextAction.seconds > 9
-                          ? timeToNextAction.seconds
-                          : "0" + timeToNextAction.seconds
-                      }`}
+                      data-content={
+                        timeToNextAction.seconds >= 0 &&
+                        timeToNextAction.minutes >= 0
+                          ? `${
+                              timeToNextAction.minutes > 9
+                                ? timeToNextAction.minutes
+                                : "0" + timeToNextAction.minutes
+                            }:${
+                              timeToNextAction.seconds > 9
+                                ? timeToNextAction.seconds
+                                : "0" + timeToNextAction.seconds
+                            }`
+                          : "..."
+                      }
                       className="before:text-lg before:font-medium before:drop-shadow-[0_0_1px_#4cf2f8] before:inset-0 
                              text-lg font-medium  before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent 
                 before:absolute relative before:content-[attr(data-content)] z-50"
                     >
-                      {`${
-                        timeToNextAction.minutes > 9
-                          ? timeToNextAction.minutes
-                          : "0" + timeToNextAction.minutes
-                      }:${
-                        timeToNextAction.seconds > 9
-                          ? timeToNextAction.seconds
-                          : "0" + timeToNextAction.seconds
-                      }`}
+                      {timeToNextAction.seconds >= 0 &&
+                      timeToNextAction.minutes >= 0
+                        ? `${
+                            timeToNextAction.minutes > 9
+                              ? timeToNextAction.minutes
+                              : "0" + timeToNextAction.minutes
+                          }:${
+                            timeToNextAction.seconds > 9
+                              ? timeToNextAction.seconds
+                              : "0" + timeToNextAction.seconds
+                          }`
+                        : "..."}
                     </p>
                   </div>
                 )

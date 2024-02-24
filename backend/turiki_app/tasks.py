@@ -37,9 +37,11 @@ def set_match_start_bans(match_id: int):
 
 
 def set_match_active(match):
-    set_match_state(match.id)
+    match.started = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow'))
     create_lobby(match)
-    match.save()
+    set_match_state(match.id, "IN_GAME_LOBBY_CREATION")
+    # match.save()
+    print(match.state, 1323123)
 
 
 def exec_task_on_date(func, args: list, when=datetime.datetime.now()):
@@ -110,6 +112,7 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
         exec_task_on_date(check_for_teams_in_lobby, [match.id],
                           datetime.datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_enter_lobby)
         set_match_active(match)
+        return
 
     exec_task_on_date(ban_map, [match.id, other_team.id, match.bans.maps[-1], "AUTO",
                                 MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps)],
@@ -121,12 +124,10 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
 @dramatiq.actor
 def set_match_state(match_id, status="IN_GAME_LOBBY_CREATION"):  # self-explanatory fr tho
     match = Match.objects.get(pk=match_id)
-    if match.state == "BANS":
-        match.started = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow'))
-        match.state = "IN_GAME_LOBBY_CREATION"
-    else:
-        match.state = status
+    match.state = status
     match.save()
+
+
 
 @dramatiq.actor
 def auto_finish_match(match_id, team_id, result):
@@ -147,6 +148,7 @@ def create_lobby(match):
         lobby = Lobby.objects.create(match=match, chat=chat)
         chat.lobby = lobby
         chat.save()
+        match.save()
         print("LOBBY CREATED")
 
 
