@@ -7,7 +7,7 @@ from rest_framework.response import Response
 
 from .models import Tournament, Team, Participant, UserAccount, Chat, Message
 from rest_framework import serializers
-from turiki_app.tasks import exec_task_on_date, set_tournament_status
+from turiki_app.tasks import exec_task_on_date, set_tournament_status, set_match_state
 import pytz
 
 utc = pytz.UTC
@@ -175,6 +175,7 @@ class MatchService:
                     match.state = "RES_SEND_LOCKED"
                     match.started = datetime.now(tz=pytz.timezone('Europe/Moscow'))
                     match.save()
+                    exec_task_on_date(set_match_state, [match.id, "ACTIVE"], match.started + match.time_results_locked)
             return Response(status=200)
         return Response(status=400)
 

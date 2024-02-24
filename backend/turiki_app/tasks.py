@@ -36,9 +36,8 @@ def set_match_start_bans(match_id: int):
         match.save()
 
 
-@dramatiq.actor
 def set_match_active(match):
-    set_active(match)
+    set_match_state(match.id)
     create_lobby(match)
     match.save()
 
@@ -120,12 +119,14 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
 
 
 @dramatiq.actor
-def set_active(match):  # self-explanatory fr tho
+def set_match_state(match_id, status="IN_GAME_LOBBY_CREATION"):  # self-explanatory fr tho
+    match = Match.objects.get(pk=match_id)
     if match.state == "BANS":
         match.started = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow'))
         match.state = "IN_GAME_LOBBY_CREATION"
-        match.save()
-
+    else:
+        match.state = status
+    match.save()
 
 @dramatiq.actor
 def auto_finish_match(match_id, team_id, result):

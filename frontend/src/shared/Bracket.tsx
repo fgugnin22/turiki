@@ -98,7 +98,9 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
                 height: bracketSize.height / 2 ** (Number(match.name) - 1)
               };
               const hasChildMatches = tournament.matches.some((otherMatch) => {
-                return otherMatch.next_match === match.id;
+                return (
+                  otherMatch.next_match === match.id && otherMatch.is_visible
+                );
               });
               return (
                 <DynamicBracketMatch

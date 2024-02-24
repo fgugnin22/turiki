@@ -40,16 +40,6 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
     );
     window.location.reload();
   };
-  if (
-    props.match.participants[0].is_winner === true &&
-    props.match.participants[1].is_winner === true
-  ) {
-    return (
-      <h2 className="text-2xl text-red-600 text-center mt-8">
-        Результат оспорен командой противника, администратор скоро прибудет
-      </h2>
-    );
-  }
   const hasOpponentWon =
     props.match.participants[0].id === props.selfParticipant?.id
       ? props.match.participants[1].is_winner
@@ -69,8 +59,13 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
   timeBeforeAutoRes = useCountdown(timeBeforeAutoRes);
   return (
     <>
-      {props.teamId === userDetails?.team &&
-        props.match.state === "RES_SEND_LOCKED" &&
+      {props.match.state === "CONTESTED" ? (
+        <h2 className="text-2xl text-warning text-center mt-8">
+          Результат оспорен командой противника, администратор скоро прибудет
+        </h2>
+      ) : (
+        props.teamId === userDetails?.team &&
+        props.match.state === "ACTIVE" &&
         props.isCaptain && (
           <div className=" text-center mt-14">
             {!selfResImage && (
@@ -184,25 +179,9 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
             >
               Отправить результат
             </ButtonMain>
-            {/* {selfResImage && (
-              <a
-                className="py-2 px-3 mt-4 inline-block bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-48 transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg"
-                href={`${serverURL}/${selfResImage}`}
-                target="_blank"
-              >
-                Свой результат
-              </a>
-            )}
-            {opponentTeamResImage && (
-              <a
-                className=" ml-8 py-2 px-3 mt-4 inline-block bg-blue-600 hover:bg-blue-700 focus:ring-blue-500 focus:ring-offset-blue-200 text-white w-48 transition ease-in duration-200 text-center text-sm font-semibold shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2  rounded-lg"
-                href={`${serverURL}/${opponentTeamResImage}`}
-              >
-                Результат оппонентов
-              </a>
-            )} */}
           </div>
-        )}
+        )
+      )}
     </>
   );
 };

@@ -17,15 +17,17 @@ def claim_match_result(match_id: int, team_id, result):
         return
     if match.started + match.time_results_locked >= datetime.now(tz=pytz.timezone('Europe/Moscow')):
         return Response(status=400)
-    [p1, p2] = list(match.participants.values())
-    p1 = Participant.objects.get(pk=p1["id"])
+    p1: Participant = match.participants.first()
+    p2: Participant = match.participants.last()
+    if p1.is_winner == p2.is_winner and p1.is_winner:
+        print('relief')
+        return
     if team_id == p1.team.id:
         p1.is_winner = result
         p1.save()
         if not result and match.state != "SCORE_DONE":
             notify(match, f"Команда {p1.team.name} выставила свой результат: поражение!")
     else:
-        p2 = Participant.objects.get(pk=p2["id"])
         p2.is_winner = result
         p2.save()
         if not result and match.state != "SCORE_DONE":
@@ -62,6 +64,7 @@ def end_match(match: Match):
         p1.save()
         match.state = "SCORE_DONE"
         match.save()
+        print('321')
         if next_match is None:
             # this block should not run but i leave it anyways
             tournament = match.tournament
@@ -70,9 +73,8 @@ def end_match(match: Match):
             return
         update_next_match(next_match, p1)
         return
-    [p1, p2] = list(match.participants.values())
-    p1 = Participant.objects.get(pk=p1["id"])
-    p2 = Participant.objects.get(pk=p2["id"])
+    p1: Participant = match.participants.first()
+    p2: Participant = match.participants.last()
     next_match = match.next_match
     if p1.is_winner is None and p2.is_winner:
         if match.state != "SCORE_DONE":
@@ -82,8 +84,11 @@ def end_match(match: Match):
             notify(match, f"Команда {p1.team.name} выставила свой результат: победа!")
     if p1.is_winner == p2.is_winner:
         notify(match, "Результат матча оспорен!")
+        match.state = "CONTESTED"
+        match.save()
+        print("HUH??")
         return
-
+    print("WTF")
     if p1.is_winner is None and p2.is_winner:
         match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
         exec_task_on_date(auto_finish_match, [match.id, p1.team.id, False],
@@ -116,7 +121,7 @@ def end_match(match: Match):
                 round_text=match.round_text,
                 state="NO_SHOW",
                 tournament=tournament,
-                starts=None,
+                starts=datetime.now(tz=pytz.timezone('Europe/Moscow')) + timedelta(minutes=1),
                 time_to_enter_lobby=tournament.time_to_enter_lobby,
                 time_results_locked=tournament.time_results_locked,
                 time_to_confirm_results=tournament.time_to_confirm_results,
@@ -124,10 +129,13 @@ def end_match(match: Match):
                 is_bo3=True,
                 is_visible=True,
                 bo3_order=match.bo3_order+1,
-                current_map=match.bans.maps[match.bo3_order]
+                current_map=match.bans.maps[match.bo3_order + 1]
             )
             match.is_visible = False
+            match.next_match.bans = match.bans
+            match.bans = None
             match.save()
+            match.next_match.save()
             update_next_match(match.next_match, p1)
             update_next_match(match.next_match, p2)
             print(6666)
@@ -156,7 +164,7 @@ def end_match(match: Match):
             round_text=match.round_text,
             state="NO_SHOW",
             tournament=tournament,
-            starts=None,
+            starts=datetime.now(tz=pytz.timezone('Europe/Moscow')) + timedelta(minutes=1),
             time_to_enter_lobby=tournament.time_to_enter_lobby,
             time_results_locked=tournament.time_results_locked,
             time_to_confirm_results=tournament.time_to_confirm_results,
@@ -164,10 +172,13 @@ def end_match(match: Match):
             is_bo3=True,
             is_visible=True,
             bo3_order=match.bo3_order + 1,
-            current_map=match.bans.maps[match.bo3_order]
+            current_map=match.bans.maps[match.bo3_order + 1]
         )
         match.is_visible = False
+        match.next_match.bans = match.bans
+        match.bans = None
         match.save()
+        match.next_match.save()
         update_next_match(match.next_match, p1)
         update_next_match(match.next_match, p2)
         print(5555)
@@ -206,6 +217,5 @@ def update_next_match(next_match: Match, winner):
                 print("LOBBY CREATED")
             next_match.save()
             return
-        print('ima a dumbass \n\n\n\n\n\n\n\n\n\n\n\n\n\n')
         from turiki_app.tasks import set_match_start_bans
         set_match_start_bans(next_match.id)

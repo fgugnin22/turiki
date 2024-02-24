@@ -8,7 +8,6 @@ import MatchResultVote from "../features/MatchResultVote";
 import { Participant } from "../helpers/transformMatches";
 import MapBans from "../shared/MapBans";
 import { useCountdown } from "../hooks/useCountDown";
-import { useEffect } from "react";
 import ButtonMain from "../shared/ButtonMain";
 const serverURL = import.meta.env.VITE_API_URL;
 const Match = () => {
@@ -47,6 +46,9 @@ const Match = () => {
   started.setMinutes(
     started.getMinutes() + Number(match?.time_results_locked.split(":")[1])
   );
+  started.setSeconds(
+    started.getSeconds() + Number(match?.time_results_locked.split(":")[2])
+  );
   let selfParticipant: Participant | null = null;
   if (match) {
     selfParticipant =
@@ -63,6 +65,7 @@ const Match = () => {
     ).getTime();
   const timeBeforeMatchStart = useCountdown(starts);
   const timeToNextAction = useCountdown(started);
+  console.log(started);
   const { seconds, minutes } = useCountdown(new Date(timeToBan));
   return (
     <Layout>
@@ -70,16 +73,22 @@ const Match = () => {
         <>
           <div className="text-center mt-2 text-2xl">
             <p
-              data-content={`Матч ${match.id}, 1/${2 ** Number(match.name)}`}
+              data-content={`Матч 1/${2 ** Number(match.name)}, Best of ${
+                match.is_bo3 ? "3" : "1"
+              }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
               className="before:text-2xl before:font-semibold before:drop-shadow-[0_0_1px_#4cf2f8] before:inset-0 
                             w-full text-center text-2xl before:w-full font-medium  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
             >
-              {`Матч ${match.id}, 1/${2 ** Number(match.name)}`}
+              {`Матч 1/${2 ** Number(match.name)}, Best of ${
+                match.is_bo3 ? "3" : "1"
+              }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
+              {/* {тип БО3 или БО1, если БО3, то счет и карты} */}
             </p>
-            {selfParticipant?.is_winner !== undefined &&
-              selfParticipant?.is_winner !== null && (
+            {(selfParticipant?.is_winner ?? false) &&
+              match.participants[0]?.is_winner !==
+                match.participants[1]?.is_winner && (
                 <p
                   data-content={`${
                     selfParticipant?.is_winner
@@ -168,9 +177,7 @@ const Match = () => {
                 <TeamPlayerList tournamentId={match.tournament!} team={team2} />
               )}
 
-              {match?.state === "RES_SEND_LOCKED" &&
-              timeToNextAction.minutes < 0 &&
-              timeToNextAction.seconds < 0 ? (
+              {match?.state === "ACTIVE" || match?.state === "CONTESTED" ? (
                 <MatchResultVote
                   selfParticipant={selfParticipant!}
                   match={match}
@@ -225,12 +232,13 @@ const Match = () => {
                 <div className="flex w-4/5 mx-auto flex-col mt-14 relative">
                   <p className="text-center mb-4">
                     {!selfParticipant?.in_lobby
-                      ? `На заход в лобби осталось: ${timeToNextAction.minutes}:
-                    ${
-                      timeToNextAction.seconds > 9
-                        ? timeToNextAction.seconds
-                        : "0" + timeToNextAction.seconds
-                    }`
+                      ? `На заход в лобби осталось: ${
+                          timeToNextAction.minutes
+                        }:${
+                          timeToNextAction.seconds > 9
+                            ? timeToNextAction.seconds
+                            : "0" + timeToNextAction.seconds
+                        }`
                       : "Ваша команда уже в лобби"}
                   </p>
                   <ButtonMain

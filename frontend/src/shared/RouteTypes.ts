@@ -5,7 +5,7 @@ export const ROUTES = {
   ADMINPAGE: route("adminboard"),
   LOGIN: route("login"),
   REGISTER_ACCOUNT: route("signup"),
-  RESET_PASSWORD: route("reset-password"),
+  RESET_PASSWORD: route("password/reset"),
   RESET_PASSWORD_CONFIRM: route("password/reset/confirm/:uid/:token", {
     params: { id: number().defined(), token: number().defined() }
   }),
