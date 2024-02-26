@@ -95,7 +95,8 @@ class TournamentService:
                         raise serializers.ValidationError('code bruh-1')
                 if not is_captain_in:
                     raise serializers.ValidationError('Капитан обязан участвовать')
-                tournament.players.set(new_players)
+                for new_plr in new_players:
+                    tournament.players.add(new_plr)
                 tournament.save()
                 return "players changed successfully"
             else:
@@ -125,7 +126,8 @@ class TournamentService:
                     raise serializers.ValidationError('code bruh-1')
             if not is_captain_in:
                 raise serializers.ValidationError('Капитан обязан участвовать')
-            tournament.players.set(new_players)
+            for new_plr in new_players:
+                tournament.players.add(new_plr)
             tournament.save()
 
             return "team registered successfully"

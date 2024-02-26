@@ -109,8 +109,10 @@ class TournamentAPIView(ModelViewSet):
         except:
             team = request.user.team
         tournament = self.get_object()
+
         if request.method == "POST":
             players_ids = request.data["team"]["players"]
+            print(team, players_ids)
             result = TournamentService.register_team(tournament, team, players_ids, "REGISTER")
         elif request.method == "DELETE":
             result = TournamentService.register_team(tournament, team, None, "CANCEL_REGISTRATION")

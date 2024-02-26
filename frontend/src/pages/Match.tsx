@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { useAppSelector, useAppDispatch } from "../shared/rtk/store";
@@ -9,13 +9,18 @@ import { Participant } from "../helpers/transformMatches";
 import MapBans from "../shared/MapBans";
 import { useCountdown } from "../hooks/useCountDown";
 import ButtonMain from "../shared/ButtonMain";
+import { ROUTES } from "../shared/RouteTypes";
 const serverURL = import.meta.env.VITE_API_URL;
 const Match = () => {
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
   const params = useParams();
-  const { data: match, isFetching } = tournamentAPI.useGetMatchByIdQuery(
+  const {
+    data: match,
+    isFetching,
+    isError
+  } = tournamentAPI.useGetMatchByIdQuery(
     {
       id: params.id!
     },
@@ -73,6 +78,10 @@ const Match = () => {
   const timeBeforeMatchStart = useCountdown(starts);
   const timeToNextAction = useCountdown(started);
   const { seconds, minutes } = useCountdown(new Date(timeToBan));
+  const navigate = useNavigate();
+  if (isError) {
+    navigate(ROUTES.NO_MATCH404.path);
+  }
   return (
     <Layout>
       {match && (

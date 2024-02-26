@@ -1,6 +1,6 @@
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { Team } from "../helpers/transformMatches.js";
-import { NavLink, useParams } from "react-router-dom";
+import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { ROUTES } from "../shared/RouteTypes";
 import RegisterTeamModal from "../features/RegisterTeamModal";
@@ -47,13 +47,11 @@ export const Tournament = () => {
 
   const tournId = Number(params["id"]);
   const { userDetails: user } = useAppSelector((state) => state.user);
-  const {
-    data: tournament,
-    error,
-    isLoading
-  } = tournamentAPI.useGetTournamentByIdQuery({
-    id: tournId!
-  });
+  const { data: tournament, isError } = tournamentAPI.useGetTournamentByIdQuery(
+    {
+      id: tournId!
+    }
+  );
   const isTeamNotRegistered =
     user &&
     tournament &&
@@ -62,6 +60,10 @@ export const Tournament = () => {
   const statusString = useTournamentStatus(tournament?.status);
   const date = new Date(tournament?.reg_starts ?? 0);
   const section = params["*"];
+  const navigate = useNavigate();
+  if (isError) {
+    navigate(ROUTES.NO_MATCH404.path);
+  }
   return (
     <div className="flex min-h-screen flex-col bg-dark grow justify-start">
       <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">

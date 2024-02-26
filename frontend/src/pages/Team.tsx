@@ -48,7 +48,10 @@ const Team = () => {
     await dispatch(uploadTeamImage({ formData, teamId: data.id }));
     window.location.reload();
   };
-  if ((data && data.players.length === 0) || isError) {
+  if (isError) {
+    navigate(ROUTES.NO_MATCH404.path);
+  }
+  if (data?.players.length === 0) {
     dispatch(getUser(localStorage.getItem("access")!))
       .unwrap()
       .then(() => navigate(ROUTES.TEAMS.CREATE.path));

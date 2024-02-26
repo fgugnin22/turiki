@@ -73,7 +73,10 @@ const Header = () => {
               <img
                 src={`${serverURL}/media/img/accordion.svg`}
                 alt=""
-                className="neonshadow mt-[1px]"
+                className={
+                  "neonshadow mt-[1px] transition " +
+                  (isDropDownVisible ? "rotate-90" : "rotate-0")
+                }
               />
             </div>
             {isDropDownVisible && (
