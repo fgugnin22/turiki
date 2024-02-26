@@ -90,7 +90,6 @@ class TournamentAPIView(ModelViewSet):
             # tourn = TournamentService.create_tournament(name, prize, max_rounds)
             request.data["reg_starts"] = datetime.datetime.strptime(request.data["reg_starts"], "%Y-%m-%dT%H:%M:%S%z")
             request.data["starts"] = datetime.datetime.strptime(request.data["starts"], "%Y-%m-%dT%H:%M:%S%z")
-            print(request.data["starts"])
             tourn = TournamentService.create_tournament(**request.data)
             return Response(model_to_dict(tourn), 201)
         except serializers.ValidationError as e:
@@ -101,7 +100,7 @@ class TournamentAPIView(ModelViewSet):
     @action(
         methods=["POST", "PATCH", "DELETE"],
         detail=True,
-        permission_classes=[IsCaptainOfThisTeamOrAdmin],
+        permission_classes=[IsAdminUser],
     )
     def register_team(self, request, pk=None):
         try:
@@ -112,7 +111,6 @@ class TournamentAPIView(ModelViewSet):
 
         if request.method == "POST":
             players_ids = request.data["team"]["players"]
-            print(team, players_ids)
             result = TournamentService.register_team(tournament, team, players_ids, "REGISTER")
         elif request.method == "DELETE":
             result = TournamentService.register_team(tournament, team, None, "CANCEL_REGISTRATION")

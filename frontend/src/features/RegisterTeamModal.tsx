@@ -34,6 +34,7 @@ const RegisterTeamModal = ({
   const [showModal, setShowModal] = useState<boolean>(false);
   const sumbitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setSubmitError(false);
     const assignedPlayers = team?.players
       .filter((player, index) => {
         return (
@@ -65,7 +66,7 @@ const RegisterTeamModal = ({
       .catch((error) => {
         setSubmitError(error.data[0]);
       });
-    setShowModal(false);
+    // setShowModal(false);
   };
   window.addEventListener("keydown", (e) => {
     if (e.code === "Escape") {
@@ -75,17 +76,11 @@ const RegisterTeamModal = ({
   return (
     <>
       <ButtonMain
-        onMouseOver={() => setSubmitError(false)}
+        onClick={() => setShowModal(true)}
         className=" py-1 px-2 focus:py-[2px] focus:px-[6px] active:py-[2px] active:px-[6px] after:!bg-gradient-to-l"
         type="button"
-        onClick={() => {
-          setSubmitError(false);
-          setShowModal(true);
-        }}
       >
-        {submitError
-          ? submitError
-          : tournamentStatus === "REGISTRATION_OPENED" && isTeamNotRegistered
+        {tournamentStatus === "REGISTRATION_OPENED" && isTeamNotRegistered
           ? "Зарегистрировать команду"
           : "Изменить регистрацию"}
       </ButtonMain>
@@ -110,42 +105,51 @@ const RegisterTeamModal = ({
                 before:relative relative before:content-[attr(data-content)]"
               ></h2>
               <form className=" z-50" onSubmit={sumbitHandler}>
-                <ul className="mt-8 mb-8 flex flex-col gap-7">
+                <ul className="mt-8 mb-1 flex flex-col gap-7">
                   {team &&
-                    team.players.map((player, index) => {
-                      return (
-                        <li
-                          key={player.id}
-                          className=" flex justify-start flex-nowrap gap-5 items-center"
-                        >
-                          <input
-                            id={String(player.id) + "input"}
-                            type="checkbox"
-                            checked={formState[index]}
-                            style={{
-                              backgroundImage: checkURL,
-                              backgroundSize: "19px"
-                            }}
-                            onChange={checkHandler}
-                            value={index}
-                            data-url={checkURL}
-                            className={`appearance-none w-[30px] h-[30px] rounded-[10px] border border-lightgray
+                    team.players
+                      .filter(
+                        (player) =>
+                          player.team_status !== "PENDING" &&
+                          player.team_status !== "REJECTED"
+                      )
+                      .map((player, index) => {
+                        return (
+                          <li
+                            key={player.id}
+                            className=" flex justify-start flex-nowrap gap-5 items-center"
+                          >
+                            <input
+                              id={String(player.id) + "input"}
+                              type="checkbox"
+                              checked={formState[index]}
+                              style={{
+                                backgroundImage: checkURL,
+                                backgroundSize: "19px"
+                              }}
+                              onChange={checkHandler}
+                              value={index}
+                              data-url={checkURL}
+                              className={`appearance-none w-[30px] h-[30px] rounded-[10px] border border-lightgray
                              bg-opacity-0 
                              hover:border-turquoise transition duration-200 bg-no-repeat !bg-[1000px] checked:!bg-[5px] checked:bg-darkturquoise checked:bg-opacity-30 checked:border-lightblue`}
-                          />
-                          <label
-                            htmlFor={String(player.id) + "input"}
-                            className="hover:text-turquoise text-lightgray transition active:text-lightblue text-xl"
-                          >
-                            {player.name}
-                          </label>
-                        </li>
-                      );
-                    })}
+                            />
+                            <label
+                              htmlFor={String(player.id) + "input"}
+                              className="hover:text-turquoise text-lightgray transition active:text-lightblue text-xl"
+                            >
+                              {player.name}
+                            </label>
+                          </li>
+                        );
+                      })}
                 </ul>
+                <p className=" text-warning mb-4">
+                  {submitError ? submitError + "!" : ""}
+                </p>
                 <div className="flex justify-between">
                   <ButtonMain className="py-3 px-[19px] focus:py-[10px] focus:px-[18px] active:py-[10px] active:px-[18px] text-xl font-semibold">
-                    Зарегистрировать
+                    {"Зарегистрировать"}
                   </ButtonMain>
                   <ButtonSecondary
                     type="button"

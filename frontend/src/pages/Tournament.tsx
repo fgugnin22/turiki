@@ -65,12 +65,12 @@ export const Tournament = () => {
     navigate(ROUTES.NO_MATCH404.path);
   }
   return (
-    <div className="flex min-h-screen flex-col bg-dark grow justify-start">
+    <div className="flex flex-col bg-dark grow justify-start">
       <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
         <Header />
       </div>
       {tournament ? (
-        <>
+        <div className="min-h-screen ">
           <div
             style={{
               backgroundImage: `linear-gradient(to bottom, transparent, #141318 90%), url(${serverURL}/media/img/siege1.webp)`
@@ -331,7 +331,7 @@ export const Tournament = () => {
               Обзор
             </div>
           )}
-        </>
+        </div>
       ) : (
         <div className=" flex items-center justify-center">
           <TriangleLoader />

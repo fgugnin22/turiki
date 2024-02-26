@@ -95,6 +95,9 @@ class TournamentService:
                         raise serializers.ValidationError('code bruh-1')
                 if not is_captain_in:
                     raise serializers.ValidationError('Капитан обязан участвовать')
+                for player in tournament.players:
+                    if player.team.id == team.id:
+                        tournament.players.remove(player)
                 for new_plr in new_players:
                     tournament.players.add(new_plr)
                 tournament.save()
@@ -103,13 +106,11 @@ class TournamentService:
                 raise serializers.ValidationError('code bruh-2')
 
         if action == "REGISTER":
-            print('\n\n\n\n123123123123\n\n\n\n')
             teams = map(lambda x: x["id"], list(tournament.teams.values()))
             if team.id in teams:
                 raise serializers.ValidationError("already registered")
             if len(tournament.teams.values()) >= 2 ** tournament.max_rounds:
                 raise serializers.ValidationError("tournament max teams count reached")
-            tournament.teams.add(team)
             new_players = []
             is_captain_in = False
             for i, player_id in enumerate(players_ids):
@@ -126,6 +127,7 @@ class TournamentService:
                     raise serializers.ValidationError('code bruh-1')
             if not is_captain_in:
                 raise serializers.ValidationError('Капитан обязан участвовать')
+            tournament.teams.add(team)
             for new_plr in new_players:
                 tournament.players.add(new_plr)
             tournament.save()
@@ -136,7 +138,6 @@ class TournamentService:
             tourn_players = list(
                 map(lambda x: x["id"], list(tournament.players.values()))
             )
-            tournament.teams.remove(team)
             is_team_in_tournament = team.id in teams
             if not is_team_in_tournament:
                 return "registration changing cancelled"
@@ -151,6 +152,7 @@ class TournamentService:
                         print("removed player")
                 except:
                     pass
+            tournament.teams.remove(team)
             tournament.save()
             return "team unregistered successfully"
 
@@ -198,7 +200,6 @@ class UserService:
                 user.name = new_name
             if new_game_name is not None:
                 user.game_name = new_game_name
-            print('1')
             user.save()
             return Response("credentials updated successfully", 200)
         if user.name is None or len(user.name) == 0 or user.google_oauth2:
@@ -212,7 +213,6 @@ class UserService:
             if new_game_name is not None:
                 user.game_name = new_game_name
             user.save()
-            print('2')
             return Response("credentials updated successfully", 200)
         elif user.check_password(old_password):
             if new_password is not None and len(new_password) > 7:
@@ -224,7 +224,6 @@ class UserService:
             if new_game_name is not None:
                 user.game_name = new_game_name
             user.save()
-            print(3)
             return Response("credentials updated successfully", 200)
         return Response("very bad response", 400)
 
