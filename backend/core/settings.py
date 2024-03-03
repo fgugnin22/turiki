@@ -55,7 +55,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = "core.urls"
 CSRF_COOKIE_SECURE = True
 CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "http://localhost:8000", 'http://46.32.68.44:8000/']
+CSRF_TRUSTED_ORIGINS = ["http://localhost:5173", "http://localhost:8000", 'https://turiki.tw1.ru']
 # html templates
 TEMPLATES = [
     {
@@ -183,7 +183,7 @@ DJOSER = {
     "SOCIAL_AUTH_ALLOWED_REDIRECT_URIS": [
         "http://localhost:8000",
         "http://localhost:5173",
-        "*"
+        "https://turiki.tw1.ru"
     ],
     "SERIALIZERS": {
         "user_create": "turiki_app.serializers.UserSerializer",

@@ -2,6 +2,7 @@ from channels.generic.websocket import AsyncJsonWebsocketConsumer
 import json
 from turiki_app.services import async_return_user, async_create_message
 
+
 class ChatConsumer(AsyncJsonWebsocketConsumer):
     async def connect(self):
         # Логика в момент подключения к websocket'у
@@ -13,7 +14,7 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         )  # добавляем группу в consumer
         token = self.scope["query_string"].decode()[6:]  # достаем токен из query params (?token={token})
         self.scope["user"] = await async_return_user(token)  # подтягиваем объект класса UserAccount
-        
+
         await self.accept()  # принимаем подключение клиента к websocket'у
 
     async def receive_json(self, content, **kwargs):

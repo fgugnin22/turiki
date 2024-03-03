@@ -70,7 +70,7 @@ export const Tournament = () => {
         <Header />
       </div>
       {tournament ? (
-        <div className="min-h-screen ">
+        <div className="min-h-screen">
           <div
             style={{
               backgroundImage: `linear-gradient(to bottom, transparent, #141318 90%), url(${serverURL}/media/img/siege1.webp)`
@@ -275,13 +275,17 @@ export const Tournament = () => {
               </div>
             </>
           ) : section === "rules" ? (
-            <>
+            <div className="flex flex-col">
               <h2 className="mx-auto bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent mt-[70px] text-2xl font-medium">
                 Скачать файл
               </h2>
-              <p className="mx-auto bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent mt-4 text-base font-medium w-[343px] text-center">
+              <p
+                className="mx-auto bg-gradient-to-r from-lightblue
+               to-turquoise bg-clip-text text-transparent 
+              mt-4 text-base font-medium w-[343px] text-center mb-4"
+              >
                 Файл содержит правила, которым должны следовать участники
-                данного турнира
+                турнира
               </p>
               <a
                 className="w-[170px] h-[170px] rounded-[10px] mx-auto my-auto relative after:absolute 
@@ -325,7 +329,7 @@ export const Tournament = () => {
                   </defs>
                 </svg>
               </a>
-            </>
+            </div>
           ) : (
             <div className=" text-6xl text-center font-semibold py-12 text-lightblue">
               Обзор
