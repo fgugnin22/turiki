@@ -75,7 +75,7 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
       <DraggableParent>
         <div
           className="max-w-full relative max-h-[1000px] scrollbar-thin scrollbar-thumb-white 
-        scrollbar-track-dark scrollbar-corner-dark scrollbar-thumb-rounded-[3px] overflow-scroll"
+        scrollbar-track-dark scrollbar-corner-dark scrollbar-thumb-rounded-[3px] overflow-scroll w-fit mx-auto"
         >
           <div
             style={{
