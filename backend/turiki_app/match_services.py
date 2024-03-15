@@ -19,7 +19,6 @@ def claim_match_result(match_id: int, team_id, result):
     p1: Participant = match.participants.first()
     p2: Participant = match.participants.last()
     if p1.is_winner == p2.is_winner and p1.is_winner:
-        print('relief')
         return
     if team_id == p1.team.id:
         p1.is_winner = result
@@ -74,11 +73,13 @@ def end_match(match: Match):
         return
     p1: Participant = match.participants.first()
     p2: Participant = match.participants.last()
+
     next_match = match.next_match
+    messages = match.lobby.chat.messages
     if p1.is_winner is None and p2.is_winner:
-        if match.state != "SCORE_DONE":
+        if match.state != "SCORE_DONE" and messages.filter(content=f"Команда {p2.team.name} выставила свой результат: победа!").count() == 0:
             notify(match, f"Команда {p2.team.name} выставила свой результат: победа!")
-    elif p2.is_winner is None and p1.is_winner:
+    elif p2.is_winner is None and p1.is_winner and messages.filter(content=f"Команда {p1.team.name} выставила свой результат: победа!").count() == 0:
         if match.state != "SCORE_DONE":
             notify(match, f"Команда {p1.team.name} выставила свой результат: победа!")
     if p1.is_winner == p2.is_winner:

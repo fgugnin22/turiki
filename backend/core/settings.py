@@ -1,6 +1,8 @@
 import os
 from datetime import timedelta
 from pathlib import Path
+
+import psycopg2.extensions
 from dotenv import load_dotenv
 import redis
 
@@ -98,6 +100,9 @@ DATABASES = {
         "HOST": "pgdb",
         "PORT": "5432",
         "ATOMIC_REQUESTS": True,
+        "OPTIONS": {
+            "isolation_level": psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE,
+        },
     }
 }
 
