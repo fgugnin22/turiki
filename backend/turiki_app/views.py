@@ -25,13 +25,13 @@ from turiki_app.serializers import (
 from turiki_app.services import TeamService, MatchService, TournamentService, UserService
 from turiki_app.tasks import create_bracket, set_initial_matches, ban_map
 from core.settings import MEDIA_ROOT
+from django.db import transaction
 
 """
 View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
 в общем здесь в классах описаны методы(нередко скрытые наследованием), которые вызываются на тот или иной url
 сюда приходят и здесь обрабатываются запросы из urls.py(где эти view зарегистрированы на соответствующие url)
 """
-
 
 class UserAPIView(GenericViewSet):
     parser_classes = [MultiPartParser, JSONParser]

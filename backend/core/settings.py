@@ -3,6 +3,7 @@ from datetime import timedelta
 from pathlib import Path
 from dotenv import load_dotenv
 import redis
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -37,11 +38,11 @@ INSTALLED_APPS = [
     "django_extensions",
 ]
 # Откуда могут приходить запросы на сервер
-ALLOWED_HOSTS=['*']
+ALLOWED_HOSTS = ['*']
 CORS_ALLOW_ALL_ORIGINS = True
 
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware", 
+    "corsheaders.middleware.CorsMiddleware",
     "core.middleware.StatsMiddleware",
     "social_django.middleware.SocialAuthExceptionMiddleware",
     "django.middleware.security.SecurityMiddleware",
@@ -96,6 +97,7 @@ DATABASES = {
         "PASSWORD": os.getenv("PG_PASSWORD"),
         "HOST": "pgdb",
         "PORT": "5432",
+        "ATOMIC_REQUESTS": True,
     }
 }
 

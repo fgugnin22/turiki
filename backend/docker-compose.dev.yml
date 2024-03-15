@@ -1,0 +1,39 @@
+version: "3"
+
+services:
+    django:
+        build:
+            context: .
+            dockerfile: Dockerfile
+        container_name: django
+        command: sh -c "mkdir -p /usr/src/app/turiki_app/migrations && touch /usr/src/app/turiki_app/migrations/__init__.py && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+        volumes:
+            - .:/usr/src/app
+        ports:
+            - "8000:8000"
+        depends_on:
+            - pgdb
+            - redis
+            - dramatiq
+    redis:
+        image: redis:5
+        ports:
+            - "6379:6379"
+    pgdb:
+        image: postgres:latest
+        environment:
+            - POSTGRES_PASSWORD=$PG_PASSWORD
+            - POSTGRES_USER=$PG_USER
+            - POSTGRES_DB=TurikiCore
+        container_name: pgdb
+        ports:
+            - "5431:5431"
+    dramatiq:
+        volumes:
+            - .:/usr/src/app
+        build:
+            context: .
+            dockerfile: Dockerfile
+        command: sh -c "python manage.py rundramatiq --processes 6 --threads 6"
+        depends_on:
+            - redis

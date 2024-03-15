@@ -3,7 +3,6 @@ import pytz
 from rest_framework.response import Response
 from turiki_app.models import Chat, Lobby, Participant, Message, Match, UserAccount
 
-
 def claim_match_result(match_id: int, team_id, result):
     # Ставит результат в Participant т.е. позволяет капитану сделать заявку на результат
 
