@@ -1,14 +1,13 @@
 from datetime import timedelta, datetime
-
 from channels.db import database_sync_to_async
-import jwt
 from django.utils.timezone import now
 from rest_framework.response import Response
-
-from .models import Tournament, Team, Participant, UserAccount, Chat, Message
 from rest_framework import serializers
-from turiki_app.tasks import exec_task_on_date, set_tournament_status, set_match_state
 import pytz
+import jwt
+
+from turiki_app.tasks import exec_task_on_date, set_tournament_status, set_match_state
+from turiki_app.models import Tournament, Team, Participant, UserAccount, Chat, Message
 
 utc = pytz.UTC
 """
@@ -20,22 +19,23 @@ class TournamentService:
     @staticmethod
     def create_tournament(
             name=None, prize=None, max_players_in_team=None,
-            max_rounds=None, reg_starts=None, time_to_check_in=None, time_to_enter_lobby=None, time_results_locked=None, time_to_confirm_results=None, time_to_select_map=None, starts=datetime.now() + timedelta(hours=3),
+            max_rounds=None, reg_starts=None, time_to_check_in=None, time_to_enter_lobby=None, time_results_locked=None,
+            time_to_confirm_results=None, time_to_select_map=None, starts=datetime.now() + timedelta(hours=3),
     ):
         try:
             if name is None or \
-                prize is None or \
-                max_rounds is None or \
-                reg_starts is None or \
-                time_to_check_in is None or \
-                time_to_enter_lobby is None or \
-                time_results_locked is None or \
-                time_to_confirm_results is None or \
-                time_to_select_map is None or \
-                max_players_in_team is None or \
-                starts is None:
-                    raise serializers.ValidationError("Forgot all or some of parameters")
-            
+                    prize is None or \
+                    max_rounds is None or \
+                    reg_starts is None or \
+                    time_to_check_in is None or \
+                    time_to_enter_lobby is None or \
+                    time_results_locked is None or \
+                    time_to_confirm_results is None or \
+                    time_to_select_map is None or \
+                    max_players_in_team is None or \
+                    starts is None:
+                raise serializers.ValidationError("Forgot all or some of parameters")
+
             tourn: Tournament = Tournament.objects.create(
                 name=name, prize=prize, max_rounds=max_rounds, starts=starts, reg_starts=reg_starts,
                 time_to_check_in=time_to_check_in,
@@ -173,7 +173,7 @@ class MatchService:
                 notify(match, f"Команда {participant_in_question.team.name} в лобби!")
             participant_in_question.in_lobby = True
             participant_in_question.save()
-            
+
             if p1.in_lobby and p2.in_lobby:
                 if match.state == "IN_GAME_LOBBY_CREATION":
                     match.state = "RES_SEND_LOCKED"
