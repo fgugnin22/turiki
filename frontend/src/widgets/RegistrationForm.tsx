@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { register } from "../shared/rtk/user";
 import { continueWithGoogle } from "../helpers/continueWithGoogle";
+import { continueWithDiscord } from "../helpers/continueWithDiscord";
 import { ROUTES } from "../shared/RouteTypes";
 import ButtonMain from "../shared/ButtonMain";
 import ButtonSecondary from "../shared/ButtonSecondary";
@@ -210,25 +211,41 @@ const RegistrationForm = () => {
             </div>
           </div>
           <ButtonMain
-            className="py-[5px] w-3/5 block mx-auto mt-8 focus:py-[3.5px] focus:px-[unset] duration-200"
+            className="py-[5px] w-4/5 block mx-auto mt-8 focus:py-[3.5px] focus:px-[unset] duration-200"
             type="submit"
           >
             Создать аккаунт
           </ButtonMain>
-          <ButtonSecondary
-            type="button"
-            onClick={continueWithGoogle}
-            className="flex items-center justify-center w-3/5 py-[5px] mx-auto mt-8 text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8]"
-          >
-            <span
-              data-content="Войти через Google"
-              className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
+          <div className="flex mt-8 w-4/5 justify-center items-center mx-auto gap-4">
+            <ButtonSecondary
+              type="button"
+              onClick={continueWithGoogle}
+              className="flex items-center grow justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8]"
+            >
+              <span
+                data-content="Войти через Google"
+                className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
+              >
+                Войти через Google
+              </span>
+            </ButtonSecondary>
+            <ButtonSecondary
+              type="button"
+              onClick={continueWithDiscord}
+              className="flex items-center grow justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8]"
             >
-              Войти через Google
-            </span>
-          </ButtonSecondary>
+              <span
+                data-content="Войти через Discord"
+                className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
+              >
+                Войти через Discord
+              </span>
+            </ButtonSecondary>
+          </div>
         </form>
       </div>
     </div>

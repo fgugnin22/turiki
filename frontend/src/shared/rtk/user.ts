@@ -150,6 +150,48 @@ export const googleAuthenticate = createAsyncThunk(
     }
   }
 );
+
+export const discordAuthenticate = createAsyncThunk(
+  "users/discordAuth",
+  async ({ state, code }: { state: string; code: string }, thunkAPI) => {
+    console.log("dkfmasdlkf");
+    if (state && code && !localStorage.getItem("access")) {
+      const details: any = {
+        state,
+        code
+      };
+      const formBody = Object.keys(details)
+        .map(
+          (key: string) =>
+            encodeURIComponent(key) + "=" + encodeURIComponent(details[key])
+        )
+        .join("&");
+      try {
+        const res = await fetch(`${server_URL}/auth/o/discord/?${formBody}`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        });
+        const data = await res.json();
+        if (res.status === 201) {
+          const { dispatch } = thunkAPI;
+          const { access } = data;
+          localStorage.setItem("access", access);
+          dispatch(getUser(access));
+
+          return data;
+        } else {
+          return thunkAPI.rejectWithValue("discord auth failed!");
+        }
+      } catch (err: any) {
+        return thunkAPI.rejectWithValue(err.response.data);
+      }
+    } else {
+      return thunkAPI.rejectWithValue("discord auth cancelled!!");
+    }
+  }
+);
 type SignUpState = UserCredentials & {
   re_password: string;
 };
@@ -489,7 +531,25 @@ const userSlice = createSlice({
       .addCase(activate.rejected, (state) => {
         state.activated = false;
       })
+      .addCase(googleAuthenticate.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(googleAuthenticate.rejected, (state) => {
+        state.loading = false;
+        state.loginFail = true;
+      })
       .addCase(googleAuthenticate.fulfilled, (state) => {
+        state.loading = false;
+        state.isAuthenticated = true;
+      })
+      .addCase(discordAuthenticate.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(discordAuthenticate.rejected, (state) => {
+        state.loading = false;
+        state.loginFail = true;
+      })
+      .addCase(discordAuthenticate.fulfilled, (state) => {
         state.loading = false;
         state.isAuthenticated = true;
       })

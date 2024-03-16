@@ -4,7 +4,11 @@ import Header from "../widgets/Header";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { getParameterByName } from "../helpers/getParameterByName";
 import { useEffect } from "react";
-import { checkAuth, googleAuthenticate } from "../shared/rtk/user";
+import {
+  checkAuth,
+  discordAuthenticate,
+  googleAuthenticate
+} from "../shared/rtk/user";
 const server_URL = import.meta.env.VITE_API_URL;
 
 const Home = () => {
@@ -15,6 +19,7 @@ const Home = () => {
   useEffect(() => {
     if (state && code) {
       dispatch(googleAuthenticate({ state, code }));
+      dispatch(discordAuthenticate({ state, code }));
     } else {
       const access = localStorage.getItem("access");
       if (access) {

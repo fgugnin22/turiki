@@ -4,6 +4,7 @@ import { login, resetRegistered } from "../shared/rtk/user";
 import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../shared/RouteTypes";
 import { continueWithGoogle } from "../helpers/continueWithGoogle";
+import { continueWithDiscord } from "../helpers/continueWithDiscord";
 import ButtonMain from "../shared/ButtonMain";
 import { Angle } from "../shared/Angle";
 const LoginForm = () => {
@@ -59,13 +60,22 @@ const LoginForm = () => {
       >
         Вход
       </h2>
-      <ButtonMain
-        type="button"
-        onClick={continueWithGoogle}
-        className="py-[5px] w-4/5 block mx-auto focus:py-[3.5px] focus:px-[unset] duration-200 mt-8 after:bg-gradient-to-l"
-      >
-        <span className="z-40">Войти через Google</span>
-      </ButtonMain>
+      <div className="w-[85%] flex mt-8 justify-center items-center mx-auto">
+        <ButtonMain
+          type="button"
+          onClick={continueWithGoogle}
+          className="py-[5px] block mx-auto focus:py-[3.5px] focus:px-[18px] duration-200 after:bg-gradient-to-l active:px-[18px]"
+        >
+          <span className="z-40">Войти через Google</span>
+        </ButtonMain>
+        <ButtonMain
+          type="button"
+          onClick={continueWithDiscord}
+          className="py-[5px] block mx-auto focus:py-[3.5px] focus:px-[18px] duration-200 after:bg-gradient-to-l active:px-[18px]"
+        >
+          <span className="z-40">Войти через Discord</span>
+        </ButtonMain>
+      </div>
       <form onSubmit={onSubmit}>
         <div
           className={

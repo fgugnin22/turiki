@@ -3,6 +3,7 @@ from datetime import timedelta
 from pathlib import Path
 
 import psycopg2.extensions
+import social_core.backends.discord
 from dotenv import load_dotenv
 import redis
 
@@ -170,6 +171,7 @@ SIMPLE_JWT = {
 }
 AUTHENTICATION_BACKENDS = (
     "social_core.backends.google.GoogleOAuth2",
+    "social_core.backends.discord.DiscordOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
 # djoser использует simplejwt для jwt авторизации т.е. библа использует другую библу
@@ -203,14 +205,18 @@ DJOSER = {
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = (
     os.getenv("SOCIAL_AUTH_GOOGLE_OAUTH2_KEY")
 )
-
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.getenv("SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET")
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     "https://www.googleapis.com/auth/userinfo.email",
     "https://www.googleapis.com/auth/userinfo.profile",
     "openid",
 ]
-SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = ["first_name", "last_name"]
+
+SOCIAL_AUTH_DISCORD_KEY = os.getenv("SOCIAL_AUTH_DISCORD_KEY")
+SOCIAL_AUTH_DISCORD_SECRET = os.getenv("SOCIAL_AUTH_DISCORD_SECRET")
+SOCIAL_AUTH_DISCORD_SCOPE = ["email"]
+SOCIAL_AUTH_DISCORD_PROFILE_EXTRA_PARAMS = {"fields": "email"}
+SOCIAL_AUTH_DISCORD_GET_ALL_EXTRA_DATA = True
 
 # настройки приложения для рисования графов структур в БД
 GRAPH_MODELS = {
