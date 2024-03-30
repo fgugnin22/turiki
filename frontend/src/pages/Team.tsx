@@ -165,7 +165,7 @@ const Team = () => {
                             setNewTeamName(target.value);
                           }}
                           minLength={3}
-                          className="absolute inset-0 z-40 bg-transparent outline-none px-3 text-lightgray rounded-[10px] text-2xl"
+                          className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-40 bg-transparent outline-none px-3 text-lightgray rounded-[10px] text-2xl"
                         />
                         <button
                           type="submit"

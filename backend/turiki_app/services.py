@@ -69,9 +69,6 @@ class TournamentService:
 
     @staticmethod
     def register_team(tournament: Tournament, team, players_ids, action):
-        """
-        Регистрация команды вместе с игроками
-        """
         if tournament.status != tournament.allowed_statuses[1] and tournament.status != tournament.allowed_statuses[3]:
             raise serializers.ValidationError("registration cancelled")
         if tournament.status == tournament.allowed_statuses[3]:

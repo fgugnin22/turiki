@@ -93,7 +93,7 @@ const TeamCreateOrFind = () => {
                     onChange(e)
                   }
                   required
-                  className="absolute inset-0 z-20 bg-transparent outline-none px-3 autofill:bg-transparent placeholder:text-lightblue text-lightblue"
+                  className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 autofill:bg-transparent placeholder:text-lightblue text-lightblue"
                 />
               </div>
               <ButtonMain
@@ -130,7 +130,7 @@ const TeamCreateOrFind = () => {
                   placeholder="Найти команду"
                   type="text"
                   name="teamName"
-                  className="absolute inset-0 z-20 bg-transparent outline-none px-3 autofill:bg-transparent placeholder:text-lightblue text-lightblue"
+                  className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 autofill:bg-transparent placeholder:text-lightblue text-lightblue"
                 />
               </div>
 

@@ -89,7 +89,7 @@ const LoginForm = () => {
         >
           <input
             className={
-              `absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl ` +
+              `absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray text-2xl ` +
               (error?.length > 0 ? "placeholder:text-warning" : "")
             }
             id="sign-in-email"
@@ -114,7 +114,7 @@ const LoginForm = () => {
         >
           <input
             className={
-              `absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl ` +
+              `absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray text-2xl ` +
               (error?.length > 0 ? "placeholder:text-warning" : "")
             }
             type="password"

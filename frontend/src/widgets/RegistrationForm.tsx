@@ -115,7 +115,7 @@ const RegistrationForm = () => {
               onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e)}
               placeholder="Ник"
               className={
-                "absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray autofill:bg-transparent " +
+                "absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray autofill:bg-transparent " +
                 (formErrors?.name ? "placeholder:text-warning" : "")
               }
             />
@@ -142,7 +142,7 @@ const RegistrationForm = () => {
               id="create-account-email"
               placeholder="Почта"
               className={
-                "absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray " +
+                "absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray " +
                 (formErrors?.email ? "placeholder:text-warning" : "")
               }
             />
@@ -164,7 +164,7 @@ const RegistrationForm = () => {
             >
               <input
                 className={
-                  "absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray " +
+                  "absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray " +
                   (formErrors?.password ? "placeholder:text-warning" : "")
                 }
                 type="password"
@@ -193,7 +193,7 @@ const RegistrationForm = () => {
             >
               <input
                 className={
-                  "absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray " +
+                  "absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray " +
                   (formErrors?.re_password ? "placeholder:text-warning" : "")
                 }
                 type="password"

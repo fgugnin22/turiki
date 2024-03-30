@@ -211,7 +211,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
                   }
                   required={!user?.name}
                   minLength={3}
-                  className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
+                  className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
                 />
               </div>
             ) : (
@@ -252,7 +252,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
               name="email"
               value={email}
               onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e)}
-              className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
+              className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
             />
           </div>
           <label
@@ -280,7 +280,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
               value={gameName}
               onChange={(e: React.FormEvent<HTMLInputElement>) => onChange(e)}
               minLength={3}
-              className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
+              className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
             />
             <span className=" absolute z-50 -bottom-7 text-warning font-medium">
               {error?.length > 0 ? "Неправильный пароль" : ""}
@@ -375,7 +375,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
                   onChange={(e: React.FormEvent<HTMLInputElement>) =>
                     onChange(e)
                   }
-                  className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
+                  className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
                   required
                 />
               </div>
@@ -432,7 +432,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
                     onChange(e)
                   }
                   required={!!user?.name}
-                  className="absolute inset-0 z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
+                  className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 text-lightgray text-2xl"
                 />
               </div>
             </>
