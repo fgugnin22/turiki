@@ -208,14 +208,14 @@ const RegistrationForm = () => {
               </span>
             </div>
             {accountCreated && (
-              <span className="absolute -bottom-8 text-center w-full text-xs">
+              <span className="absolute -bottom-6 text-center w-full text-xs">
                 Чтобы войти, нужно перейти по ссылке, отправленной на вашу
                 почту!
               </span>
             )}
           </div>
           <ButtonMain
-            className="py-[5px] w-4/5 block mx-auto mt-12 focus:py-[3.5px] focus:px-[unset] duration-200"
+            className="py-[5px] w-4/5 block mx-auto mt-8 focus:py-[3.5px] focus:px-[unset] duration-200"
             type="submit"
           >
             Создать аккаунт

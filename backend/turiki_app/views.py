@@ -33,6 +33,7 @@ View - представление, которое отвечает за обра
 сюда приходят и здесь обрабатываются запросы из urls.py(где эти view зарегистрированы на соответствующие url)
 """
 
+
 class UserAPIView(GenericViewSet):
     parser_classes = [MultiPartParser, JSONParser]
 
@@ -96,6 +97,39 @@ class TournamentAPIView(ModelViewSet):
             raise e
         except Exception:
             return Response("something went wrong when creating the tournament", 400)
+
+    @action(
+        methods=["POST"],
+        detail=True,
+        permission_classes=[IsAdminUser],
+    )
+    def payment(self, request, pk=None):
+        # {
+        #     "team_id": 123,
+        #     "is_confirmed": True
+        # }
+        try:
+            tournament = self.get_object()
+
+            team_id = request.data.get("team_id")
+            is_confirmed = request.data.get("is_confirmed")
+
+            team = Team.objects.get(pk=team_id)
+
+            current_payment = team.payment
+
+            current_payment[tournament.name] = {
+                        "id": tournament.id,
+                        "is_confirmed": is_confirmed
+                    }
+
+            team.payment = current_payment
+
+            team.save()
+
+            return Response(team.payment, status=200)
+        except:
+            return Response(status=400)
 
     @action(
         methods=["POST", "PATCH", "DELETE"],
@@ -205,17 +239,18 @@ class MatchAPIView(ModelViewSet):
     )
     def claim_result(self, request, pk=None):
         # try:
-            match = self.get_object()
-            team_id = request.user.team.id
-            result = request.data["team"]["result"]
-            if type(result) != bool:
-                return Response("type of match result must be boolean", status=400)
-            res = claim_match_result(match.id, team_id, result)
-            if res is not None:
-                return res
-            return Response("Match result has been claimed")
-        # except:
-        #     return Response("data types mismatch", status=400)
+        match = self.get_object()
+        team_id = request.user.team.id
+        result = request.data["team"]["result"]
+        if type(result) != bool:
+            return Response("type of match result must be boolean", status=400)
+        res = claim_match_result(match.id, team_id, result)
+        if res is not None:
+            return res
+        return Response("Match result has been claimed")
+
+    # except:
+    #     return Response("data types mismatch", status=400)
 
     @action(methods=["PATCH"], detail=True, permission_classes=[IsAdminUser])
     def force_status(self, request, pk=None):
@@ -238,6 +273,7 @@ class TeamAPIView(ModelViewSet):
             return Response(status=204)
         except Exception:
             return Response(status=400)
+
     @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
     def photo(self, request, pk=None):
         try:
@@ -328,7 +364,7 @@ class ChatAPIView(ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         raise serializers.ValidationError("not allowed use websocket instead")
-    
+
     def destroy(self, request, *args, **kwargs):
         raise serializers.ValidationError("nonononono, NO!")
         return super().destroy(request, *args, **kwargs)

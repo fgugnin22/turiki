@@ -16,6 +16,12 @@ from core.settings import BASE_DIR
 def images_path():
     return "media/img"
 
+def payment_default():
+    return {"tournament": {
+        "id": -1,
+        "is_confirmed": False
+    }}
+
 
 # модель пользователя с логином - почтой(у жанго по умолчанию логин - имя пользователя)
 # управление моделью пользователя
@@ -76,6 +82,8 @@ class Team(models.Model):
     next_member = models.CharField(null=True, blank=True, max_length=255)
     image = models.FilePathField(path=images_path(), blank=True, null=True)
     is_open = models.BooleanField(default=True)
+
+    payment = models.JSONField(default=payment_default)
     def __str__(self):
         return self.name
 
