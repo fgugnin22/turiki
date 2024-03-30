@@ -65,9 +65,7 @@ const RegistrationForm = () => {
   if (isAuthenticated) {
     navigate(ROUTES.DASHBOARD.path, { replace: true });
   }
-  if (accountCreated) {
-    navigate(ROUTES.LOGIN.path, { replace: true });
-  }
+
   return (
     <div
       className="min-w-[500px] leading-10 relative after:absolute after:opacity-[0.04] after:inset-0 
@@ -151,7 +149,7 @@ const RegistrationForm = () => {
               {formErrors?.email ?? ""}
             </span>
           </div>
-          <div className="flex justify-center gap-[15px]">
+          <div className="flex justify-center gap-[15px] relative">
             <div
               className={
                 `rounded-[10px] relative after:absolute 
@@ -209,9 +207,15 @@ const RegistrationForm = () => {
                 {formErrors?.re_password ?? ""}
               </span>
             </div>
+            {accountCreated && (
+              <span className="absolute -bottom-8 text-center w-full text-xs">
+                Чтобы войти, нужно перейти по ссылке, отправленной на вашу
+                почту!
+              </span>
+            )}
           </div>
           <ButtonMain
-            className="py-[5px] w-4/5 block mx-auto mt-8 focus:py-[3.5px] focus:px-[unset] duration-200"
+            className="py-[5px] w-4/5 block mx-auto mt-12 focus:py-[3.5px] focus:px-[unset] duration-200"
             type="submit"
           >
             Создать аккаунт
