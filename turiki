@@ -1,0 +1,44 @@
+
+server {
+    server_name turiki.tw1.ru;
+
+    root /root/site/backend/dist;
+    location = /favicon.ico {
+        alias /root/site/backend/favicon.ico;
+    }
+    location /assets/ {
+        try_files $uri $uri/ =404;
+    }
+
+    location /media/ {
+	root /root/site/backend;
+	try_files $uri $uri/ =420;
+    }
+
+    location / {
+	proxy_set_header $host Host;
+	proxy_pass http://localhost:8000;
+        include proxy_params;
+    }
+
+
+    listen 443 ssl; # managed by Certbot
+    ssl_certificate /etc/letsencrypt/live/turiki.tw1.ru/fullchain.pem; # managed by Certbot
+    ssl_certificate_key /etc/letsencrypt/live/turiki.tw1.ru/privkey.pem; # managed by Certbot
+    include /etc/letsencrypt/options-ssl-nginx.conf; # managed by Certbot
+    ssl_dhparam /etc/letsencrypt/ssl-dhparams.pem; # managed by Certbot
+
+}
+
+server {
+    if ($host = turiki.tw1.ru) {
+        return 301 https://$host$request_uri;
+    } # managed by Certbot
+
+
+    server_name turiki.tw1.ru;
+    listen 80;
+    return 404; # managed by Certbot
+
+
+}
