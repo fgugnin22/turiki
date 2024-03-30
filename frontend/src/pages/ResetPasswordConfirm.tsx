@@ -6,7 +6,6 @@ import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { ROUTES } from "../shared/RouteTypes";
 import ButtonMain from "../shared/ButtonMain";
 const ResetPasswordConfirm = () => {
-  const inputClasses = `block min-h-[auto] w-full rounded border-2 bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-blue-400`;
   const dispatch = useAppDispatch();
   const params = useParams<string>();
   const [requestSent, setRequestSent] = useState(false);
@@ -19,14 +18,24 @@ const ResetPasswordConfirm = () => {
     const target = e.target as HTMLInputElement;
     return setFormData({ ...formData, [target.name]: target.value });
   };
+
+  const [error, setError] = useState("");
   const submitHandler = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const uid = params.uid;
     const token = params.token;
     if (!(uid && token)) {
+      setError("Неправильная ссылка для сброса пароля");
       return;
     }
+
+    if (new_password !== re_new_password) {
+      setError("Пароли не совпадают!");
+      setTimeout(() => setError(""), 2500);
+      return;
+    }
+
     dispatch(
       resetPasswordConfirm({ uid, token, new_password, re_new_password })
     );
@@ -46,7 +55,7 @@ const ResetPasswordConfirm = () => {
             <div className="relative mb-3">
               <input
                 className={`block min-h-[auto] w-full rounded-[10px] border-2 border-lightgray bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-lightblue`}
-                type="new_password"
+                type="password"
                 placeholder="Новый пароль"
                 name="new_password"
                 value={new_password}
@@ -58,7 +67,7 @@ const ResetPasswordConfirm = () => {
             <div className="relative mb-3">
               <input
                 className={`block min-h-[auto] w-full rounded-[10px] border-2 border-lightgray bg-transparent px-3 py-[0.32rem] leading-[1.6] outline-none transition-all duration-200 ease-linear focus:border-lightblue`}
-                type="re_new_password"
+                type="password"
                 placeholder="Повторите пароль"
                 name="re_new_password"
                 value={re_new_password}
@@ -72,7 +81,7 @@ const ResetPasswordConfirm = () => {
               className="py-3 active:py-[10px] focus:py-[10px] w-full text-gray-100 font-medium transition duration-300 rounded"
               type="submit"
             >
-              Сохранить пароль
+              {error ? error : "Сохранить пароль"}
             </ButtonMain>
           </form>
         </div>
