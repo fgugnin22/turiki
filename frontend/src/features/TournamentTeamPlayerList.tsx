@@ -20,7 +20,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
   return (
     <div
       className="rounded-[10px] relative after:absolute 
-            before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+            before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0
             before:z-10 z-20 before:bg-dark before:rounded-[9px]
             before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%] before:drop-shadow-[0_0_3px_#4cf2f8]"
@@ -37,7 +37,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
             </a>
             <p
               data-content={team.name}
-              className="before:text-[16px] before:font-semibold before:inset-0 
+              className="before:text-[16px] before:font-semibold before:top-0 bfore:bottom-0 before:left-0 before:right-0 
                            text-left text-[16px] font-semibold  before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"

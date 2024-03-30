@@ -133,7 +133,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
 
   return (
     <section
-      className="w-full sm:w-4/5 lg:w-3/5 relative after:absolute after:inset-0 
+      className="w-full sm:w-4/5 lg:w-3/5 relative after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 
       hover:after:!drop-shadow-[0_0_2px_#4cf2f8] after:!drop-shadow-[0_0_2px_#4cf2f8] mx-auto my-auto mb-24 rounded-[10px] after:rounded-[10px] 
     after:border after:border-turquoise after:bg-gradient-to-b after:from-transparent 
   after:to-darkturquoise after:from-[-30%] after:to-[3000%]"
@@ -195,7 +195,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
             {nameOpened ? (
               <div
                 className="rounded-[10px] relative after:absolute 
-                            before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                            before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                             before:z-10 z-20 before:bg-dark before:rounded-[8px] 
                             before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%] bg-transparent h-12
@@ -217,7 +217,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
             ) : (
               <p
                 data-content={name}
-                className="before:text-[28px] mt-[9px] before:font-semibold before:inset-0 
+                className="before:text-[28px] mt-[9px] before:font-semibold before:top-0 bfore:bottom-0 before:left-0 before:right-0 
                             w-full text-left text-[28px] before:w-full font-medium  before:text-left before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -230,7 +230,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
         <div className="">
           <label
             data-content="Почта"
-            className="before:text-xl before:font-medium before:inset-0 
+            className="before:text-xl before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
                             w-full text-left text-xl before:w-full font-medium  before:text-left before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -240,7 +240,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
           </label>
           <div
             className="rounded-[10px] relative after:absolute 
-                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                                before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
                                mt-1 w-full mx-auto mb-4"
@@ -257,7 +257,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
           </div>
           <label
             data-content="Ник в R6S"
-            className="before:text-xl before:font-medium before:inset-0 
+            className="before:text-xl before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
                             w-full text-xl before:w-full font-medium before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -267,7 +267,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
           </label>
           <div
             className="rounded-[10px] relative after:absolute 
-                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                                before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
                                mt-1 w-full mx-auto"
@@ -332,7 +332,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
             <>
               <label
                 data-content="Новый пароль"
-                className="before:text-xl block mt-4 before:font-medium before:inset-0 
+                className="before:text-xl block mt-4 before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
                             w-full text-left text-xl before:w-full font-medium  before:text-left before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -342,7 +342,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
               </label>
               <div
                 className="rounded-[10px] relative after:absolute 
-                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                                before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
                                mt-1 w-full mx-auto mb-4"
@@ -384,7 +384,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
             <>
               <label
                 data-content="Подтвердите текущий пароль"
-                className="before:text-xl block mt-4 before:font-medium before:inset-0 
+                className="before:text-xl block mt-4 before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
                             w-full text-left text-xl before:w-full font-medium  before:text-left before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -394,7 +394,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
               </label>
               <div
                 className="rounded-[10px] relative after:absolute 
-                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                                before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
                                mt-1 w-full mx-auto mb-4"

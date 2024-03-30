@@ -30,7 +30,7 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
   return (
     <div
       className="rounded-[10px] relative after:absolute 
-            before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+            before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0
             before:z-10 z-20 before:bg-dark before:rounded-[9px]
             before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%]"
@@ -40,7 +40,7 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
         <div className="flex items-center mt-7 mx-14 justify-between">
           <p
             data-content={props.team.name}
-            className="before:text-[20px] before:font-medium before:inset-0 
+            className="before:text-[20px] before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
                            text-left text-[20px] font-medium  before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"

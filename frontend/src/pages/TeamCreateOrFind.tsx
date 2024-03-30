@@ -66,7 +66,7 @@ const TeamCreateOrFind = () => {
           <div className=" w-full sm:w-4/5">
             <h2
               data-content="Создать команду"
-              className="before:text-[30px] before:inset-0  w-full text-center text-[30px] before:w-full before:text-center before:font-extrabold font-extrabold before:bg-gradient-to-r 
+              className="before:text-[30px] before:top-0 bfore:bottom-0 before:left-0 before:right-0  w-full text-center text-[30px] before:w-full before:text-center before:font-extrabold font-extrabold before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] mb-2"
             >
@@ -79,7 +79,7 @@ const TeamCreateOrFind = () => {
             <form className="flex gap-8" onSubmit={onSubmit}>
               <div
                 className="rounded-[10px] relative after:absolute 
-                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                                before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
                                w-4/5 mr-auto"
@@ -107,7 +107,7 @@ const TeamCreateOrFind = () => {
             <div className="mt-8">
               <h2
                 data-content="Найти команду"
-                className="before:text-[30px] before:inset-0  w-full text-center text-[30px] before:w-full before:text-center before:font-extrabold font-extrabold before:bg-gradient-to-r 
+                className="before:text-[30px] before:top-0 bfore:bottom-0 before:left-0 before:right-0  w-full text-center text-[30px] before:w-full before:text-center before:font-extrabold font-extrabold before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] mb-2"
               >
@@ -119,7 +119,7 @@ const TeamCreateOrFind = () => {
 
               <div
                 className="rounded-[10px] relative after:absolute 
-                                before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                                before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
                                w-full"
@@ -148,7 +148,7 @@ const TeamCreateOrFind = () => {
                       <div
                         className={`shadow mx-auto w-full relative hover:bg-turquoise hover:bg-opacity-30 transition h-20 bg-transparent
                     flex text-center justify-between  items-center rounded-[10px] after:absolute 
-                    before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                    before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                   after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                     before:z-10 z-20 before:bg-dark before:rounded-[9px]`}
                         key={team.id}
@@ -157,7 +157,7 @@ const TeamCreateOrFind = () => {
                           <div className="flex w-[30%] overflow-clip h-full items-center  border-r border-lightblue z-30">
                             <p
                               data-content={team.name}
-                              className="before:text-lg before:inset-0 text-center text-lg before:w-full font-semibold  before:text-center before:bg-gradient-to-l 
+                              className="before:text-lg before:top-0 bfore:bottom-0 before:left-0 before:right-0 text-center text-lg before:w-full font-semibold  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] grow z-20 break-words"
                             >
@@ -167,7 +167,7 @@ const TeamCreateOrFind = () => {
                           <div className="flex items-center justify-center gap-1 z-20 w-[28%]">
                             <p
                               data-content={cap?.name}
-                              className="before:text-lg before:inset-0 text-left text-lg before:w-full font-semibold before:text-left before:bg-gradient-to-l 
+                              className="before:text-lg before:top-0 bfore:bottom-0 before:left-0 before:right-0 text-left text-lg before:w-full font-semibold before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
                             >
@@ -181,7 +181,7 @@ const TeamCreateOrFind = () => {
                           <div className="flex items-center justify-center gap-1 z-20 w-[28%]">
                             <p
                               data-content={"Игроков: " + team.players.length}
-                              className="before:text-lg before:inset-0 text-left text-lg before:w-full font-semibold before:text-left before:bg-gradient-to-l 
+                              className="before:text-lg before:top-0 bfore:bottom-0 before:left-0 before:right-0 text-left text-lg before:w-full font-semibold before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
                             >

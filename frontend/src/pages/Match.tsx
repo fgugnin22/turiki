@@ -91,7 +91,7 @@ const Match = () => {
               data-content={`Матч 1/${2 ** Number(match.name)}, Best of ${
                 match.is_bo3 ? "3" : "1"
               }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
-              className="before:text-2xl before:font-semibold before:drop-shadow-[0_0_1px_#4cf2f8] before:inset-0 
+              className="before:text-2xl before:font-semibold before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 bfore:bottom-0 before:left-0 before:right-0 
                             w-full text-center text-2xl before:w-full font-medium  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -110,7 +110,7 @@ const Match = () => {
                       ? "Ваша команда выиграла!"
                       : "Ваша команда проиграла!"
                   }`}
-                  className="before:text-[20px] before:font-medium  before:inset-0 
+                  className="before:text-[20px] before:font-medium  before:top-0 bfore:bottom-0 before:left-0 before:right-0 
                             w-full text-center text-[20px] before:w-full font-medium  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -127,7 +127,7 @@ const Match = () => {
                 Карта:{" "}
                 <span
                   data-content={match.current_map}
-                  className="before:text-lg before:-top-[3px] before:drop-shadow-[0_0_1px_#4cf2f8] before:inset-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
+                  className="before:text-lg before:-top-[3px] before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 bfore:bottom-0 before:left-0 before:right-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
                 >
@@ -158,7 +158,7 @@ const Match = () => {
                         ? timeBeforeMatchStart.seconds
                         : "0" + timeBeforeMatchStart.seconds
                     }`}
-                    className="before:text-lg before:-top-[3px] before:drop-shadow-[0_0_1px_#4cf2f8] before:inset-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
+                    className="before:text-lg before:-top-[3px] before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 bfore:bottom-0 before:left-0 before:right-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
           before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
             before:absolute relative before:content-[attr(data-content)]"
                   >
@@ -218,7 +218,7 @@ const Match = () => {
                             }`
                           : "..."
                       }
-                      className="before:text-lg before:font-medium before:drop-shadow-[0_0_1px_#4cf2f8] before:inset-0 
+                      className="before:text-lg before:font-medium before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 bfore:bottom-0 before:left-0 before:right-0 
                              text-lg font-medium  before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent 
                 before:absolute relative before:content-[attr(data-content)] z-50"

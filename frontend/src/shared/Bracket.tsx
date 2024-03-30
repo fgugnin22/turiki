@@ -56,7 +56,7 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
               ? "Полуфинал"
               : `1/${2 ** (tournament.max_rounds - i - 1)} финала`
           }
-          className="before:text-2xl before:inset-0  w-full text-center text-2xl before:w-full  before:text-center before:font-semibold
+          className="before:text-2xl before:top-0 bfore:bottom-0 before:left-0 before:right-0  w-full text-center text-2xl before:w-full  before:text-center before:font-semibold
            before:bg-gradient-to-l
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"

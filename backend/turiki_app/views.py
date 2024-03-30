@@ -348,6 +348,34 @@ class TeamAPIView(ModelViewSet):
         except:
             return Response(status=400)
 
+    @action(
+        methods=["PATCH"],
+        detail=True,
+        permission_classes=[IsAuthenticated],
+    )
+    def captain(self, request, pk=None):
+        old_cap = request.user
+
+        team = self.get_object()
+
+        if team.id != old_cap.team.id or old_cap.team_status != "CAPTAIN":
+            return Response(status=400)
+
+        new_cap_id = request.data.get("new_cap_id")
+
+        new_cap = UserAccount.objects.get(pk=new_cap_id)
+
+        old_cap.team_status = "ACTIVE"
+        new_cap.team_status = "CAPTAIN"
+
+        old_cap.save()
+        new_cap.save()
+
+        return Response(status=200)
+
+
+
+
     def update(self, request, *args, **kwargs):
         raise serializers.ValidationError("use other endpoints")
 

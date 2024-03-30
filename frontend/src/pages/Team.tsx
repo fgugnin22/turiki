@@ -26,6 +26,7 @@ const Team = () => {
   const [applyForTeam] = tournamentAPI.useApplyForTeamMutation();
   const [changeTeamName] = tournamentAPI.useChangeTeamNameMutation();
   const [openOrCloseTeam] = tournamentAPI.useTeamOpennessMutation();
+  const [makeCaptain] = tournamentAPI.useMakeCaptainMutation();
   const { data, isLoading, isError } = tournamentAPI.useGetTeamByIdQuery(
     params.id
   );
@@ -62,7 +63,7 @@ const Team = () => {
         <>
           <div
             className="rounded-[10px] mt-16 relative after:absolute 
-        before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+        before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
       after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
         before:z-10 z-20 
         py-4 px-6 sm:py-12 sm:px-16 w-full sm:w-[70%] lg:w-1/2 mx-auto before:bg-dark before:rounded-[9px]  
@@ -140,7 +141,7 @@ const Team = () => {
                   {showInput ? (
                     <div
                       className="rounded-[10px] relative right-3 after:absolute 
-                            before:absolute after:inset-0 before:inset-[1px] after:bg-gradient-to-r
+                            before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                             before:z-10 z-40 before:bg-darkestturq bg-transparent h-12
                             w-full mx-auto before:rounded-[9px]"
@@ -309,7 +310,10 @@ const Team = () => {
                               </button>
                               <button
                                 onClick={() =>
-                                  alert("JOKES ON YOU \nI DID NOT FINISH THIS")
+                                  makeCaptain({
+                                    teamId: data.id,
+                                    new_cap_id: player.id
+                                  })
                                 }
                                 className="hover:text-lightblue active:text-turquoise transition font-base text-base"
                               >

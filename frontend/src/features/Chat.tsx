@@ -59,7 +59,7 @@ const Chat = (props: ChatProps) => {
     <div
       className=" justify-self-end flex flex-col grow mt-4 w-full bg-transparent text-lightgray rounded-[10px]
     overflow-hidden min-h-[400px] relative after:absolute 
-    before:absolute after:inset-0 before:inset-[2px] after:bg-gradient-to-r
+    before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[2px] after:bg-gradient-to-r
   after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
     before:z-10 z-20 before:bg-dark before:rounded-[8px] 
     before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%]"

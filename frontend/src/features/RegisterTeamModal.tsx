@@ -87,14 +87,14 @@ const RegisterTeamModal = ({
       </ButtonMain>
       {showModal ? (
         <>
-          <div className="fixed inset-0 z-[90] overflow-y-auto flex items-center pb-48 ">
+          <div className="fixed top-0 bottom-0 left-0 right-0 z-[90] overflow-y-auto flex items-center pb-48 ">
             <div
-              className="fixed inset-0 w-full h-full bg-lightblue opacity-10"
+              className="fixed top-0 bottom-0 left-0 right-0 w-full h-full bg-lightblue opacity-10"
               onClick={() => setShowModal(false)}
             ></div>
             <div
               className="rounded-[10px] mx-auto my-auto relative after:absolute 
-            before:absolute after:inset-0 before:inset-[2px] after:bg-gradient-to-r
+            before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[2px] after:bg-gradient-to-r
           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
             before:z-10 z-20 before:bg-dark before:rounded-[8px] 
             before:bg-gradient-to-b before:from-transparent before:to-darkturquoise before:to-[350%] py-9 px-12 flex flex-col max-w-[460px]"

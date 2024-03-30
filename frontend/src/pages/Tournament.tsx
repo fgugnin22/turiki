@@ -93,7 +93,7 @@ export const Tournament = () => {
                 </p>
                 <p
                   data-content={tournament.name}
-                  className="before:w-full text-2xl leading-7 font-medium w-4/5 block before:inset-0 before:text-left text-left before:bg-gradient-to-r 
+                  className="before:w-full text-2xl leading-7 font-medium w-4/5 block before:top-0 bfore:bottom-0 before:left-0 before:right-0 before:text-left text-left before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
                 >
@@ -293,7 +293,7 @@ export const Tournament = () => {
               </p>
               <a
                 className="w-[170px] h-[170px] rounded-[10px] mx-auto my-auto relative after:absolute 
-            before:absolute after:inset-0 before:inset-[2px] after:bg-gradient-to-r
+            before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[2px] after:bg-gradient-to-r
           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
             before:z-10 z-20 before:bg-dark before:transition hover:before:bg-opacity-80 before:rounded-[8px] flex items-center justify-center"
                 target="_blank"

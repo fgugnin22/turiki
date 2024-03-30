@@ -22,7 +22,7 @@ const Header = () => {
           className="neonshadow transition duration-300"
         />
       </Link>
-      <div className="flex justify-between w-1/2 mt-[1px] mr-auto ">
+      <div className="flex justify-start w-1/2 mt-[1px] mr-auto gap-8">
         <Link
           data-content="На главную"
           className=" text-lightgray text-lg 
@@ -36,6 +36,20 @@ const Header = () => {
           to={ROUTES.LANDING.path}
         >
           На главную
+        </Link>
+        <Link
+          data-content="Турниры"
+          className=" text-lightgray text-lg 
+                    before:hover:bg-gradient-to-r
+                    before:hover:from-turquoise transition duration-300 before:opacity-0 
+                    hover:before:opacity-100 before:hover:to-lightblue
+                     before:hover:bg-clip-text 
+                    hover:text-opacity-0 before:font-medium font-medium
+                    hover:before:content-[attr(data-content)] hover:relative
+                    hover:before:absolute  hover:!drop-shadow-[0_0_1px_#4cf2f8]"
+          to={ROUTES.TOURNAMENTS.path}
+        >
+          Турниры
         </Link>
       </div>
       {isAuthenticated ? (

@@ -42,7 +42,7 @@ const Home = () => {
         style={{
           backgroundImage: `url(${server_URL}/media/img/landingbg.webp)`
         }}
-        className="absolute inset-0 z-0 opacity-40 bg-center bg-cover bg-no-repeat transition"
+        className="absolute top-0 bottom-0 left-0 right-0 z-0 opacity-40 bg-center bg-cover bg-no-repeat transition"
       ></div>
       <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
         <Header />
@@ -59,19 +59,21 @@ const Home = () => {
             <p
               data-content="первом турнире!"
               className="before:text-7xl -top-2 before:top-2 hover:!drop-shadow-[0_0_2px_#4cf2f8] !drop-shadow-[0_0_2px_#4cf2f8] 
-                            leading-[90px] before:inset-0  w-full text-left text-7xl before:w-full font-medium  before:text-left before:bg-gradient-to-l 
+                            leading-[90px] before:top-0 bfore:bottom-0 before:left-0 before:right-0  w-full text-left text-7xl before:w-full font-medium  before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
             >
               первом турнире!
             </p>
           </h1>
-          <ButtonMain
-            className="py-5 px-36 hover:py-5 hover:px-36 active:px-[142px] focus:py-[18px] active:py-[18px] focus:px-[142px] mr-auto"
-            onClick={handleRedirect}
-          >
-            Зарегистрироваться
-          </ButtonMain>
+          {!isAuthenticated && (
+            <ButtonMain
+              className="py-5 px-36 hover:py-5 hover:px-36 active:px-[142px] focus:py-[18px] active:py-[18px] focus:px-[142px] mr-auto"
+              onClick={handleRedirect}
+            >
+              Зарегистрироваться
+            </ButtonMain>
+          )}
         </div>
       </section>
       {/* <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">

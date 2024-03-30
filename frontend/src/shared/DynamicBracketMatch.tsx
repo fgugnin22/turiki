@@ -39,7 +39,7 @@ const TeamParticipant = ({
   return participant ? (
     participant.status === "WON" ? (
       <div
-        className="py-3 pl-5 pr-6 text-lightgray relative after:absolute after:inset-0 
+        className="py-3 pl-5 pr-6 text-lightgray relative after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 
       after:rounded-[10px] after:bg-turquoise after:opacity-25 text-lg font-medium"
       >
         <span
@@ -54,7 +54,7 @@ const TeamParticipant = ({
         </span>
         <p
           data-content={participant?.status}
-          className=" before:inset-0 text-right float-right  before:text-right before:font-bold before:bg-gradient-to-r 
+          className=" before:top-0 bfore:bottom-0 before:left-0 before:right-0 text-right float-right  before:text-right before:font-bold before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
         >
@@ -98,7 +98,7 @@ const DynamicBracketMatch = ({
     >
       <div
         className="w-[350px] flex flex-row flex-wrap content-start rounded-[10px] relative after:absolute 
-            before:absolute after:inset-0 before:inset-[2px] after:bg-gradient-to-r
+            before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[2px] after:bg-gradient-to-r
           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
             before:z-10 z-20 before:bg-dark before:rounded-[8px] 
             before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[700%]"

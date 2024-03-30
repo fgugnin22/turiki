@@ -205,6 +205,18 @@ export const tournamentAPI = createApi({
       },
       invalidatesTags: ["Team"]
     }),
+    makeCaptain: build.mutation<null, { teamId: number; new_cap_id: number }>({
+      query: ({ teamId, new_cap_id }) => {
+        return {
+          method: "PATCH",
+          url: `team/${teamId}/captain/`,
+          body: JSON.stringify({
+            new_cap_id
+          })
+        };
+      },
+      invalidatesTags: ["Team"]
+    }),
     kickPlayerFromTeam: build.mutation<
       null,
       { teamId: number; player_id: number }
