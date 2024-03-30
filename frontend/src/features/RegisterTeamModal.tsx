@@ -73,6 +73,7 @@ const RegisterTeamModal = ({
       setShowModal(false);
     }
   });
+
   return (
     <>
       <ButtonMain
@@ -138,7 +139,11 @@ const RegisterTeamModal = ({
                               htmlFor={String(player.id) + "input"}
                               className="hover:text-turquoise text-lightgray transition active:text-lightblue text-xl"
                             >
-                              {player.name}
+                              {player.name ||
+                                player.game_name ||
+                                player.email.split("@")[0] ||
+                                player.game_name ||
+                                player.email.split("@")[0]}
                             </label>
                           </li>
                         );

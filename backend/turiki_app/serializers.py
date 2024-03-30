@@ -118,7 +118,7 @@ class TeamSerializer(serializers.ModelSerializer):
 
         class Meta:
             model = User
-            fields = ["team_status", "id", "name", "game_name", "image"]
+            fields = ["team_status", "id", "name", "game_name", "image", "email"]
 
     players = PlayerSerializer(many=True)
 

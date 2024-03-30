@@ -7,7 +7,7 @@ import { ROUTES } from "../shared/RouteTypes";
 import { Link } from "react-router-dom";
 const serverURL = import.meta.env.VITE_API_URL;
 
-export type Player = Omit<IUser, "email" | "is_active" | "team">;
+export type Player = Omit<IUser, "is_active" | "team">;
 type TeamPlayerListProps = {
   team: {
     id: number;
@@ -73,7 +73,13 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
                     className="w-10 h-10 rounded-full"
                   />
                   <div className="flex flex-wrap  text-lightblue font-medium">
-                    <p className="block">{player.name}</p>
+                    <p className="block">
+                      {player.name ||
+                        player.game_name ||
+                        player.email.split("@")[0] ||
+                        player.game_name ||
+                        player.email.split("@")[0]}
+                    </p>
                     {player.team_status === "CAPTAIN" && (
                       <img
                         src={`${serverURL}/media/img/crown.svg`}

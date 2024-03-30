@@ -92,7 +92,7 @@ class TournamentService:
                         raise serializers.ValidationError('code bruh-1')
                 if not is_captain_in:
                     raise serializers.ValidationError('Капитан обязан участвовать')
-                for player in tournament.players:
+                for player in tournament.players.all():
                     if player.team.id == team.id:
                         tournament.players.remove(player)
                 for new_plr in new_players:

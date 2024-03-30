@@ -63,7 +63,11 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       className="w-10 h-10 rounded-full"
                     />
                     <div className="flex flex-wrap text-lightblue font-medium">
-                      <p className="block">{player.name}</p>
+                      <p className="block">
+                        {player.name ||
+                          player.game_name ||
+                          player.email.split("@")[0]}
+                      </p>
                       {player.team_status === "CAPTAIN" && (
                         <img
                           src={`${serverURL}/media/img/crown.svg`}
@@ -94,7 +98,9 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       className="w-7 h-7 rounded-full"
                     />
                     <div className="flex flex-wrap text-lightblue font-medium">
-                      <p className="block">{player.name}</p>
+                      <p className="block">{player.name ||
+                                player.game_name ||
+                                player.email.split("@")[0]}</p>
                       {player.team_status === "CAPTAIN" && (
                         <img
                           src={`${serverURL}/media/img/crown.svg`}
@@ -125,7 +131,9 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       className="w-7 h-7 rounded-full"
                     />
                     <div className="flex flex-wrap text-lightblue font-medium">
-                      <p className="block">{player.name}</p>
+                      <p className="block">{player.name ||
+                                player.game_name ||
+                                player.email.split("@")[0]}</p>
                       {player.team_status === "CAPTAIN" && (
                         <img
                           src={`${serverURL}/media/img/crown.svg`}
@@ -156,7 +164,9 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       className="w-7 h-7 rounded-full"
                     />
                     <div className="flex flex-wrap text-lightblue font-medium">
-                      <p className="block">{player.name}</p>
+                      <p className="block">{player.name ||
+                                player.game_name ||
+                                player.email.split("@")[0]}</p>
                       {player.team_status === "CAPTAIN" && (
                         <img
                           src={`${serverURL}/media/img/crown.svg`}
@@ -187,7 +197,9 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       className="w-7 h-7 rounded-full"
                     />
                     <div className="flex flex-wrap text-lightblue font-medium">
-                      <p className="block">{player.name}</p>
+                      <p className="block">{player.name ||
+                                player.game_name ||
+                                player.email.split("@")[0]}</p>
                       {player.team_status === "CAPTAIN" && (
                         <img
                           src={`${serverURL}/media/img/crown.svg`}

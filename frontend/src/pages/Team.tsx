@@ -266,7 +266,9 @@ const Team = () => {
                         />
                         <div className="flex items-center justify-start gap-[10px]">
                           <span className="bg-gradient-to-r font-medium from-lightblue to-turquoise bg-clip-text text-transparent">
-                            {player.name}
+                            {player.name ||
+                              player.game_name ||
+                              player.email.split("@")[0]}
                           </span>
                           {player?.team_status === "CAPTAIN" && (
                             <img
@@ -372,7 +374,9 @@ const Team = () => {
                     />
                     <div className="flex items-center  font-medium justify-start gap-[10px]">
                       <span className="bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent">
-                        {player.name}
+                        {player.name ||
+                          player.game_name ||
+                          player.email.split("@")[0]}
                       </span>
                       <span className="bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent">
                         {player.id === id && "(Вы)"}
