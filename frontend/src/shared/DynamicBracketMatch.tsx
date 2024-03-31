@@ -54,7 +54,7 @@ const TeamParticipant = ({
         </span>
         <p
           data-content={participant?.status}
-          className=" before:top-0 bfore:bottom-0 before:left-0 before:right-0 text-right float-right  before:text-right before:font-bold before:bg-gradient-to-r 
+          className=" before:top-0 before:bottom-0 before:left-0 before:right-0 text-right float-right  before:text-right before:font-bold before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
         >

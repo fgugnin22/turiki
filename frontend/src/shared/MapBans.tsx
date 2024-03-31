@@ -13,7 +13,7 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
   return (
     <>
       {
-        <div className="place-self-center mx-auto flex flex-col col-span-2 shadow-xl mt-4 rounded-lg  w-fit max-w-3/5">
+        <div className="place-self-center mx-auto flex flex-col col-span-2 shadow-xl mt-4 rounded-lg w-[500px] max-w-3/5">
           <p
             data-content={`${
               (user?.team === match.participants[0].team.id ||
@@ -31,7 +31,7 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
                 ? "секунды"
                 : "секунда"
             }`}
-            className="before:text-[20px] before:top-0 bfore:bottom-0 before:left-0 before:right-0  w-full text-center text-[20px] before:w-full font-semibold  before:text-center before:bg-gradient-to-l 
+            className="before:text-[20px] before:top-0 before:bottom-0 before:left-0 before:right-0  w-full text-center text-[20px] before:w-full font-semibold  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] mb-2"
           >
@@ -53,8 +53,9 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
             }`}
           </p>
           <div
-            className="rounded-[10px] w-fit mx-auto relative after:absolute 
-              before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
+            className="rounded-[10px] relative after:absolute 
+              before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:top-[1px]
+              before:bottom-[1px] before:left-[1px] before:right-[1px] after:bg-gradient-to-r
             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
               before:z-10 z-20 before:bg-dark before:rounded-[9px] flex flex-wrap flex-col justify-left gap-y-8 gap-x-8 px-16 py-12 h-fit max-h-[400px]"
           >
@@ -73,7 +74,7 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
                 <div className="z-30 w-44 relative" key={map}>
                   <p
                     data-content={map}
-                    className="before:text-[20px] before:top-0 bfore:bottom-0 before:left-0 before:right-0  w-full text-left text-[20px] before:w-full font-semibold  before:text-left before:bg-gradient-to-l 
+                    className="before:text-[20px] before:top-0 before:bottom-0 before:left-0 before:right-0  w-full text-left text-[20px] before:w-full font-semibold  before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
                   >

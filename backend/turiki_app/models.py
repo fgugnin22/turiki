@@ -16,6 +16,7 @@ from core.settings import BASE_DIR
 def images_path():
     return "media/img"
 
+
 def payment_default():
     return {"tournament": {
         "id": -1,
@@ -23,33 +24,11 @@ def payment_default():
     }}
 
 
-# модель пользователя с логином - почтой(у жанго по умолчанию логин - имя пользователя)
-# управление моделью пользователя
-class UserAccountManager(BaseUserManager):
-    def create_user(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError('Email required!')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.save()
-        return user
-
-    def create_superuser(self, email, password=None, **extra_fields):
-        if not email:
-            raise ValueError('Email required!')
-        email = self.normalize_email(email)
-        user = self.model(email=email, **extra_fields)
-        user.set_password(password)
-        user.is_superuser = 1
-        user.is_staff = 1
-        user.save()
-        return user
-
 def default_starts():
     return now() + datetime.timedelta(minutes=1)
+
+
 class Tournament(models.Model):
-    
     allowed_statuses = ["REGISTRATION_CLOSED_BEFORE_REG",
                         "REGISTRATION_OPENED",
                         "REGISTRATION_CLOSED_AFTER_REG",
@@ -71,24 +50,24 @@ class Tournament(models.Model):
     time_results_locked = models.DurationField(default=datetime.timedelta(minutes=1))
     time_to_confirm_results = models.DurationField(default=datetime.timedelta(minutes=2))
     time_to_select_map = models.DurationField(default=datetime.timedelta(minutes=2))
+
     def __str__(self):
         return self.name
 
 
 class Team(models.Model):
-    name = models.CharField(max_length=255, null=True, blank=True, unique=True)
+    name = models.CharField(max_length=20, null=True, blank=True, unique=True)
     tournaments = models.ManyToManyField(Tournament, related_name="teams", blank=True)
     next_member = models.CharField(null=True, blank=True, max_length=255)
     image = models.FilePathField(path=images_path(), blank=True, null=True)
     is_open = models.BooleanField(default=True)
 
     payment = models.JSONField(default=payment_default)
+
     def __str__(self):
         return self.name
 
 
-#
-#
 class MapBan(models.Model):
     CHALET = "CHALET"
     BANK = "BANK"
@@ -102,7 +81,7 @@ class MapBan(models.Model):
     ADMIN = "ADMIN"
     CAPTAIN = "CAPTAIN"
     AUTO = "AUTO"
-    
+
     WHO_CAN_BAN = (
         (ADMIN, ADMIN.lower()),
         (CAPTAIN, CAPTAIN.lower()),
@@ -170,8 +149,8 @@ class Match(models.Model):
     round_text = models.CharField(max_length=31, blank=True, null=True)  # ПОРЯДОК СЛЕДОВАНИЯ МАТЧЕЙ
     # В ТУРНИРЕ, Т.Е. 1 - ПЕРВЫЕ МАТЧИ В ТУРНИРЕ, 2 - ВТОРЫЕ И ТД. п.с. на самом деле это не обязательно, просто рекомендация)))
     state = models.CharField(max_length=63, null=True, blank=True)
-    started = models.DateTimeField(blank=True, null=True) # начинается игра в матче
-    starts = models.DateTimeField(blank=True, null=True) # начинается матч
+    started = models.DateTimeField(blank=True, null=True)  # начинается игра в матче
+    starts = models.DateTimeField(blank=True, null=True)  # начинается матч
     first_result_claimed = models.DateTimeField(blank=True, null=True)
     time_to_enter_lobby = models.DurationField(default=datetime.timedelta(minutes=10))
     time_results_locked = models.DurationField(default=datetime.timedelta(minutes=1))
@@ -183,6 +162,7 @@ class Match(models.Model):
     is_visible = models.BooleanField(default=True)
     bo3_order = models.IntegerField(default=0)
     current_map = models.CharField(null=True, blank=True)
+
     def get_participants(self):
         arr = list(self.teams.values())
         if len(arr) == 0:
@@ -212,6 +192,34 @@ class Participant(models.Model):
         return f"{self.team}_{self.match}"
 
 
+class UserAccountManager(BaseUserManager):
+    def create_user(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Email required!')
+
+        name = extra_fields.get("name", email.split("@")[0])
+        extra_fields.pop("name", None)
+        print(extra_fields)
+        email = self.normalize_email(email)
+        user = self.model(email=email, name=name, **extra_fields)
+
+        user.set_password(password)
+        user.save()
+
+        return user
+
+    def create_superuser(self, email, password=None, **extra_fields):
+        if not email:
+            raise ValueError('Email required!')
+        email = self.normalize_email(email)
+        user = self.model(email=email, **extra_fields)
+        user.set_password(password)
+        user.is_superuser = 1
+        user.is_staff = 1
+        user.save()
+        return user
+
+
 class UserAccount(AbstractBaseUser, PermissionsMixin):
     def is_google_oauth2(self):
         if self.name is None:
@@ -219,8 +227,8 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
         return False
 
     objects = UserAccountManager()
-    email = models.EmailField(max_length=255, unique=True)
-    name = models.CharField(max_length=255, unique=True)
+    email = models.EmailField(max_length=100, unique=True)
+    name = models.CharField(max_length=20, unique=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     team = models.ForeignKey(Team, null=True, blank=True, on_delete=models.SET_NULL, related_name="players")
@@ -258,5 +266,6 @@ class Message(models.Model):
     content = models.CharField(max_length=512, blank=False, null=False)
     created_at = models.DateTimeField(blank=True, null=True)
     type = models.CharField(max_length=31, default="message")
+
     def __str__(self):
         return f"{self.user}_{self.content}_at_{self.created_at}_{self.chat}"

@@ -217,7 +217,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
             ) : (
               <p
                 data-content={name}
-                className="before:text-[28px] mt-[9px] before:font-semibold before:top-0 bfore:bottom-0 before:left-0 before:right-0 
+                className="before:text-[28px] mt-[9px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
                             w-full text-left text-[28px] before:w-full font-medium  before:text-left before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -230,7 +230,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
         <div className="">
           <label
             data-content="Почта"
-            className="before:text-xl before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
+            className="before:text-xl before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
                             w-full text-left text-xl before:w-full font-medium  before:text-left before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -257,7 +257,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
           </div>
           <label
             data-content="Ник в R6S"
-            className="before:text-xl before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
+            className="before:text-xl before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
                             w-full text-xl before:w-full font-medium before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -332,7 +332,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
             <>
               <label
                 data-content="Новый пароль"
-                className="before:text-xl block mt-4 before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
+                className="before:text-xl block mt-4 before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
                             w-full text-left text-xl before:w-full font-medium  before:text-left before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
@@ -384,7 +384,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
             <>
               <label
                 data-content="Подтвердите текущий пароль"
-                className="before:text-xl block mt-4 before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
+                className="before:text-xl block mt-4 before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
                             w-full text-left text-xl before:w-full font-medium  before:text-left before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"

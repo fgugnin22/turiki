@@ -40,7 +40,7 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
         <div className="flex items-center mt-7 mx-14 justify-between">
           <p
             data-content={props.team.name}
-            className="before:text-[20px] before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
+            className="before:text-[20px] before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
                            text-left text-[20px] font-medium  before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"

@@ -73,7 +73,7 @@ const Test = () => {
       ></div>
       <p
         data-content="Турниры"
-        className="before:text-lg before:top-0 bfore:bottom-0 before:left-0 before:right-0  w-full text-center text-lg before:w-full font-medium  before:text-center before:bg-gradient-to-l 
+        className="before:text-lg before:top-0 before:bottom-0 before:left-0 before:right-0  w-full text-center text-lg before:w-full font-medium  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
       >

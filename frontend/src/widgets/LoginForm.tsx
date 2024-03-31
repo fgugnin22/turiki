@@ -54,7 +54,7 @@ const LoginForm = () => {
     >
       <h2
         data-content="Вход"
-        className="before:text-[44px] before:top-0 bfore:bottom-0 before:left-0 before:right-0  w-full text-center text-[44px] before:w-full  before:text-center before:font-extrabold before:bg-gradient-to-r 
+        className="before:text-[44px] before:top-0 before:bottom-0 before:left-0 before:right-0  w-full text-center text-[44px] before:w-full  before:text-center before:font-extrabold before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
       >
@@ -132,7 +132,7 @@ const LoginForm = () => {
         </div>
         <Link
           data-content="Забыли пароль?"
-          className="before:w-full mx-auto mt-4 font-medium w-4/5 block before:top-0 bfore:bottom-0 before:left-0 before:right-0 before:text-right text-right before:bg-gradient-to-r 
+          className="before:w-full mx-auto mt-4 font-medium w-4/5 block before:top-0 before:bottom-0 before:left-0 before:right-0 before:text-right text-right before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] before:hover:bg-lightblue before:hover:bg-none text-lg transition"
           to={ROUTES.RESET_PASSWORD.path}
@@ -169,7 +169,7 @@ const LoginForm = () => {
       </form>
       <Link
         data-content="Зарегистрироваться"
-        className="before:w-full mx-auto mt-6 font-medium w-4/5 block before:top-0 bfore:bottom-0 before:left-0 before:right-0 before:text-center text-center before:bg-gradient-to-r 
+        className="before:w-full mx-auto mt-6 font-medium w-4/5 block before:top-0 before:bottom-0 before:left-0 before:right-0 before:text-center text-center before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] before:hover:bg-lightblue before:hover:bg-none text-lg transition"
         to={ROUTES.RESET_PASSWORD.path}

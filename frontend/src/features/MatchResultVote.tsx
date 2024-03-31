@@ -68,7 +68,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
             {!selfResImage && (
               <p
                 data-content={`Перед отправкой результата прикрепите скрин из игры!`}
-                className="before:text-[20px] before:font-semibold before:top-0 bfore:bottom-0 before:left-0 before:right-0 
+                className="before:text-[20px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
                              text-[20px] font-semibold  before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent 
                 before:absolute relative before:content-[attr(data-content)] z-50"
@@ -127,7 +127,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
                       {result === "won" ? <RadioTrue /> : <RadioFalse />}
                       <p
                         data-content={`Победа`}
-                        className="before:text-[20px] grow text-left ml-5 before:w-full before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
+                        className="before:text-[20px] grow text-left ml-5 before:w-full before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
                              text-[20px] font-medium  before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent 
                 before:absolute relative before:content-[attr(data-content)] w-[calc(100%-52px)] z-50"
@@ -149,7 +149,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
                       {result === "lost" ? <RadioTrue /> : <RadioFalse />}
                       <p
                         data-content={`Поражение`}
-                        className="before:text-[20px] grow text-left ml-5 before:w-full before:font-medium before:top-0 bfore:bottom-0 before:left-0 before:right-0 
+                        className="before:text-[20px] grow text-left ml-5 before:w-full before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
                              text-[20px] font-medium  before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent 
                 before:absolute relative before:content-[attr(data-content)] w-[calc(100%-52px)] z-50"

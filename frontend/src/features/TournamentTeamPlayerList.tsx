@@ -37,12 +37,31 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
             </a>
             <p
               data-content={team.name}
-              className="before:text-[16px] before:font-semibold before:top-0 bfore:bottom-0 before:left-0 before:right-0 
+              className="before:text-[16px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
                            text-left text-[16px] font-semibold  before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
             >
               {team.name}{" "}
+            </p>
+            <p
+              data-content={`Взнос: 
+              ${
+                team.payment[tournament?.name ?? ""]?.is_confirmed
+                  ? "Есть"
+                  : "Нет"
+              }`}
+              className="ml-auto before:text-[16px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
+                           text-left text-[16px] font-semibold  before:text-left before:bg-gradient-to-l 
+              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+            >
+              {`Взнос: 
+              ${
+                team.payment[tournament?.name ?? ""]?.is_confirmed
+                  ? "Есть"
+                  : "Нет"
+              }`}
             </p>
           </div>
           <div className="bg-gradient-to-r from-lightblue to-turquoise h-[1px] neonshadow mx-6 mt-3"></div>

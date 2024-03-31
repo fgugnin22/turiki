@@ -56,7 +56,7 @@ const Header = () => {
         <>
           <div
             className=" absolute flex flex-col
-                        right-0 top-2 z-50 w-[215px]"
+                        right-0 top-2 z-50"
             role="menuitem"
             onClick={() => setIsDropDownVisible((prev) => !prev)}
           >

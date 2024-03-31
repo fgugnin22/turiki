@@ -75,7 +75,7 @@ const RegistrationForm = () => {
     >
       <h2
         data-content="Зарегистрироваться"
-        className="before:text-[44px] before:top-0 bfore:bottom-0 before:left-0 before:right-0  w-full text-center text-[44px] before:w-full  before:text-center before:font-extrabold before:bg-gradient-to-r 
+        className="before:text-[44px] before:top-0 before:bottom-0 before:left-0 before:right-0  w-full text-center text-[44px] before:w-full  before:text-center before:font-extrabold before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
       >

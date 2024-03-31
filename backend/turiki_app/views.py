@@ -54,17 +54,11 @@ class UserAPIView(GenericViewSet):
         except Exception as e:
             return Response({"error": "Failed to process the image"}, status=500)
 
-        image_bytes = image_file.size
-
-        image_dimensions = image.size
-
         # если размер изображения больше 1.5 мб, то оно не обрабатывается
         if image_file.size > 1.5 * 2 ** 20:
             return Response("image too large", status=400)
 
         old_img = user.image
-
-        file_to_delete = Path(old_img)
 
         try:
             file_to_delete = Path(old_img)
@@ -210,18 +204,12 @@ class MatchAPIView(ModelViewSet):
         except Exception as e:
             return Response({"error": "Failed to process the image"}, status=500)
 
-        image_bytes = image_file.size
-
-        image_dimensions = image.size
-
         if image_file.size > 1.5 * 2 ** 20:
             return Response("image too large", status=400)
 
         participant = match.participants.first() if match.participants.first().team.id == user.team.id else match.participants.last()
 
-        old_img = participant.image
-
-        file_to_delete = Path(old_img)
+        old_img = participant.res_image
 
         try:
             file_to_delete = Path(old_img)
@@ -236,11 +224,11 @@ class MatchAPIView(ModelViewSet):
 
         img_name = f'media/img/team{user.team.id}_match{match.id}.png'
 
-        participant.image = img_name
+        participant.res_image = img_name
 
         image.save(MEDIA_ROOT + "/" + "/".join(img_name.split("/")[1:]))
 
-        user.save()
+        participant.save()
         return Response(status=200)
 
     def create(self, request, *args, **kwargs):
@@ -328,10 +316,6 @@ class TeamAPIView(ModelViewSet):
             image = Image.open(image_file)
         except Exception as e:
             return Response({"error": "Failed to process the image"}, status=500)
-
-        image_bytes = image_file.size
-
-        image_dimensions = image.size
 
         if image_file.size > 1.5 * 2 ** 20:
             return Response("image too large", status=400)

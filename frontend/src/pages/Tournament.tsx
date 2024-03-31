@@ -93,7 +93,7 @@ export const Tournament = () => {
                 </p>
                 <p
                   data-content={tournament.name}
-                  className="before:w-full text-2xl leading-7 font-medium w-4/5 block before:top-0 bfore:bottom-0 before:left-0 before:right-0 before:text-left text-left before:bg-gradient-to-r 
+                  className="before:w-full text-2xl leading-7 font-medium w-4/5 block before:top-0 before:bottom-0 before:left-0 before:right-0 before:text-left text-left before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
                 >
