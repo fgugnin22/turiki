@@ -74,8 +74,8 @@ def end_match(match: Match):
     p1: Participant = match.participants.first()
     p2: Participant = match.participants.last()
 
-    next_match = match.next_match
     messages = match.lobby.chat.messages
+
     if p1.is_winner is None and p2.is_winner:
         if match.state != "SCORE_DONE" and messages.filter(content=f"Команда {p2.team.name} выставила свой результат: победа!").count() == 0:
             notify(match, f"Команда {p2.team.name} выставила свой результат: победа!")
@@ -86,9 +86,7 @@ def end_match(match: Match):
         notify(match, "Результат матча оспорен!")
         match.state = "CONTESTED"
         match.save()
-        print("HUH??")
         return
-    print("WTF")
     if p1.is_winner is None and p2.is_winner:
         match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
         exec_task_on_date(auto_finish_match, [match.id, p1.team.id, False],
@@ -103,6 +101,10 @@ def end_match(match: Match):
     match.state = "SCORE_DONE"
     match.save()
 
+    prev_match = match.tournament.matches.filter(next_match__id=match.id).first()
+
+    next_match = match.next_match
+
     if p1.is_winner:
         p1.result_text = "WON"
         p2.result_text = "LOST"
@@ -110,9 +112,8 @@ def end_match(match: Match):
         p1.save()
         p2.save()
         notify(match, f"Команда {p1.team.name} выиграла!")
-        print(1111)
-        #####
-        if match.is_bo3 and match.bo3_order < 2:
+
+        if match.is_bo3 and match.bo3_order < 2 and (prev_match is None or not (match.bo3_order == 1 and prev_match.participants.filter(result_text="WON").first().team.id == p1.team.id)):
             print(2222)
             tournament = match.tournament
             match.next_match = Match.objects.create(
@@ -140,7 +141,7 @@ def end_match(match: Match):
             update_next_match(match.next_match, p2)
             print(6666)
             return
-        #####
+
         if next_match is None:
             tournament = match.tournament
             tournament.status = match.tournament.allowed_statuses[-1]
@@ -155,7 +156,7 @@ def end_match(match: Match):
     p2.save()
     notify(match, f"Команда {p2.team.name} выиграла!")
     print(3333)
-    if match.is_bo3 and match.bo3_order < 2:
+    if match.is_bo3 and match.bo3_order < 2 and (prev_match is None or not (match.bo3_order == 1 and prev_match.participants.filter(result_text="WON").first().team.id == p2.team.id)):
         print(4444)
         tournament = match.tournament
         match.next_match = Match.objects.create(
