@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { useAppSelector, useAppDispatch } from "../shared/rtk/store";
@@ -44,6 +44,14 @@ const Match = () => {
       skip: isFetching || !match?.participants[0]?.team?.id
     }
   );
+
+  const tournament = tournamentAPI.useGetTournamentByIdQuery(
+    {
+      id: match?.tournament ?? -1
+    },
+    { skip: Number(match?.tournament) === 0 }
+  );
+
   const { data: team2 } = tournamentAPI.useGetTeamByIdQuery(
     match?.participants[1]?.team.id,
     {
@@ -83,6 +91,13 @@ const Match = () => {
   const timeBeforeMatchStart = useCountdown(starts);
   const timeToNextAction = useCountdown(started);
   const { seconds, minutes } = useCountdown(new Date(timeToBan));
+
+  const prevMatch = tournament.data?.matches.find(
+    (m) =>
+      m.next_match === match?.id &&
+      m.participants.findIndex((p) => p.team.id === user?.team) !== -1
+  );
+
   const navigate = useNavigate();
   if (isError) {
     navigate(ROUTES.NO_MATCH404.path);
@@ -92,19 +107,46 @@ const Match = () => {
       {match && (
         <>
           <div className="text-center mt-2 text-2xl relative">
-            {/* <ButtonSecondary
-              type="button"
-              className="absolute left-8 flex items-center grow justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8]"
-            >
-              <span
-                data-content="Войти через Google"
-                className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
+            {prevMatch && (
+              <Link
+                to={ROUTES.MATCHES.MATCH_BY_ID.buildPath({ id: prevMatch.id })}
+              >
+                <ButtonSecondary
+                  type="button"
+                  className="!absolute top-1 left-0 flex z-40 items-center px-4 justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8] text-lg"
+                >
+                  <span
+                    data-content="Предыдущий матч"
+                    className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
+                  >
+                    Предыдущий матч
+                  </span>
+                </ButtonSecondary>
+              </Link>
+            )}
+            {match.next_match && (
+              <Link
+                to={ROUTES.MATCHES.MATCH_BY_ID.buildPath({
+                  id: match.next_match
+                })}
               >
-                Войти через Google
-              </span>
-            </ButtonSecondary> */}
+                <ButtonSecondary
+                  type="button"
+                  className="!absolute z-40 top-1 right-0 flex items-center px-4 justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8] text-lg"
+                >
+                  <span
+                    data-content="Следующий матч"
+                    className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
+              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
+                  >
+                    Следующий матч
+                  </span>
+                </ButtonSecondary>
+              </Link>
+            )}
             <p
               data-content={`Матч 1/${2 ** Number(match.name)}, Best of ${
                 match.is_bo3 ? "3" : "1"
