@@ -1,4 +1,6 @@
 import datetime
+import os.path
+from pathlib import Path
 
 from django.core.files import File
 from rest_framework import serializers
@@ -25,13 +27,7 @@ from turiki_app.serializers import (
 from turiki_app.services import TeamService, MatchService, TournamentService, UserService
 from turiki_app.tasks import create_bracket, set_initial_matches, ban_map
 from core.settings import MEDIA_ROOT
-from django.db import transaction
-
-"""
-View - представление, которое отвечает за обработку запросов(я хз как еще по другому объяснить)
-в общем здесь в классах описаны методы(нередко скрытые наследованием), которые вызываются на тот или иной url
-сюда приходят и здесь обрабатываются запросы из urls.py(где эти view зарегистрированы на соответствующие url)
-"""
+from PIL import Image
 
 
 class UserAPIView(GenericViewSet):
@@ -43,22 +39,49 @@ class UserAPIView(GenericViewSet):
 
     @action(methods=["PUT"], detail=False, permission_classes=[IsAuthenticated])
     def photo(self, request):
+        user = request.user
+
+        if 'image' not in request.FILES:
+            return Response({"error": "No image attached"}, status=400)
+
+        image_file = request.FILES['image']
+
+        if not image_file.name.endswith('.png'):
+            return Response({"error": "Only PNG images are allowed"}, status=415)
+
         try:
-            image = request.data.get("image").file
-            user: UserAccount = request.user
-            seconds = datetime.datetime.now().microsecond
-            img_name = f'media/img/user{user.id}_{str(seconds)}.png'
-            user.image = img_name
-            file = File(image, name=img_name)  # TODO: this is not very safe
-            if file.name[-4:] == ".png":
-                with open(MEDIA_ROOT + f"/img/user{user.id}_{str(seconds)}.png", "wb+") as f:
-                    f.writelines(file.readlines())
-                user.save()
-                return Response(status=200)
-            else:
-                return Response(status=415)
-        except TypeError:
-            return Response(status=400)
+            image = Image.open(image_file)
+        except Exception as e:
+            return Response({"error": "Failed to process the image"}, status=500)
+
+        image_bytes = image_file.size
+
+        image_dimensions = image.size
+
+
+        # если размер изображения больше 1.5 мб, то оно не обрабатывается
+        if image_file.size > 1.5 * 2 ** 20:
+            return Response("image too large", status=400)
+
+        old_img = user.image
+
+        file_to_delete = Path(old_img)
+
+        if file_to_delete.exists():
+            file_to_delete.unlink()
+            print(f"File '{old_img}' deleted successfully")
+        else:
+            print(f"File '{old_img}' does not exist")
+
+        seconds = datetime.datetime.now().microsecond
+        img_name = f'media/img/user{user.id}_{str(seconds)}.png'
+
+        user.image = img_name
+
+        image.save(MEDIA_ROOT + "/" + "/".join(img_name.split("/")[1:]))
+
+        user.save()
+        return Response(status=200)
 
 
 class TournamentAPIView(ModelViewSet):
@@ -119,9 +142,9 @@ class TournamentAPIView(ModelViewSet):
             current_payment = team.payment
 
             current_payment[tournament.name] = {
-                        "id": tournament.id,
-                        "is_confirmed": is_confirmed
-                    }
+                "id": tournament.id,
+                "is_confirmed": is_confirmed
+            }
 
             team.payment = current_payment
 
@@ -372,9 +395,6 @@ class TeamAPIView(ModelViewSet):
         new_cap.save()
 
         return Response(status=200)
-
-
-
 
     def update(self, request, *args, **kwargs):
         raise serializers.ValidationError("use other endpoints")
