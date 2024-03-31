@@ -141,7 +141,6 @@ def auto_finish_match(match_id, team_id, result):
         claim_match_result(match.id, team_id, result)
 
 
-# TODO: сделать отложенную активацию матча и создание лобби
 @dramatiq.actor
 def create_lobby(match):
     # создание лобби и чата в матче если в нем есть 2 команды, он не закончен
@@ -166,7 +165,6 @@ def set_tournament_status(tournament_id, status):
         tournament.save()
 
 
-# TODO: сделать отложенное автоматическое наполнение матчей
 @dramatiq.actor
 def set_initial_matches(tournament):
     """
@@ -211,7 +209,6 @@ def set_initial_matches(tournament):
         tournament.save()
 
 
-# TODO: автоматическое отложенное создание сетки перед началом за какое-то кол-во времени
 @dramatiq.actor
 def create_bracket(tournament, rounds):
     # вызывает функцию create_match я хз зачем так непонятно сделал с именами, потом переделаю TODO:!!!

@@ -251,7 +251,8 @@ DRAMATIQ_TASKS_DATABASE = "default"
 DRAMATIQ_RESULT_BACKEND = {
     "BACKEND": "dramatiq.results.backends.redis.RedisBackend",
     "BACKEND_OPTIONS": {
-        "url": "redis://redis:6379",  # TODO: ЕСЛИ не работает заменить урл на redis://localhost:6379
+        "url": "redis://redis:6379",  # ЕСЛИ не работает заменить урл на redis://localhost:6379, 
+        # docker использует внутри себя названия сервисов в качестве доменных имен
     },
     "MIDDLEWARE_OPTIONS": {"result_ttl": 1000 * 60 * 10},
 }

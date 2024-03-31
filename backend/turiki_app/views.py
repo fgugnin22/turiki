@@ -58,7 +58,6 @@ class UserAPIView(GenericViewSet):
 
         image_dimensions = image.size
 
-
         # если размер изображения больше 1.5 мб, то оно не обрабатывается
         if image_file.size > 1.5 * 2 ** 20:
             return Response("image too large", status=400)
@@ -67,11 +66,16 @@ class UserAPIView(GenericViewSet):
 
         file_to_delete = Path(old_img)
 
-        if file_to_delete.exists():
-            file_to_delete.unlink()
-            print(f"File '{old_img}' deleted successfully")
-        else:
-            print(f"File '{old_img}' does not exist")
+        try:
+            file_to_delete = Path(old_img)
+
+            if file_to_delete.exists():
+                file_to_delete.unlink()
+                print(f"File '{old_img}' deleted successfully")
+            else:
+                print(f"File '{old_img}' does not exist")
+        except TypeError:
+            print("no image(")
 
         seconds = datetime.datetime.now().microsecond
         img_name = f'media/img/user{user.id}_{str(seconds)}.png'
@@ -97,21 +101,6 @@ class TournamentAPIView(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            # name, prize, max_rounds,  = (
-            #     request.data.pop("name"),
-            #     request.data.pop("prize"),
-            #     request.data.pop("max_rounds"),
-            # )
-
-            # name = (
-            #     name
-            #     if name is not None
-            #     else "You forgot to name the tournament dumbass"
-            # )
-            # prize = prize if prize is not None else "Prize too xd"
-            # max_rounds = max_rounds if max_rounds is not None else 1000
-
-            # tourn = TournamentService.create_tournament(name, prize, max_rounds)
             request.data["reg_starts"] = datetime.datetime.strptime(request.data["reg_starts"], "%Y-%m-%dT%H:%M:%S%z")
             request.data["starts"] = datetime.datetime.strptime(request.data["starts"], "%Y-%m-%dT%H:%M:%S%z")
             tourn = TournamentService.create_tournament(**request.data)
@@ -201,26 +190,58 @@ class MatchAPIView(ModelViewSet):
 
     @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
     def photo(self, request, pk=None):
+        user = request.user
+
+        match = self.get_object()
+
+        if user.team_status != "CAPTAIN" or user.team.id != match.teams.first().id and user.team.id != match.teams.last().id:
+            return Response(status=403)
+
+        if 'image' not in request.FILES:
+            return Response({"error": "No image attached"}, status=400)
+
+        image_file = request.FILES['image']
+
+        if not image_file.name.endswith('.png'):
+            return Response({"error": "Only PNG images are allowed"}, status=415)
+
         try:
-            user = request.user
-            match = self.get_object()
-            if user.team_status != "CAPTAIN" or user.team.id != match.teams.first().id and user.team.id != match.teams.last().id:
-                return Response(status=403)
-            image = request.data.get("image").file
-            img_name = f'media/img/team{user.team.id}_match{match.id}.png'
-            participant = match.participants.first() if match.participants.first().team.id == user.team.id else match.participants.last()
-            participant.res_image = img_name
-            file = File(image, name=img_name)  # TODO: this is not very safe
-            if file.name[-4:] == ".png":
-                with open(MEDIA_ROOT + f"/img/team{user.team.id}_match{match.id}.png", "wb+") as f:
-                    f.writelines(file.readlines())
-                    f.close()
-                participant.save()
-                return Response(status=200)
+            image = Image.open(image_file)
+        except Exception as e:
+            return Response({"error": "Failed to process the image"}, status=500)
+
+        image_bytes = image_file.size
+
+        image_dimensions = image.size
+
+        if image_file.size > 1.5 * 2 ** 20:
+            return Response("image too large", status=400)
+
+        participant = match.participants.first() if match.participants.first().team.id == user.team.id else match.participants.last()
+
+        old_img = participant.image
+
+        file_to_delete = Path(old_img)
+
+        try:
+            file_to_delete = Path(old_img)
+
+            if file_to_delete.exists():
+                file_to_delete.unlink()
+                print(f"File '{old_img}' deleted successfully")
             else:
-                return Response(status=415)
+                print(f"File '{old_img}' does not exist")
         except TypeError:
-            return Response(status=400)
+            print("no image(")
+
+        img_name = f'media/img/team{user.team.id}_match{match.id}.png'
+
+        participant.image = img_name
+
+        image.save(MEDIA_ROOT + "/" + "/".join(img_name.split("/")[1:]))
+
+        user.save()
+        return Response(status=200)
 
     def create(self, request, *args, **kwargs):
         return Response(status=404)
@@ -229,23 +250,12 @@ class MatchAPIView(ModelViewSet):
         methods=["PUT"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin]
     )
     def team_in_lobby(self, request, pk=None):
-        # {
-        #     "team": {
-        #         "team_id": int
-        #     }
-        # }
         return MatchService.team_enter_lobby(request, self.get_object())
 
     @action(
         methods=["POST", "PATCH", "PUT"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin]
     )
     def ban(self, request, pk=None):
-        # {
-        #     "team": {
-        #         "team_id": int
-        #     },
-        #     "map": str
-        # }
         try:
             team = request.user.team
             match = self.get_object()
@@ -299,24 +309,55 @@ class TeamAPIView(ModelViewSet):
 
     @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
     def photo(self, request, pk=None):
+        user = request.user
+
+        team = self.get_object()
+
+        if request.user.team_status != "CAPTAIN" or request.user.team.id != team.id:
+            return Response(status=403)
+
+        if 'image' not in request.FILES:
+            return Response({"error": "No image attached"}, status=400)
+
+        image_file = request.FILES['image']
+
+        if not image_file.name.endswith('.png'):
+            return Response({"error": "Only PNG images are allowed"}, status=415)
+
         try:
-            image = request.data.get("image").file
-            team = self.get_object()
-            if request.user.team_status != "CAPTAIN" or request.user.team.id != team.id:
-                return Response(status=403)
-            img_name = f'media/img/team{team.id}.png'
-            team.image = img_name
-            file = File(image, name=img_name)  # TODO: this is not very safe
-            if file.name[-4:] == ".png":
-                with open(MEDIA_ROOT + f"/img/team{team.id}.png", "wb+") as f:
-                    f.writelines(file.readlines())
-                    f.close()
-                team.save()
-                return Response(status=200)
+            image = Image.open(image_file)
+        except Exception as e:
+            return Response({"error": "Failed to process the image"}, status=500)
+
+        image_bytes = image_file.size
+
+        image_dimensions = image.size
+
+        if image_file.size > 1.5 * 2 ** 20:
+            return Response("image too large", status=400)
+
+        old_img = team.image
+
+        try:
+            file_to_delete = Path(old_img)
+
+            if file_to_delete.exists():
+                file_to_delete.unlink()
+                print(f"File '{old_img}' deleted successfully")
             else:
-                return Response(status=415)
+                print(f"File '{old_img}' does not exist")
         except TypeError:
-            return Response(status=400)
+            print("no image(")
+
+        seconds = datetime.datetime.now().microsecond
+
+        img_name = f'media/img/team{team.id}_{str(seconds)}.png'
+        team.image = img_name
+
+        image.save(MEDIA_ROOT + "/" + "/".join(img_name.split("/")[1:]))
+
+        team.save()
+        return Response(status=200)
 
     @action(methods=["PATCH"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
     def player_status(self, request, pk=None):

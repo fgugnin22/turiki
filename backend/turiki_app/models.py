@@ -61,7 +61,6 @@ class Tournament(models.Model):
     prize = models.IntegerField(default=0)
     status = models.CharField(default="REGISTRATION_CLOSED_BEFORE_REG", max_length=255)
     starts = models.DateTimeField(blank=True, null=True)
-    # teams = models.ManyToManyField("Team", through="IDK KAK BUDET NAZIVATSYA") <-- TODO: SDELAT' типо что была итоговая таблица команд кто какое место занял какой приз получил и тд
     players = models.ManyToManyField("UserAccount", blank=True)
     max_rounds = models.IntegerField(default=1)
     # time_to_register = models.DurationField(default=datetime.timedelta(minutes=3))
