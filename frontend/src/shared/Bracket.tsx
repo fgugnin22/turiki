@@ -99,7 +99,9 @@ const Bracket = ({ tournament }: { tournament: Tournament }) => {
               };
               const hasChildMatches = tournament.matches.some((otherMatch) => {
                 return (
-                  otherMatch.next_match === match.id && otherMatch.is_visible
+                  (otherMatch.next_match === match.id &&
+                    otherMatch.is_visible) ||
+                  (match.name === "1" && tournament.max_rounds > 1)
                 );
               });
               return (
