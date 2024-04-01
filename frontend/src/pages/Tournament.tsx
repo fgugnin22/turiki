@@ -57,7 +57,7 @@ export const Tournament = () => {
     !tournament.teams.some((team: Team) => Number(team.id) === user.team);
 
   const { data: team } = tournamentAPI.useGetTeamByIdQuery(user?.team, {
-    skip: Number(user?.team) === 0
+    skip: user?.team === undefined
   });
 
   const statusString = useTournamentStatus(tournament?.status);

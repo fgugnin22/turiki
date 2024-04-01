@@ -38,11 +38,11 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
           >
             {`${
               (user?.team === match.participants[0]?.team.id ||
-                user?.team === match.participants[1]?.team?.id) &&
+                user?.team === match.participants[1]?.team.id) &&
               user?.team_status === "CAPTAIN" &&
-              match.bans?.previous_team !== user?.team
-                ? "Выберите карту для бана"
-                : "Ход оппонентов"
+              match.bans?.previous_team !== match.participants[0].id
+                ? "Ход команды " + match.participants[0]?.team.name
+                : "Ход команды " + match.participants[1]?.team.name
             }, осталось ${secondsRemaining >= 0 ? secondsRemaining : "..."} ${
               secondsRemaining % 10 > 4 ||
               secondsRemaining % 10 === 0 ||

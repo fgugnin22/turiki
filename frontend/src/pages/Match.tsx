@@ -14,8 +14,6 @@ import ButtonSecondary from "../shared/ButtonSecondary";
 
 const serverURL = import.meta.env.VITE_API_URL;
 
-// TODO: сделать стрелки перехода назад и вперёд по матчам
-
 const Match = () => {
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
@@ -49,7 +47,7 @@ const Match = () => {
     {
       id: match?.tournament ?? -1
     },
-    { skip: Number(match?.tournament) === 0 }
+    { skip: match?.tournament === undefined }
   );
 
   const { data: team2 } = tournamentAPI.useGetTeamByIdQuery(
