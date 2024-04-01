@@ -16,25 +16,24 @@ IN_A_MINUTE = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
 
 @dramatiq.actor
 def set_match_start_bans(match_id: int):
-    with transaction.atomic():
-        match = Match.objects.get(pk=match_id)
+    match = Match.objects.get(pk=match_id)
 
-        if match.teams.count() != 2:
-            return
-        if match.state == "NO_SHOW":
-            match.state = "BANS"
-            [team1, team2] = [Team.objects.get(pk=match.participants.values()[0]["team_id"]),
-                              Team.objects.get(pk=match.participants.values()[1]["team_id"])]
-            initial_timestamps = [match.starts]
-            bans = MapBan.objects.create(match=match, previous_team=team1.id, timestamps=initial_timestamps,
-                                         time_to_select_map=match.tournament.time_to_select_map)
-            exec_task_on_date(ban_map, [match.id, team2.id, match.bans.maps[-1], "AUTO",
-                                        MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps)],
-                              initial_timestamps[-1] + match.bans.time_to_select_map)
+    if match.teams.count() != 2:
+        return
+    if match.state == "NO_SHOW":
+        match.state = "BANS"
+        [team1, team2] = [Team.objects.get(pk=match.participants.values()[0]["team_id"]),
+                          Team.objects.get(pk=match.participants.values()[1]["team_id"])]
+        initial_timestamps = [match.starts]
+        bans = MapBan.objects.create(match=match, previous_team=team1.id, timestamps=initial_timestamps,
+                                     time_to_select_map=match.tournament.time_to_select_map)
+        exec_task_on_date(ban_map, [match.id, team2.id, match.bans.maps[-1], "AUTO",
+                                    MapBan.DEFAULT_MAP_POOL_SIZE - len(match.bans.maps)],
+                          initial_timestamps[-1] + match.bans.time_to_select_map)
 
-            match.bans = bans
-            bans.save()
-            match.save()
+        match.bans = bans
+        bans.save()
+        match.save()
 
 
 def set_match_active(match):
@@ -108,6 +107,7 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
         match.bans.previous_team = team.id
         match.bans.timestamps.append(datetime.datetime.now() + datetime.timedelta(seconds=1))
         match.bans.ban_log.append(who_banned)
+        match.bans.save()
         if len(match.bans.maps) == 1 or (match.is_bo3 and len(match.bans.maps) == 3):
             if not match.is_bo3:
                 match.current_map = match.bans.maps[0]
@@ -127,10 +127,10 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
 
 @dramatiq.actor
 def set_match_state(match_id, status="IN_GAME_LOBBY_CREATION"):  # self-explanatory fr tho
-    with transaction.atomic():
-        match = Match.objects.get(pk=match_id)
-        match.state = status
-        match.save()
+    match = Match.objects.get(pk=match_id)
+    match.state = status
+    print(match_id, status, "aksjdnfkajsd!!!!!")
+    match.save()
 
 
 @dramatiq.actor
@@ -144,25 +144,23 @@ def auto_finish_match(match_id, team_id, result):
 @dramatiq.actor
 def create_lobby(match):
     # создание лобби и чата в матче если в нем есть 2 команды, он не закончен
-    with transaction.atomic():
-        try:
-            if match.lobby is not None:
-                print("lobby already created")
-        except:
-            chat = Chat.objects.create()
-            lobby = Lobby.objects.create(match=match, chat=chat)
-            chat.lobby = lobby
-            chat.save()
-            match.save()
-            print("LOBBY CREATED")
+    try:
+        if match.lobby is not None:
+            print("lobby already created")
+    except:
+        chat = Chat.objects.create()
+        lobby = Lobby.objects.create(match=match, chat=chat)
+        chat.lobby = lobby
+        chat.save()
+        match.save()
+        print("LOBBY CREATED")
 
 
 @dramatiq.actor
 def set_tournament_status(tournament_id, status):
-    with transaction.atomic():
-        tournament = Tournament.objects.get(pk=tournament_id)
-        tournament.status = status
-        tournament.save()
+    tournament = Tournament.objects.get(pk=tournament_id)
+    tournament.status = status
+    tournament.save()
 
 
 @dramatiq.actor
@@ -176,7 +174,8 @@ def set_initial_matches(tournament):
         teams = list(tournament.teams.values())
         random.shuffle(teams)
         initial_matches = []
-        exec_task_on_date(set_tournament_status, [tournament.id, tournament.allowed_statuses[-2]], when=tournament.starts)
+        exec_task_on_date(set_tournament_status, [tournament.id, tournament.allowed_statuses[-2]],
+                          when=tournament.starts)
         for match in matches:
             is_match_initial = match["is_last"]
             if is_match_initial:
@@ -216,8 +215,8 @@ def create_bracket(tournament, rounds):
         if tournament.status != tournament.allowed_statuses[4]:
             raise serializers.ValidationError("Создать сетку можно ТОЛЬКО после чек-ин'а")
         is_enough_teams_to_start_tournament = (
-                    2 ** (rounds - 1) < len(list(tournament.teams.values())) <= 2 ** rounds and len(
-                list(tournament.matches.values())) == 0)
+                2 ** (rounds - 1) < len(list(tournament.teams.values())) <= 2 ** rounds and len(
+            list(tournament.matches.values())) == 0)
         if is_enough_teams_to_start_tournament:
             create_match(rounds, rounds, tournament, None, tournament.starts)
             return tournament

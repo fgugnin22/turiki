@@ -10,18 +10,19 @@ type Props = {
 const MapBans = ({ match, secondsRemaining }: Props) => {
   const { userDetails: user } = useAppSelector((state) => state.user);
   const [banMap] = tournamentAPI.useBanMapMutation();
+
   return (
     <>
       {
         <div className="place-self-center mx-auto flex flex-col col-span-2 shadow-xl mt-4 rounded-lg w-[500px] max-w-3/5">
           <p
             data-content={`${
-              (user?.team === match.participants[0].team.id ||
-                user?.team === match.participants[1].team.id) &&
+              (user?.team === match.participants[0]?.team.id ||
+                user?.team === match.participants[1]?.team.id) &&
               user?.team_status === "CAPTAIN" &&
-              match.bans?.previous_team !== user?.team
-                ? "Выберите карту для бана"
-                : "Ход оппонентов"
+              match.bans?.previous_team !== match.participants[0].id
+                ? "Ход команды " + match.participants[0]?.team.name
+                : "Ход команды " + match.participants[1]?.team.name
             }, осталось ${secondsRemaining >= 0 ? secondsRemaining : "..."} ${
               secondsRemaining % 10 > 4 ||
               secondsRemaining % 10 === 0 ||
@@ -36,8 +37,8 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
                 before:absolute relative before:content-[attr(data-content)] mb-2"
           >
             {`${
-              (user?.team === match.participants[0].team.id ||
-                user?.team === match.participants[1].team.id) &&
+              (user?.team === match.participants[0]?.team.id ||
+                user?.team === match.participants[1]?.team?.id) &&
               user?.team_status === "CAPTAIN" &&
               match.bans?.previous_team !== user?.team
                 ? "Выберите карту для бана"
@@ -80,8 +81,8 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
                   >
                     {map}
                   </p>
-                  {(user?.team === match.participants[0].team.id ||
-                    user?.team === match.participants[1].team.id) &&
+                  {(user?.team === match.participants[0]?.team.id ||
+                    user?.team === match.participants[1]?.team.id) &&
                     user?.team_status === "CAPTAIN" &&
                     match.bans?.previous_team !== user?.team && (
                       <button

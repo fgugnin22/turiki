@@ -12,7 +12,6 @@ import Footer from "../widgets/Footer";
 import ButtonSecondary from "../shared/ButtonSecondary";
 import Bracket from "../shared/Bracket";
 import { useTournamentStatus } from "../hooks/useTournamentStatus";
-import { useCountdown } from "../hooks/useCountDown";
 import TournamentTeamPlayerList from "../features/TournamentTeamPlayerList";
 import TriangleLoader from "../shared/TriangleLoader";
 

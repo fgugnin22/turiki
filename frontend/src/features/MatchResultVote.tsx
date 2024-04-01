@@ -51,6 +51,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
       Number(props.match?.time_to_confirm_results.split(":")[2])
   );
   timeBeforeAutoRes = useCountdown(timeBeforeAutoRes);
+
   if (!props.teamId) {
     return <></>;
   }
@@ -76,16 +77,18 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
                 {`Перед отправкой результата прикрепите скрин из игры!`}
               </p>
             )}
-            {props.selfParticipant.is_winner === true &&
-              (vsParticipant.is_winner ?? true) && (
-                <p>
-                  Результаты выставятся автоматически через{" "}
-                  {timeBeforeAutoRes.minutes}:
-                  {timeBeforeAutoRes.seconds > 9
-                    ? timeBeforeAutoRes.seconds
-                    : `0${timeBeforeAutoRes.seconds}`}{" "}
-                </p>
-              )}
+            {((props.selfParticipant.is_winner === null &&
+              vsParticipant.is_winner !== null) ||
+              (props.selfParticipant.is_winner !== null &&
+                vsParticipant.is_winner === null)) && (
+              <p>
+                Результаты выставятся автоматически через{" "}
+                {timeBeforeAutoRes.minutes}:
+                {timeBeforeAutoRes.seconds > 9
+                  ? timeBeforeAutoRes.seconds
+                  : `0${timeBeforeAutoRes.seconds}`}{" "}
+              </p>
+            )}
             <div className="flex gap-10 justify-evenly mt-10">
               {!selfResImage ? (
                 <label

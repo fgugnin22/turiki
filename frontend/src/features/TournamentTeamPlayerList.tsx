@@ -1,6 +1,7 @@
 import { IUser } from "../shared";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { getImagePath } from "../helpers/getImagePath";
+import { Match, Participant } from "../helpers/transformMatches";
 const serverURL = import.meta.env.VITE_API_URL;
 export type Player = Omit<IUser, "email" | "is_active" | "team">;
 type TournamentTeamPlayerListProps = {
@@ -16,7 +17,28 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
   const { data: tournament } = tournamentAPI.useGetTournamentByIdQuery({
     id: props.tournamentId
   });
+
   const { data: team } = tournamentAPI.useGetTeamByIdQuery(props.team.id);
+
+  const bestMatch = JSON.parse(JSON.stringify(tournament?.matches))
+    .sort((a: Match, b: Match) => b.id - a.id)
+    .find(
+      (m: Match) =>
+        m.participants.findIndex((p: Participant) => p.team.id === team?.id) !==
+        -1
+    );
+
+  const placement =
+    Number(bestMatch?.name) +
+    (bestMatch?.participants.find((p: Participant) => p.team.id === team?.id)
+      ?.result_text === "LOST"
+      ? 1
+      : 0);
+  const placementStr =
+    placement < 3
+      ? `${placement}`
+      : `${placement}-${2 ** Number(bestMatch?.name)}`;
+
   return (
     <div
       className="rounded-[10px] relative after:absolute 
@@ -44,25 +66,37 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
             >
               {team.name}{" "}
             </p>
-            <p
-              data-content={`Взнос: 
-              ${
-                team.payment[tournament?.name ?? ""]?.is_confirmed
-                  ? "Есть"
-                  : "Нет"
-              }`}
-              className="ml-auto before:text-[16px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
+            {tournament?.status === "PLAYED" ? (
+              <p
+                data-content={"Место: " + placementStr}
+                className="ml-auto before:text-[16px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
                            text-left text-[16px] font-semibold  before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
-            >
-              {`Взнос: 
+              >
+                {"Место: " + placementStr}
+              </p>
+            ) : (
+              <p
+                data-content={`Взнос: 
               ${
                 team.payment[tournament?.name ?? ""]?.is_confirmed
                   ? "Есть"
                   : "Нет"
               }`}
-            </p>
+                className="ml-auto before:text-[16px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
+                           text-left text-[16px] font-semibold  before:text-left before:bg-gradient-to-l 
+              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
+                before:absolute relative before:content-[attr(data-content)]"
+              >
+                {`Взнос: 
+              ${
+                team.payment[tournament?.name ?? ""]?.is_confirmed
+                  ? "Есть"
+                  : "Нет"
+              }`}
+              </p>
+            )}
           </div>
           <div className="bg-gradient-to-r from-lightblue to-turquoise h-[1px] neonshadow mx-6 mt-3"></div>
           <ul className="flex flex-col gap-y-4  mx-6 relative my-4">

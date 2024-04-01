@@ -186,7 +186,7 @@ const Match = () => {
                 Карта:{" "}
                 <span
                   data-content={match.current_map}
-                  className="before:text-lg before:-top-[3px] before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 before:bottom-0 before:left-0 before:right-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
+                  className="before:text-lg before:-top-[2px] before:drop-shadow-[0_0_1px_#4cf2f8]before:bottom-0 before:left-0 before:right-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
                 >

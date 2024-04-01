@@ -1,36 +1,39 @@
 from datetime import datetime, timedelta
 import pytz
+from django.db import transaction
 from rest_framework.response import Response
 from turiki_app.models import Chat, Lobby, Participant, Message, Match, UserAccount
 
 def claim_match_result(match_id: int, team_id, result):
     # Ставит результат в Participant т.е. позволяет капитану сделать заявку на результат
-
-    # try:
-    match = Match.objects.get(pk=match_id)
-    if match.participants.count() == 1:
-        p1 = match.participants.first()
-        p1.is_winner = True
-        p1.save()
+    with transaction.atomic():
+        match = Match.objects.get(pk=match_id)
+        if match.participants.get(team__id=team_id) is not None \
+            and match.participants.get(team__id=team_id).is_winner is not None:
+            return
+        if match.participants.count() == 1:
+            p1 = match.participants.first()
+            p1.is_winner = True
+            p1.save()
+            end_match(match)
+            return
+        if match.started + match.time_results_locked >= datetime.now(tz=pytz.timezone('Europe/Moscow')):
+            return Response(status=400)
+        p1: Participant = match.participants.first()
+        p2: Participant = match.participants.last()
+        if p1.is_winner == p2.is_winner and p1.is_winner:
+            return
+        if team_id == p1.team.id:
+            p1.is_winner = result
+            p1.save()
+            if not result and match.state != "SCORE_DONE":
+                notify(match, f"Команда {p1.team.name} выставила свой результат: поражение!")
+        else:
+            p2.is_winner = result
+            p2.save()
+            if not result and match.state != "SCORE_DONE":
+                notify(match, f"Команда {p2.team.name} выставила свой результат: поражение!")
         end_match(match)
-        return
-    if match.started + match.time_results_locked >= datetime.now(tz=pytz.timezone('Europe/Moscow')):
-        return Response(status=400)
-    p1: Participant = match.participants.first()
-    p2: Participant = match.participants.last()
-    if p1.is_winner == p2.is_winner and p1.is_winner:
-        return
-    if team_id == p1.team.id:
-        p1.is_winner = result
-        p1.save()
-        if not result and match.state != "SCORE_DONE":
-            notify(match, f"Команда {p1.team.name} выставила свой результат: поражение!")
-    else:
-        p2.is_winner = result
-        p2.save()
-        if not result and match.state != "SCORE_DONE":
-            notify(match, f"Команда {p2.team.name} выставила свой результат: поражение!")
-    end_match(match)
 
 
 # except:
@@ -62,7 +65,6 @@ def end_match(match: Match):
         p1.save()
         match.state = "SCORE_DONE"
         match.save()
-        print('321')
         if next_match is None:
             # this block should not run but i leave it anyways
             tournament = match.tournament
@@ -155,9 +157,7 @@ def end_match(match: Match):
     p1.save()
     p2.save()
     notify(match, f"Команда {p2.team.name} выиграла!")
-    print(3333)
     if match.is_bo3 and match.bo3_order < 2 and (prev_match is None or not (match.bo3_order == 1 and prev_match.participants.filter(result_text="WON").first().team.id == p2.team.id)):
-        print(4444)
         tournament = match.tournament
         match.next_match = Match.objects.create(
             next_match=next_match,
@@ -182,7 +182,6 @@ def end_match(match: Match):
         match.next_match.save()
         update_next_match(match.next_match, p1)
         update_next_match(match.next_match, p2)
-        print(5555)
         return
     if next_match is None:
         tournament = match.tournament

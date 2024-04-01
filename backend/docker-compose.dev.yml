@@ -2,8 +2,8 @@ version: "3"
 
 services:
     django:
+        image: backend
         build:
-            context: .
             dockerfile: Dockerfile
         container_name: django
         command: sh -c "mkdir -p /usr/src/app/turiki_app/migrations && touch /usr/src/app/turiki_app/migrations/__init__.py && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
@@ -15,6 +15,13 @@ services:
             - pgdb
             - redis
             - dramatiq
+    dramatiq:
+        image: backend
+        volumes:
+            - .:/usr/src/app
+        command: sh -c "python manage.py rundramatiq --processes 6 --threads 6"
+        depends_on:
+            - redis
     redis:
         image: redis:5
         ports:
@@ -28,12 +35,3 @@ services:
         container_name: pgdb
         ports:
             - "5431:5431"
-    dramatiq:
-        volumes:
-            - .:/usr/src/app
-        build:
-            context: .
-            dockerfile: Dockerfile
-        command: sh -c "python manage.py rundramatiq --processes 6 --threads 6"
-        depends_on:
-            - redis
