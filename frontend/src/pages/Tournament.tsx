@@ -1,5 +1,10 @@
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
-import { Team } from "../helpers/transformMatches.js";
+import {
+  Match,
+  Participant,
+  Team,
+  Tournament
+} from "../helpers/transformMatches.js";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { ROUTES } from "../shared/RouteTypes";
@@ -25,6 +30,49 @@ export interface IMatch {
   state: string;
   participants: Team[];
 }
+
+const sortTeamByPlacement = (tournament?: Tournament): Team[] => {
+  if (!tournament) {
+    return [];
+  }
+  return tournament.teams.toSorted((team1: Team, team2: Team) => {
+    const bestMatch1 = tournament.matches
+      .toSorted((a: Match, b: Match) => b.id - a.id)
+      .find(
+        (m: Match) =>
+          m.participants.findIndex(
+            (p: Participant) => p.team.id === team1?.id
+          ) !== -1
+      );
+
+    const placement1 =
+      Number(bestMatch1?.name) +
+      (bestMatch1?.participants.find(
+        (p: Participant) => p.team.id === team1?.id
+      )?.result_text === "LOST"
+        ? 1
+        : 0);
+    const bestMatch2 = tournament.matches
+      .toSorted((a: Match, b: Match) => b.id - a.id)
+      .find(
+        (m: Match) =>
+          m.participants.findIndex(
+            (p: Participant) => p.team.id === team2?.id
+          ) !== -1
+      );
+
+    const placement2 =
+      Number(bestMatch2?.name) +
+      (bestMatch2?.participants.find(
+        (p: Participant) => p.team.id === team2?.id
+      )?.result_text === "LOST"
+        ? 1
+        : 0);
+
+    return placement1 - placement2;
+  });
+};
+
 export const Tournament = () => {
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const [page, setPage] = useState(0);
@@ -64,6 +112,9 @@ export const Tournament = () => {
   const date = new Date(tournament?.reg_starts ?? 0);
   const section = params["*"];
   const navigate = useNavigate();
+
+  const sortedTeams = sortTeamByPlacement(tournament);
+
   if (isError) {
     navigate(ROUTES.NO_MATCH404.path);
   }
@@ -222,17 +273,15 @@ export const Tournament = () => {
           ) : section === "participants" ? (
             <>
               <div className="mx-auto pt-12 grid grid-cols-2 sm:grid-cols-3 gap-10 lg:grid-cols-3 w-full lg:w-4/5 xl:w-[1100px] min-h-[378px]">
-                {tournament.teams
-                  .slice(page * 12, page * 12 + 12)
-                  .map((team) => {
-                    return (
-                      <TournamentTeamPlayerList
-                        key={team.name + "team"}
-                        tournamentId={tournament.id}
-                        team={team}
-                      />
-                    );
-                  })}
+                {sortedTeams.slice(page * 12, page * 12 + 12).map((team) => {
+                  return (
+                    <TournamentTeamPlayerList
+                      key={team.name + "team"}
+                      tournamentId={tournament.id}
+                      team={team}
+                    />
+                  );
+                })}
               </div>
               <div className="w-full flex justify-center items-center mt-6 gap-[10px] text-turquoise text-base font-medium">
                 <button

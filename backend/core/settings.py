@@ -165,7 +165,7 @@ REST_FRAMEWORK = {
 # здесь надо доделать настройки simplejwt!(а какие я забыл))
 SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("JWT",),
-    "ACCESS_TOKEN_LIFETIME": timedelta(hours=12),
+    "ACCESS_TOKEN_LIFETIME": timedelta(days=1),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=3),
     "AUTH_TOKEN_CLASSES": ("rest_framework_simplejwt.tokens.AccessToken",),
 }
@@ -174,7 +174,7 @@ AUTHENTICATION_BACKENDS = (
     "social_core.backends.discord.DiscordOAuth2",
     "django.contrib.auth.backends.ModelBackend",
 )
-# djoser использует simplejwt для jwt авторизации т.е. библа использует другую библу
+
 DJOSER = {
     "LOGIN_FIELD": "email",
     "USER_CREATE_PASSWORD_RETYPE": True,
@@ -231,22 +231,18 @@ DRAMATIQ_BROKER = {
     "BROKER": "dramatiq.brokers.redis.RedisBroker",
     "OPTIONS": {
         "connection_pool": redis.ConnectionPool.from_url("redis://redis:6379"),
-        # "heartbeat": 0,
-        # "connection_attempts": 5,
     },
     "MIDDLEWARE": [
-        # "dramatiq.middleware.Prometheus",
         "dramatiq.middleware.AgeLimit",
         "dramatiq.middleware.TimeLimit",
         "dramatiq.middleware.Callbacks",
-        # "dramatiq.middleware.Retries",
         "django_dramatiq.middleware.DbConnectionsMiddleware",
         "django_dramatiq.middleware.AdminMiddleware",
     ],
 }
 
-# Defines which database should be used to persist Task objects when the
-# AdminMiddleware is enabled.  The default value is "default".
+
+
 DRAMATIQ_TASKS_DATABASE = "default"
 DRAMATIQ_RESULT_BACKEND = {
     "BACKEND": "dramatiq.results.backends.redis.RedisBackend",

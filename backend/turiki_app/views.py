@@ -286,7 +286,7 @@ class MatchAPIView(ModelViewSet):
 class TeamAPIView(ModelViewSet):
     queryset = Team.objects.all()
     serializer_class = TeamSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticatedOrReadOnly]
     parser_classes = [MultiPartParser, JSONParser]
 
     @action(methods=["PATCH"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
