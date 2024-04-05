@@ -2,6 +2,8 @@ import { IUser } from "../shared";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { getImagePath } from "../helpers/getImagePath";
 import { Match, Participant } from "../helpers/transformMatches";
+import { Link } from "react-router-dom";
+import { ROUTES } from "../shared/RouteTypes";
 const serverURL = import.meta.env.VITE_API_URL;
 export type Player = Omit<IUser, "email" | "is_active" | "team">;
 type TournamentTeamPlayerListProps = {
@@ -50,22 +52,28 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
       {team && (
         <div className="w-full relative z-50 ">
           <div className="flex items-center mt-5 mx-6 gap-3 justify-start">
-            <a href="#" className="">
-              <img
-                alt="profil"
-                src={`${serverURL}/${getImagePath(props.team.image)}`}
-                className="object-cover rounded-full h-10 w-10 "
-              />
-            </a>
-            <p
-              data-content={team.name}
-              className="before:text-[16px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
+            <Link
+              to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({ id: props.team.id })}
+              className="flex items-center gap-2"
+            >
+              {props.team.image && (
+                <img
+                  alt="profil"
+                  src={`${serverURL}/${getImagePath(props.team.image)}`}
+                  className="object-cover rounded-full h-10 w-10 "
+                />
+              )}
+
+              <p
+                data-content={team.name}
+                className="ml-2 before:text-[16px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
                            text-left text-[16px] font-semibold  before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
-            >
-              {team.name}{" "}
-            </p>
+              >
+                {team.name}{" "}
+              </p>
+            </Link>
             {tournament?.status === "PLAYED" ? (
               <p
                 data-content={"Место: " + placementStr}

@@ -38,21 +38,26 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
       <Angle color="#21DBD3" />
       <div className="w-full h-full relative z-50">
         <div className="flex items-center mt-7 mx-14 justify-between">
-          <p
-            data-content={props.team.name}
-            className="before:text-[20px] before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
+          <Link
+            className="flex justify-between w-full"
+            to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({ id: props.team.id })}
+          >
+            <p
+              data-content={props.team.name}
+              className="before:text-[20px] before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
                            text-left text-[20px] font-medium  before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
-          >
-            {props.team.name}{" "}
-          </p>
-          <Link to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({ id: props.team.id })}>
-            <img
-              alt="profil"
-              src={`${serverURL}/${getImagePath(props.team.image)}`}
-              className="object-cover rounded-full h-10 w-10 "
-            />
+            >
+              {props.team.name}{" "}
+            </p>
+            {props.team.image && (
+              <img
+                alt="profil"
+                src={`${serverURL}/${getImagePath(props.team.image)}`}
+                className="object-cover rounded-full h-10 w-10 "
+              />
+            )}
           </Link>
         </div>
         <div className="bg-gradient-to-r from-lightblue to-turquoise h-[1px] neonshadow mx-9 mt-5"></div>

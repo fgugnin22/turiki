@@ -33,6 +33,11 @@ from PIL import Image
 class UserAPIView(GenericViewSet):
     parser_classes = [MultiPartParser, JSONParser]
 
+
+    @action(methods=["GET"], detail=True, permission_classes=[IsAuthenticated])
+    def notifications(self, request, pk=None):
+        return Response(status=200)
+
     @action(methods=["PATCH"], detail=False, permission_classes=[IsAuthenticated])
     def credentials(self, request):
         return UserService.update_credentials(request)
