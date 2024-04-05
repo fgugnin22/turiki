@@ -29,13 +29,26 @@ const Match = () => {
     },
     { pollingInterval: 2500 }
   );
+
+  const { data: nextMatch } = tournamentAPI.useGetMatchByIdQuery(
+    {
+      id: match?.next_match ?? -1
+    },
+    {
+      skip: match?.next_match === undefined
+    }
+  );
   const { data: chat, isSuccess: isChatSuccess } =
     tournamentAPI.useGetChatMessagesQuery(
       { chatId: match?.lobby?.chat },
-      { skip: !match?.lobby, pollingInterval: 2500 }
+      {
+        skip: !match?.lobby,
+        pollingInterval: 2500
+      }
     );
 
   const messages = chat?.messages;
+
   const { data: team1 } = tournamentAPI.useGetTeamByIdQuery(
     match?.participants[0]?.team.id,
     {
@@ -124,27 +137,29 @@ const Match = () => {
                 </ButtonSecondary>
               </Link>
             )}
-            {match.next_match && (
-              <Link
-                to={ROUTES.MATCHES.MATCH_BY_ID.buildPath({
-                  id: match.next_match
-                })}
-              >
-                <ButtonSecondary
-                  type="button"
-                  className="!absolute z-40 top-1 right-0 flex items-center px-4 justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8] text-lg"
+            {match.next_match &&
+              nextMatch &&
+              nextMatch.participants.length > 0 && (
+                <Link
+                  to={ROUTES.MATCHES.MATCH_BY_ID.buildPath({
+                    id: match.next_match
+                  })}
                 >
-                  <span
-                    data-content="Следующий матч"
-                    className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
+                  <ButtonSecondary
+                    type="button"
+                    className="!absolute z-40 top-1 right-0 flex items-center px-4 justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8] text-lg"
+                  >
+                    <span
+                      data-content="Следующий матч"
+                      className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
-                  >
-                    Следующий матч
-                  </span>
-                </ButtonSecondary>
-              </Link>
-            )}
+                    >
+                      Следующий матч
+                    </span>
+                  </ButtonSecondary>
+                </Link>
+              )}
             <p
               data-content={`Матч 1/${2 ** Number(match.name)}, Best of ${
                 match.is_bo3 ? "3" : "1"
@@ -158,6 +173,9 @@ const Match = () => {
                 match.is_bo3 ? "3" : "1"
               }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
             </p>
+            {match.participants.length === 1 && match.state === "NO_SHOW" && (
+              <p className="text-lightgray text-xl">Ожидается соперник...</p>
+            )}
             {(selfParticipant?.is_winner ?? false) &&
               match.participants[0]?.is_winner !==
                 match.participants[1]?.is_winner && (
@@ -215,7 +233,7 @@ const Match = () => {
                         ? timeBeforeMatchStart.seconds
                         : "0" + timeBeforeMatchStart.seconds
                     }`}
-                    className="before:text-lg before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 before:bottom-0 before:left-0 before:right-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
+                    className="before:text-lg before:drop-shadow-[0_0_1px_#4cf2f8] before:-top-[2px] before:bottom-0 before:left-0 before:right-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
           before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
             before:absolute relative before:content-[attr(data-content)]"
                   >

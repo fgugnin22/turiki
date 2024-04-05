@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useAppSelector } from "../shared/rtk/store";
-import useWebSocket, { SendMessage } from "react-use-websocket";
-import { tournamentAPI } from "../shared/rtk/tournamentAPI";
+import useWebSocket from "react-use-websocket";
 interface chatArgs {
   chatId: number;
   content: string;
@@ -46,7 +45,7 @@ const Chat = (props: ChatProps) => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
   const [messages, setMessages] = useState(props.messages);
-  if (props.messages.length > messages.length) {
+  if (props.messages.length !== messages.length) {
     setMessages(props.messages);
   }
   useEffect(scrollToBottom, [messages]);
@@ -57,7 +56,7 @@ const Chat = (props: ChatProps) => {
   }, [lastMessage]);
   return (
     <div
-      className=" justify-self-end flex flex-col grow mt-4 w-full bg-transparent text-lightgray rounded-[10px]
+      className="justify-self-end flex flex-col grow mt-4 w-full bg-transparent text-lightgray rounded-[10px]
     overflow-hidden min-h-[400px] relative after:absolute 
     before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[2px] after:bg-gradient-to-r
   after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
