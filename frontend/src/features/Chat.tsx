@@ -19,18 +19,25 @@ const Chat = (props: ChatProps) => {
     )}`,
     {}
   );
+
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
+
   const [message, setMessage] = useState("");
+
+  const [messages, setMessages] = useState(props.messages);
 
   const onChangeMessage = (e: React.FormEvent) =>
     setMessage((e.target as HTMLInputElement).value);
+
   const onSubmit = (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
+
     if (message.length === 0) {
       return;
     }
+
     sendMessage(
       JSON.stringify({
         type: "chat_message",
@@ -38,25 +45,33 @@ const Chat = (props: ChatProps) => {
         message
       })
     );
+
     setMessage("");
   };
+
   const messagesEndRef = useRef<HTMLElement>(null);
+
   const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    messagesEndRef.current?.scrollIntoView({
+      behavior: "smooth"
+    });
   };
-  const [messages, setMessages] = useState(props.messages);
-  if (props.messages.length !== messages.length) {
+
+  useEffect(() => {
     setMessages(props.messages);
-  }
+  }, [props.messages]);
+
   useEffect(scrollToBottom, [messages]);
+
   useEffect(() => {
     if (lastMessage !== null) {
       setMessages([...messages, JSON.parse(lastMessage.data).message]);
     }
   }, [lastMessage]);
+
   return (
     <div
-      className="order-2 justify-self-end flex flex-col grow mt-4 w-full bg-transparent text-lightgray rounded-[10px]
+      className="order-3 justify-self-end flex flex-col grow mt-4 w-full bg-transparent text-lightgray rounded-[10px]
     overflow-hidden min-h-[400px] relative after:absolute 
     before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[2px] after:bg-gradient-to-r
   after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 

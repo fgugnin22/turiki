@@ -266,21 +266,39 @@ const Match = () => {
               {match && match.participants[1] && team2 && (
                 <TeamPlayerList tournamentId={match.tournament!} team={team2} />
               )}
-
-              {match?.state === "ACTIVE" || match?.state === "CONTESTED" ? (
-                <MatchResultVote
-                  selfParticipant={selfParticipant!}
-                  match={match}
-                  isCaptain={user?.team_status === "CAPTAIN"}
-                  teamId={selfParticipant?.team.id}
-                />
-              ) : (
-                match?.state === "RES_SEND_LOCKED" && (
-                  <div className="text-center mt-8 text-lg">
-                    <span>Результаты можно будет опубликовать через: </span>
-                    <p
-                      data-content={
-                        timeToNextAction.seconds >= 0 &&
+              <div className="order-1">
+                {match?.state === "ACTIVE" || match?.state === "CONTESTED" ? (
+                  <MatchResultVote
+                    selfParticipant={selfParticipant!}
+                    match={match}
+                    isCaptain={user?.team_status === "CAPTAIN"}
+                    teamId={selfParticipant?.team.id}
+                  />
+                ) : (
+                  match?.state === "RES_SEND_LOCKED" && (
+                    <div className="text-center mt-8 text-lg">
+                      <span>Результаты можно будет опубликовать через: </span>
+                      <p
+                        data-content={
+                          timeToNextAction.seconds >= 0 &&
+                          timeToNextAction.minutes >= 0
+                            ? `${
+                                timeToNextAction.minutes > 9
+                                  ? timeToNextAction.minutes
+                                  : "0" + timeToNextAction.minutes
+                              }:${
+                                timeToNextAction.seconds > 9
+                                  ? timeToNextAction.seconds
+                                  : "0" + timeToNextAction.seconds
+                              }`
+                            : "..."
+                        }
+                        className="before:text-lg before:font-medium before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 before:bottom-0 before:left-0 before:right-0 
+                             text-lg font-medium  before:bg-gradient-to-l 
+              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent 
+                before:absolute relative before:content-[attr(data-content)] z-50"
+                      >
+                        {timeToNextAction.seconds >= 0 &&
                         timeToNextAction.minutes >= 0
                           ? `${
                               timeToNextAction.minutes > 9
@@ -291,71 +309,54 @@ const Match = () => {
                                 ? timeToNextAction.seconds
                                 : "0" + timeToNextAction.seconds
                             }`
-                          : "..."
-                      }
-                      className="before:text-lg before:font-medium before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 before:bottom-0 before:left-0 before:right-0 
-                             text-lg font-medium  before:bg-gradient-to-l 
-              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent 
-                before:absolute relative before:content-[attr(data-content)] z-50"
-                    >
-                      {timeToNextAction.seconds >= 0 &&
-                      timeToNextAction.minutes >= 0
-                        ? `${
-                            timeToNextAction.minutes > 9
-                              ? timeToNextAction.minutes
-                              : "0" + timeToNextAction.minutes
+                          : "..."}
+                      </p>
+                    </div>
+                  )
+                )}
+                {match?.state == "BANS" && (
+                  <MapBans
+                    secondsRemaining={minutes * 60 + seconds}
+                    match={match}
+                  />
+                )}
+                {match.state === "IN_GAME_LOBBY_CREATION" &&
+                user?.team === selfParticipant?.team.id &&
+                user?.team_status === "CAPTAIN" ? (
+                  <div className="order-1 flex w-4/5 mx-auto flex-col mt-14 relative">
+                    <p className="text-center mb-4">
+                      {!selfParticipant?.in_lobby
+                        ? `На заход в лобби осталось: ${
+                            timeToNextAction.minutes
                           }:${
                             timeToNextAction.seconds > 9
                               ? timeToNextAction.seconds
                               : "0" + timeToNextAction.seconds
                           }`
-                        : "..."}
+                        : "Ваша команда уже в лобби"}
                     </p>
+                    <ButtonMain
+                      disabled={selfParticipant?.in_lobby}
+                      onClick={() => {
+                        confirmTeamInLobby({
+                          matchId: match.id,
+                          teamId: user.team
+                        });
+                      }}
+                      className="py-4 w-full focus:py-[14px] active:py-[14px] text-center disabled:opacity-60"
+                    >
+                      Моя команда зашла в лобби!
+                    </ButtonMain>
                   </div>
-                )
-              )}
-              {match?.state === "BANS" && (
-                <MapBans
-                  secondsRemaining={minutes * 60 + seconds}
-                  match={match}
-                />
+                ) : (
+                  <></>
+                )}{" "}
+              </div>
+              {((user?.is_staff && isChatSuccess) ||
+                (isChatSuccess && isAuthenticated && selfParticipant)) && (
+                <Chat messages={messages} chatId={match?.lobby?.chat!} />
               )}
             </>
-            {match.state === "IN_GAME_LOBBY_CREATION" &&
-            user?.team === selfParticipant?.team.id &&
-            user?.team_status === "CAPTAIN" ? (
-              <div className="flex w-4/5 mx-auto flex-col mt-14 relative">
-                <p className="text-center mb-4">
-                  {!selfParticipant?.in_lobby
-                    ? `На заход в лобби осталось: ${timeToNextAction.minutes}:${
-                        timeToNextAction.seconds > 9
-                          ? timeToNextAction.seconds
-                          : "0" + timeToNextAction.seconds
-                      }`
-                    : "Ваша команда уже в лобби"}
-                </p>
-                <ButtonMain
-                  disabled={selfParticipant?.in_lobby}
-                  onClick={() => {
-                    confirmTeamInLobby({
-                      matchId: match.id,
-                      teamId: user.team
-                    });
-                  }}
-                  className="py-4 w-full focus:py-[14px] active:py-[14px] text-center disabled:opacity-60"
-                >
-                  Моя команда зашла в лобби!
-                </ButtonMain>
-              </div>
-            ) : (
-              <></>
-            )}
-            {match?.state === "SCORE_DONE" && <div className=""></div>}
-            {((user?.is_staff && isChatSuccess) ||
-              (isChatSuccess && isAuthenticated && selfParticipant)) && (
-              <Chat messages={messages} chatId={match?.lobby?.chat!} />
-            )}
-            <div className="order-1"></div>
           </div>
         </>
       )}
