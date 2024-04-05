@@ -56,7 +56,7 @@ const Chat = (props: ChatProps) => {
   }, [lastMessage]);
   return (
     <div
-      className="justify-self-end flex flex-col grow mt-4 w-full bg-transparent text-lightgray rounded-[10px]
+      className="order-2 justify-self-end flex flex-col grow mt-4 w-full bg-transparent text-lightgray rounded-[10px]
     overflow-hidden min-h-[400px] relative after:absolute 
     before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[2px] after:bg-gradient-to-r
   after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
@@ -106,7 +106,7 @@ const Chat = (props: ChatProps) => {
                 className="flex w-full mt-3 space-x-3 text-xs font-semibold"
               >
                 <div className="flex flex-col">
-                  <span className="text-lightgray text-xs font-medium">
+                  <span className="text-lightgray text-xs font-medium mb-[1px]">
                     {message.user}{" "}
                     {message.created_at &&
                       "в " +

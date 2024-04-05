@@ -53,7 +53,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
   timeBeforeAutoRes = useCountdown(timeBeforeAutoRes);
 
   if (!props.teamId) {
-    return <div></div>;
+    return <></>;
   }
   return (
     <>
@@ -180,7 +180,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
           </ButtonMain>
         </div>
       ) : (
-        <div></div>
+        <></>
       )}
     </>
   );

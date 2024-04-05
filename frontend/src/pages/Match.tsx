@@ -35,7 +35,7 @@ const Match = () => {
       id: match?.next_match ?? -1
     },
     {
-      skip: match?.next_match === undefined
+      skip: (match?.next_match ?? -1) === -1
     }
   );
   const { data: chat, isSuccess: isChatSuccess } =
@@ -315,49 +315,47 @@ const Match = () => {
                 )
               )}
               {match?.state === "BANS" && (
-                <>
-                  <div></div>
-                  <MapBans
-                    secondsRemaining={minutes * 60 + seconds}
-                    match={match}
-                  />
-                </>
+                <MapBans
+                  secondsRemaining={minutes * 60 + seconds}
+                  match={match}
+                />
               )}
             </>
             {match.state === "IN_GAME_LOBBY_CREATION" &&
-              user?.team === selfParticipant?.team.id &&
-              user?.team_status === "CAPTAIN" && (
-                <div className="flex w-4/5 mx-auto flex-col mt-14 relative">
-                  <p className="text-center mb-4">
-                    {!selfParticipant?.in_lobby
-                      ? `На заход в лобби осталось: ${
-                          timeToNextAction.minutes
-                        }:${
-                          timeToNextAction.seconds > 9
-                            ? timeToNextAction.seconds
-                            : "0" + timeToNextAction.seconds
-                        }`
-                      : "Ваша команда уже в лобби"}
-                  </p>
-                  <ButtonMain
-                    disabled={selfParticipant?.in_lobby}
-                    onClick={() => {
-                      confirmTeamInLobby({
-                        matchId: match.id,
-                        teamId: user.team
-                      });
-                    }}
-                    className="py-4 w-full focus:py-[14px] active:py-[14px] text-center disabled:opacity-60"
-                  >
-                    Моя команда зашла в лобби!
-                  </ButtonMain>
-                </div>
-              )}
+            user?.team === selfParticipant?.team.id &&
+            user?.team_status === "CAPTAIN" ? (
+              <div className="flex w-4/5 mx-auto flex-col mt-14 relative">
+                <p className="text-center mb-4">
+                  {!selfParticipant?.in_lobby
+                    ? `На заход в лобби осталось: ${timeToNextAction.minutes}:${
+                        timeToNextAction.seconds > 9
+                          ? timeToNextAction.seconds
+                          : "0" + timeToNextAction.seconds
+                      }`
+                    : "Ваша команда уже в лобби"}
+                </p>
+                <ButtonMain
+                  disabled={selfParticipant?.in_lobby}
+                  onClick={() => {
+                    confirmTeamInLobby({
+                      matchId: match.id,
+                      teamId: user.team
+                    });
+                  }}
+                  className="py-4 w-full focus:py-[14px] active:py-[14px] text-center disabled:opacity-60"
+                >
+                  Моя команда зашла в лобби!
+                </ButtonMain>
+              </div>
+            ) : (
+              <></>
+            )}
             {match?.state === "SCORE_DONE" && <div className=""></div>}
             {((user?.is_staff && isChatSuccess) ||
               (isChatSuccess && isAuthenticated && selfParticipant)) && (
               <Chat messages={messages} chatId={match?.lobby?.chat!} />
             )}
+            <div className="order-1"></div>
           </div>
         </>
       )}

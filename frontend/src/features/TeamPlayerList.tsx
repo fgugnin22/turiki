@@ -29,7 +29,7 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
 
   return (
     <div
-      className="rounded-[10px] relative after:absolute 
+      className="order-1 rounded-[10px] relative after:absolute 
             before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0
             before:z-10 z-20 before:bg-dark before:rounded-[9px]
