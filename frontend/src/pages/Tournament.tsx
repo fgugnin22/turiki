@@ -3,7 +3,7 @@ import {
   Match,
   Participant,
   Team,
-  Tournament
+  Tournament as ITournament
 } from "../helpers/transformMatches.js";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
@@ -19,6 +19,7 @@ import Bracket from "../shared/Bracket";
 import { useTournamentStatus } from "../hooks/useTournamentStatus";
 import TournamentTeamPlayerList from "../features/TournamentTeamPlayerList";
 import TriangleLoader from "../shared/TriangleLoader";
+import NotificationElem from "../features/NotificationElem";
 
 const serverURL = import.meta.env.VITE_API_URL;
 
@@ -31,7 +32,7 @@ export interface IMatch {
   participants: Team[];
 }
 
-const sortTeamByPlacement = (tournament?: Tournament): Team[] => {
+const sortTeamByPlacement = (tournament?: ITournament): Team[] => {
   if (!tournament) {
     return [];
   }
@@ -76,6 +77,11 @@ const sortTeamByPlacement = (tournament?: Tournament): Team[] => {
 export const Tournament = () => {
   const { isAuthenticated } = useAppSelector((state) => state.user);
   const [page, setPage] = useState(0);
+
+  const notifications = tournamentAPI.useGetNotificationsQuery(undefined, {
+    skip: !isAuthenticated,
+    pollingInterval: 10000
+  });
 
   useEffect(() => {
     if (state && code) {
@@ -393,6 +399,11 @@ export const Tournament = () => {
           <TriangleLoader />
         </div>
       )}
+      <div className="fixed bottom-4 right-4 flex flex-col-reverse gap-4 z-50 bg-dark">
+        {notifications?.data?.map((n) => (
+          <NotificationElem data={n} />
+        ))}
+      </div>
       <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between relative z-0">
         <Footer />
       </div>

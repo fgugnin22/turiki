@@ -93,6 +93,14 @@ export interface Participant {
   res_image: string;
 }
 
+export interface INotification {
+  id: number;
+  user_id: number;
+  kind: string;
+  content: any;
+  is_read: boolean;
+}
+
 export interface Team {
   id: number;
   name: string;

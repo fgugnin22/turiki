@@ -269,3 +269,10 @@ class Message(models.Model):
 
     def __str__(self):
         return f"{self.user}_{self.content}_at_{self.created_at}_{self.chat}"
+
+
+class Notification(models.Model):
+    user = models.ForeignKey(UserAccount, on_delete=models.CASCADE)
+    kind = models.CharField(max_length=32)
+    content = models.JSONField(default=dict)
+    is_read = models.BooleanField(default=False)

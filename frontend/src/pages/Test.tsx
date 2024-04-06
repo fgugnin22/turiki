@@ -1,10 +1,8 @@
 import { useState } from "react";
-import TeamPlayerList from "../features/TeamPlayerList";
 import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
-import ButtonMain from "../shared/ButtonMain";
 import TriangleLoader from "../shared/TriangleLoader";
-const serverURL = import.meta.env.VITE_API_URL;
+import NotificationElem from "../features/NotificationElem";
 
 const testbans = {
   bans: {
@@ -90,6 +88,20 @@ const Test = () => {
       <div className=" flex items-center justify-center my-24">
         <TriangleLoader></TriangleLoader>
       </div>
+      <NotificationElem
+        data={{
+          id: 1,
+          user_id: 2,
+          kind: "match",
+          content: {
+            match: {
+              match_id: 23,
+              state: "SOON"
+            }
+          },
+          is_read: false
+        }}
+      />
     </Layout>
   );
 };

@@ -1,4 +1,5 @@
 import datetime
+import json
 import os.path
 from pathlib import Path
 
@@ -16,7 +17,7 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet
 
 from turiki_app.match_services import claim_match_result
-from turiki_app.models import Team, Tournament, Chat, MapBan, Match, UserAccount
+from turiki_app.models import Team, Tournament, Chat, MapBan, Match, UserAccount, Notification
 from turiki_app.permissons import IsAdminUserOrReadOnly, IsCaptainOfThisTeamOrAdmin
 from turiki_app.serializers import (
     TournamentSerializer,
@@ -33,9 +34,21 @@ from PIL import Image
 class UserAPIView(GenericViewSet):
     parser_classes = [MultiPartParser, JSONParser]
 
-
-    @action(methods=["GET"], detail=True, permission_classes=[IsAuthenticated])
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
     def notifications(self, request, pk=None):
+        user = request.user
+        unread_notifications = Notification.objects.filter(user__id=user.id, is_read=False).values()
+        return Response(list(unread_notifications), status=200, content_type="application/json")
+
+    @action(methods=["PATCH"], detail=False, permission_classes=[IsAuthenticated])
+    def read_notification(self, request, pk=None):
+        # {
+        #     "id": -1
+        # }
+        notification_id = json.loads(request.body)["id"]
+        notific: Notification = Notification.objects.get(pk=notification_id)
+        notific.is_read = True
+        notific.save()
         return Response(status=200)
 
     @action(methods=["PATCH"], detail=False, permission_classes=[IsAuthenticated])

@@ -8,7 +8,7 @@ import pytz
 import datetime
 
 from turiki_app.match_services import claim_match_result
-from turiki_app.models import Chat, Lobby, Match, Team, Participant, MapBan, Tournament
+from turiki_app.models import Chat, Lobby, Match, Team, Participant, MapBan, Tournament, Notification, UserAccount
 
 MSK_TIMEZONE = datetime.timezone(datetime.timedelta(hours=3))
 IN_A_MINUTE = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
@@ -169,43 +169,77 @@ def set_initial_matches(tournament):
     Эта функция наполняет начальные матчи(матчи на максимальной глубине)
     присутствует рандомизация команд
     """
-    with transaction.atomic():
-        matches = list(tournament.matches.values())
-        teams = list(tournament.teams.values())
-        random.shuffle(teams)
-        initial_matches = []
-        exec_task_on_date(set_tournament_status, [tournament.id, tournament.allowed_statuses[-2]],
-                          when=tournament.starts)
-        for match in matches:
-            is_match_initial = match["is_last"]
-            if is_match_initial:
-                initial_matches.append(match)
-        for _, match in enumerate(initial_matches):
-            match_object = Match.objects.get(pk=match["id"])
-            team1 = teams.pop()
-            team1 = Team.objects.get(pk=team1["id"])
-            participant1 = Participant.objects.create(
-                team=team1, match=match_object, status="NO_SHOW", result_text="TBD"
-            )
-            match_object.participants.add(participant1)
-            match_object.save()
-        for _, match in enumerate(initial_matches):
-            match_object = Match.objects.get(pk=match["id"])
-            if len(teams) == 0:
-                print(match_object.participants.values())
-                exec_task_on_date(auto_finish_match, [match_object.id, match_object.participants.first().team.id, True],
-                                  when=match_object.tournament.starts)
-                continue
-            team2 = teams.pop()
-            team2 = Team.objects.get(pk=team2["id"])
-            participant2 = Participant.objects.create(
-                team=team2, match=match_object, status="NO_SHOW", result_text="TBD"
-            )
-            match_object.starts = tournament.starts
-            exec_task_on_date(set_match_start_bans, [match_object.id], when=tournament.starts)
-            match_object.participants.add(participant2)
-            match_object.save()
-        tournament.save()
+    matches = list(tournament.matches.values())
+    teams = list(tournament.teams.values())
+    random.shuffle(teams)
+    initial_matches = []
+    exec_task_on_date(set_tournament_status, [tournament.id, tournament.allowed_statuses[-2]],
+                        when=tournament.starts)
+    for match in matches:
+        is_match_initial = match["is_last"]
+        if is_match_initial:
+            initial_matches.append(match)
+
+    for _, match in enumerate(initial_matches):
+        match_object = Match.objects.get(pk=match["id"])
+        team1 = teams.pop()
+        team1 = Team.objects.get(pk=team1["id"])
+        participant1 = Participant.objects.create(
+            team=team1, match=match_object, status="NO_SHOW", result_text="TBD"
+        )
+        match_object.participants.add(participant1)
+        exec_task_on_date(notify_team_for_match, [team1.id, match_object.id, "SOON"],
+                          when=tournament.starts - datetime.timedelta(minutes=5))
+        exec_task_on_date(notify_team_for_match, [team1.id, match_object.id, "STARTED"], when=tournament.starts)
+        match_object.save()
+
+    for _, match in enumerate(initial_matches):
+        match_object = Match.objects.get(pk=match["id"])
+        if len(teams) == 0:
+            exec_task_on_date(auto_finish_match, [match_object.id, match_object.participants.first().team.id, True],
+                              when=match_object.tournament.starts)
+            continue
+        team2 = teams.pop()
+        team2 = Team.objects.get(pk=team2["id"])
+        participant2 = Participant.objects.create(
+            team=team2, match=match_object, status="NO_SHOW", result_text="TBD"
+        )
+        match_object.starts = tournament.starts
+        exec_task_on_date(set_match_start_bans, [match_object.id], when=tournament.starts)
+        exec_task_on_date(notify_team_for_match, [team2.id, match_object.id, "SOON"],
+                        when=tournament.starts - datetime.timedelta(minutes=5))
+        exec_task_on_date(notify_team_for_match, [team2.id, match_object.id, "STARTED"], when=tournament.starts)
+        match_object.participants.add(participant2)
+        match_object.save()
+    tournament.save()
+
+
+
+@dramatiq.actor
+def notify_team_for_match(team_id, match_id, state):
+    """state - STARTED | SOON"""
+    match = Match.objects.get(pk=match_id)
+
+    team_players = match.tournament.players.filter(team__id=team_id)
+
+    for player in team_players:
+        content = {
+            "match": {
+                "match_id": match.id,
+                "state": state
+            }
+        }
+        create_notification(player.id, "match", content)
+
+
+@dramatiq.actor
+def create_notification(user_id, kind, content):
+    user = UserAccount.objects.get(pk=user_id)
+    n = Notification.objects.create(user=user, kind=kind, content=content)
+    n.save()
+
+
+
 
 
 @dramatiq.actor

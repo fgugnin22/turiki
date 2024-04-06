@@ -8,13 +8,22 @@ import {
 } from "../shared/rtk/user";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import Header from "../widgets/Header";
+import { tournamentAPI } from "../shared/rtk/tournamentAPI";
+import NotificationElem from "../features/NotificationElem";
+
 export const Layout = (props: {
   children: React.ReactNode[] | React.ReactNode;
 }) => {
-  // const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
+  const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
+
+  const notifications = tournamentAPI.useGetNotificationsQuery(undefined, {
+    skip: !isAuthenticated,
+    pollingInterval: 10000
+  });
+
   const dispatch = useAppDispatch();
   const state = getParameterByName("state");
-  const code = getParameterByName("code"); //get code and state from google oauth2
+  const code = getParameterByName("code");
   useEffect(() => {
     if (state && code) {
       dispatch(googleAuthenticate({ state, code }));
@@ -35,6 +44,11 @@ export const Layout = (props: {
           {props.children}
         </div>
         <Footer />
+        <div className="fixed bottom-4 right-4 flex flex-col-reverse gap-4 z-50 bg-dark">
+          {notifications?.data?.map((n) => (
+            <NotificationElem data={n} />
+          ))}
+        </div>
       </div>
     </div>
   );

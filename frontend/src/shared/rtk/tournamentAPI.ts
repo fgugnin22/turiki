@@ -1,5 +1,10 @@
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import { Match, Team, Tournament } from "../../helpers/transformMatches";
+import {
+  INotification,
+  Match,
+  Team,
+  Tournament
+} from "../../helpers/transformMatches";
 
 export const tournamentAPI = createApi({
   reducerPath: "tournamentAPI",
@@ -19,7 +24,7 @@ export const tournamentAPI = createApi({
   refetchOnFocus: true,
   refetchOnReconnect: true,
   refetchOnMountOrArgChange: false,
-  tagTypes: ["Team", "Tournament", "Match", "Chat", ""],
+  tagTypes: ["Team", "Tournament", "Match", "Chat", "Notification"],
   endpoints: (build) => ({
     banMap: build.mutation({
       invalidatesTags: ["Match"],
@@ -265,6 +270,26 @@ export const tournamentAPI = createApi({
         };
       },
       providesTags: ["Chat"]
+    }),
+    getNotifications: build.query<INotification[], undefined>({
+      query: () => {
+        return {
+          url: `user/notifications/`
+        };
+      },
+      providesTags: ["Notification"]
+    }),
+    readNotification: build.mutation<null, number>({
+      query: (notification_id: number) => {
+        return {
+          url: `user/read_notification/`,
+          method: "PATCH",
+          body: JSON.stringify({
+            id: notification_id
+          })
+        };
+      },
+      invalidatesTags: ["Notification"]
     }),
     changeTeamName: build.mutation<null, { teamId: number; newName: string }>({
       query: ({ teamId, newName }) => {
