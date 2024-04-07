@@ -27,11 +27,13 @@ def claim_match_result(match_id: int, team_id, result):
             p1.is_winner = result
             p1.save()
             if not result and match.state != "SCORE_DONE":
+                match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
                 notify(match, f"Команда {p1.team.name} выставила свой результат: поражение!")
         else:
             p2.is_winner = result
             p2.save()
             if not result and match.state != "SCORE_DONE":
+                match.first_result_claimed = datetime.now(tz=pytz.timezone("Europe/Moscow"))
                 notify(match, f"Команда {p2.team.name} выставила свой результат: поражение!")
         end_match(match)
 
@@ -201,7 +203,7 @@ def update_next_match(next_match: Match, winner):
     next_match.participants.add(next_participant)
     next_match.save()
     if len(list(next_match.participants.values())) == 2:
-        next_match.starts = datetime.now() + timedelta(seconds=10)
+        next_match.starts = datetime.now(tz=pytz.timezone('Europe/Moscow')) + timedelta(seconds=10)
         next_match.save()
         if next_match.is_bo3 and next_match.bo3_order > 0:
             next_match.started = datetime.now(tz=pytz.timezone('Europe/Moscow'))

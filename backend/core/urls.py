@@ -22,7 +22,7 @@ from turiki_app.views import TournamentAPIView, MatchAPIView, TeamAPIView, ChatA
 from rest_framework.routers import DefaultRouter
 
 from . import settings
-from .yasg import urlpatterns as doc_urls
+# from .yasg import urlpatterns as doc_urls
 
 # с помощью defaultrouter'а регистрируем api маршруты
 tournamentRouter = DefaultRouter()
@@ -39,7 +39,7 @@ chatRouter.register(r'api/v2/chat', ChatAPIView, basename='chat')
 
 userRouter = DefaultRouter()
 userRouter.register(r'api/v2/user', UserAPIView, basename='user')
-# Я НЕ ЗНАЮ КАК ОБЪЯСНИТЬ НО ПОРЯДОК URL ОЧЕНЬ ВАЖЕН, ЕСЛИ ПЕРЕСТАВИТЬ МОЖЕТ ВСЁ СЛОМАТЬСЯ НАХЕР!
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth/', include('djoser.urls')),

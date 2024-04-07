@@ -7,7 +7,7 @@ server {
         alias /root/site/backend/favicon.ico;
     }
     location /assets/ {
-        try_files $uri $uri/ =404;
+        try_files $uri $uri/ =418;
     }
 
     location /media/ {
@@ -39,4 +39,35 @@ server {
     server_name turiki.tw1.ru;
     listen 80;
     return 404; # managed by Certbot
+
+
+}
+
+server {
+    listen 80;
+    index index.php;
+    server_name vk-test.tw1.ru;
+    error_log  /var/log/nginx/error.log;
+    access_log /var/log/nginx/access.log;
+    root /var/www/task.loc;
+    rewrite ^([^.]*)$ /index.php;
+
+    location / {
+        root /var/www/task.loc/static;
+        try_files $uri $uri/ =404;
+    }
+
+    location /static/ {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        try_files $uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass php:9000;
+        fastcgi_index index.php;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        fastcgi_param PATH_INFO $fastcgi_path_info;
+    }
 }
