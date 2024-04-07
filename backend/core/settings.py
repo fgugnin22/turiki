@@ -241,8 +241,6 @@ DRAMATIQ_BROKER = {
     ],
 }
 
-
-
 DRAMATIQ_TASKS_DATABASE = "default"
 DRAMATIQ_RESULT_BACKEND = {
     "BACKEND": "dramatiq.results.backends.redis.RedisBackend",

@@ -9,10 +9,10 @@ import datetime
 
 from turiki_app.match_services import claim_match_result
 from turiki_app.models import Chat, Lobby, Match, Team, Participant, MapBan, Tournament, Notification, UserAccount
+from django_dramatiq.tasks import delete_old_tasks
 
 MSK_TIMEZONE = datetime.timezone(datetime.timedelta(hours=3))
 IN_A_MINUTE = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
-
 
 @dramatiq.actor
 def set_match_start_bans(match_id: int):

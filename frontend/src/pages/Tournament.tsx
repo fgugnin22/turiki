@@ -36,9 +36,10 @@ const sortTeamByPlacement = (tournament?: ITournament): Team[] => {
   if (!tournament) {
     return [];
   }
-  return tournament.teams.toSorted((team1: Team, team2: Team) => {
-    const bestMatch1 = tournament.matches
-      .toSorted((a: Match, b: Match) => b.id - a.id)
+  return [...tournament.teams].sort((team1: Team, team2: Team) => {
+    const matches = [...tournament.matches];
+    const bestMatch1 = matches
+      .sort((a: Match, b: Match) => b.id - a.id)
       .find(
         (m: Match) =>
           m.participants.findIndex(
@@ -53,8 +54,8 @@ const sortTeamByPlacement = (tournament?: ITournament): Team[] => {
       )?.result_text === "LOST"
         ? 1
         : 0);
-    const bestMatch2 = tournament.matches
-      .toSorted((a: Match, b: Match) => b.id - a.id)
+    const bestMatch2 = matches
+      .sort((a: Match, b: Match) => b.id - a.id)
       .find(
         (m: Match) =>
           m.participants.findIndex(
