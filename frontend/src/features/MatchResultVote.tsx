@@ -112,6 +112,7 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
               type="file"
               accept="image/png"
               hidden
+              required
             />
             {(props.selfParticipant.is_winner === undefined ||
               props.selfParticipant.is_winner === null) && (

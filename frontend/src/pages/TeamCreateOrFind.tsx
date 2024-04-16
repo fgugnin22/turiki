@@ -85,6 +85,7 @@ const TeamCreateOrFind = () => {
                                w-4/5 mr-auto"
               >
                 <input
+                  className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 autofill:bg-transparent placeholder:text-lightblue text-lightblue"
                   type="text"
                   placeholder="Название команды"
                   name="teamName"
@@ -92,8 +93,8 @@ const TeamCreateOrFind = () => {
                   onChange={(e: React.FormEvent<HTMLInputElement>) =>
                     onChange(e)
                   }
+                  minLength={3}
                   required
-                  className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 autofill:bg-transparent placeholder:text-lightblue text-lightblue"
                 />
               </div>
               <ButtonMain

@@ -158,6 +158,7 @@ const Chat = (props: ChatProps) => {
             onChange={(e: React.FormEvent<HTMLInputElement>) =>
               onChangeMessage(e)
             }
+            maxLength={512}
             required
           />
         </label>

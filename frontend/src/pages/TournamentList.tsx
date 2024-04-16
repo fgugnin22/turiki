@@ -48,21 +48,12 @@ const TournamentList = () => {
                       </div>
                       <p className="z-30 relative -top-[1px]">
                         <span
-                          data-content="Призовой фонд: "
-                          className="before:text-lg before:top-0 before:bottom-0 before:left-0 before:right-0 text-center text-lg before:w-full font-medium  before:text-center before:bg-gradient-to-l 
+                          data-content={`Призовой фонд: ${tourn.prize}`}
+                          className="before:text-lg h-[25px] block before:top-0 before:bottom-0 before:left-0 before:right-0 text-center text-lg before:w-full font-medium  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] grow z-30 leading-6"
                         >
-                          Призовой фонд:{" "}
-                        </span>
-
-                        <span
-                          data-content={tourn.prize}
-                          className="before:text-lg before:top-0 before:bottom-0 before:left-0 before:right-0 text-center text-lg before:w-full font-medium  before:text-center before:bg-gradient-to-l 
-              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
-                before:absolute relative before:content-[attr(data-content)] grow z-30 leading-6"
-                        >
-                          {tourn.prize}
+                          {`Призовой фонд: ${tourn.prize}`}
                         </span>
                       </p>
                       <p

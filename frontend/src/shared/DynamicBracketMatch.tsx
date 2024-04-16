@@ -1,5 +1,4 @@
 import { useNavigate } from "react-router-dom";
-import { tournamentAPI } from "./rtk/tournamentAPI";
 import BracketConnecter from "./BracketConnecter";
 import { ROUTES } from "./RouteTypes";
 import { useAppSelector } from "./rtk/store";
@@ -21,6 +20,7 @@ type Props = {
   };
   round: number;
 };
+
 const EmptyParticipant = () => {
   return (
     <div className="py-3 pl-5 pr-6 text-lightgray relative text-lg font-medium">
@@ -29,6 +29,7 @@ const EmptyParticipant = () => {
     </div>
   );
 };
+
 const TeamParticipant = ({
   participant,
   isUserInParticipant
@@ -73,6 +74,7 @@ const TeamParticipant = ({
     <EmptyParticipant />
   );
 };
+
 const DynamicBracketMatch = ({
   timeString,
   matchId,
@@ -106,13 +108,23 @@ const DynamicBracketMatch = ({
         <div className="w-full bg-gradient-to-r from-lightblue to-turquoise text-center z-50 flex items-center justify-between rounded-t-[10px] pl-8 h-[52px]">
           <p className="text-lightgray text-base font-medium">
             <span className="mr-6">
-              {timeStarts.getHours()}:{timeStarts.getMinutes()}
+              {timeStarts.getHours() > 9
+                ? timeStarts.getHours()
+                : `0${timeStarts.getHours()}`}
+              :
+              {timeStarts.getMinutes() > 9
+                ? timeStarts.getMinutes()
+                : `0${timeStarts.getMinutes()}`}
             </span>
             <span className="">
-              {timeStarts.getDate()}.
-              {timeStarts.getMonth() < 10
-                ? "0" + String(timeStarts.getMonth())
-                : timeStarts.getMonth()}
+              {timeStarts.getDate() > 9
+                ? timeStarts.getDate()
+                : `0${timeStarts.getDate()}`}
+              .
+              {timeStarts.getMonth() > 9
+                ? timeStarts.getMonth()
+                : `0${timeStarts.getMonth()}`}
+              .{timeStarts.getFullYear()}
             </span>
           </p>
           <ButtonSecondary
