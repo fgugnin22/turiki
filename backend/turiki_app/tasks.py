@@ -21,6 +21,7 @@ def set_match_start_bans(match_id: int):
     if match.teams.count() != 2:
         return
     if match.state == "NO_SHOW":
+        create_lobby(match)
         match.state = "BANS"
         [team1, team2] = [Team.objects.get(pk=match.participants.values()[0]["team_id"]),
                           Team.objects.get(pk=match.participants.values()[1]["team_id"])]
@@ -39,7 +40,6 @@ def set_match_start_bans(match_id: int):
 def set_match_active(match):
     with transaction.atomic():
         match.started = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow'))
-        create_lobby(match)
         set_match_state(match.id, "IN_GAME_LOBBY_CREATION")
         # match.save()
         print(match.state, 1323123)
@@ -154,6 +154,8 @@ def create_lobby(match):
         chat.save()
         match.save()
         print("LOBBY CREATED")
+
+
 
 
 @dramatiq.actor

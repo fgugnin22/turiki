@@ -5,6 +5,7 @@ import {
   Team,
   Tournament
 } from "../../helpers/transformMatches";
+import { ChatMessages } from "..";
 
 export const tournamentAPI = createApi({
   reducerPath: "tournamentAPI",
@@ -263,7 +264,7 @@ export const tournamentAPI = createApi({
       },
       invalidatesTags: ["Team"]
     }),
-    getChatMessages: build.query({
+    getChatMessages: build.query<ChatMessages, { chatId: number }>({
       query: ({ chatId }) => {
         return {
           url: `chat/${chatId}/`

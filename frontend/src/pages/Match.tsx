@@ -11,6 +11,7 @@ import { useCountdown } from "../hooks/useCountDown";
 import ButtonMain from "../shared/ButtonMain";
 import { ROUTES } from "../shared/RouteTypes";
 import ButtonSecondary from "../shared/ButtonSecondary";
+import AdminChat from "../features/AdminChat";
 
 const serverURL = import.meta.env.VITE_API_URL;
 
@@ -18,7 +19,9 @@ const Match = () => {
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
+
   const params = useParams();
+
   const {
     data: match,
     isFetching,
@@ -38,16 +41,6 @@ const Match = () => {
       skip: (match?.next_match ?? -1) === -1
     }
   );
-  const { data: chat, isSuccess: isChatSuccess } =
-    tournamentAPI.useGetChatMessagesQuery(
-      { chatId: match?.lobby?.chat },
-      {
-        skip: !match?.lobby,
-        pollingInterval: 2500
-      }
-    );
-
-  const messages = chat?.messages;
 
   const { data: team1 } = tournamentAPI.useGetTeamByIdQuery(
     match?.participants[0]?.team.id,
@@ -352,10 +345,21 @@ const Match = () => {
                   <></>
                 )}{" "}
               </div>
-              {((user?.is_staff && isChatSuccess) ||
-                (isChatSuccess && isAuthenticated && selfParticipant)) && (
-                <Chat messages={messages} chatId={match?.lobby?.chat!} />
-              )}
+              {!user?.is_staff
+                ? isAuthenticated &&
+                  selfParticipant && (
+                    <Chat
+                      teamId={selfParticipant?.team.id ?? -1}
+                      lobby={match.lobby}
+                    />
+                  )
+                : isAuthenticated &&
+                  selfParticipant && (
+                    <AdminChat
+                      lobby={match.lobby}
+                      teams={match.participants.map((p) => p.team)}
+                    />
+                  )}
             </>
           </div>
         </>

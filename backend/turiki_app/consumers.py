@@ -1,6 +1,8 @@
 from channels.generic.websocket import AsyncJsonWebsocketConsumer
 import json
-from turiki_app.services import async_return_user, async_create_message
+
+from turiki_app.models import Chat, UserAccount
+from turiki_app.services import async_return_chat, async_return_user, async_create_message, async_validate_chat_connection
 
 
 class ChatConsumer(AsyncJsonWebsocketConsumer):
@@ -8,19 +10,30 @@ class ChatConsumer(AsyncJsonWebsocketConsumer):
         # Логика в момент подключения к websocket'у
         self.chat_id = int(
             self.scope["url_route"]["kwargs"]["chat_id"])  # заносим id чата из url строки /chat/{chatid}/
+
+        chat = await async_return_chat(self.chat_id)
+
         self.chat_id_group_name = f'chat_{self.chat_id}'  # уникальное имя группы для каждого чата
+        token = self.scope["query_string"].decode()[6:]  # достаем токен из query params (?token={token})
+        user: UserAccount = await async_return_user(token)
+         # подтягиваем объект класса UserAccount
+        
+        is_denied = await async_validate_chat_connection(chat, user)
+            
+        if is_denied:
+            await self.close()
+        
         await self.channel_layer.group_add(
             self.chat_id_group_name, self.channel_name
         )  # добавляем группу в consumer
-        token = self.scope["query_string"].decode()[6:]  # достаем токен из query params (?token={token})
-        self.scope["user"] = await async_return_user(token)  # подтягиваем объект класса UserAccount
-
+        
+        self.scope["user"] = user
+        
         await self.accept()  # принимаем подключение клиента к websocket'у
 
     async def receive_json(self, content, **kwargs):
-        # ^эта функция отрабатывает когда от клиента приходят запросы по WS
         message = content["message"]  # достаем текст сообщения
-        user = self.scope["user"]  # 20 строка
+        user = self.scope["user"]
         if user is None:  # если юзера нет или токен был неправильный, то ничего дальше не происходит
             return
         msg_instance = await async_create_message(user=user, chat_id=self.chat_id, content=message)

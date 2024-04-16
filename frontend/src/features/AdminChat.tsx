@@ -5,22 +5,22 @@ import { Match } from "../helpers/transformMatches";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 
 interface ChatProps {
-  teamId: number;
   error?: string;
   lobby: Match["lobby"];
+  teams: { name: string; id: number }[];
 }
 
 const websocketURL = import.meta.env.VITE_WEBSCOKET_ENDPOINT;
 
-const Chat = (props: ChatProps) => {
+const AdminChat = (props: ChatProps) => {
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
 
-  const [isTeam, setIsTeam] = useState(false);
+  const [whichTeam, setWhichTeam] = useState(-1);
 
   const currentChat = props.lobby?.chats.filter((ch) =>
-    isTeam ? ch.team_id === props.teamId : !ch.is_team
+    whichTeam !== -1 ? ch.team_id === whichTeam : !ch.is_team
   )[0];
 
   const { data, isSuccess } = tournamentAPI.useGetChatMessagesQuery(
@@ -89,13 +89,13 @@ const Chat = (props: ChatProps) => {
     }
   }, [lastMessage]);
 
-  const toggleChats = (isShared: boolean) => async () => {
-    setIsTeam(!isShared);
+  const toggleChats = (teamId: number) => async () => {
+    setWhichTeam(teamId);
 
     const newChat = await refetchChat({
       chatId:
         props.lobby?.chats.filter((ch) =>
-          !isShared ? ch.team_id === props.teamId : !ch.is_team
+          teamId !== -1 ? ch.team_id === teamId : !ch.is_team
         )[0]?.id ?? -1
     }).unwrap();
 
@@ -112,7 +112,9 @@ const Chat = (props: ChatProps) => {
     before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%]"
     >
       <div className="w-full bg-gradient-to-r from-lightblue z-10 to-turquoise p-3 text-center text-2xl font-semibold">
-        {isTeam ? "Командный чат" : "Общий чат"}
+        {whichTeam !== -1
+          ? "Чат команды " + props.teams.find((t) => t.id === whichTeam)?.name
+          : "Общий чат"}
       </div>
       <div className="z-10 flex flex-col flex-grow h-0 p-4 overflow-x-scroll scrollbar-none max-w-full">
         {messages.map((message) => {
@@ -217,24 +219,32 @@ const Chat = (props: ChatProps) => {
       relative flex text-black font-normal"
       >
         <button
-          onClick={toggleChats(false)}
+          onClick={toggleChats(props.teams[0].id)}
           className={`grow ${
-            isTeam ? "bg-lightblue" : ""
+            whichTeam === props.teams[0].id ? "bg-lightblue" : ""
           }  bg-opacity-20 hover:text-black text-lightblue transition hover:bg-lightblue `}
         >
-          Командный чат
+          {"Чат команды " + props.teams[0].name}
         </button>
         <button
-          onClick={toggleChats(true)}
+          onClick={toggleChats(-1)}
           className={`grow ${
-            !isTeam ? "bg-turquoise" : ""
+            whichTeam === -1 ? "bg-turquoise" : ""
           } bg-opacity-20 hover:text-black text-lightblue transition hover:bg-turquoise `}
         >
           Общий чат
+        </button>
+        <button
+          onClick={toggleChats(props.teams[1].id)}
+          className={`grow ${
+            whichTeam === props.teams[1].id ? "bg-lightblue" : ""
+          }  bg-opacity-20 hover:text-black text-lightblue transition hover:bg-lightblue `}
+        >
+          {"Чат команды " + props.teams[1].name}
         </button>
       </div>
     </div>
   );
 };
 
-export default Chat;
+export default AdminChat;

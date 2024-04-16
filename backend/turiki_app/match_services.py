@@ -4,6 +4,16 @@ from django.db import transaction
 from rest_framework.response import Response
 from turiki_app.models import Chat, Lobby, Participant, Message, Match, UserAccount
 
+def create_team_chat(match, team):
+    chat: Chat = Chat.objects.create()
+    lobby = match.lobby
+    chat.lobby = lobby
+    chat.is_team = True
+    chat.team = team
+    chat.save()
+    match.save()
+
+
 def claim_match_result(match_id: int, team_id, result):
     # Ставит результат в Participant т.е. позволяет капитану сделать заявку на результат
     with transaction.atomic():
@@ -44,7 +54,7 @@ def claim_match_result(match_id: int, team_id, result):
 
 
 def notify(match, content):
-    chat = match.lobby.chat
+    chat = match.lobby.chats.filter(is_team=False)[0]
     user: UserAccount = UserAccount.objects.filter(is_superuser=True)[0]
     msg_type = "notification"
     msg = Message(chat=chat,
@@ -78,7 +88,7 @@ def end_match(match: Match):
     p1: Participant = match.participants.first()
     p2: Participant = match.participants.last()
 
-    messages = match.lobby.chat.messages
+    messages = match.lobby.chats.filter(is_team=False)[0]
 
     if p1.is_winner is None and p2.is_winner:
         if match.state != "SCORE_DONE" and messages.filter(content=f"Команда {p2.team.name} выставила свой результат: победа!").count() == 0:

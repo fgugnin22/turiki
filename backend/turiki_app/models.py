@@ -248,16 +248,15 @@ class UserAccount(AbstractBaseUser, PermissionsMixin):
 
 class Lobby(models.Model):
     match = models.OneToOneField(Match, on_delete=models.CASCADE, related_name="lobby")
-    chat = models.OneToOneField("Chat", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"{self.match}"
 
 
 class Chat(models.Model):
-    pass
-    # def __str__(self):
-    #     return f"{self.lobby}"
+    is_team = models.BooleanField(default=False)
+    team = models.ForeignKey(Team, on_delete=models.CASCADE, null=True, blank=True)
+    lobby = models.ForeignKey(Lobby, on_delete=models.CASCADE, null=True, blank=True, related_name="chats")
 
 
 class Message(models.Model):

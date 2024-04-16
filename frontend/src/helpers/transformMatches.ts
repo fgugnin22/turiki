@@ -1,4 +1,5 @@
 import { Player } from "../features/TeamPlayerList";
+import { ChatMessages } from "../shared";
 export interface TournamentPlayer {
   team_id: number;
   id: number;
@@ -44,7 +45,7 @@ export interface Match {
   bans?: Bans;
   lobby?: {
     id: number;
-    chat: number;
+    chats: ChatMessages[];
   } | null;
   id: number;
   state: string;

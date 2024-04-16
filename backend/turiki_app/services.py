@@ -303,6 +303,16 @@ class TeamService:
 
 
 @database_sync_to_async
+def async_return_chat(id):
+    return Chat.objects.get(pk=id)
+
+
+@database_sync_to_async
+def async_validate_chat_connection(chat, user):
+    return not user.is_staff and chat.team is not None and user.team.id != chat.team.id or user.team_status not in ["ACTIVE", "CAPTAIN"]
+
+
+@database_sync_to_async
 def async_return_user(token):
     # асинхронное доставание UserAccount по jwt токену из БД для consumers.py -> websocket
     from core.settings import SECRET_KEY

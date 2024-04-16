@@ -1,4 +1,5 @@
 export interface message {
+  type: string;
   chat: number;
   content: string;
   created_at: string;
@@ -7,6 +8,9 @@ export interface message {
 }
 export interface ChatMessages {
   id: number;
+  is_team: boolean;
+  lobby_id: number;
+  team_id: number | null;
   messages: message[];
 }
 export interface IChangeSelfTeamStatus {
