@@ -402,7 +402,7 @@ export const Tournament = () => {
       )}
       <div className="fixed bottom-4 right-4 flex flex-col-reverse gap-4 z-50 bg-dark">
         {notifications?.data?.map((n) => (
-          <NotificationElem data={n} />
+          <NotificationElem key={n.id} data={n} />
         ))}
       </div>
       <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between relative z-0">

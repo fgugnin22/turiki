@@ -17,13 +17,21 @@ const sortMatchesForBracket = (matches: Match[] | undefined) => {
       matches
         .filter((m) => Number(m.name) === i)
         .sort((match1, match2) => {
+          console.log(match1.next_match, match2.next_match);
+
           if (!match1.next_match) {
             return 1;
           }
           if (!match2.next_match) {
             return -1;
           }
-          return match2.next_match - match1.next_match;
+          const diff = match2.next_match - match1.next_match;
+
+          if (diff !== 0) {
+            return diff;
+          }
+
+          return match2.id - match1.id;
         })
     );
   }

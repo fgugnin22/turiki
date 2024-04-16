@@ -65,8 +65,8 @@ const NotificationElem = (props: NotificationProps) => {
             y2="40.1358"
             gradientUnits="userSpaceOnUse"
           >
-            <stop offset="0.0208333" stop-color="#21DBD3" />
-            <stop offset="1" stop-color="#18A3DC" />
+            <stop offset="0.0208333" stopColor="#21DBD3" />
+            <stop offset="1" stopColor="#18A3DC" />
           </linearGradient>
           <linearGradient
             id="paint1_linear_709_1760"
@@ -76,8 +76,8 @@ const NotificationElem = (props: NotificationProps) => {
             y2="3"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#21DBD3" />
-            <stop offset="1" stop-color="#18A3DC" />
+            <stop stopColor="#21DBD3" />
+            <stop offset="1" stopColor="#18A3DC" />
           </linearGradient>
           <linearGradient
             id="paint2_linear_709_1760"
@@ -87,8 +87,8 @@ const NotificationElem = (props: NotificationProps) => {
             y2="3"
             gradientUnits="userSpaceOnUse"
           >
-            <stop stop-color="#21DBD3" />
-            <stop offset="1" stop-color="#18A3DC" />
+            <stop stopColor="#21DBD3" />
+            <stop offset="1" stopColor="#18A3DC" />
           </linearGradient>
         </defs>
       </svg>
@@ -124,8 +124,8 @@ const NotificationElem = (props: NotificationProps) => {
               y2="34.8967"
               gradientUnits="userSpaceOnUse"
             >
-              <stop stop-color="#21DBD3" />
-              <stop offset="1" stop-color="#18A3DC" />
+              <stop stopColor="#21DBD3" />
+              <stop offset="1" stopColor="#18A3DC" />
             </linearGradient>
           </defs>
         </svg>

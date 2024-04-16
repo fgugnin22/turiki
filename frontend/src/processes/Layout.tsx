@@ -46,7 +46,7 @@ export const Layout = (props: {
         <Footer />
         <div className="fixed bottom-4 right-4 flex flex-col-reverse gap-4 z-50 bg-dark">
           {notifications?.data?.map((n) => (
-            <NotificationElem data={n} />
+            <NotificationElem key={n.id} data={n} />
           ))}
         </div>
       </div>
