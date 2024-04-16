@@ -370,6 +370,7 @@ class TeamAPIView(ModelViewSet):
     )
     def apply_for_team(self, request, pk=None):
         team = self.get_object()
+        res = None
         if request.method == "PATCH":
             res = TeamService.apply_for_team(team, request.user)
         elif request.method == "DELETE":

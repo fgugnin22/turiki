@@ -13,13 +13,15 @@ const serverURL = import.meta.env.VITE_API_URL;
 const Team = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const params = useParams();
+
   const isAuthenticated = useAppSelector((state) => state.user.isAuthenticated);
   const teamId = useAppSelector((state) => state.user.userDetails?.team);
   const team_status = useAppSelector(
     (state) => state.user.userDetails?.team_status
   );
   const id = useAppSelector((state) => state.user.userDetails?.id);
-  const params = useParams();
+
   const [acceptPlayerToTeam] = tournamentAPI.useInvitePlayerToTeamMutation();
   const [kickPlayerFromTeam] = tournamentAPI.useKickPlayerFromTeamMutation();
   const [leaveFromTeam] = tournamentAPI.useLeaveFromTeamMutation();
@@ -27,6 +29,7 @@ const Team = () => {
   const [changeTeamName] = tournamentAPI.useChangeTeamNameMutation();
   const [openOrCloseTeam] = tournamentAPI.useTeamOpennessMutation();
   const [makeCaptain] = tournamentAPI.useMakeCaptainMutation();
+
   const { data, isLoading, isError } = tournamentAPI.useGetTeamByIdQuery(
     params.id
   );
@@ -36,6 +39,7 @@ const Team = () => {
 
   const [showInput, setShowInput] = useState(false);
   const [newTeamName, setNewTeamName] = useState("");
+
   const onImageSubmit = async (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -49,14 +53,17 @@ const Team = () => {
     await dispatch(uploadTeamImage({ formData, teamId: data.id }));
     window.location.reload();
   };
+
+  const handleLeaveTeamClick = async () => {
+    await leaveFromTeam(Number(params?.id));
+    await dispatch(getUser(localStorage.getItem("access")!));
+    navigate(ROUTES.TEAMS.CREATE.path);
+  };
+
   if (isError) {
-    navigate(ROUTES.NO_MATCH404.path);
+    navigate(ROUTES.TEAMS.CREATE.path);
   }
-  if (data?.players.length === 0) {
-    dispatch(getUser(localStorage.getItem("access")!))
-      .unwrap()
-      .then(() => navigate(ROUTES.TEAMS.CREATE.path));
-  }
+
   return (
     <Layout>
       {data && (
@@ -81,7 +88,7 @@ const Team = () => {
             {dropdown && teamId === data?.id && (
               <div className="absolute  transition z-[90] flex flex-col gap-1 py-[15px] px-4 right-[60px] top-4 bg-darkestturq rounded-[10px]">
                 <button
-                  onClick={() => leaveFromTeam(Number(params?.id))}
+                  onClick={handleLeaveTeamClick}
                   className="hover:text-lightblue active:text-turquoise transition font-medium"
                 >
                   Покинуть команду
@@ -261,7 +268,7 @@ const Team = () => {
                           src={
                             Number(player?.image?.length) > 0
                               ? serverURL + "/" + getImagePath(player.image!)
-                              : serverURL + "/media/img/userdefaultloggedin.svg"
+                              : serverURL + "/media/img/defaultuser.svg"
                           }
                           alt=""
                         />
@@ -372,7 +379,7 @@ const Team = () => {
                       src={
                         Number(player?.image?.length) > 0
                           ? serverURL + "/" + getImagePath(player.image!)
-                          : serverURL + "/media/img/userdefaultloggedin.svg"
+                          : serverURL + "/media/img/defaultuser.svg"
                       }
                       alt=""
                     />

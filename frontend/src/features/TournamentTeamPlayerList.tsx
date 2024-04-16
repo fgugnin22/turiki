@@ -119,7 +119,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       src={`${serverURL}/${
                         player.image
                           ? getImagePath(player.image)
-                          : "media/img/userdefaultloggedin.svg"
+                          : "media/img/defaultuser.svg"
                       }`}
                       className="w-10 h-10 rounded-full"
                     />
@@ -154,7 +154,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       src={`${serverURL}/${
                         player.image
                           ? getImagePath(player.image)
-                          : "media/img/userdefaultloggedin.svg"
+                          : "media/img/defaultuser.svg"
                       }`}
                       className="w-7 h-7 rounded-full"
                     />
@@ -187,7 +187,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       src={`${serverURL}/${
                         player.image
                           ? getImagePath(player.image)
-                          : "media/img/userdefaultloggedin.svg"
+                          : "media/img/defaultuser.svg"
                       }`}
                       className="w-7 h-7 rounded-full"
                     />
@@ -220,7 +220,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       src={`${serverURL}/${
                         player.image
                           ? getImagePath(player.image)
-                          : "media/img/userdefaultloggedin.svg"
+                          : "media/img/defaultuser.svg"
                       }`}
                       className="w-7 h-7 rounded-full"
                     />
@@ -253,7 +253,7 @@ const TournamentTeamPlayerList = (props: TournamentTeamPlayerListProps) => {
                       src={`${serverURL}/${
                         player.image
                           ? getImagePath(player.image)
-                          : "media/img/userdefaultloggedin.svg"
+                          : "media/img/defaultuser.svg"
                       }`}
                       className="w-7 h-7 rounded-full"
                     />

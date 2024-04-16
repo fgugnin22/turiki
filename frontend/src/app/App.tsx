@@ -12,11 +12,9 @@ import Match from "../pages/Match";
 import Tournament from "../pages/Tournament";
 import NoMatch from "../pages/NoMatch";
 import TeamCreateOrFind from "../pages/TeamCreateOrFind";
-import TeamList from "../pages/TeamList";
 import TournmanetList from "../pages/TournamentList";
 import { ROUTES } from "../shared/RouteTypes";
 import AdminBoard from "../pages/AdminBoard";
-import BracketPage from "../pages/BracketPage";
 import Test from "../pages/Test";
 import AccountPage from "../pages/AccountPage";
 

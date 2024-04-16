@@ -73,7 +73,7 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
                     src={
                       Number(player?.image?.length) > 0
                         ? serverURL + "/" + getImagePath(player.image!)
-                        : serverURL + "/media/img/userdefaultloggedin.svg"
+                        : serverURL + "/media/img/defaultuser.svg"
                     }
                     className="w-10 h-10 rounded-full"
                   />

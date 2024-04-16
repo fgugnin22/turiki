@@ -244,17 +244,26 @@ class TeamService:
         return "team name changed successfully"
 
     @staticmethod
-    def remove_from_team(team, player):
+    def remove_from_team(team: Team, player):
         try:
-            if team.players.count() == 1:
-                team.delete()
             player.team = None
             player.team_status = None
             player.save()
+
             if player.name == team.next_member:
                 team.next_member = None
                 team.save()
-            team.players.remove(player)
+
+            team.save()
+            for plr in team.players.all():
+                if plr.team_status == "ACTIVE":
+                    plr.team_status = "CAPTAIN"
+                    plr.save()
+                    break
+
+            if team.players.count() == 0:
+                team.delete()
+
             return "player kicked from team"
         except:
             return "None"

@@ -71,7 +71,7 @@ const Header = () => {
                 src={
                   image
                     ? `${serverURL}/${image}`
-                    : `${serverURL}/media/img/userdefaultloggedin.svg`
+                    : `${serverURL}/media/img/defaultuser.svg`
                 }
                 alt=""
                 className=" rounded-full w-[45px] h-[45px]"
