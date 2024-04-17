@@ -108,6 +108,11 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
         match.bans.timestamps.append(datetime.datetime.now() + datetime.timedelta(seconds=1))
         match.bans.ban_log.append(who_banned)
         match.bans.save()
+
+        if match.is_bo3 and len(match.bans.maps) in [5, 4]:
+            bans: MapBan = match.bans
+            bans.picked_maps.append(map_to_ban)
+
         if len(match.bans.maps) == 1 or (match.is_bo3 and len(match.bans.maps) == 3):
             if not match.is_bo3:
                 match.current_map = match.bans.maps[0]

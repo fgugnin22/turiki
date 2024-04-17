@@ -76,8 +76,9 @@ class MapBan(models.Model):
     KAFE = "KAFE"
     OREGON = "OREGON"
     SKYSCRAPER = "SKYSCRAPER"
-    THEMEPARK = "THEMEPARK"
-    VILLA = "VILLA"
+    NIGHTHAVENLABS = "NIGHTHAVEN LABS"
+    CONSULATE = "CONSULATE"
+
     ADMIN = "ADMIN"
     CAPTAIN = "CAPTAIN"
     AUTO = "AUTO"
@@ -96,8 +97,8 @@ class MapBan(models.Model):
         (KAFE, KAFE.lower()),
         (OREGON, OREGON.lower()),
         (SKYSCRAPER, SKYSCRAPER.lower()),
-        (THEMEPARK, THEMEPARK.lower()),
-        (VILLA, VILLA.lower())
+        (NIGHTHAVENLABS, NIGHTHAVENLABS.lower()),
+        (CONSULATE, CONSULATE.lower())
     )
 
     def get_default_map_pool(self=None):
@@ -109,8 +110,8 @@ class MapBan(models.Model):
             "KAFE",
             "OREGON",
             "SKYSCRAPER",
-            "THEMEPARK",
-            "VILLA"
+            "NIGHTHAVEN LABS",
+            "CONSULATE"
         ]
 
     DEFAULT_MAP_POOL_SIZE = len(DEFAULT_COMPETITIVE_MAP_CHOICES_TUPLE)
@@ -135,7 +136,11 @@ class MapBan(models.Model):
                                     null=True),
         size=DEFAULT_MAP_POOL_SIZE,
         default=get_default_map_pool)
-
+    picked_maps = fields.ArrayField(
+        base_field=models.CharField(max_length=30, choices=DEFAULT_COMPETITIVE_MAP_CHOICES_TUPLE, default=None,
+                                    null=True),
+        size=DEFAULT_MAP_POOL_SIZE,
+        default=list)
     def __str__(self):
         return f"{self.id}"
 
