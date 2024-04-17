@@ -30,7 +30,7 @@ const Match = () => {
     {
       id: params.id!
     },
-    { pollingInterval: 2500 }
+    { pollingInterval: 5000 }
   );
 
   const { data: nextMatch } = tournamentAPI.useGetMatchByIdQuery(

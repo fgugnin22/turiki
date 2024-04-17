@@ -29,7 +29,7 @@ const AdminChat = (props: ChatProps) => {
     },
     {
       skip: !props.lobby || !isAuthenticated,
-      pollingInterval: 2500
+      pollingInterval: 5000
     }
   );
 
