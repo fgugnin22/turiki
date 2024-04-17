@@ -52,7 +52,7 @@ const Chat = (props: ChatProps) => {
   const onSubmit = (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
 
-    if (message.length === 0) {
+    if (message.trim().length === 0) {
       return;
     }
 
@@ -60,7 +60,7 @@ const Chat = (props: ChatProps) => {
       JSON.stringify({
         type: "chat_message",
         chatId: currentChat?.id,
-        message
+        message: message.trim()
       })
     );
 

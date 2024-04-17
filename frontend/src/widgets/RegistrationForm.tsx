@@ -34,7 +34,7 @@ const RegistrationForm = () => {
   const onChange = (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     setFormErrors((p) => ({ ...p, [target.name]: "" }));
-    return setFormData({ ...formData, [target.name]: target.value });
+    return setFormData({ ...formData, [target.name]: target.value.trim() });
   };
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {

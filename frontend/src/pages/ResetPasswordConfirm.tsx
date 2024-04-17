@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Layout } from "../processes/Layout";
 import { Navigate, useParams } from "react-router-dom";
 import { resetPasswordConfirm } from "../shared/rtk/user";
-import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
+import { useAppDispatch } from "../shared/rtk/store";
 import { ROUTES } from "../shared/RouteTypes";
 import ButtonMain from "../shared/ButtonMain";
 const ResetPasswordConfirm = () => {

@@ -29,7 +29,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
   const onChange = async (e: React.FormEvent<HTMLInputElement>) => {
     const target = e.target as HTMLInputElement;
     setError("");
-    return setFormData({ ...formData, [target.name]: target.value });
+    return setFormData({ ...formData, [target.name]: target.value.trim() });
   };
   const onSubmit = async (
     e:

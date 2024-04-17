@@ -170,7 +170,7 @@ const Team = () => {
                           value={newTeamName}
                           onChange={(e: React.FormEvent<HTMLInputElement>) => {
                             const target = e.target as HTMLInputElement;
-                            setNewTeamName(target.value);
+                            setNewTeamName(target.value.trim());
                           }}
                           minLength={3}
                           className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-40 bg-transparent outline-none px-3 text-lightgray rounded-[10px] text-2xl"
