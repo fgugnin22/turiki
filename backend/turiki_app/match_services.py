@@ -88,7 +88,7 @@ def end_match(match: Match):
     p1: Participant = match.participants.first()
     p2: Participant = match.participants.last()
 
-    messages = match.lobby.chats.filter(is_team=False)[0]
+    messages = match.lobby.chats.filter(is_team=False)[0].messages
 
     if p1.is_winner is None and p2.is_winner:
         if match.state != "SCORE_DONE" and messages.filter(content=f"Команда {p2.team.name} выставила свой результат: победа!").count() == 0:
@@ -223,8 +223,11 @@ def update_next_match(next_match: Match, winner):
                     print("lobby already created")
             except:
                 chat = Chat.objects.create()
-                lobby = Lobby.objects.create(match=next_match, chat=chat)
+                lobby: Lobby = Lobby.objects.create(match=next_match)
+                lobby.chats.add(chat)
                 chat.lobby = lobby
+                create_team_chat(next_match, next_match.participants.all()[0].team)
+                create_team_chat(next_match, next_match.participants.all()[1].team)
                 chat.save()
                 print("LOBBY CREATED")
             next_match.save()
