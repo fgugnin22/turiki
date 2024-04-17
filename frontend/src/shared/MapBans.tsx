@@ -87,10 +87,19 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
                     onClick={handleBan}
                     className="absolute z-50 right-1 top-[6.5px]"
                   >
-                    <img
-                      src={`${serverURL}/media/img/ban.svg`}
-                      className="neonshadow hover:scale-110 active:scale-150 transition"
-                    />
+                    {match.is_bo3 &&
+                    (match.bans?.maps.length === 4 ||
+                      match.bans?.maps.length === 5) ? (
+                      <img
+                        src={`${serverURL}/media/img/galka.svg`}
+                        className="neonshadow hover:scale-110 active:scale-150 transition"
+                      />
+                    ) : (
+                      <img
+                        src={`${serverURL}/media/img/ban.svg`}
+                        className="neonshadow hover:scale-110 active:scale-150 transition"
+                      />
+                    )}
                   </button>
                 )}
             </div>

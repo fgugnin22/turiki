@@ -7,7 +7,7 @@ import dramatiq
 import pytz
 import datetime
 
-from turiki_app.match_services import claim_match_result
+from turiki_app.match_services import claim_match_result, create_team_chat
 from turiki_app.models import Chat, Lobby, Match, Team, Participant, MapBan, Tournament, Notification, UserAccount
 from django_dramatiq.tasks import delete_old_tasks
 
@@ -16,12 +16,16 @@ IN_A_MINUTE = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
 
 @dramatiq.actor
 def set_match_start_bans(match_id: int):
+    print('WTFFFFFFF')
     match = Match.objects.get(pk=match_id)
-
     if match.teams.count() != 2:
         return
     if match.state == "NO_SHOW":
         create_lobby(match)
+
+        create_team_chat(match, match.participants.all()[0].team)
+        create_team_chat(match, match.participants.all()[1].team)
+
         match.state = "BANS"
         [team1, team2] = [Team.objects.get(pk=match.participants.values()[0]["team_id"]),
                           Team.objects.get(pk=match.participants.values()[1]["team_id"])]
@@ -35,7 +39,6 @@ def set_match_start_bans(match_id: int):
         match.bans = bans
         bans.save()
         match.save()
-
 
 def set_match_active(match):
     with transaction.atomic():
@@ -86,7 +89,7 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
         team = Team.objects.get(pk=team_id)
         match = Match.objects.get(pk=match_id)
 
-        if len(match.bans.maps) == 1 or (match.is_bo3 and len(match.bans.maps) == 3):
+        if len(match.bans.maps) == 1:
             return
 
         if not map_to_ban.upper() in match.bans.maps:
@@ -100,6 +103,11 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
                 return
         except:
             pass
+
+        if match.is_bo3 and len(match.bans.maps) in [5, 4]:
+            bans: MapBan = match.bans
+            bans.picked_maps.append(map_to_ban)
+
         a = list(match.participants.values())
         other_team_id = a[0]["team_id"] if a[0]["team_id"] != team.id else a[1]["team_id"]
         other_team = Team.objects.get(pk=other_team_id)
@@ -109,18 +117,21 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
         match.bans.ban_log.append(who_banned)
         match.bans.save()
 
-        if match.is_bo3 and len(match.bans.maps) in [5, 4]:
-            bans: MapBan = match.bans
-            bans.picked_maps.append(map_to_ban)
 
-        if len(match.bans.maps) == 1 or (match.is_bo3 and len(match.bans.maps) == 3):
+        if len(match.bans.maps) == 1:
             if not match.is_bo3:
                 match.current_map = match.bans.maps[0]
+
             if match.is_bo3:
-                match.current_map = match.bans.maps[0]
+                match.current_map = match.bans.picked_maps[0]
+
+            match.bans.save()
+            match.save()
+
             exec_task_on_date(check_for_teams_in_lobby, [match.id],
                               datetime.datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_enter_lobby)
             set_match_active(match)
+
             return
 
         exec_task_on_date(ban_map, [match.id, other_team.id, match.bans.maps[-1], "AUTO",
@@ -154,7 +165,8 @@ def create_lobby(match):
             print("lobby already created")
     except:
         chat = Chat.objects.create()
-        lobby = Lobby.objects.create(match=match, chat=chat)
+        lobby = Lobby.objects.create(match=match)
+        lobby.chats.add(chat)
         chat.lobby = lobby
         chat.save()
         match.save()

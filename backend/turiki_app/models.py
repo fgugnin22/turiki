@@ -76,7 +76,7 @@ class MapBan(models.Model):
     KAFE = "KAFE"
     OREGON = "OREGON"
     SKYSCRAPER = "SKYSCRAPER"
-    NIGHTHAVENLABS = "NIGHTHAVEN LABS"
+    NIGHTHAVENLABS = "NIGHTHAVEN"
     CONSULATE = "CONSULATE"
 
     ADMIN = "ADMIN"
@@ -110,7 +110,7 @@ class MapBan(models.Model):
             "KAFE",
             "OREGON",
             "SKYSCRAPER",
-            "NIGHTHAVEN LABS",
+            "NIGHTHAVEN",
             "CONSULATE"
         ]
 

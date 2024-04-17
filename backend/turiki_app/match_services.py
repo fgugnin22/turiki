@@ -130,6 +130,13 @@ def end_match(match: Match):
         if match.is_bo3 and match.bo3_order < 2 and (prev_match is None or not (match.bo3_order == 1 and prev_match.participants.filter(result_text="WON").first().team.id == p1.team.id)):
             print(2222)
             tournament = match.tournament
+
+            next_map = ""
+            if match.bo3_order == 0:
+                next_map = match.bans.picked_maps[1]
+            elif match.bo3_order == 1:
+                next_map = match.bans.maps[0]
+
             match.next_match = Match.objects.create(
                 next_match=next_match,
                 name=match.name,
@@ -144,7 +151,7 @@ def end_match(match: Match):
                 is_bo3=True,
                 is_visible=True,
                 bo3_order=match.bo3_order+1,
-                current_map=match.bans.maps[match.bo3_order + 1]
+                current_map=next_map
             )
             match.is_visible = False
             match.next_match.bans = match.bans
@@ -171,6 +178,13 @@ def end_match(match: Match):
     notify(match, f"Команда {p2.team.name} выиграла!")
     if match.is_bo3 and match.bo3_order < 2 and (prev_match is None or not (match.bo3_order == 1 and prev_match.participants.filter(result_text="WON").first().team.id == p2.team.id)):
         tournament = match.tournament
+
+        next_map = ""
+        if match.bo3_order == 0:
+            next_map = match.bans.picked_maps[1]
+        elif match.bo3_order == 1:
+            next_map = match.bans.maps[0]
+
         match.next_match = Match.objects.create(
             next_match=next_match,
             name=match.name,
@@ -185,7 +199,7 @@ def end_match(match: Match):
             is_bo3=True,
             is_visible=True,
             bo3_order=match.bo3_order + 1,
-            current_map=match.bans.maps[match.bo3_order + 1]
+            current_map=next_map
         )
         match.is_visible = False
         match.next_match.bans = match.bans
