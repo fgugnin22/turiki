@@ -113,8 +113,8 @@ class TournamentAPIView(ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         try:
-            request.data["reg_starts"] = datetime.datetime.strptime(request.data["reg_starts"], "%Y-%m-%dT%H:%M:%S%z")
-            request.data["starts"] = datetime.datetime.strptime(request.data["starts"], "%Y-%m-%dT%H:%M:%S%z")
+            request.data["reg_starts"] = datetime.datetime.fromisoformat(request.data["reg_starts"])
+            request.data["starts"] = datetime.datetime.fromisoformat(request.data["starts"])
             tourn = TournamentService.create_tournament(**request.data)
             return Response(model_to_dict(tourn), 201)
         except serializers.ValidationError as e:

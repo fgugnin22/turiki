@@ -16,7 +16,6 @@ IN_A_MINUTE = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
 
 @dramatiq.actor
 def set_match_start_bans(match_id: int):
-    print('WTFFFFFFF')
     match = Match.objects.get(pk=match_id)
     if match.teams.count() != 2:
         return
@@ -43,9 +42,9 @@ def set_match_start_bans(match_id: int):
 def set_match_active(match):
     with transaction.atomic():
         match.started = datetime.datetime.now(tz=pytz.timezone('Europe/Moscow'))
-        set_match_state(match.id, "IN_GAME_LOBBY_CREATION")
-        # match.save()
-        print(match.state, 1323123)
+        match.state = "IN_GAME_LOBBY_CREATION"
+        match.save()
+
 
 
 def exec_task_on_date(func, args: list, when=datetime.datetime.now()):
@@ -124,14 +123,11 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
 
             if match.is_bo3:
                 match.current_map = match.bans.picked_maps[0]
-
             match.bans.save()
             match.save()
-
             exec_task_on_date(check_for_teams_in_lobby, [match.id],
                               datetime.datetime.now(tz=pytz.timezone("Europe/Moscow")) + match.time_to_enter_lobby)
             set_match_active(match)
-
             return
 
         exec_task_on_date(ban_map, [match.id, other_team.id, match.bans.maps[-1], "AUTO",
@@ -143,10 +139,10 @@ def ban_map(match_id, team_id, map_to_ban, who_banned=MapBan.CAPTAIN, move=0):
 
 @dramatiq.actor
 def set_match_state(match_id, status="IN_GAME_LOBBY_CREATION"):  # self-explanatory fr tho
-    match = Match.objects.get(pk=match_id)
-    match.state = status
-    print(match_id, status, "aksjdnfkajsd!!!!!")
-    match.save()
+    with transaction.atomic():
+        match = Match.objects.get(pk=match_id)
+        match.state = status
+        match.save()
 
 
 @dramatiq.actor
@@ -224,6 +220,7 @@ def set_initial_matches(tournament):
             team=team2, match=match_object, status="NO_SHOW", result_text="TBD"
         )
         match_object.starts = tournament.starts
+        # datetime.datetime.now().
         exec_task_on_date(set_match_start_bans, [match_object.id], when=tournament.starts)
         exec_task_on_date(notify_team_for_match, [team2.id, match_object.id, "SOON"],
                         when=tournament.starts - datetime.timedelta(minutes=5))

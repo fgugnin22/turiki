@@ -345,21 +345,22 @@ const Match = () => {
                   <></>
                 )}{" "}
               </div>
-              {!user?.is_staff
-                ? isAuthenticated &&
-                  selfParticipant && (
-                    <Chat
-                      teamId={selfParticipant?.team.id ?? -1}
-                      lobby={match.lobby}
-                    />
-                  )
-                : isAuthenticated &&
-                  selfParticipant && (
-                    <AdminChat
-                      lobby={match.lobby}
-                      teams={match.participants.map((p) => p.team)}
-                    />
-                  )}
+              {match.state !== "NO_SHOW" &&
+                (!user?.is_staff
+                  ? isAuthenticated &&
+                    selfParticipant && (
+                      <Chat
+                        teamId={selfParticipant?.team.id ?? -1}
+                        lobby={match.lobby}
+                      />
+                    )
+                  : isAuthenticated &&
+                    selfParticipant && (
+                      <AdminChat
+                        lobby={match.lobby}
+                        teams={match.participants.map((p) => p.team)}
+                      />
+                    ))}
             </>
           </div>
         </>
