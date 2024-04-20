@@ -107,25 +107,29 @@ const DynamicBracketMatch = ({
       >
         <div className="w-full bg-gradient-to-r from-lightblue to-turquoise text-center z-50 flex items-center justify-between rounded-t-[10px] pl-8 h-[52px]">
           <p className="text-lightgray text-base font-medium">
-            <span className="mr-6">
-              {timeStarts.getHours() > 9
-                ? timeStarts.getHours()
-                : `0${timeStarts.getHours()}`}
-              :
-              {timeStarts.getMinutes() > 9
-                ? timeStarts.getMinutes()
-                : `0${timeStarts.getMinutes()}`}
-            </span>
-            <span className="">
-              {timeStarts.getDate() > 9
-                ? timeStarts.getDate()
-                : `0${timeStarts.getDate()}`}
-              .
-              {timeStarts.getMonth() > 9
-                ? timeStarts.getMonth()
-                : `0${timeStarts.getMonth()}`}
-              .{timeStarts.getFullYear()}
-            </span>
+            {timeStarts.getTime() > 10 && (
+              <>
+                <span className="mr-6">
+                  {timeStarts.getHours() > 9
+                    ? timeStarts.getHours()
+                    : `0${timeStarts.getHours()}`}
+                  :
+                  {timeStarts.getMinutes() > 9
+                    ? timeStarts.getMinutes()
+                    : `0${timeStarts.getMinutes()}`}
+                </span>
+                <span className="">
+                  {timeStarts.getDate() > 9
+                    ? timeStarts.getDate()
+                    : `0${timeStarts.getDate()}`}
+                  .
+                  {timeStarts.getMonth() > 9
+                    ? timeStarts.getMonth()
+                    : `0${timeStarts.getMonth()}`}
+                  .{timeStarts.getFullYear()}
+                </span>
+              </>
+            )}
           </p>
           <ButtonSecondary
             className="h-full px-7 rounded-[5px] rounded-tr-[10px] after:rounded-[5px] after:rounded-tr-[10px] before:!rounded-[4px] before:!rounded-tr-[9px] "

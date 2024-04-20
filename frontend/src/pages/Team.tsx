@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { Layout } from "../processes/Layout";
@@ -29,6 +29,8 @@ const Team = () => {
   const [changeTeamName] = tournamentAPI.useChangeTeamNameMutation();
   const [openOrCloseTeam] = tournamentAPI.useTeamOpennessMutation();
   const [makeCaptain] = tournamentAPI.useMakeCaptainMutation();
+  const [changeDesc] = tournamentAPI.useChangeTeamDescriptionMutation();
+  const [changeJoinConfirm] = tournamentAPI.useChangeTeamJoinConfirmMutation();
 
   const { data, isLoading, isError } = tournamentAPI.useGetTeamByIdQuery(
     params.id
@@ -38,27 +40,42 @@ const Team = () => {
   const [playerDropdowns, setPlayerDropdowns] = useState(-1);
 
   const [showInput, setShowInput] = useState(false);
+  const [showSaveDescBtn, setShowSaveDescBtn] = useState(false);
   const [newTeamName, setNewTeamName] = useState("");
+  const [newTeamDescription, setNewTeamDescription] = useState("");
 
   const onImageSubmit = async (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     e.stopPropagation();
     const target = e.target as HTMLInputElement;
+
     if (!target.files || !data) {
       return;
     }
+
     const formData = new FormData();
+
     formData.append("image", target.files[0]);
-    console.log(target.files[0]);
+
     await dispatch(uploadTeamImage({ formData, teamId: data.id }));
+
     window.location.reload();
   };
 
   const handleLeaveTeamClick = async () => {
     await leaveFromTeam(Number(params?.id));
+
     await dispatch(getUser(localStorage.getItem("access")!));
+
     navigate(ROUTES.TEAMS.CREATE.path);
   };
+
+  useEffect(() => {
+    if (data?.description && newTeamDescription === "") {
+      console.log(data?.description, "\n", newTeamDescription === "");
+      setNewTeamDescription(data.description);
+    }
+  }, [data?.description]);
 
   if (isError) {
     navigate(ROUTES.TEAMS.CREATE.path);
@@ -94,17 +111,34 @@ const Team = () => {
                   Покинуть команду
                 </button>
                 {team_status === "CAPTAIN" && (
-                  <button
-                    onClick={() =>
-                      openOrCloseTeam({
-                        teamId: data.id,
-                        is_open: !data.is_open
-                      })
-                    }
-                    className="hover:text-lightblue active:text-turquoise transition font-medium"
-                  >
-                    {data.is_open ? "Сделать закрытой" : "Сделать открытой"}
-                  </button>
+                  <>
+                    <button
+                      onClick={() =>
+                        openOrCloseTeam({
+                          teamId: data.id,
+                          is_open: !data.is_open
+                        })
+                      }
+                      className="hover:text-lightblue active:text-turquoise transition font-medium"
+                    >
+                      {data.is_open ? "Сделать закрытой" : "Сделать открытой"}
+                    </button>
+                    {data.is_open && (
+                      <button
+                        onClick={() =>
+                          changeJoinConfirm({
+                            teamId: data.id,
+                            join_confirm: !data.is_join_confirmation_necessary
+                          })
+                        }
+                        className="hover:text-lightblue active:text-turquoise transition font-medium"
+                      >
+                        {!data.is_join_confirmation_necessary
+                          ? "Вход по заявкам"
+                          : "Вход без заявок"}
+                      </button>
+                    )}
+                  </>
                 )}
               </div>
             )}
@@ -158,7 +192,7 @@ const Team = () => {
                           e.preventDefault();
                           changeTeamName({
                             teamId: Number(params.id),
-                            newName: newTeamName
+                            newName: newTeamName.trim()
                           });
                           setShowInput(false);
                         }}
@@ -170,7 +204,7 @@ const Team = () => {
                           value={newTeamName}
                           onChange={(e: React.FormEvent<HTMLInputElement>) => {
                             const target = e.target as HTMLInputElement;
-                            setNewTeamName(target.value.trim());
+                            setNewTeamName(target.value);
                           }}
                           minLength={3}
                           className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-40 bg-transparent outline-none px-3 text-lightgray rounded-[10px] text-2xl"
@@ -247,91 +281,132 @@ const Team = () => {
                   </button>
                 </div>
               </div>
+              {team_status === "CAPTAIN" &&
+              data.players.findIndex((p) => p.id === id) >= 0 ? (
+                <form
+                  className="mt-4"
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    changeDesc({
+                      description: newTeamDescription.trim(),
+                      teamId: teamId ?? -1
+                    });
+                    setShowSaveDescBtn(false);
+                  }}
+                >
+                  <label htmlFor="desc" className="text-turquoise text-lg">
+                    Описание команды
+                  </label>
+                  <textarea
+                    id="desc"
+                    name="description"
+                    className="w-full h-full bg-transparent outline-none border-turquoise
+                  border rounded-[10px] px-1 text-lightgray"
+                    onChange={(e) => {
+                      setShowSaveDescBtn(e.target.value !== data.description);
+                      setNewTeamDescription(e.target.value);
+                    }}
+                    value={newTeamDescription}
+                    maxLength={128}
+                  ></textarea>
+                  {showSaveDescBtn && (
+                    <ButtonMain className="py-2 w-full focus:py-[7px] active:py-[7px]">
+                      Сохранить
+                    </ButtonMain>
+                  )}
+                </form>
+              ) : (
+                data.description && (
+                  <p className="text-lightblue mt-2 -mb-1 text-lg">
+                    Описание: {data.description}
+                  </p>
+                )
+              )}
               <div
                 className="flex max-h-[300px] flex-col gap-8 mt-8 w-full scrollbar-thin scrollbar-thumb-rounded-full scrollbar-thumb-turquoise 
         scrollbar-track-transparent scrollbar-corner-transparent overflow-y-scroll relative"
               >
-                {data.players
-                  // .toSorted((plr) => {
-                  //   return plr.team_status === "CAPTAIN" ? -12 : 12;
-                  // })
-                  .map((player, i: number) => {
-                    if (player.team_status === "PENDING") {
-                      return;
-                    }
-                    return (
-                      <div
-                        className="flex justify-start gap-6 items-center ml-2 relative"
-                        key={player.id + "member"}
-                      >
-                        <img
-                          className="w-10 h-10 rounded-full"
-                          src={
-                            Number(player?.image?.length) > 0
-                              ? serverURL + "/" + getImagePath(player.image!)
-                              : serverURL + "/media/img/defaultuser.svg"
-                          }
-                          alt=""
-                        />
-                        <div className="flex items-center justify-start gap-[10px]">
-                          <span className="bg-gradient-to-r font-medium from-lightblue to-turquoise bg-clip-text text-transparent">
-                            {player.name ||
-                              player.game_name ||
-                              player.email.split("@")[0]}
-                          </span>
-                          {player?.team_status === "CAPTAIN" && (
-                            <img
-                              src={`${serverURL}/media/img/crown.svg`}
-                              className="ml-1 block"
-                            />
-                          )}
-                          <span className="bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent">
-                            {player.id === id && "(Вы)"}
-                          </span>
-                        </div>
+                {data.players.map((player, i: number) => {
+                  if (
+                    player.team_status === "PENDING" ||
+                    player.team_status === "REJECTED"
+                  ) {
+                    return;
+                  }
 
-                        {player.id !== id && team_status === "CAPTAIN" && (
-                          <button
-                            onClick={() => {
-                              setPlayerDropdowns((prev) => {
-                                return prev === player.id ? -1 : player.id;
-                              });
-                            }}
-                            className="ml-auto w-9 h-9 flex items-center justify-center transition sm:top-4 sm:right-4 rounded-[10px] hover:bg-turquoise hover:bg-opacity-30"
-                          >
-                            <Dots />
-                          </button>
+                  return (
+                    <div
+                      className="flex justify-start gap-6 items-center ml-2 relative"
+                      key={player.id + "member"}
+                    >
+                      <img
+                        className="w-10 h-10 rounded-full"
+                        src={
+                          Number(player?.image?.length) > 0
+                            ? serverURL + "/" + getImagePath(player.image!)
+                            : serverURL + "/media/img/defaultuser.svg"
+                        }
+                        alt=""
+                      />
+                      <div className="flex items-center justify-start gap-[10px]">
+                        <span className="bg-gradient-to-r font-medium from-lightblue to-turquoise bg-clip-text text-transparent">
+                          {player.name ||
+                            player.game_name ||
+                            player.email.split("@")[0]}
+                        </span>
+                        {player?.team_status === "CAPTAIN" && (
+                          <img
+                            src={`${serverURL}/media/img/crown.svg`}
+                            className="ml-1 block"
+                          />
                         )}
-                        {playerDropdowns === player.id &&
-                          team_status === "CAPTAIN" && (
-                            <div className="absolute transition z-[90] flex flex-col gap-[1px] py-2 px-3 right-10 top-[2px] bg-darkestturq rounded-[10px]">
-                              <button
-                                onClick={() =>
-                                  kickPlayerFromTeam({
-                                    teamId: data.id,
-                                    player_id: player.id
-                                  })
-                                }
-                                className="hover:text-lightblue active:text-turquoise transition font-base text-base"
-                              >
-                                Кикнуть игрока
-                              </button>
-                              <button
-                                onClick={() =>
-                                  makeCaptain({
-                                    teamId: data.id,
-                                    new_cap_id: player.id
-                                  })
-                                }
-                                className="hover:text-lightblue active:text-turquoise transition font-base text-base"
-                              >
-                                Сделать капитаном
-                              </button>
-                            </div>
-                          )}
+                        <span className="bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent">
+                          {player.id === id && "(Вы)"}
+                        </span>
                       </div>
-                    );
-                  })}
+
+                      {player.id !== id && team_status === "CAPTAIN" && (
+                        <button
+                          onClick={() => {
+                            setPlayerDropdowns((prev) => {
+                              return prev === player.id ? -1 : player.id;
+                            });
+                          }}
+                          className="ml-auto w-9 h-9 flex items-center justify-center transition sm:top-4 sm:right-4 rounded-[10px] hover:bg-turquoise hover:bg-opacity-30"
+                        >
+                          <Dots />
+                        </button>
+                      )}
+                      {playerDropdowns === player.id &&
+                        team_status === "CAPTAIN" && (
+                          <div className="absolute transition z-[90] flex flex-col gap-[1px] py-2 px-3 right-10 top-[2px] bg-darkestturq rounded-[10px]">
+                            <button
+                              onClick={() =>
+                                kickPlayerFromTeam({
+                                  teamId: data.id,
+                                  player_id: player.id
+                                })
+                              }
+                              className="hover:text-lightblue active:text-turquoise transition font-base text-base"
+                            >
+                              Кикнуть игрока
+                            </button>
+                            <button
+                              onClick={() =>
+                                makeCaptain({
+                                  teamId: data.id,
+                                  new_cap_id: player.id
+                                })
+                              }
+                              className="hover:text-lightblue active:text-turquoise transition font-base text-base"
+                            >
+                              Сделать капитаном
+                            </button>
+                          </div>
+                        )}
+                    </div>
+                  );
+                })}
               </div>
               {String(teamId) === String(params.id) ? (
                 <ButtonMain

@@ -3,7 +3,8 @@ import {
   Match,
   Participant,
   Team,
-  Tournament as ITournament
+  Tournament as ITournament,
+  INotification
 } from "../helpers/transformMatches.js";
 import { NavLink, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
@@ -20,6 +21,7 @@ import { useTournamentStatus } from "../hooks/useTournamentStatus";
 import TournamentTeamPlayerList from "../features/TournamentTeamPlayerList";
 import TriangleLoader from "../shared/TriangleLoader";
 import NotificationElem from "../features/NotificationElem";
+import TournamentResultTeam from "../features/TournamentResultTeam";
 
 const serverURL = import.meta.env.VITE_API_URL;
 
@@ -254,6 +256,22 @@ export const Tournament = () => {
                 >
                   Участники
                 </NavLink>
+                {tournament.status === "PLAYED" && (
+                  <NavLink
+                    className={({ isActive }) =>
+                      `${
+                        isActive
+                          ? "underline underline-offset-[13px] !text-lightblue"
+                          : ""
+                      }` + "  text-lightgray transition hover:!text-turquoise"
+                    }
+                    to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.RESULTS.buildPath({
+                      id: tournId
+                    })}
+                  >
+                    Результаты
+                  </NavLink>
+                )}
                 <NavLink
                   className={({ isActive }) =>
                     `${
@@ -389,6 +407,20 @@ export const Tournament = () => {
                 </svg>
               </a>
             </div>
+          ) : section === "results" ? (
+            <div className="mx-auto flex flex-col w-full lg:w-4/5 xl:w-[1100px] text-lightblue">
+              <div className="w-full px-4 h-12 flex items-center gap-24 border-b border-b-lightblue">
+                <p>#</p>
+                <p>Команда</p>
+              </div>
+              {sortedTeams.map((t) => (
+                <TournamentResultTeam
+                  key={t.id + t.name}
+                  team={t}
+                  tournamentId={tournId}
+                />
+              ))}
+            </div>
           ) : (
             <div className=" text-6xl text-center font-semibold py-12 text-lightblue">
               Обзор
@@ -401,7 +433,7 @@ export const Tournament = () => {
         </div>
       )}
       <div className="fixed bottom-4 right-4 flex flex-col-reverse gap-4 z-50 bg-dark">
-        {notifications?.data?.map((n) => (
+        {notifications?.data?.map((n: INotification) => (
           <NotificationElem key={n.id} data={n} />
         ))}
       </div>

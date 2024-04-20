@@ -211,6 +211,32 @@ export const tournamentAPI = createApi({
       },
       invalidatesTags: ["Team"]
     }),
+    changeTeamDescription: build.mutation<
+      null,
+      { teamId: number; description: string }
+    >({
+      query: ({ teamId, description }) => {
+        return {
+          method: "PATCH",
+          url: `team/${teamId}/desc/`,
+          body: JSON.stringify({ description })
+        };
+      },
+      invalidatesTags: ["Team"]
+    }),
+    changeTeamJoinConfirm: build.mutation<
+      null,
+      { teamId: number; join_confirm: boolean }
+    >({
+      query: ({ teamId, join_confirm }) => {
+        return {
+          method: "PATCH",
+          url: `team/${teamId}/join_confirm/`,
+          body: JSON.stringify({ join_confirm })
+        };
+      },
+      invalidatesTags: ["Team"]
+    }),
     makeCaptain: build.mutation<null, { teamId: number; new_cap_id: number }>({
       query: ({ teamId, new_cap_id }) => {
         return {

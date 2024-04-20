@@ -275,7 +275,7 @@ class TeamService:
         team_players_ids = map(lambda x: x["id"], list(team.players.values()))
         if player.id in team_players_ids:
             return "player already applied for this team"
-        if team.next_member == player.name:
+        if team.next_member == player.name or not team.is_join_confirmation_necessary:
             player.team_status = "ACTIVE"
             res = "player added to the team"
         else:

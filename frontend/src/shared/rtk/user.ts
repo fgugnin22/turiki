@@ -154,7 +154,6 @@ export const googleAuthenticate = createAsyncThunk(
 export const discordAuthenticate = createAsyncThunk(
   "users/discordAuth",
   async ({ state, code }: { state: string; code: string }, thunkAPI) => {
-    console.log("dkfmasdlkf");
     if (state && code && !localStorage.getItem("access")) {
       const details: any = {
         state,

@@ -43,7 +43,8 @@ export const ROUTES = {
         {
           BRACKET: route("bracket"),
           PARTICIPANTS: route("participants"),
-          RULES: route("rules")
+          RULES: route("rules"),
+          RESULTS: route("results")
         }
       )
     }

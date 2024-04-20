@@ -81,7 +81,7 @@ class UserAPIView(GenericViewSet):
         try:
             file_to_delete = Path(old_img)
 
-            if file_to_delete.exists():
+            if file_to_delete.exists() and file_to_delete.is_file():
                 file_to_delete.unlink()
                 print(f"File '{old_img}' deleted successfully")
             else:
@@ -232,7 +232,7 @@ class MatchAPIView(ModelViewSet):
         try:
             file_to_delete = Path(old_img)
 
-            if file_to_delete.exists():
+            if file_to_delete.exists() and file_to_delete.is_file():
                 file_to_delete.unlink()
                 print(f"File '{old_img}' deleted successfully")
             else:
@@ -302,6 +302,31 @@ class TeamAPIView(ModelViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
     parser_classes = [MultiPartParser, JSONParser]
 
+    @action(methods=["PATCH"], detail=True, permission_classes=[IsAuthenticated])
+    def desc(self, request, pk=None):
+        user: UserAccount = request.user
+        team = self.get_object()
+        if user.team_status != "CAPTAIN" or team.players.filter(id=user.id).count() < 1:
+            return Response(status=403)
+
+        team.description = request.data["description"]
+        team.save()
+        return Response(status=200)
+
+
+    @action(methods=["PATCH"], detail=True, permission_classes=[IsAuthenticated])
+    def join_confirm(self, request, pk=None):
+        user: UserAccount = request.user
+        team = self.get_object()
+        if user.team_status != "CAPTAIN" or team.players.filter(id=user.id).count() < 1:
+            return Response(status=403)
+
+        team.is_join_confirmation_necessary = request.data["join_confirm"]
+        team.save()
+
+        return Response(status=200)
+
+
     @action(methods=["PATCH"], detail=True, permission_classes=[IsCaptainOfThisTeamOrAdmin])
     def openness(self, request, pk=None):
         try:
@@ -315,8 +340,6 @@ class TeamAPIView(ModelViewSet):
 
     @action(methods=["PUT"], detail=True, permission_classes=[IsAuthenticated])
     def photo(self, request, pk=None):
-        user = request.user
-
         team = self.get_object()
 
         if request.user.team_status != "CAPTAIN" or request.user.team.id != team.id:
@@ -343,7 +366,7 @@ class TeamAPIView(ModelViewSet):
         try:
             file_to_delete = Path(old_img)
 
-            if file_to_delete.exists():
+            if file_to_delete.exists() and file_to_delete.is_file():
                 file_to_delete.unlink()
                 print(f"File '{old_img}' deleted successfully")
             else:

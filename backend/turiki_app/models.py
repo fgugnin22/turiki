@@ -57,10 +57,12 @@ class Tournament(models.Model):
 
 class Team(models.Model):
     name = models.CharField(max_length=20, null=True, blank=True, unique=True)
+    description = models.CharField(max_length=128, null=True, blank=True, unique=False)
     tournaments = models.ManyToManyField(Tournament, related_name="teams", blank=True)
     next_member = models.CharField(null=True, blank=True, max_length=255)
     image = models.FilePathField(path=images_path(), blank=True, null=True)
     is_open = models.BooleanField(default=True)
+    is_join_confirmation_necessary = models.BooleanField(default=True)
 
     payment = models.JSONField(default=payment_default)
 

@@ -110,6 +110,8 @@ export interface Team {
   players: Player[];
   image: string;
   is_open: boolean;
+  description: string;
+  is_join_confirmation_necessary: boolean;
   payment: {
     [key: string]: {
       id: number;

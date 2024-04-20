@@ -24,16 +24,21 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
   const onImageSubmit = async (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     e.stopPropagation();
+
     const target = e.target as HTMLInputElement;
+
     if (!target.files || !props.teamId) {
       return;
     }
+
     const formData = new FormData();
+
     formData.append("image", target.files[0]);
-    console.log(target.files[0]);
+
     await dispatch(
       uploadMatchResultImage({ formData, matchId: props.match.id })
     );
+
     window.location.reload();
   };
   const selfResImage = props.selfParticipant?.res_image;

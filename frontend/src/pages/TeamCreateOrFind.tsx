@@ -3,7 +3,7 @@ import { Layout } from "../processes/Layout";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
 import { getUser } from "../shared/rtk/user";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { ROUTES } from "../shared/RouteTypes";
 import ButtonMain from "../shared/ButtonMain";
 const serverURL = import.meta.env.VITE_API_URL;
@@ -28,9 +28,7 @@ const TeamCreateOrFind = () => {
     loading,
     loginFail
   } = useAppSelector((state) => state.user);
-  if (!isAuthenticated && !loading && loginFail) {
-    return <Layout>Необходима авторизация!</Layout>;
-  }
+
   const [page, setPage] = useState(0);
   const [formData, setFormData] = useState({
     teamName: ""
@@ -58,6 +56,18 @@ const TeamCreateOrFind = () => {
     const target = e.target as HTMLInputElement;
     return setSearch(target.value);
   };
+
+  if (!isAuthenticated && !loading && loginFail) {
+    return <Layout>Необходима авторизация!</Layout>;
+  }
+
+  if (
+    isAuthenticated &&
+    user?.team &&
+    (user.team_status !== "PENDING" || user.team_status !== "REJECTED")
+  ) {
+    navigate(ROUTES.TEAMS.TEAM_BY_ID.buildPath({ id: user.team }));
+  }
 
   return (
     <Layout>
@@ -141,13 +151,17 @@ const TeamCreateOrFind = () => {
                     team.name.toLowerCase().includes(search.toLowerCase())
                   )
                   .slice(page * 4, page * 4 + 4)
+                  .sort((t1, t2) => t2.id - t1.id)
                   .map((team) => {
                     const cap = team.players.find(
                       (p) => p.team_status === "CAPTAIN"
                     );
                     return (
-                      <div
-                        className={`shadow mx-auto w-full relative hover:bg-turquoise hover:bg-opacity-30 transition h-20 bg-transparent
+                      <Link
+                        to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({
+                          id: team.id
+                        })}
+                        className={`shadow mx-auto w-full relative hover:bg-turquoise hover:before:bg-opacity-60 before:transition before:duration-200 h-20 bg-transparent
                     flex text-center justify-between  items-center rounded-[10px] after:absolute 
                     before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                   after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
@@ -191,7 +205,10 @@ const TeamCreateOrFind = () => {
                           </div>
                           {team.is_open ? (
                             <button
-                              onClick={async () => {
+                              onClick={async (e) => {
+                                e.stopPropagation();
+                                e.preventDefault();
+
                                 if (!user) {
                                   return;
                                 }
@@ -281,7 +298,7 @@ const TeamCreateOrFind = () => {
                             </svg>
                           )}
                         </div>
-                      </div>
+                      </Link>
                     );
                   })}
               </div>
