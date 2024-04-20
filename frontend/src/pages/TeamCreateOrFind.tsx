@@ -64,7 +64,8 @@ const TeamCreateOrFind = () => {
   if (
     isAuthenticated &&
     user?.team &&
-    (user.team_status !== "PENDING" || user.team_status !== "REJECTED")
+    user.team_status !== "PENDING" &&
+    user.team_status !== "REJECTED"
   ) {
     navigate(ROUTES.TEAMS.TEAM_BY_ID.buildPath({ id: user.team }));
   }
