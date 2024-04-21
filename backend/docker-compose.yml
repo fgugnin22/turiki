@@ -7,6 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: django
+    restart: unless-stopped
     command: sh -c "mkdir -p /usr/src/app/turiki_app/migrations && touch /usr/src/app/turiki_app/migrations/__init__.py && python manage.py makemigrations && python manage.py migrate && daphne -b 0.0.0.0 -p 8000 core.asgi:application"
     volumes:
       - .:/usr/src/app
@@ -18,12 +19,14 @@ services:
       - dramatiq
   dramatiq:
     image: backend
+    restart: unless-stopped
+    command: sh -c "python manage.py rundramatiq --processes 4 --threads 4"
     volumes:
       - .:/usr/src/app
-    command: sh -c "python manage.py rundramatiq --processes 4 --threads 4"
     depends_on:
       - redis
   redis:
+    restart: unless-stopped
     image: redis:5
     ports:
       - "6379:6379"
@@ -34,5 +37,6 @@ services:
       - POSTGRES_USER=$PG_USER
       - POSTGRES_DB=TurikiCore
     container_name: pgdb
+    restart: unless-stopped
     ports:
       - "5431:5431"
