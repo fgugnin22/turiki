@@ -97,7 +97,7 @@ const Team = () => {
               onClick={() => setDropdown((p) => !p)}
               className={
                 "absolute top-2 right-2 z-30 w-9 h-9 flex items-center justify-center transition " +
-                "sm:top-4 sm:right-4 rounded-[10px] hover:bg-turquoise hover:bg-opacity-30 "
+                "sm:top-4 sm:right-4 rounded-[10px] hover:bg-turquoise hover:bg-opacity-30 z-50"
               }
             >
               <Dots />
@@ -143,7 +143,7 @@ const Team = () => {
               </div>
             )}
             <div className="flex relative z-30 flex-col">
-              <div className="flex items-center justify-between lg:justify-start lg:gap-10 text-2xl font-semibold">
+              <div className="flex flex-col gap-4 lg:flex-row items-center justify-between lg:justify-start lg:gap-10 text-2xl font-semibold">
                 <label
                   style={{
                     gridTemplateAreas: "a"
@@ -178,7 +178,7 @@ const Team = () => {
                     hidden
                   />
                 </label>
-                <div className="flex items-center justify-between w-3/5">
+                <div className="flex items-center justify-between w-full lg:w-3/5">
                   {showInput ? (
                     <div
                       className="rounded-[10px] relative right-3 after:absolute 
@@ -415,10 +415,10 @@ const Team = () => {
                     await navigator.clipboard.writeText(location.href);
                     setTimeout(() => setInviteClicked(false), 3000);
                   }}
-                  className="mt-8 font-semibold text-lg py-3 active:py-[10px] focus:py-[10px]"
+                  className="mt-8 text-base px-0 lg:text-lg font-semibold py-3 active:py-[10px] focus:py-[10px]"
                 >
                   {inviteClicked
-                    ? "Ссылка скопирована в буфер обмена!"
+                    ? "Ссылка скопирована!"
                     : "Поделиться ссылкой на команду"}
                 </ButtonMain>
               ) : (

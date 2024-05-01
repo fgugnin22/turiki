@@ -4,8 +4,6 @@ import { ROUTES } from "../shared/RouteTypes";
 const serverURL = import.meta.env.VITE_API_URL;
 const Footer = () => {
   return (
-    // <!-- Footer container -->
-
     <footer className="mt-auto pt-14 pb-20 grid grid-cols-4 items-start justify-between ">
       <div className="flex justify-start items-center gap-[30px]">
         <img
