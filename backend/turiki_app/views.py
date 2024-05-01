@@ -420,11 +420,16 @@ class TeamAPIView(ModelViewSet):
     @action(
         methods=["PATCH", "PUT"],
         detail=True,
-        permission_classes=[IsCaptainOfThisTeamOrAdmin],
+        permission_classes=[IsAuthenticated],
     )
     def change_name(self, request, pk=None):
         try:
+            user = request.user
             team = self.get_object()
+
+            if user.team_status != "CAPTAIN" or user.team.id != team.id:
+                return Response(status=403)
+
             name = request.data.get("name", team.name)
             res = TeamService.change_team_name(team, name)
             return Response(res, 200)

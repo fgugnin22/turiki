@@ -27,3 +27,4 @@ ball.json
 backend/**/*/migrations/*
 !backend/**/*/migrations/__init__.py
 backend/**/*/__pycache__
+backend/assets
