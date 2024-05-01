@@ -118,7 +118,7 @@ const RegistrationForm = () => {
               }
             />
             <Angle color={formErrors?.name ? "#A7652C" : "#21DBD3"} />
-            <span className=" absolute z-50 text-sm -bottom-5 text-warning">
+            <span className=" absolute z-50 text-xs -bottom-5 text-warning">
               {formErrors?.name ?? ""}
             </span>
           </div>
@@ -145,7 +145,7 @@ const RegistrationForm = () => {
               }
             />
             <Angle color={formErrors?.email ? "#A7652C" : "#21DBD3"} />
-            <span className=" absolute z-50 text-sm -bottom-5 text-warning">
+            <span className=" absolute z-50 text-xs -bottom-5 text-warning">
               {formErrors?.email ?? ""}
             </span>
           </div>
@@ -173,7 +173,7 @@ const RegistrationForm = () => {
                 required
               />
               <Angle color={formErrors?.password ? "#A7652C" : "#21DBD3"} />
-              <span className=" absolute z-50 text-sm -bottom-5 text-warning">
+              <span className=" absolute z-50 text-xs -bottom-5 text-warning">
                 {formErrors?.password ?? ""}
               </span>
             </div>
@@ -203,7 +203,7 @@ const RegistrationForm = () => {
                 required
               />
               <Angle color={formErrors?.re_password ? "#A7652C" : "#21DBD3"} />
-              <span className=" absolute z-50 text-sm -bottom-5 text-warning">
+              <span className=" absolute z-50 text-xs -bottom-5 text-warning">
                 {formErrors?.re_password ?? ""}
               </span>
             </div>

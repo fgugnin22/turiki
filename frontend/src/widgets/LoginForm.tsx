@@ -126,7 +126,7 @@ const LoginForm = () => {
             required
           />
           <Angle color={error ? "#A7652C" : "#21DBD3"} />
-          <span className=" absolute z-50 text-sm -bottom-6 text-warning">
+          <span className=" absolute z-50 text-sm -bottom-5 lg:-bottom-6 text-warning">
             {error ? "Неверные данные учётной записи" : ""}
           </span>
         </div>
