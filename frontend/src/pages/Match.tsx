@@ -11,6 +11,8 @@ import { useCountdown } from "../hooks/useCountDown";
 import ButtonMain from "../shared/ButtonMain";
 import { ROUTES } from "../shared/RouteTypes";
 import AdminChat from "../features/AdminChat";
+import React, { ReactEventHandler, useEffect, useState } from "react";
+import useWindowSize from "../hooks/useWindowSize";
 
 const serverURL = import.meta.env.VITE_API_URL;
 
@@ -23,6 +25,8 @@ const Match = () => {
 
   const params = useParams();
 
+  const [showChat, setShowChat] = useState(document.body.clientWidth > 900);
+
   const {
     data: match,
     isFetching,
@@ -32,15 +36,6 @@ const Match = () => {
       id: params.id!
     },
     { pollingInterval: 5000 }
-  );
-
-  const { data: nextMatch } = tournamentAPI.useGetMatchByIdQuery(
-    {
-      id: match?.next_match ?? -1
-    },
-    {
-      skip: (match?.next_match ?? -1) === -1
-    }
   );
 
   const { data: team1 } = tournamentAPI.useGetTeamByIdQuery(
@@ -90,6 +85,12 @@ const Match = () => {
   const timeToNextAction = useCountdown(started);
   const { seconds, minutes } = useCountdown(new Date(timeToBan));
 
+  const windowSize = useWindowSize();
+
+  useEffect(() => {
+    setShowChat(windowSize.width > 900);
+  }, [windowSize.width]);
+
   if (isError) {
     navigate(ROUTES.NO_MATCH404.path);
   }
@@ -98,6 +99,46 @@ const Match = () => {
     <Layout>
       {match && (
         <>
+          <button
+            onClick={() => setShowChat((p) => !p)}
+            className="fixed bottom-4 right-4 lg:hidden"
+          >
+            <svg
+              width="45"
+              height="45"
+              viewBox="0 0 45 45"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <circle
+                cx="22.5"
+                cy="22.5"
+                r="22.5"
+                fill="url(#paint0_linear_786_1002)"
+              />
+              <path
+                d="M32.3813 26.8627C32.9711 25.5285 33.2987 24.0525 33.2987 22.4999C33.2987 16.5353 28.4634 11.7 22.4987 11.7C16.5341 11.7 11.6987 16.5353 11.6987 22.4999C11.6987 28.4646 16.5341 33.2999 22.4987 33.2999C24.4191 33.2999 26.2224 32.7987 27.785 31.92L33.3008 33.2989L32.3813 26.8627Z"
+                fill="white"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+              <defs>
+                <linearGradient
+                  id="paint0_linear_786_1002"
+                  x1="45"
+                  y1="0"
+                  x2="5.36442e-06"
+                  y2="45"
+                  gradientUnits="userSpaceOnUse"
+                >
+                  <stop stopColor="#18A3DC" />
+                  <stop offset="1" stopColor="#21DBD3" />
+                </linearGradient>
+              </defs>
+            </svg>
+          </button>
           <div className="text-center mt-2 text-2xl relative">
             <p
               data-content={`Матч 1/${2 ** Number(match.name)}, Best of ${
@@ -306,14 +347,16 @@ const Match = () => {
               {match.state !== "NO_SHOW" &&
                 (!user?.is_staff
                   ? isAuthenticated &&
-                    selfParticipant && (
+                    selfParticipant &&
+                    showChat && (
                       <Chat
                         teamId={selfParticipant?.team.id ?? -1}
                         lobby={match.lobby}
                       />
                     )
                   : isAuthenticated &&
-                    selfParticipant && (
+                    selfParticipant &&
+                    showChat && (
                       <AdminChat
                         lobby={match.lobby}
                         teams={match.participants.map((p) => p.team)}

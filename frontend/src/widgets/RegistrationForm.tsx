@@ -208,7 +208,7 @@ const RegistrationForm = () => {
               </span>
             </div>
             {accountCreated && (
-              <span className="absolute -bottom-6 text-center w-full text-xs">
+              <span className="absolute -bottom-[25px] lg:-bottom-5 lg:text-xs z-50 leading-3 text-center w-full text-[10px]">
                 Чтобы войти, нужно перейти по ссылке, отправленной на вашу
                 почту!
               </span>

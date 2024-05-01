@@ -87,13 +87,16 @@ const TeamCreateOrFind = () => {
               Нельзя создать команду при открытой заявке на вступление в другую
               команду
             </p>
-            <form className="flex gap-8" onSubmit={onSubmit}>
+            <form
+              className="flex gap-3 lg:gap-8 flex-col lg:flex-row"
+              onSubmit={onSubmit}
+            >
               <div
                 className="rounded-[10px] relative after:absolute 
                                 before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
-                               w-4/5 mr-auto"
+                               w-full lg:w-4/5 mr-auto"
               >
                 <input
                   className="absolute top-0 bottom-0 left-0 right-0 w-full h-full z-20 bg-transparent outline-none px-3 autofill:bg-transparent placeholder:text-lightblue text-lightblue"
@@ -146,7 +149,7 @@ const TeamCreateOrFind = () => {
                 />
               </div>
 
-              <div className="flex flex-col gap-6 mt-8 h-[392px]">
+              <div className="flex flex-col gap-5 lg:gap-6 mt-8 lg:h-[392px]">
                 {teamList
                   ?.filter((team) =>
                     team.name.toLowerCase().includes(search.toLowerCase())
@@ -162,15 +165,15 @@ const TeamCreateOrFind = () => {
                         to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({
                           id: team.id
                         })}
-                        className={`shadow mx-auto w-full relative hover:bg-turquoise hover:before:bg-opacity-60 before:transition before:duration-200 h-20 bg-transparent
-                    flex text-center justify-between  items-center rounded-[10px] after:absolute 
+                        className={`shadow mx-auto w-full relative hover:bg-turquoise hover:before:bg-opacity-60 before:transition before:duration-200 lg:h-20 bg-transparent
+                    flex  text-center justify-between  items-center rounded-[10px] after:absolute 
                     before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                   after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                     before:z-10 z-20 before:bg-dark before:rounded-[9px]`}
                         key={team.id}
                       >
-                        <div className="relative flex flex-row items-center justify-evenly flex-nowrap z-30 w-full h-full">
-                          <div className="flex w-[30%] overflow-clip h-full items-center  border-r border-lightblue z-30">
+                        <div className="relative flex flex-col lg:flex-row items-center justify-evenly flex-nowrap z-30 w-full h-full">
+                          <div className="flex lg:w-[30%] py-6 overflow-clip h-full items-center  lg:border-r border-lightblue z-30">
                             <p
                               data-content={team.name}
                               className="before:text-lg before:top-0 before:bottom-0 before:left-0 before:right-0 text-center text-lg before:w-full font-semibold  before:text-center before:bg-gradient-to-l 
@@ -180,7 +183,9 @@ const TeamCreateOrFind = () => {
                               {team.name}
                             </p>
                           </div>
-                          <div className="flex items-center justify-center gap-1 z-20 w-[28%]">
+                          <div className="h-[1px] relative z-50 w-full bg-gradient-to-r from-lightblue to-turquoise lg:hidden"></div>
+
+                          <div className="flex items-center justify-center gap-1 z-20 lg:w-[28%] mt-6 lg:mt-0">
                             <p
                               data-content={cap?.name}
                               className="before:text-lg before:top-0 before:bottom-0 before:left-0 before:right-0 text-left text-lg before:w-full font-semibold before:text-left before:bg-gradient-to-l 
@@ -194,7 +199,7 @@ const TeamCreateOrFind = () => {
                               className=""
                             />
                           </div>
-                          <div className="flex items-center justify-center gap-1 z-20 w-[28%]">
+                          <div className="flex items-center justify-center gap-1 z-20 lg:w-[28%] mt-6 lg:mt-0">
                             <p
                               data-content={"Игроков: " + team.players.length}
                               className="before:text-lg before:top-0 before:bottom-0 before:left-0 before:right-0 text-left text-lg before:w-full font-semibold before:text-left before:bg-gradient-to-l 
@@ -227,7 +232,7 @@ const TeamCreateOrFind = () => {
                                 );
                               }}
                               className={
-                                "w-9 h-9 mr-2 rounded-[10px] transition flex items-center justify-center hover:bg-turquoise hover:bg-opacity-40 " +
+                                "w-9 h-9 mr-2 rounded-[10px] transition flex items-center justify-center bg-turquoise bg-opacity-30 hover:bg-opacity-40 my-6 lg:my-0 " +
                                 `${
                                   user?.team_status === "PENDING" &&
                                   !team.players.find((p) => p.id === user.id)
