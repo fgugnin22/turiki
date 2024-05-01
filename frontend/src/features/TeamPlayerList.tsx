@@ -37,15 +37,15 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
     >
       <Angle color="#21DBD3" />
       <div className="w-full h-full relative z-50">
-        <div className="flex items-center mt-7 mx-14 justify-between">
+        <div className="flex items-center mt-2 lg:mt-7 lg:mx-14 justify-between">
           <Link
             className="flex justify-between w-full"
             to={ROUTES.TEAMS.TEAM_BY_ID.buildPath({ id: props.team.id })}
           >
             <p
               data-content={props.team.name}
-              className="before:text-[20px] before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
-                           text-left text-[20px] font-medium  before:text-left before:bg-gradient-to-l 
+              className="before:lg:text-[20px] text-sm before:text-sm mx-auto lg:m-0 before:font-medium before:top-0 before:bottom-0 before:left-0 before:right-0 
+                           lg:text-left lg:text-[20px] font-medium  before:text-left before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
             >
@@ -55,27 +55,30 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
               <img
                 alt="profil"
                 src={`${serverURL}/${getImagePath(props.team.image)}`}
-                className="object-cover rounded-full h-10 w-10 "
+                className="hidden lg:block object-cover rounded-full h-10 w-10 "
               />
             )}
           </Link>
         </div>
-        <div className="bg-gradient-to-r from-lightblue to-turquoise h-[1px] neonshadow mx-9 mt-5"></div>
-        <ul className="flex flex-wrap gap-y-7 my-7 mx-12">
+        <div className="bg-gradient-to-r from-lightblue to-turquoise h-[1px] neonshadow mx-2 mt-[6px] lg:mx-9 lg:mt-5"></div>
+        <ul className="flex flex-wrap gap-2 m-2 lg:gap-y-7 lg:my-7 lg:mx-12">
           {props.team.players
             .filter((plr) => {
               return tournament?.players.find((p) => p.id === plr.id);
             })
             .map((player, i) => {
               return (
-                <li key={i} className="flex items-center space-x-4">
+                <li
+                  key={i}
+                  className="flex items-center gap-[7px] lg:gap-4 text-xs"
+                >
                   <img
                     src={
                       Number(player?.image?.length) > 0
                         ? serverURL + "/" + getImagePath(player.image!)
                         : serverURL + "/media/img/defaultuser.svg"
                     }
-                    className="w-10 h-10 rounded-full"
+                    className="w-[15px] lg:w-10 h-[15px] lg:h-10 rounded-full"
                   />
                   <div className="flex flex-wrap  text-lightblue font-medium">
                     <p className="block">
@@ -88,10 +91,10 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
                     {player.team_status === "CAPTAIN" && (
                       <img
                         src={`${serverURL}/media/img/crown.svg`}
-                        className="ml-1 block"
+                        className="ml-1 block w-[13px] lg:w-[initial]"
                       />
                     )}
-                    <p className=" block w-full">
+                    <p className="hidden lg:block w-full">
                       <span className="text-lightgray">r6: </span>
                       {player.game_name}
                     </p>

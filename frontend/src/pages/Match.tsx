@@ -10,7 +10,6 @@ import MapBans from "../shared/MapBans";
 import { useCountdown } from "../hooks/useCountDown";
 import ButtonMain from "../shared/ButtonMain";
 import { ROUTES } from "../shared/RouteTypes";
-import ButtonSecondary from "../shared/ButtonSecondary";
 import AdminChat from "../features/AdminChat";
 
 const serverURL = import.meta.env.VITE_API_URL;
@@ -19,6 +18,8 @@ const Match = () => {
   const { userDetails: user, isAuthenticated } = useAppSelector(
     (state) => state.user
   );
+
+  const navigate = useNavigate();
 
   const params = useParams();
 
@@ -47,13 +48,6 @@ const Match = () => {
     {
       skip: isFetching || !match?.participants[0]?.team?.id
     }
-  );
-
-  const tournament = tournamentAPI.useGetTournamentByIdQuery(
-    {
-      id: match?.tournament ?? -1
-    },
-    { skip: match?.tournament === undefined }
   );
 
   const { data: team2 } = tournamentAPI.useGetTeamByIdQuery(
@@ -96,63 +90,15 @@ const Match = () => {
   const timeToNextAction = useCountdown(started);
   const { seconds, minutes } = useCountdown(new Date(timeToBan));
 
-  const prevMatch = tournament.data?.matches.find(
-    (m) =>
-      m.next_match === match?.id &&
-      m.participants.findIndex((p) => p.team.id === user?.team) !== -1
-  );
-
-  const navigate = useNavigate();
   if (isError) {
     navigate(ROUTES.NO_MATCH404.path);
   }
+
   return (
     <Layout>
       {match && (
         <>
           <div className="text-center mt-2 text-2xl relative">
-            {prevMatch && (
-              <Link
-                to={ROUTES.MATCHES.MATCH_BY_ID.buildPath({ id: prevMatch.id })}
-              >
-                <ButtonSecondary
-                  type="button"
-                  className="!absolute top-1 left-0 flex z-40 items-center px-4 justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8] text-lg"
-                >
-                  <span
-                    data-content="Предыдущий матч"
-                    className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
-              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
-                before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
-                  >
-                    Предыдущий матч
-                  </span>
-                </ButtonSecondary>
-              </Link>
-            )}
-            {match.next_match &&
-              nextMatch &&
-              nextMatch.participants.length > 0 && (
-                <Link
-                  to={ROUTES.MATCHES.MATCH_BY_ID.buildPath({
-                    id: match.next_match
-                  })}
-                >
-                  <ButtonSecondary
-                    type="button"
-                    className="!absolute z-40 top-1 right-0 flex items-center px-4 justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8] text-lg"
-                  >
-                    <span
-                      data-content="Следующий матч"
-                      className="z-40 before:w-full before:text-center before:bg-gradient-to-b 
-              before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
-                before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
-                    >
-                      Следующий матч
-                    </span>
-                  </ButtonSecondary>
-                </Link>
-              )}
             <p
               data-content={`Матч 1/${2 ** Number(match.name)}, Best of ${
                 match.is_bo3 ? "3" : "1"
@@ -210,7 +156,7 @@ const Match = () => {
               ((timeBeforeMatchStart.seconds > 0 ||
                 timeBeforeMatchStart.minutes > 0 ||
                 timeBeforeMatchStart.hours > 0) && (
-                <p className="text-lg font-normal text-lightgray mb-4">
+                <p className="text-sm lg:text-lg font-normal text-lightgray mb-4">
                   <span>До начала матча осталось: </span>
                   <span
                     data-content={`${
@@ -247,10 +193,10 @@ const Match = () => {
                 </p>
               ))}
           </div>
-          <div className="grid grid-cols-2 justify-center gap-x-[140px] relative mt-8">
+          <div className="grid grid-cols-2 justify-center gap-x-[33px] lg:gap-x-[140px] relative mt-8">
             <img
               src={`${serverURL}/media/img/versus.svg`}
-              className="absolute z-50 top-[65px] left-[calc(50%-25px)]"
+              className="absolute z-50 top-[24px] lg:top-[65px] left-1/2 -translate-x-1/2 w-[20px] lg:w-[50px]"
             />
             <>
               {match && match.participants[0] && team1 && (
@@ -259,7 +205,7 @@ const Match = () => {
               {match && match.participants[1] && team2 && (
                 <TeamPlayerList tournamentId={match.tournament!} team={team2} />
               )}
-              <div className="order-1">
+              <div className="order-1 lg:col-span-1 col-span-2">
                 {match?.state === "ACTIVE" || match?.state === "CONTESTED" ? (
                   <MatchResultVote
                     selfParticipant={selfParticipant!}
@@ -269,7 +215,7 @@ const Match = () => {
                   />
                 ) : (
                   match?.state === "RES_SEND_LOCKED" && (
-                    <div className="text-center mt-8 text-lg">
+                    <div className="text-center mt-8 text-lg leading-6">
                       <span>Результаты можно будет опубликовать через: </span>
                       <p
                         data-content={
@@ -286,7 +232,7 @@ const Match = () => {
                               }`
                             : "..."
                         }
-                        className="before:text-lg before:font-medium before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 before:bottom-0 before:left-0 before:right-0 
+                        className="before:text-lg  before:font-medium before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 before:bottom-0 before:left-0 before:right-0 
                              text-lg font-medium  before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent 
                 before:absolute relative before:content-[attr(data-content)] z-50"
@@ -313,6 +259,18 @@ const Match = () => {
                     match={match}
                   />
                 )}
+                {match?.state === "SCORE_DONE" && match.next_match && (
+                  <Link
+                    className="flex items-center w-full mt-12"
+                    to={ROUTES.MATCHES.MATCH_BY_ID.buildPath({
+                      id: match.next_match
+                    })}
+                  >
+                    <ButtonMain className="mx-auto font-medium">
+                      Перейти к следующему матчу!
+                    </ButtonMain>
+                  </Link>
+                )}
                 {match.state === "IN_GAME_LOBBY_CREATION" &&
                 user?.team === selfParticipant?.team.id &&
                 user?.team_status === "CAPTAIN" ? (
@@ -336,7 +294,7 @@ const Match = () => {
                           teamId: user.team
                         });
                       }}
-                      className="py-4 w-full focus:py-[14px] active:py-[14px] text-center disabled:opacity-60"
+                      className="py-4 font-medium px-0 w-full focus:py-[14px] active:py-[14px] text-center disabled:opacity-60"
                     >
                       Моя команда зашла в лобби!
                     </ButtonMain>

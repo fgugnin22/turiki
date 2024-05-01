@@ -104,7 +104,7 @@ const Chat = (props: ChatProps) => {
 
   return (
     <div
-      className="order-3 justify-self-end flex flex-col grow mt-4 w-full bg-transparent text-lightgray rounded-[10px]
+      className="hidden order-3 justify-self-end lg:flex flex-col grow mt-4 w-full bg-transparent text-lightgray rounded-[10px]
     overflow-hidden min-h-[400px] relative after:absolute 
     before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[2px] after:bg-gradient-to-r
   after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 

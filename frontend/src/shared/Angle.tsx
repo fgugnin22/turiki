@@ -1,6 +1,6 @@
 export const Angle = ({ color }: { color: string }) => (
   <svg
-    className="absolute z-30 right-2 top-2"
+    className="absolute z-30 right-2 top-2 hidden lg:block"
     width="12"
     height="13"
     viewBox="0 0 12 13"
