@@ -56,7 +56,7 @@ const Header = () => {
   return (
     <header
       className={
-        "flex lg:justify-between text-lightgray items-center h-[78px] relative gap-8 " +
+        "flex lg:justify-between text-lightgray items-center h-[78px] relative lg:gap-8 " +
         (areMobileLinkVisible ? "bg-darkestturq lg:bg-transparent" : "")
       }
     >
@@ -113,7 +113,7 @@ const Header = () => {
         </svg>
       </button>
       <Link
-        className="ml-3 flex items-center justify-center text-lg gap-3"
+        className="ml-12 flex items-center justify-center text-lg gap-3"
         to={ROUTES.TOURNAMENTS.path}
       >
         <img
@@ -240,13 +240,17 @@ const Header = () => {
           </div>
         </>
       ) : (
-        <div className="flex justify-between items-center gap-3">
+        <div className="flex justify-between items-center gap-0 lg:gap-3 flex-col lg:flex-row ml-auto lg:m-0">
           <Link
-            className=" flex gap-[19px] justify-between items-center rounded-[10px] hover:bg-turquoise hover:bg-opacity-20 active:bg-turquoise active:bg-opacity-60 h-[52px] pl-5 pr-5 neonshadow transition-colors"
+            className=" flex gap-[19px] justify-between items-center rounded-[10px] hover:bg-turquoise hover:bg-opacity-20 active:bg-turquoise active:bg-opacity-60 lg:h-[52px] pl-5 pr-5 neonshadow transition-colors"
             to={ROUTES.LOGIN.path}
             type="button"
           >
-            <img src={`${serverURL}/media/img/defaultuser.svg`} alt="" />
+            <img
+              className="hidden lg:block"
+              src={`${serverURL}/media/img/defaultuser.svg`}
+              alt=""
+            />
             <span
               data-content="Вход"
               className="before:text-lg text-lg before:font-semibold before:bg-gradient-to-r before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
@@ -257,7 +261,7 @@ const Header = () => {
           </Link>
           <span
             data-content="/"
-            className="before:text-lg neonshadow font-black before:bg-gradient-to-r before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+            className="hidden lg:block before:lg:text-lg neonshadow font-black before:bg-gradient-to-r before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                         before:absolute relative before:content-[attr(data-content)] neonshadow scale-150 mx-2 mb-1"
           >
             /
@@ -266,8 +270,8 @@ const Header = () => {
             to={ROUTES.REGISTER_ACCOUNT.path}
             type="button"
             data-content="Регистрация"
-            className="before:text-lg text-lg before:font-semibold before:bg-gradient-to-r before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
-                        before:absolute relative before:content-[attr(data-content)] neonshadow rounded-[10px] hover:bg-turquoise hover:bg-opacity-20 h-[52px] px-4 flex items-center transition-colors
+            className="hidden lg:flex before:lg:text-lg lg:text-lg before:font-semibold before:bg-gradient-to-r before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+                        before:absolute relative before:content-[attr(data-content)] neonshadow rounded-[10px] hover:bg-turquoise hover:bg-opacity-20 lg:h-[52px] px-4 items-center transition-colors
                         active:bg-turquoise active:bg-opacity-60"
           >
             <span className="">Регистрация</span>
