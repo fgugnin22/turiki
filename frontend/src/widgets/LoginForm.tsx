@@ -172,7 +172,7 @@ const LoginForm = () => {
         className="before:w-full mx-auto mt-6 font-medium w-4/5 block before:top-0 before:bottom-0 before:left-0 before:right-0 before:text-center text-center before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] before:hover:bg-lightblue before:hover:bg-none text-lg transition"
-        to={ROUTES.RESET_PASSWORD.path}
+        to={ROUTES.REGISTER_ACCOUNT.path}
       >
         Зарегистрироваться
       </Link>

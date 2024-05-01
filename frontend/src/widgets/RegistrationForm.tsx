@@ -68,14 +68,14 @@ const RegistrationForm = () => {
 
   return (
     <div
-      className="min-w-[500px] leading-10 relative after:absolute after:opacity-[0.04] after:top-0 after:bottom-0 after:left-0 after:right-0 
+      className="w-full lg:w-[initial] lg:min-w-[500px] leading-10 relative after:absolute after:opacity-[0.04] after:top-0 after:bottom-0 after:left-0 after:right-0 
           mx-auto my-auto rounded-[10px] after:rounded-[10px] 
           border border-turquoise after:bg-gradient-to-b after:from-transparent 
         after:to-darkturquoise after:z-[-1] py-[52px] flex flex-col"
     >
       <h2
         data-content="Зарегистрироваться"
-        className="before:text-[44px] before:top-0 before:bottom-0 before:left-0 before:right-0  w-full text-center text-[44px] before:w-full  before:text-center before:font-extrabold before:bg-gradient-to-r 
+        className="before:lg:text-[44px] lg:h-10 neonshadow text-2xl before:text-2xl before:top-0 before:bottom-0 before:left-0 before:right-0  w-full text-center lg:text-[44px] before:w-full  before:text-center before:font-extrabold before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
       >
@@ -149,14 +149,14 @@ const RegistrationForm = () => {
               {formErrors?.email ?? ""}
             </span>
           </div>
-          <div className="flex justify-center gap-[15px] relative">
+          <div className="flex flex-col lg:flex-row items-center justify-center lg:gap-[15px] w-4/5 mx-auto relative">
             <div
               className={
                 `rounded-[10px] relative after:absolute 
                                 before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                              after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                                before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
-                               mt-7 w-[calc(40%-7.5px)]` +
+                               mt-7 w-full` +
                 (formErrors?.password ? "after:!bg-warning after:!bg-none" : "")
               }
             >
@@ -183,7 +183,7 @@ const RegistrationForm = () => {
                 before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
                 after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                 before:z-10 z-20 before:bg-dark before:rounded-[9px] bg-transparent h-12
-                mt-7 w-[calc(40%-7.5px)] ` +
+                mt-7 w-full ` +
                 (formErrors?.re_password
                   ? "after:!bg-warning after:!bg-none"
                   : "")
@@ -220,11 +220,11 @@ const RegistrationForm = () => {
           >
             Создать аккаунт
           </ButtonMain>
-          <div className="flex mt-8 w-4/5 justify-center items-center mx-auto gap-4">
+          <div className="flex mt-8 w-4/5 justify-center items-center mx-auto gap-4 flex-col lg:flex-row ">
             <ButtonSecondary
               type="button"
               onClick={continueWithGoogle}
-              className="flex items-center grow justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8]"
+              className="flex w-full lg:w-[initial] font-semibold items-center grow justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8]"
             >
               <span
                 data-content="Войти через Google"
@@ -238,7 +238,7 @@ const RegistrationForm = () => {
             <ButtonSecondary
               type="button"
               onClick={continueWithDiscord}
-              className="flex items-center grow justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8]"
+              className="flex w-full lg:w-[initial] font-semibold items-center grow justify-center py-[5px] mx-auto text-center !bg-transparent !drop-shadow-[0_0_1px_#4cf2f8]"
             >
               <span
                 data-content="Войти через Discord"
