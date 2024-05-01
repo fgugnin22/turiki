@@ -44,7 +44,7 @@ export const Layout = (props: {
           {props.children}
         </div>
         <Footer />
-        <div className="fixed bottom-4 right-4 flex flex-col-reverse gap-4 z-50 bg-dark">
+        <div className="fixed bottom-0 left-0 right-0 py-4 lg:left-[unset] lg:py-0 lg:bottom-4 lg:right-4 flex justify-center items-center flex-col-reverse gap-4 z-50">
           {notifications?.data?.map((n) => (
             <NotificationElem key={n.id} data={n} />
           ))}

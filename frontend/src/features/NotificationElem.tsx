@@ -18,9 +18,17 @@ const NotificationElem = (props: NotificationProps) => {
         id: props.data.content.match.match_id
       })}
       onClick={handleRead}
-      className="w-[400px] h-24 bg-turquoise bg-opacity-30 hover:bg-opacity-50 transition duration-100 rounded-[5px] flex px-[28px] items-center gap-8 relative"
+      className=" w-[95%] mx-auto lg:mx-0 lg:w-[400px] h-24 bg-turquoise bg-opacity-30 hover:bg-opacity-50 transition duration-100 rounded-[5px] flex px-[28px] items-center gap-4 lg:gap-8 relative"
     >
-      <svg width="41" height="40" viewBox="0 0 41 40" fill="none">
+      <div className="rounded-[5px] absolute top-0 bottom-0 right-0 left-0 bg-turquoise bg-opacity-30 hover:bg-opacity-50 z-10"></div>
+      <div className="rounded-[5px] absolute top-0 bottom-0 right-0 left-0 bg-dark"></div>
+      <svg
+        className="z-10 w-10 h-10 relative"
+        width="41"
+        height="40"
+        viewBox="0 0 41 40"
+        fill="none"
+      >
         <path
           d="M40.2273 20C40.2273 30.7611 31.3426 39.5 20.3636 39.5C9.38472 39.5 0.5 30.7611 0.5 20C0.5 9.2389 9.38472 0.5 20.3636 0.5C31.3426 0.5 40.2273 9.2389 40.2273 20Z"
           stroke="url(#paint0_linear_709_1760)"
@@ -92,7 +100,7 @@ const NotificationElem = (props: NotificationProps) => {
           </linearGradient>
         </defs>
       </svg>
-      <p className="text-lg font-semibold bg-gradient-to-r from-turquoise bg-clip-text to-lightblue text-transparent">
+      <p className="z-10 lg:text-lg font-semibold bg-gradient-to-r from-turquoise bg-clip-text to-lightblue text-transparent">
         {props.data.content?.match?.state === "SOON" && "Матч скоро начнётся!"}
         {props.data.content?.match?.state === "STARTED" && "Матч начался!"}
       </p>
@@ -102,7 +110,7 @@ const NotificationElem = (props: NotificationProps) => {
           e.preventDefault();
           handleRead();
         }}
-        className="absolute right-2 top-2 p-2 rounded-lg hover:bg-turquoise hover:bg-opacity-20 transition duration-100"
+        className="z-10 absolute right-2 top-2 p-2 rounded-lg hover:bg-turquoise hover:bg-opacity-20 transition duration-100"
       >
         <svg
           width="15"

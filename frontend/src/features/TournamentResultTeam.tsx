@@ -36,7 +36,7 @@ const TournamentResultTeam: React.FC<TournamentResultTeamProps> = (props) => {
       : `${placement}-${2 ** Number(bestMatch?.name)}`;
 
   return (
-    <div className="px-4 h-20 flex items-center border-b border-b-lightblue last-of-type:border-none text-xl font-medium">
+    <div className="px-4 h-20 flex items-center border-b border-b-lightblue last-of-type:border-none lg:text-xl font-medium">
       <p className="flex items-center w-14 justify-between">
         {placementStr}
         {placement < 3 && (
@@ -73,7 +73,7 @@ const TournamentResultTeam: React.FC<TournamentResultTeamProps> = (props) => {
         )}
       </p>
       <img
-        className=" object-cover h-14 w-14 rounded-full ml-12 mr-4"
+        className=" object-cover w-10 lg:h-14 h-10 lg:w-14 rounded-full ml-6 lg:ml-12 mr-4"
         src={`${serverURL}/${props.team.image}`}
       />
       <p>{props.team.name}</p>

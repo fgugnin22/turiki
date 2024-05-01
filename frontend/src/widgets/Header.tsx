@@ -253,7 +253,7 @@ const Header = () => {
             />
             <span
               data-content="Вход"
-              className="before:text-lg text-lg before:font-semibold before:bg-gradient-to-r before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
+              className="before:text-lg mr-2 lg:mr-0 text-lg before:font-semibold before:bg-gradient-to-r before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                         before:absolute relative before:content-[attr(data-content)]"
             >
               Вход

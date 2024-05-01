@@ -129,7 +129,7 @@ export const Tournament = () => {
   }
   return (
     <div className="flex flex-col bg-dark grow justify-start">
-      <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
+      <div className="mx-auto w-[310px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
         <Header />
       </div>
       {tournament ? (
@@ -141,8 +141,8 @@ export const Tournament = () => {
             className=" text-lightgray flex align-bottom pt-56 flex-wrap bg-cover bg-center"
           >
             <div className="mx-auto w-full lg:w-4/5 xl:w-[1100px] flex align-bottom flex-wrap">
-              <div className=" w-1/2 bg-transparent flex flex-col">
-                <p className=" text-white opacity-50 leading-6">
+              <div className=" w-full lg:w-1/2 bg-transparent flex flex-col">
+                <p className=" text-white opacity-50 leading-6 text-center lg:text-left">
                   {(tournament.status === "REGISTRATION_CLOSED_BEFORE_REG" &&
                     `Регистрация открется ${date.toLocaleDateString(
                       "ru"
@@ -152,21 +152,15 @@ export const Tournament = () => {
                 </p>
                 <p
                   data-content={tournament.name}
-                  className="before:w-full text-2xl leading-7 font-medium w-4/5 block before:top-0 before:bottom-0 before:left-0 before:right-0 before:text-left text-left before:bg-gradient-to-r 
+                  className="before:w-full text-2xl leading-7 font-medium lg:w-4/5 block before:top-0 before:bottom-0 before:left-0 before:right-0 
+                  before:text-center text-center before:lg:text-left lg:text-left before:bg-gradient-to-r 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
                 >
                   {tournament.name}
                 </p>
               </div>
-              <div className="w-1/2 bg-transparent flex flex-wrap justify-end">
-                <p className="w-full text-right text-white">
-                  <span className="opacity-50 !opacity-0">
-                    До конца регистрации:{" "}
-                  </span>
-                  <span className=" text-lightblue !opacity-0">00:12:32</span>
-                </p>
-
+              <div className="w-full mt-1 lg:mt-0 justify-center lg:w-1/2 bg-transparent flex flex-wrap lg:justify-end">
                 {(user?.team ?? false) &&
                   ((isTeamNotRegistered &&
                     tournament.status === "REGISTRATION_OPENED") ||
@@ -209,7 +203,7 @@ export const Tournament = () => {
                   </svg>
                 </ButtonSecondary>
               </div>
-              <div className="w-full font-medium text-base flex justify-start gap-24 items-center mt-5">
+              <div className="w-full font-medium text-xs justify-evenly lg:text-base flex lg:justify-start lg:gap-24 items-center mt-5">
                 <NavLink
                   className={({ isActive }) =>
                     `${
@@ -297,7 +291,7 @@ export const Tournament = () => {
             </div>
           ) : section === "participants" ? (
             <>
-              <div className="mx-auto pt-12 grid grid-cols-2 sm:grid-cols-3 gap-10 lg:grid-cols-3 w-full lg:w-4/5 xl:w-[1100px] min-h-[378px]">
+              <div className=" mx-4 lg:mx-auto pt-12 grid sm:grid-cols-2 gap-10 xl:grid-cols-3 lg:w-full lg:w-4/5 xl:w-[1100px] min-h-[378px]">
                 {sortedTeams.slice(page * 12, page * 12 + 12).map((team) => {
                   return (
                     <TournamentTeamPlayerList
@@ -409,7 +403,7 @@ export const Tournament = () => {
             </div>
           ) : section === "results" ? (
             <div className="mx-auto flex flex-col w-full lg:w-4/5 xl:w-[1100px] text-lightblue">
-              <div className="w-full px-4 h-12 flex items-center gap-24 border-b border-b-lightblue">
+              <div className="w-full px-4 h-12 flex items-center gap-[72px] lg:gap-24 border-b border-b-lightblue">
                 <p>#</p>
                 <p>Команда</p>
               </div>
@@ -432,7 +426,7 @@ export const Tournament = () => {
           <TriangleLoader />
         </div>
       )}
-      <div className="fixed bottom-4 right-4 flex flex-col-reverse gap-4 z-50 bg-dark">
+      <div className="fixed bottom-4 right-4 flex flex-col-reverse gap-4 z-50">
         {notifications?.data?.map((n: INotification) => (
           <NotificationElem key={n.id} data={n} />
         ))}

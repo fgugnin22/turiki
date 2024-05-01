@@ -138,8 +138,11 @@ const UserChangeForm = ({ name }: { name: string }) => {
     after:border after:border-turquoise after:bg-gradient-to-b after:from-transparent 
   after:to-darkturquoise after:from-[-30%] after:to-[3000%]"
     >
-      <form className="relative z-30 px-14 py-10" onSubmit={onSubmit}>
-        <div className="flex gap-0 sm:gap-10 justify-between items-center lg:justify-start">
+      <form
+        className="relative z-30 px-4 py-8 lg:px-14 lg:py-10"
+        onSubmit={onSubmit}
+      >
+        <div className="flex flex-col lg:flex-row gap-0 sm:gap-10 justify-between items-center lg:justify-start">
           <label
             style={{
               gridTemplateAreas: "a"
@@ -172,7 +175,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
             accept="image/png"
             hidden
           />
-          <div className="mb-8 lg:grow">
+          <div className="mb-8 lg:grow flex flex-col-reverse lg:block">
             <button
               type="button"
               onClick={() => setNameOpened((p) => !p)}
@@ -182,7 +185,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
               {nameOpened ? (
                 <span
                   data-content="Редактировать профиль"
-                  className="z-40 before:w-full before:text-center before:bg-gradient-to-l 
+                  className="z-40 text-sm lg:text-base before:w-full before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
                 before:absolute relative before:content-[attr(data-content)] before:hover:bg-none before:hover:bg-turquoise"
                 >
@@ -199,7 +202,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
                           after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
                             before:z-10 z-20 before:bg-dark before:rounded-[8px] 
                             before:bg-gradient-to-b before:from-transparent from-[-100%] before:to-darkturquoise before:to-[900%] bg-transparent h-12
-                            mt-1 w-full mx-auto"
+                            my-4 lg:my-0 w-full mx-auto"
               >
                 <input
                   type="text"
@@ -217,8 +220,8 @@ const UserChangeForm = ({ name }: { name: string }) => {
             ) : (
               <p
                 data-content={name}
-                className="before:text-[28px] mt-[9px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
-                            w-full text-left text-[28px] before:w-full font-medium  before:text-left before:bg-gradient-to-b
+                className="text-center before:text-center before:text-[28px] mt-[9px] before:font-semibold before:top-0 before:bottom-0 before:left-0 before:right-0 
+                            w-full text-[28px] before:w-full font-medium  lg:text-left lg:before:text-left before:bg-gradient-to-b
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
                 before:absolute relative before:content-[attr(data-content)]"
               >
@@ -287,26 +290,26 @@ const UserChangeForm = ({ name }: { name: string }) => {
             </span>
           </div>
           {!nameOpened && !newPasswordOpened ? (
-            <div className="flex justify-between w-full">
+            <div className="flex flex-col lg:flex-row justify-between w-full gap-4 mt-8 lg:mt-[60px]">
               <ButtonMain
                 type="submit"
-                className="font-semibold text-lg py-3 mt-[60px] px-9 focus:py-[10px] w-[45%]"
+                className="font-semibold text-lg py-3  px-9 focus:py-[10px] w-full"
               >
                 Сохранить
               </ButtonMain>
               <ButtonMain
                 onClick={() => setNewPasswordOpened(true)}
                 type="button"
-                className="font-semibold text-lg py-3 mt-[60px] px-9 focus:py-[10px] active:py-[10px] w-[45%]"
+                className="font-semibold text-lg py-3  px-9 focus:py-[10px] active:py-[10px] w-full"
               >
                 Изменить пароль
               </ButtonMain>
             </div>
           ) : nameOpened ? (
-            <div className="flex justify-between w-full">
+            <div className="flex flex-col lg:flex-row justify-between w-full gap-4 mt-8 lg:mt-[60px]">
               <ButtonMain
                 type="submit"
-                className="font-semibold text-lg py-3 mt-[60px] px-9 focus:py-[10px] w-[45%]"
+                className="font-semibold text-lg py-3  px-9 focus:py-[10px] w-full"
               >
                 Сохранить
               </ButtonMain>
@@ -316,7 +319,7 @@ const UserChangeForm = ({ name }: { name: string }) => {
                   setNameOpened(false);
                   setNewPasswordOpened(false);
                 }}
-                className="font-semibold text-lg py-3 mt-[60px] px-9 focus:py-[10px] w-[45%]"
+                className="font-semibold text-lg py-3  px-9 focus:py-[10px] w-full"
               >
                 <span
                   data-content="Отмена"
