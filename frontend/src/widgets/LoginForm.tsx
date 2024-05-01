@@ -47,7 +47,7 @@ const LoginForm = () => {
   const navigate = useNavigate();
   return (
     <div
-      className="min-w-[500px] leading-10 relative after:absolute after:opacity-[0.04] after:top-0 after:bottom-0 after:left-0 after:right-0 
+      className="w-full lg:w-[initial] lg:min-w-[500px] leading-10 relative after:absolute after:opacity-[0.04] after:top-0 after:bottom-0 after:left-0 after:right-0 
     mx-auto my-auto rounded-[10px] after:rounded-[10px] 
     border border-turquoise after:bg-gradient-to-b after:from-transparent 
   after:to-darkturquoise after:z-[-1] py-12 flex flex-col"
@@ -60,18 +60,18 @@ const LoginForm = () => {
       >
         Вход
       </h2>
-      <div className="w-[85%] flex mt-8 justify-center items-center mx-auto">
+      <div className="w-[85%] flex flex-col lg:flex-row mt-8 justify-center items-center mx-auto gap-3 lg:gap-0 font-medium">
         <ButtonMain
           type="button"
           onClick={continueWithGoogle}
-          className="py-[5px] block mx-auto focus:py-[3.5px] focus:px-[18px] duration-200 after:bg-gradient-to-l active:px-[18px]"
+          className="py-[5px] w-full lg:w-[initial] block mx-auto focus:py-[3.5px] focus:px-[18px] duration-200 after:bg-gradient-to-l active:px-[18px]"
         >
           <span className="z-40">Войти через Google</span>
         </ButtonMain>
         <ButtonMain
           type="button"
           onClick={continueWithDiscord}
-          className="py-[5px] block mx-auto focus:py-[3.5px] focus:px-[18px] duration-200 after:bg-gradient-to-l active:px-[18px]"
+          className="py-[5px] w-full lg:w-[initial] block mx-auto focus:py-[3.5px] focus:px-[18px] duration-200 after:bg-gradient-to-l active:px-[18px]"
         >
           <span className="z-40">Войти через Discord</span>
         </ButtonMain>
