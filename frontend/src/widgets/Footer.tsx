@@ -4,8 +4,8 @@ import { ROUTES } from "../shared/RouteTypes";
 const serverURL = import.meta.env.VITE_API_URL;
 const Footer = () => {
   return (
-    <footer className="mt-auto pt-14 pb-20 grid grid-cols-4 items-start justify-between ">
-      <div className="flex justify-start items-center gap-[30px]">
+    <footer className="mt-auto pt-14 pb-20 grid grid-cols-1 px-4 lg:px-0 lg:grid-cols-4 items-start justify-between ">
+      <div className="flex justify-start items-center gap-3 lg:gap-[30px]">
         <img
           width="40"
           height="40"
@@ -20,7 +20,7 @@ const Footer = () => {
           Signal Cup
         </span>
       </div>
-      <div className="flex flex-col justify-between items-start min-h-[120px] mt-[9px]">
+      <div className="flex flex-col gap-2 lg:gap-0 lg:justify-between items-start lg:min-h-[120px] mt-[9px]">
         <Link
           data-content="На главную"
           className=" text-lightgray 
@@ -64,7 +64,7 @@ const Footer = () => {
           Разработчики
         </Link>
       </div>
-      <div className="flex flex-col justify-between items-start min-h-[120px] mt-[9px]">
+      <div className="flex flex-col gap-2 lg:gap-0 lg:justify-between items-start lg:min-h-[120px] mt-2 lg:mt-[9px]">
         <Link
           data-content="Поддержка"
           className=" text-lightgray 
@@ -108,7 +108,7 @@ const Footer = () => {
           Условия
         </Link>
       </div>
-      <div className="flex flex-col justify-between items-start min-h-[120px] mt-[9px]">
+      <div className="flex flex-col justify-between items-start lg:min-h-[120px] mt-[9px]">
         <Link
           data-content="Политика конфиденциальности"
           className=" text-lightgray 
@@ -123,7 +123,7 @@ const Footer = () => {
         >
           Политика конфиденциальности
         </Link>
-        <div className="flex gap-4">
+        <div className="flex gap-4 mt-4 lg:mt-0">
           <img src={serverURL + "/media/img/discord.svg"} alt="" />
           <img src={serverURL + "/media/img/vkontakte.svg"} alt="" />
           <img src={serverURL + "/media/img/email.svg"} alt="" />
