@@ -17,10 +17,14 @@ interface MatchResultVoteProps {
 }
 
 const MatchResultVote = (props: MatchResultVoteProps) => {
-  const team = useAppSelector((state) => state.user.userDetails?.team);
-  const [claimMatchResult, {}] = tournamentAPI.useClaimMatchResultMutation();
-  const [result, setResult] = useState<"won" | "lost" | undefined>(undefined);
   const dispatch = useAppDispatch();
+
+  const team = useAppSelector((state) => state.user.userDetails?.team);
+
+  const [claimMatchResult, {}] = tournamentAPI.useClaimMatchResultMutation();
+
+  const [result, setResult] = useState<"won" | "lost" | undefined>(undefined);
+
   const onImageSubmit = async (e: React.FormEvent<HTMLInputElement>) => {
     e.preventDefault();
     e.stopPropagation();
@@ -41,25 +45,32 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
 
     window.location.reload();
   };
+
   const selfResImage = props.selfParticipant?.res_image;
+
   const vsParticipant =
     props.match.participants[0].id === props.selfParticipant?.id
       ? props.match.participants[1]
       : props.match.participants[0];
+
   let timeBeforeAutoRes: any = new Date(props.match?.first_result_claimed);
+
   timeBeforeAutoRes.setMinutes(
     timeBeforeAutoRes.getMinutes() +
       Number(props.match?.time_to_confirm_results.split(":")[1])
   );
+
   timeBeforeAutoRes.setSeconds(
     timeBeforeAutoRes.getSeconds() +
       Number(props.match?.time_to_confirm_results.split(":")[2])
   );
+
   timeBeforeAutoRes = useCountdown(timeBeforeAutoRes);
 
   if (!props.teamId) {
     return <></>;
   }
+
   return (
     <>
       {props.match.state === "CONTESTED" ? (
@@ -87,10 +98,14 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
               vsParticipant.is_winner === null)) && (
             <p className="-mb-5">
               Результаты выставятся автоматически через{" "}
-              {timeBeforeAutoRes.minutes}:
-              {timeBeforeAutoRes.seconds > 9
-                ? timeBeforeAutoRes.seconds
-                : `0${timeBeforeAutoRes.seconds}`}{" "}
+              {timeBeforeAutoRes.isInThePast
+                ? "..."
+                : `${timeBeforeAutoRes.minutes}:
+              ${
+                timeBeforeAutoRes.seconds > 9
+                  ? timeBeforeAutoRes.seconds
+                  : `0${timeBeforeAutoRes.seconds}`
+              }`}
             </p>
           )}
           <div className="flex items-center flex-col lg:flex-row gap-6 lg:gap-10 justify-evenly mt-10">

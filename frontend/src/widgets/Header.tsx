@@ -113,7 +113,7 @@ const Header = () => {
         </svg>
       </button>
       <Link
-        className="ml-12 flex items-center justify-center text-lg gap-3"
+        className="ml-12 lg:ml-0 flex items-center justify-center text-lg gap-3"
         to={ROUTES.TOURNAMENTS.path}
       >
         <img

@@ -83,7 +83,49 @@ const Match = () => {
     ).getTime();
   const timeBeforeMatchStart = useCountdown(starts);
   const timeToNextAction = useCountdown(started);
-  const { seconds, minutes } = useCountdown(new Date(timeToBan));
+
+  const timeB4MatchStartsStr = `${
+    timeBeforeMatchStart.hours > 9
+      ? timeBeforeMatchStart.hours
+      : "0" + timeBeforeMatchStart.hours
+  }:${
+    timeBeforeMatchStart.minutes > 9
+      ? timeBeforeMatchStart.minutes
+      : "0" + timeBeforeMatchStart.minutes
+  }:${
+    timeBeforeMatchStart.seconds > 9
+      ? timeBeforeMatchStart.seconds
+      : "0" + timeBeforeMatchStart.seconds
+  }`;
+
+  const timeB4PublishResStr =
+    timeToNextAction.seconds >= 0 &&
+    timeToNextAction.minutes >= 0 &&
+    !timeToNextAction.isInThePast
+      ? `${
+          timeToNextAction.minutes > 9
+            ? timeToNextAction.minutes
+            : "0" + timeToNextAction.minutes
+        }:${
+          timeToNextAction.seconds > 9
+            ? timeToNextAction.seconds
+            : "0" + timeToNextAction.seconds
+        }`
+      : "...";
+
+  const { seconds, minutes, isInThePast } = useCountdown(new Date(timeToBan));
+
+  const insideLobbyStr = !selfParticipant?.in_lobby
+    ? `На заход в лобби осталось: ${
+        timeToNextAction.isInThePast
+          ? "..."
+          : `${timeToNextAction.minutes}:${
+              timeToNextAction.seconds > 9
+                ? timeToNextAction.seconds
+                : "0" + timeToNextAction.seconds
+            }`
+      }`
+    : "Ваша команда уже в лобби";
 
   const windowSize = useWindowSize();
 
@@ -197,42 +239,16 @@ const Match = () => {
             ) : (
               ""
             )) ||
-              ((timeBeforeMatchStart.seconds > 0 ||
-                timeBeforeMatchStart.minutes > 0 ||
-                timeBeforeMatchStart.hours > 0) && (
+              (!timeBeforeMatchStart.isInThePast && (
                 <p className="text-sm lg:text-lg font-normal text-lightgray mb-4">
                   <span>До начала матча осталось: </span>
                   <span
-                    data-content={`${
-                      timeBeforeMatchStart.hours > 9
-                        ? timeBeforeMatchStart.hours
-                        : "0" + timeBeforeMatchStart.hours
-                    }:${
-                      timeBeforeMatchStart.minutes > 9
-                        ? timeBeforeMatchStart.minutes
-                        : "0" + timeBeforeMatchStart.minutes
-                    }:${
-                      timeBeforeMatchStart.seconds > 9
-                        ? timeBeforeMatchStart.seconds
-                        : "0" + timeBeforeMatchStart.seconds
-                    }`}
+                    data-content={timeB4MatchStartsStr}
                     className="before:text-lg before:drop-shadow-[0_0_1px_#4cf2f8] before:-top-[2px] before:bottom-0 before:left-0 before:right-0 w-full text-center text-lg before:w-full before:text-center before:bg-gradient-to-l 
           before:from-turquoise before:bg-clip-text before:to-lightblue text-transparent
             before:absolute relative before:content-[attr(data-content)]"
                   >
-                    {`${
-                      timeBeforeMatchStart.hours > 9
-                        ? timeBeforeMatchStart.hours
-                        : "0" + timeBeforeMatchStart.hours
-                    }:${
-                      timeBeforeMatchStart.minutes > 9
-                        ? timeBeforeMatchStart.minutes
-                        : "0" + timeBeforeMatchStart.minutes
-                    }:${
-                      timeBeforeMatchStart.seconds > 9
-                        ? timeBeforeMatchStart.seconds
-                        : "0" + timeBeforeMatchStart.seconds
-                    }`}
+                    {timeB4MatchStartsStr}
                   </span>
                 </p>
               ))}
@@ -262,37 +278,13 @@ const Match = () => {
                     <div className="text-center mt-8 text-lg leading-6">
                       <span>Результаты можно будет опубликовать через: </span>
                       <p
-                        data-content={
-                          timeToNextAction.seconds >= 0 &&
-                          timeToNextAction.minutes >= 0
-                            ? `${
-                                timeToNextAction.minutes > 9
-                                  ? timeToNextAction.minutes
-                                  : "0" + timeToNextAction.minutes
-                              }:${
-                                timeToNextAction.seconds > 9
-                                  ? timeToNextAction.seconds
-                                  : "0" + timeToNextAction.seconds
-                              }`
-                            : "..."
-                        }
+                        data-content={timeB4PublishResStr}
                         className="before:text-lg  before:font-medium before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 before:bottom-0 before:left-0 before:right-0 
                              text-lg font-medium  before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent 
                 before:absolute relative before:content-[attr(data-content)] z-50"
                       >
-                        {timeToNextAction.seconds >= 0 &&
-                        timeToNextAction.minutes >= 0
-                          ? `${
-                              timeToNextAction.minutes > 9
-                                ? timeToNextAction.minutes
-                                : "0" + timeToNextAction.minutes
-                            }:${
-                              timeToNextAction.seconds > 9
-                                ? timeToNextAction.seconds
-                                : "0" + timeToNextAction.seconds
-                            }`
-                          : "..."}
+                        {timeB4PublishResStr}
                       </p>
                     </div>
                   )
@@ -321,13 +313,7 @@ const Match = () => {
                   <div className="order-1 flex w-4/5 mx-auto flex-col mt-14 relative">
                     <p className="text-center mb-4">
                       {!selfParticipant?.in_lobby
-                        ? `На заход в лобби осталось: ${
-                            timeToNextAction.minutes
-                          }:${
-                            timeToNextAction.seconds > 9
-                              ? timeToNextAction.seconds
-                              : "0" + timeToNextAction.seconds
-                          }`
+                        ? insideLobbyStr
                         : "Ваша команда уже в лобби"}
                     </p>
                     <ButtonMain

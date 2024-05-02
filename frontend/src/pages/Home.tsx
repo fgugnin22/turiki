@@ -9,6 +9,7 @@ import {
   discordAuthenticate,
   googleAuthenticate
 } from "../shared/rtk/user";
+
 const server_URL = import.meta.env.VITE_API_URL;
 
 const Home = () => {
@@ -68,7 +69,7 @@ const Home = () => {
           </h1>
           {!isAuthenticated && (
             <ButtonMain
-              className="lg:py-5 lg:px-36 lg:hover:py-5 lg:hover:px-36 lg:active:px-[142px] lg:focus:py-[18px] lg:active:py-[18px] lg:focus:px-[142px] lg:mr-auto"
+              className="mx-4 mt-2 lg:mt-0 lg:mx-0 lg:py-5 lg:px-36 lg:hover:py-5 lg:hover:px-36 lg:active:px-[142px] lg:focus:py-[18px] lg:active:py-[18px] lg:focus:px-[142px] lg:mr-auto"
               onClick={handleRedirect}
             >
               Зарегистрироваться
@@ -76,9 +77,6 @@ const Home = () => {
           )}
         </div>
       </section>
-      {/* <div className="mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col justify-between">
-                <Footer />
-            </div> */}
     </div>
   );
 };
