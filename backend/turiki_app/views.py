@@ -35,7 +35,26 @@ class UserAPIView(GenericViewSet):
     parser_classes = [MultiPartParser, JSONParser]
 
     @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
-    def notifications(self, request, pk=None):
+    def ongoing_match(self, request):
+        user = request.user
+        team = user.team
+
+        active_statuses = ["ACTIVE", "RES_SEND_LOCKED", "BANS", "IN_GAME_LOBBY_CREATION", "CONTESTED"]
+
+        ongoing_matches = Match.objects.filter(state__in=active_statuses)
+
+        for match in ongoing_matches:
+            tournament = match.tournament
+            if tournament.players.filter(pk=user.id).count() == 1 and \
+                    match.participants.filter(team__id=team.id).count() == 1:
+                match_serializer: MatchSerializer = MatchSerializer(match)
+                return Response(match_serializer.data)
+            
+        return Response(status=404)
+
+
+    @action(methods=["GET"], detail=False, permission_classes=[IsAuthenticated])
+    def notifications(self, request):
         user = request.user
         unread_notifications = Notification.objects.filter(user__id=user.id, is_read=False).values()
         return Response(list(unread_notifications), status=200, content_type="application/json")
@@ -405,16 +424,23 @@ class TeamAPIView(ModelViewSet):
     @action(
         methods=["PATCH", "DELETE"],
         detail=True,
-        permission_classes=[IsCaptainOfThisTeamOrAdmin],
+        permission_classes=[IsAuthenticated],
     )
     def invite(self, request, pk=None):
+        user = request.user
         team = self.get_object()
+
+        if user.team.id != team.id or user.team_status != "CAPTAIN":
+            return Response(status=403)
+
         player = UserAccount.objects.get(pk=request.data["player_id"])
+
         res = None
         if request.method == "PATCH":
             res = TeamService.invite_player(team, player)
         elif request.method == "DELETE":
             res = TeamService.remove_from_team(team, player)
+
         return Response(res)
 
     @action(

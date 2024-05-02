@@ -246,24 +246,30 @@ class TeamService:
     @staticmethod
     def remove_from_team(team: Team, player):
         try:
+            if player.name == team.next_member:
+                team.next_member = None
+
+            if player.team_status == "CAPTAIN":
+                for plr in team.players.all():
+                    if plr.team_status == "ACTIVE":
+                        plr.team_status = "CAPTAIN"
+                        plr.save()
+                        break
+
             player.team = None
             player.team_status = None
             player.save()
 
-            if player.name == team.next_member:
-                team.next_member = None
-                team.save()
-
             team.save()
-            for plr in team.players.all():
-                if plr.team_status == "ACTIVE":
-                    plr.team_status = "CAPTAIN"
-                    plr.save()
-                    break
+
+            print(team.players.count(), type(team.players.count()))
 
             if team.players.count() == 0:
+                print(123)
                 team.delete()
+                return
 
+            team.save()
             return "player kicked from team"
         except:
             return "None"

@@ -281,6 +281,7 @@ export const tournamentAPI = createApi({
       },
       invalidatesTags: ["Team"]
     }),
+
     leaveFromTeam: build.mutation<null, number>({
       query: (teamId) => {
         return {
@@ -297,6 +298,14 @@ export const tournamentAPI = createApi({
         };
       },
       providesTags: ["Chat"]
+    }),
+    getOngoingMatch: build.query<Match, null>({
+      query: () => {
+        return {
+          url: `user/ongoing_match/`
+        };
+      },
+      providesTags: ["Match"]
     }),
     getNotifications: build.query<INotification[], undefined>({
       query: () => {

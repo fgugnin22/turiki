@@ -70,9 +70,11 @@ const Team = () => {
     navigate(ROUTES.TEAMS.CREATE.path);
   };
 
+  const canChangeTeamName =
+    Number(teamId) === Number(params.id) && team_status === "CAPTAIN";
+
   useEffect(() => {
     if (data?.description && newTeamDescription === "") {
-      console.log(data?.description, "\n", newTeamDescription === "");
       setNewTeamDescription(data.description);
     }
   }, [data?.description]);
@@ -179,7 +181,7 @@ const Team = () => {
                   />
                 </label>
                 <div className="flex items-center justify-between w-full lg:w-3/5">
-                  {showInput ? (
+                  {showInput && canChangeTeamName ? (
                     <div
                       className="rounded-[10px] relative right-3 after:absolute 
                             before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:inset-[1px] after:bg-gradient-to-r
@@ -236,48 +238,49 @@ const Team = () => {
                     </span>
                   )}
                   <button onClick={() => setShowInput((p) => !p)}>
-                    {showInput ? (
-                      <svg
-                        width="23"
-                        height="23"
-                        viewBox="0 0 18 17"
-                        fill="none"
-                        className="rotate-[42deg] transition"
-                      >
-                        <path
-                          d="M16.5789 6.8502H10.4211V1.28441C10.4211 0.575051 9.78483 0 9 0C8.21517 0 7.57895 0.575051 7.57895 1.28441V6.8502H1.42105C0.636226 6.8502 0 7.42525 0 8.13462C0 8.84398 0.636226 9.41903 1.42105 9.41903H7.57895V14.9848C7.57895 15.6942 8.21517 16.2692 9 16.2692C9.78483 16.2692 10.4211 15.6942 10.4211 14.9848V9.41903H16.5789C17.3638 9.41903 18 8.84398 18 8.13462C18 7.42525 17.3638 6.8502 16.5789 6.8502Z"
-                          fill="url(#paint0_linear_466_1089)"
-                        />
-                        <defs>
-                          <linearGradient
-                            id="paint0_linear_466_1089"
-                            x1="27.9474"
-                            y1="-8.99089"
-                            x2="-6.12936"
-                            y2="28.711"
-                            gradientUnits="userSpaceOnUse"
-                          >
-                            <stop stopColor="#21DBD3" />
-                            <stop offset="1" stopColor="#18A3DC" />
-                          </linearGradient>
-                        </defs>
-                      </svg>
-                    ) : (
-                      <svg
-                        className="relative top-[1px]"
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="none"
-                      >
-                        <path
-                          fillRule="evenodd"
-                          clipRule="evenodd"
-                          d="M9.88611 1.75414L10.809 0.80216C11.8822 -0.267385 13.622 -0.267387 14.6952 0.802158C15.7683 1.8717 15.7683 3.60578 14.6952 4.67533L13.9653 5.37822L9.88611 1.75414ZM8.78916 2.88561L0.842392 11.0825L0 15.5L4.38044 14.6088L12.8278 6.47367L8.78916 2.88561Z"
-                          fill="#21DBD3"
-                        />
-                      </svg>
-                    )}
+                    {canChangeTeamName &&
+                      (showInput ? (
+                        <svg
+                          width="23"
+                          height="23"
+                          viewBox="0 0 18 17"
+                          fill="none"
+                          className="rotate-[42deg] transition"
+                        >
+                          <path
+                            d="M16.5789 6.8502H10.4211V1.28441C10.4211 0.575051 9.78483 0 9 0C8.21517 0 7.57895 0.575051 7.57895 1.28441V6.8502H1.42105C0.636226 6.8502 0 7.42525 0 8.13462C0 8.84398 0.636226 9.41903 1.42105 9.41903H7.57895V14.9848C7.57895 15.6942 8.21517 16.2692 9 16.2692C9.78483 16.2692 10.4211 15.6942 10.4211 14.9848V9.41903H16.5789C17.3638 9.41903 18 8.84398 18 8.13462C18 7.42525 17.3638 6.8502 16.5789 6.8502Z"
+                            fill="url(#paint0_linear_466_1089)"
+                          />
+                          <defs>
+                            <linearGradient
+                              id="paint0_linear_466_1089"
+                              x1="27.9474"
+                              y1="-8.99089"
+                              x2="-6.12936"
+                              y2="28.711"
+                              gradientUnits="userSpaceOnUse"
+                            >
+                              <stop stopColor="#21DBD3" />
+                              <stop offset="1" stopColor="#18A3DC" />
+                            </linearGradient>
+                          </defs>
+                        </svg>
+                      ) : (
+                        <svg
+                          className="relative top-[1px]"
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="none"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            clipRule="evenodd"
+                            d="M9.88611 1.75414L10.809 0.80216C11.8822 -0.267385 13.622 -0.267387 14.6952 0.802158C15.7683 1.8717 15.7683 3.60578 14.6952 4.67533L13.9653 5.37822L9.88611 1.75414ZM8.78916 2.88561L0.842392 11.0825L0 15.5L4.38044 14.6088L12.8278 6.47367L8.78916 2.88561Z"
+                            fill="#21DBD3"
+                          />
+                        </svg>
+                      ))}
                   </button>
                 </div>
               </div>
