@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Match, Match2, Participant } from "../helpers/transformMatches";
+import { Match, Participant } from "../helpers/transformMatches";
 import { useCountdown } from "../hooks/useCountDown";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
@@ -7,6 +7,7 @@ import { uploadMatchResultImage } from "../shared/rtk/user";
 import RadioTrue from "../shared/RadioTrue";
 import RadioFalse from "../shared/RadioFalse";
 import ButtonMain from "../shared/ButtonMain";
+
 const serverURL = import.meta.env.VITE_API_URL;
 
 interface MatchResultVoteProps {
@@ -100,12 +101,11 @@ const MatchResultVote = (props: MatchResultVoteProps) => {
               Результаты выставятся автоматически через{" "}
               {timeBeforeAutoRes.isInThePast
                 ? "..."
-                : `${timeBeforeAutoRes.minutes}:
-              ${
-                timeBeforeAutoRes.seconds > 9
-                  ? timeBeforeAutoRes.seconds
-                  : `0${timeBeforeAutoRes.seconds}`
-              }`}
+                : `${timeBeforeAutoRes.minutes}:${
+                    timeBeforeAutoRes.seconds > 9
+                      ? timeBeforeAutoRes.seconds
+                      : `0${timeBeforeAutoRes.seconds}`
+                  }`}
             </p>
           )}
           <div className="flex items-center flex-col lg:flex-row gap-6 lg:gap-10 justify-evenly mt-10">

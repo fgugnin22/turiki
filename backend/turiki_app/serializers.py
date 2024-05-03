@@ -65,6 +65,15 @@ class MatchSerializer(serializers.ModelSerializer):
     lobby = LobbySerializer(many=False)
     next_match = serializers.PrimaryKeyRelatedField(read_only=True)
     tournament = serializers.PrimaryKeyRelatedField(read_only=True)
+    is_next_match_a_map = serializers.SerializerMethodField()
+
+    def get_is_next_match_a_map(self, match):
+        if match.is_bo3 and \
+                (match.bo3_order == 0 or match.bo3_order == 1 and match.next_match is not None):
+            return True
+
+        return False
+
     class Meta:
         depth = 2
         model = Match
@@ -88,6 +97,7 @@ class MatchSerializer(serializers.ModelSerializer):
             "is_visible",
             "bo3_order",
             "current_map",
+            "is_next_match_a_map"
         )
 
 

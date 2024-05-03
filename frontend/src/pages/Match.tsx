@@ -1,7 +1,7 @@
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { Layout } from "../processes/Layout";
 import { tournamentAPI } from "../shared/rtk/tournamentAPI";
-import { useAppSelector, useAppDispatch } from "../shared/rtk/store";
+import { useAppSelector } from "../shared/rtk/store";
 import Chat from "../features/Chat";
 import TeamPlayerList from "../features/TeamPlayerList";
 import MatchResultVote from "../features/MatchResultVote";
@@ -11,7 +11,7 @@ import { useCountdown } from "../hooks/useCountDown";
 import ButtonMain from "../shared/ButtonMain";
 import { ROUTES } from "../shared/RouteTypes";
 import AdminChat from "../features/AdminChat";
-import React, { ReactEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import useWindowSize from "../hooks/useWindowSize";
 
 const serverURL = import.meta.env.VITE_API_URL;
@@ -113,7 +113,7 @@ const Match = () => {
         }`
       : "...";
 
-  const { seconds, minutes, isInThePast } = useCountdown(new Date(timeToBan));
+  const { seconds, minutes } = useCountdown(new Date(timeToBan));
 
   const insideLobbyStr = !selfParticipant?.in_lobby
     ? `На заход в лобби осталось: ${
@@ -128,6 +128,14 @@ const Match = () => {
     : "Ваша команда уже в лобби";
 
   const windowSize = useWindowSize();
+
+  const isFirstTeamWinner =
+    match?.participants[0].is_winner &&
+    match.participants[1]?.is_winner === false;
+
+  const isSecondTeamWinner =
+    match?.participants[1].is_winner &&
+    match.participants[0]?.is_winner === false;
 
   useEffect(() => {
     setShowChat(windowSize.width > 900);
@@ -185,25 +193,37 @@ const Match = () => {
             </button>
           )}
           <div className="text-center mt-2 text-2xl relative">
-            <p
-              data-content={`Матч 1/${2 ** Number(match.name)}, Best of ${
-                match.is_bo3 ? "3" : "1"
-              }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
-              className="before:text-2xl before:font-semibold before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 before:bottom-0 before:left-0 before:right-0 
-                            w-full text-center text-2xl before:w-full font-medium  before:text-center before:bg-gradient-to-l 
+            <div className="flex flex-col-reverse sm:flex-row">
+              <Link
+                className="text-lg hover:underline block"
+                to={ROUTES.TOURNAMENTS.TOURNAMENT_BY_ID.BRACKET.buildPath({
+                  id: match.tournament ?? -1
+                })}
+              >
+                Перейти к турнирной сетке
+              </Link>
+              <p
+                data-content={`Матч 1/${2 ** Number(match.name)}, Best of ${
+                  match.is_bo3 ? "3" : "1"
+                }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
+                className="before:text-2xl before:font-semibold before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 before:bottom-0 before:left-0 before:right-0 
+                             text-center text-2xl font-medium  before:text-center before:bg-gradient-to-l 
               before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
-                before:absolute relative before:content-[attr(data-content)]"
-            >
-              {`Матч 1/${2 ** Number(match.name)}, Best of ${
-                match.is_bo3 ? "3" : "1"
-              }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
-            </p>
+                before:absolute sm:absolute sm:left-1/2 sm:-translate-x-1/2 before:content-[attr(data-content)]"
+              >
+                {`Матч 1/${2 ** Number(match.name)}, Best of ${
+                  match.is_bo3 ? "3" : "1"
+                }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
+              </p>
+            </div>
+
             {match.participants.length === 1 && match.state === "NO_SHOW" && (
               <p className="text-lightgray text-xl">Ожидается соперник...</p>
             )}
             {(selfParticipant?.is_winner ?? false) &&
               match.participants[0]?.is_winner !==
-                match.participants[1]?.is_winner && (
+                match.participants[1]?.is_winner &&
+              match.participants.every((p) => p.is_winner !== null) && (
                 <p
                   data-content={`${
                     selfParticipant?.is_winner
@@ -253,17 +273,25 @@ const Match = () => {
                 </p>
               ))}
           </div>
-          <div className="grid grid-cols-2 justify-center gap-x-[33px] lg:gap-x-[140px] relative mt-8">
+          <div className="grid grid-cols-2 justify-center gap-x-[33px] lg:gap-x-[140px] relative mt-4">
             <img
               src={`${serverURL}/media/img/versus.svg`}
               className="absolute z-50 top-[24px] lg:top-[65px] left-1/2 -translate-x-1/2 w-[20px] lg:w-[50px]"
             />
             <>
               {match && match.participants[0] && team1 && (
-                <TeamPlayerList tournamentId={match.tournament!} team={team1} />
+                <TeamPlayerList
+                  isWinner={isFirstTeamWinner ?? false}
+                  tournamentId={match.tournament!}
+                  team={team1}
+                />
               )}
               {match && match.participants[1] && team2 && (
-                <TeamPlayerList tournamentId={match.tournament!} team={team2} />
+                <TeamPlayerList
+                  isWinner={isSecondTeamWinner ?? false}
+                  tournamentId={match.tournament!}
+                  team={team2}
+                />
               )}
               <div className="order-1 lg:col-span-1 col-span-2">
                 {match?.state === "ACTIVE" || match?.state === "CONTESTED" ? (
@@ -303,7 +331,9 @@ const Match = () => {
                     })}
                   >
                     <ButtonMain className="mx-auto font-medium">
-                      Перейти к следующему матчу!
+                      {match.is_next_match_a_map
+                        ? "Перейти к следующей карте"
+                        : "Перейти к следующему матчу!"}
                     </ButtonMain>
                   </Link>
                 )}

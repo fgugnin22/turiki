@@ -102,7 +102,10 @@ export const tournamentAPI = createApi({
       query: () => {
         return { url: `tournament/` };
       },
-      providesTags: ["Tournament"]
+      providesTags: ["Tournament"],
+      transformResponse(baseQueryReturnValue: Tournament[]) {
+        return baseQueryReturnValue.sort((a, b) => b.id - a.id);
+      }
     }),
     registerTeamOnTournament: build.mutation<
       null,

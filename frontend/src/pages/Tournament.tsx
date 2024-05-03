@@ -6,7 +6,7 @@ import {
   Tournament as ITournament,
   INotification
 } from "../helpers/transformMatches.js";
-import { NavLink, useNavigate, useParams } from "react-router-dom";
+import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../shared/rtk/store";
 import { ROUTES } from "../shared/RouteTypes";
 import RegisterTeamModal from "../features/RegisterTeamModal";
@@ -22,6 +22,8 @@ import TournamentTeamPlayerList from "../features/TournamentTeamPlayerList";
 import TriangleLoader from "../shared/TriangleLoader";
 import NotificationElem from "../features/NotificationElem";
 import TournamentResultTeam from "../features/TournamentResultTeam";
+import TournamentOverview from "../widgets/TournamentOverview";
+import ButtonMain from "../shared/ButtonMain";
 
 const serverURL = import.meta.env.VITE_API_URL;
 
@@ -85,6 +87,8 @@ export const Tournament = () => {
     skip: !isAuthenticated,
     pollingInterval: 10000
   });
+
+  const ongoingMatch = tournamentAPI.useGetOngoingMatchQuery(null);
 
   useEffect(() => {
     if (state && code) {
@@ -173,6 +177,17 @@ export const Tournament = () => {
                       maxPlayers={tournament.max_players_in_team}
                     />
                   )}
+                {ongoingMatch.data && (
+                  <Link
+                    to={ROUTES.MATCHES.MATCH_BY_ID.buildPath({
+                      id: ongoingMatch.data.id
+                    })}
+                  >
+                    <ButtonMain className="font-semibold text-sm py-[6px] focus:py-1 active:py-1">
+                      Перейти к текущему матчу!
+                    </ButtonMain>
+                  </Link>
+                )}
                 <ButtonSecondary
                   onClick={async () =>
                     await navigator.clipboard.writeText(location.href)
@@ -403,7 +418,7 @@ export const Tournament = () => {
             </div>
           ) : section === "results" ? (
             <div className="mx-auto flex flex-col w-full lg:w-4/5 xl:w-[1100px] text-lightblue">
-              <div className="w-full px-4 h-12 flex items-center gap-[72px] lg:gap-24 border-b border-b-lightblue">
+              <div className="w-full px-4 h-12 flex items-center gap-[72px] lg:gap-24 border-b border-b-lightblue lg:text-lg">
                 <p>#</p>
                 <p>Команда</p>
               </div>
@@ -416,9 +431,7 @@ export const Tournament = () => {
               ))}
             </div>
           ) : (
-            <div className=" text-6xl text-center font-semibold py-12 text-lightblue">
-              Обзор
-            </div>
+            <TournamentOverview />
           )}
         </div>
       ) : (

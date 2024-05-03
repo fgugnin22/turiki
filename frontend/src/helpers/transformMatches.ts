@@ -59,6 +59,7 @@ export interface Match {
   is_visible: boolean;
   bo3_order: number;
   current_map: string;
+  is_next_match_a_map: boolean;
 }
 
 export interface Tournament {
@@ -89,7 +90,7 @@ export interface Participant {
   is_winner: boolean;
   result_text: any;
   team: Team;
-  match: Match2;
+  match: Match;
   in_lobby: boolean;
   res_image: string;
 }
@@ -118,22 +119,6 @@ export interface Team {
       is_confirmed: boolean;
     };
   };
-}
-export interface Match2 {
-  first_result_claimed: string;
-  started: string;
-  id: number;
-  name: string;
-  round_text: string;
-  state: string;
-  starts: string;
-  next_match: number;
-  tournament: number;
-  teams: number[];
-  is_bo3: boolean;
-  is_visible: boolean;
-  bo3_order: number;
-  current_map: string;
 }
 
 export interface NextMatch {
