@@ -1,3 +1,5 @@
+from django.db import close_old_connections
+from django.db import connection
 from django.db import transaction
 from rest_framework import serializers
 from apscheduler.schedulers.background import BackgroundScheduler
@@ -9,10 +11,10 @@ import datetime
 
 from turiki_app.match_services import claim_match_result, create_team_chat
 from turiki_app.models import Chat, Lobby, Match, Team, Participant, MapBan, Tournament, Notification, UserAccount
-from django_dramatiq.tasks import delete_old_tasks
+
 
 MSK_TIMEZONE = datetime.timezone(datetime.timedelta(hours=3))
-IN_A_MINUTE = datetime.datetime.now() + datetime.timedelta(minutes=0.5)
+
 
 @dramatiq.actor
 def set_match_start_bans(match_id: int):
@@ -220,7 +222,7 @@ def set_initial_matches(tournament):
             team=team2, match=match_object, status="NO_SHOW", result_text="TBD"
         )
         match_object.starts = tournament.starts
-        # datetime.datetime.now().
+
         exec_task_on_date(set_match_start_bans, [match_object.id], when=tournament.starts)
         exec_task_on_date(notify_team_for_match, [team2.id, match_object.id, "SOON"],
                         when=tournament.starts - datetime.timedelta(minutes=5))
@@ -331,3 +333,17 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             match1.next_match.save()
             create_match(next_round_count - 1, rounds, tournament, match1, starts)
             create_match(next_round_count - 1, rounds, tournament, match2, starts)
+
+@dramatiq.actor
+def clean_db_cons():
+    close_old_connections()
+    with connection.cursor() as cursor:
+        sql = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle'"
+        print(sql)
+        cursor.execute(sql)
+        row = cursor.fetchall()
+        print(row)
+    exec_task_on_date(clean_db_cons, [], when=datetime.datetime.now() + datetime.timedelta(minutes=1))
+
+
+exec_task_on_date(clean_db_cons, [], when=datetime.datetime.now() + datetime.timedelta(minutes=1))

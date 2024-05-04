@@ -3,22 +3,15 @@ from datetime import timedelta
 from pathlib import Path
 
 import psycopg2.extensions
-import social_core.backends.discord
 from dotenv import load_dotenv
 import redis
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv()
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-# Используется для шифрования jwt-токенов -> берется json-payload токена, смешивается шифрованием с этим ключом и получается электронная подпись токена(3 часть)
 SECRET_KEY = os.getenv("SECRET_KEY")
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv("DEBUG")
 
 INSTALLED_APPS = [

@@ -12,7 +12,7 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
   const [banMap] = tournamentAPI.useBanMapMutation();
 
   return (
-    <div className="order-1 place-self-center mx-auto flex flex-col col-span-2 shadow-xl mt-4 rounded-lg lg:w-[500px] lg:max-w-3/5 items-center min-w-[300px]">
+    <div className="order-1 place-self-center mx-auto flex flex-col col-span-2 shadow-xl mt-4 rounded-lg lg:w-[500px] items-center min-w-[300px]">
       <p
         data-content={`${
           (user?.team === match.participants[0]?.team.id ||

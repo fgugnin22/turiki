@@ -74,6 +74,7 @@ class MatchSerializer(serializers.ModelSerializer):
 
         return False
 
+
     class Meta:
         depth = 2
         model = Match

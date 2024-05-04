@@ -209,7 +209,12 @@ class TournamentAPIView(ModelViewSet):
 
     @action(methods=["POST"], detail=True, permission_classes=[IsAdminUser])
     def initialize_matches(self, request, pk=None):
-        set_initial_matches(tournament=self.get_object())
+        tournament = self.get_object()
+
+        if tournament.matches.filter(participants__isnull=False).count() > 0:
+            return Response(status=400)
+
+        set_initial_matches(tournament=tournament)
         return Response(status=201)
 
 

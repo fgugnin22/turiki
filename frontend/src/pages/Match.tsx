@@ -130,11 +130,11 @@ const Match = () => {
   const windowSize = useWindowSize();
 
   const isFirstTeamWinner =
-    match?.participants[0].is_winner &&
+    match?.participants[0]?.is_winner &&
     match.participants[1]?.is_winner === false;
 
   const isSecondTeamWinner =
-    match?.participants[1].is_winner &&
+    match?.participants[1]?.is_winner &&
     match.participants[0]?.is_winner === false;
 
   useEffect(() => {
@@ -206,14 +206,12 @@ const Match = () => {
                 data-content={`Матч 1/${2 ** Number(match.name)}, Best of ${
                   match.is_bo3 ? "3" : "1"
                 }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
-                className="before:text-2xl before:font-semibold before:drop-shadow-[0_0_1px_#4cf2f8] before:top-0 before:bottom-0 before:left-0 before:right-0 
-                             text-center text-2xl font-medium  before:text-center before:bg-gradient-to-l 
-              before:from-turquoise before:bg-clip-text before:to-lightblue before:to-[80%] text-transparent
-                before:absolute sm:absolute sm:left-1/2 sm:-translate-x-1/2 before:content-[attr(data-content)]"
+                className="bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent text-2xl font-extrabold
+                sm:absolute sm:left-1/2 sm:-translate-x-1/2"
               >
                 {`Матч 1/${2 ** Number(match.name)}, Best of ${
                   match.is_bo3 ? "3" : "1"
-                }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
+                }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : "1"} `}
               </p>
             </div>
 
@@ -293,6 +291,9 @@ const Match = () => {
                   team={team2}
                 />
               )}
+              {match.participants.length == 1 && (
+                <div className="order-1"></div>
+              )}
               <div className="order-1 lg:col-span-1 col-span-2">
                 {match?.state === "ACTIVE" || match?.state === "CONTESTED" ? (
                   <MatchResultVote
@@ -323,20 +324,22 @@ const Match = () => {
                     match={match}
                   />
                 )}
-                {match?.state === "SCORE_DONE" && match.next_match && (
-                  <Link
-                    className="flex items-center w-full mt-12"
-                    to={ROUTES.MATCHES.MATCH_BY_ID.buildPath({
-                      id: match.next_match
-                    })}
-                  >
-                    <ButtonMain className="mx-auto font-medium">
-                      {match.is_next_match_a_map
-                        ? "Перейти к следующей карте"
-                        : "Перейти к следующему матчу!"}
-                    </ButtonMain>
-                  </Link>
-                )}
+                {match?.state === "SCORE_DONE" &&
+                  match.next_match &&
+                  selfParticipant?.is_winner == true && (
+                    <Link
+                      className="flex items-center w-full mt-12"
+                      to={ROUTES.MATCHES.MATCH_BY_ID.buildPath({
+                        id: match.next_match
+                      })}
+                    >
+                      <ButtonMain className="mx-auto font-medium">
+                        {match.is_next_match_a_map
+                          ? "Перейти к следующей карте"
+                          : "Перейти к следующему матчу!"}
+                      </ButtonMain>
+                    </Link>
+                  )}
                 {match.state === "IN_GAME_LOBBY_CREATION" &&
                 user?.team === selfParticipant?.team.id &&
                 user?.team_status === "CAPTAIN" ? (
@@ -364,6 +367,7 @@ const Match = () => {
                 )}{" "}
               </div>
               {match.state !== "NO_SHOW" &&
+                match.participants.length == 2 &&
                 (!user?.is_staff
                   ? isAuthenticated &&
                     selfParticipant &&
@@ -374,6 +378,7 @@ const Match = () => {
                       />
                     )
                   : isAuthenticated &&
+                    match.participants.length == 2 &&
                     selfParticipant &&
                     showChat && (
                       <AdminChat
