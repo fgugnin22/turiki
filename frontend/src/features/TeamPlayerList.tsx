@@ -97,10 +97,10 @@ const TeamPlayerList = (props: TeamPlayerListProps) => {
             .filter((plr) => {
               return tournament?.players.find((p) => p.id === plr.id);
             })
-            .map((player, i) => {
+            .map((player) => {
               return (
                 <li
-                  key={i}
+                  key={player.id + "palyer213123"}
                   className="flex items-center gap-[7px] lg:gap-4 text-xs"
                 >
                   <img

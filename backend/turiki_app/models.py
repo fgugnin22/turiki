@@ -50,6 +50,7 @@ class Tournament(models.Model):
     time_results_locked = models.DurationField(default=datetime.timedelta(minutes=1))
     time_to_confirm_results = models.DurationField(default=datetime.timedelta(minutes=2))
     time_to_select_map = models.DurationField(default=datetime.timedelta(minutes=2))
+    overview_info = models.CharField(default=str, max_length=1024)
 
     def __str__(self):
         return self.name

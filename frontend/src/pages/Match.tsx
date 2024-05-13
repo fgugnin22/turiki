@@ -52,7 +52,7 @@ const Match = () => {
     }
   );
   const [confirmTeamInLobby] = tournamentAPI.useConfirmTeamInLobbyMutation();
-  const starts = new Date(match?.starts!);
+  const starts = new Date(match?.starts! ?? 0);
   const started = new Date(match?.started!);
   started.setMinutes(
     started.getMinutes() +
@@ -205,13 +205,13 @@ const Match = () => {
               <p
                 data-content={`Матч 1/${2 ** Number(match.name)}, Best of ${
                   match.is_bo3 ? "3" : "1"
-                }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""} `}
+                }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""}`}
                 className="bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent text-2xl font-extrabold
                 sm:absolute sm:left-1/2 sm:-translate-x-1/2"
               >
                 {`Матч 1/${2 ** Number(match.name)}, Best of ${
                   match.is_bo3 ? "3" : "1"
-                }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : "1"} `}
+                }${match.is_bo3 ? `, ${match.bo3_order + 1}/3` : ""}`}
               </p>
             </div>
 

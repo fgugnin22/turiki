@@ -56,7 +56,7 @@ const MapBans = ({ match, secondsRemaining }: Props) => {
               before:absolute after:top-0 after:bottom-0 after:left-0 after:right-0 before:top-[1px]
               before:bottom-[1px] before:left-[1px] before:right-[1px] after:bg-gradient-to-r
             after:from-lightblue after:to-turquoise after:rounded-[10px] after:z-0 
-              before:z-10 z-20 before:bg-dark before:rounded-[9px] flex flex-wrap flex-col justify-left gap-y-8 gap-x-8 px-16 py-12 lg:h-fit lg:max-h-[400px]"
+              before:z-10 z-20 before:bg-dark before:rounded-[9px] flex flex-wrap flex-col justify-left gap-y-8 gap-x-8 px-16 py-12 lg:h-fit lg:w-[480px] lg:mr-auto lg:max-h-[400px]"
       >
         {match.bans?.maps.map((map) => {
           const handleBan = () => {

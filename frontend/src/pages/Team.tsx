@@ -162,23 +162,25 @@ const Team = () => {
                     />
                   )}
                   {team_status === "CAPTAIN" && (
-                    <img
-                      style={{ gridArea: "a" }}
-                      src={serverURL + "/media/img/uploadround.svg"}
-                      className={
-                        "object-cover opacity-0 hover:opacity-100 object-center rounded-full h-full w-full relative z-30 transition aspect-square	" +
-                        (!data?.image ? " !opacity-100" : " opacity-0")
-                      }
-                      alt=""
-                    />
+                    <>
+                      <img
+                        style={{ gridArea: "a" }}
+                        src={serverURL + "/media/img/uploadround.svg"}
+                        className={
+                          "object-cover opacity-0 hover:opacity-100 object-center rounded-full h-full w-full relative z-30 transition aspect-square	" +
+                          (!data?.image ? " !opacity-100" : " opacity-0")
+                        }
+                        alt=""
+                      />
+                      <input
+                        onChange={onImageSubmit}
+                        id="file_input"
+                        type="file"
+                        accept="image/png"
+                        hidden
+                      />
+                    </>
                   )}
-                  <input
-                    onChange={onImageSubmit}
-                    id="file_input"
-                    type="file"
-                    accept="image/png"
-                    hidden
-                  />
                 </label>
                 <div className="flex items-center justify-between w-full lg:w-3/5">
                   {showInput && canChangeTeamName ? (

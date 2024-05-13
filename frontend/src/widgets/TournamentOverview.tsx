@@ -1,6 +1,14 @@
+import { Tournament } from "../helpers/transformMatches";
+
 const serverURL = import.meta.env.VITE_API_URL;
 
-const TournamentOverview = () => {
+type TournamentOverviewProps = {
+  tournament: Tournament;
+};
+
+const TournamentOverview: React.FC<TournamentOverviewProps> = ({
+  tournament
+}) => {
   return (
     <div className="px-[15px] mx-auto w-[320px] sm:w-[400px] md:w-[600px] lg:w-[900px] xl:w-[1100px] flex flex-col lg:gap-12 lg:flex-row lg:justify-between">
       <div>
@@ -46,7 +54,7 @@ const TournamentOverview = () => {
             <div className="flex flex-col">
               <p>Призовой фонд</p>
               <p className="bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent font-bold">
-                Эээ бля
+                {tournament.prize}
               </p>
             </div>
           </li>
@@ -59,7 +67,7 @@ const TournamentOverview = () => {
             <div className="flex flex-col">
               <p>Участники</p>
               <p className="bg-gradient-to-r from-lightblue to-turquoise bg-clip-text text-transparent font-bold">
-                Несколько
+                {tournament.teams.length}/{2 ** tournament.max_rounds}
               </p>
             </div>
           </li>

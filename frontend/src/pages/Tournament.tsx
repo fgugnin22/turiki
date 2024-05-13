@@ -431,7 +431,7 @@ export const Tournament = () => {
               ))}
             </div>
           ) : (
-            <TournamentOverview />
+            <TournamentOverview tournament={tournament} />
           )}
         </div>
       ) : (

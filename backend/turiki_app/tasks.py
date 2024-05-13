@@ -339,10 +339,8 @@ def clean_db_cons():
     close_old_connections()
     with connection.cursor() as cursor:
         sql = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle'"
-        print(sql)
         cursor.execute(sql)
         row = cursor.fetchall()
-        print(row)
     exec_task_on_date(clean_db_cons, [], when=datetime.datetime.now() + datetime.timedelta(minutes=1))
 
 

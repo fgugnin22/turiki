@@ -261,11 +261,9 @@ class TeamService:
             player.save()
 
             team.save()
-
-            print(team.players.count(), type(team.players.count()))
+            team.refresh_from_db()
 
             if team.players.count() == 0:
-                print(123)
                 team.delete()
                 return
 
