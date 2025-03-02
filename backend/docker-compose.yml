@@ -1,6 +1,11 @@
 version: "3.1"
 
 services:
+  # backend:
+  #   image: backend
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile
   django:
     image: backend
     build:
@@ -14,9 +19,15 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - pgdb
-      - redis
-      - dramatiq
+      pgdb:
+        condition: service_started
+        restart: true
+      redis:
+        condition: service_started
+        restart: true
+      dramatiq:
+        condition: service_started
+        restart: true
   dramatiq:
     image: backend
     restart: unless-stopped
@@ -24,7 +35,9 @@ services:
     volumes:
       - .:/usr/src/app
     depends_on:
-      - redis
+      redis:
+        condition: service_started
+        restart: true
   redis:
     restart: unless-stopped
     image: redis:5
