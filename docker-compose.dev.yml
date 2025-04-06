@@ -11,7 +11,7 @@ services:
     command: sh -c "npm run dev -- --host"
     volumes:
       - ./frontend:/usr/src/app:rw
-      - /usr/src/app/node_modules:rw
+      - /usr/src/app/node_modules
     ports:
       - "5173:5173"
     depends_on:
