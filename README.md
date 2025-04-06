@@ -6,7 +6,7 @@
 
 1) Скопируйте себе
 2) ```docker-compose -f ./docker-compose.dev.yml up -d```
-3) Если не произошло ошибок, то должно работать)))))))(адрес - localhost:8000)
+3) Если не произошло ошибок, то должно работать)))))))(адрес - localhost:5173 - frontend, localhost:8000 - backend)
 
 4) в консоли контейнера django нужно создать админа с помощью ```python manage.py createsuperuser```
 
