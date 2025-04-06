@@ -3,13 +3,9 @@
 0) Для начала работы необходимы следующие программы(Windows 10):
  - Docker Desktop
  - wsl2 + Ubuntu
- - Node.js x64 + npm
- - Разрешить выполнять  сторонние скрипты в powershell, введите код снизу, потом нажмите A, затем Enter
-```powershell
-Set-ExecutionPolicy Unrestricted
-```
+
 1) Скопируйте себе
-2) Запустите скрипт run_dev.ps1 и подождите минут 10(!)
+2) ```docker-compose -f ./docker-compose.dev.yml up -d```
 3) Если не произошло ошибок, то должно работать)))))))(адрес - localhost:8000)
 
 4) в консоли контейнера django нужно создать админа с помощью ```python manage.py createsuperuser```
