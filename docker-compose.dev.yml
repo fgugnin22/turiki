@@ -1,16 +1,30 @@
 version: "3.1"
 
 services:
+  frontend:
+    image: frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: frontend
+    restart: unless-stopped
+    command: sh -c "npm run dev"
+    volumes:
+      - ./frontend:/usr/src/app
+    ports:
+      - "5173:5173"
+    depends_on:
+      - django
   django:
     image: backend
     build:
-      context: .
+      context: ./backend
       dockerfile: Dockerfile
     container_name: django
     restart: unless-stopped
     command: sh -c "mkdir -p /usr/src/app/turiki_app/migrations && touch /usr/src/app/turiki_app/migrations/__init__.py && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/usr/src/app
+      - ./backend:/usr/src/app
     ports:
       - "8000:8000"
     depends_on:
@@ -28,7 +42,7 @@ services:
     restart: unless-stopped
     command: sh -c "python manage.py rundramatiq --processes 4 --threads 4"
     volumes:
-      - .:/usr/src/app
+      - ./backend:/usr/src/app
     depends_on:
       redis:
         condition: service_started

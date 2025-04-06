@@ -334,14 +334,14 @@ def create_match(next_round_count, rounds, tournament, next_match=None, starts=d
             create_match(next_round_count - 1, rounds, tournament, match1, starts)
             create_match(next_round_count - 1, rounds, tournament, match2, starts)
 
-@dramatiq.actor
-def clean_db_cons():
-    close_old_connections()
-    with connection.cursor() as cursor:
-        sql = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle'"
-        cursor.execute(sql)
-        row = cursor.fetchall()
-    exec_task_on_date(clean_db_cons, [], when=datetime.datetime.now() + datetime.timedelta(minutes=1))
+# @dramatiq.actor
+# def clean_db_cons():
+#     close_old_connections()
+#     with connection.cursor() as cursor:
+#         sql = "SELECT pg_terminate_backend(pid) FROM pg_stat_activity WHERE state = 'idle'"
+#         cursor.execute(sql)
+#         row = cursor.fetchall()
+#     exec_task_on_date(clean_db_cons, [], when=datetime.datetime.now() + datetime.timedelta(minutes=1))
 
 
-exec_task_on_date(clean_db_cons, [], when=datetime.datetime.now() + datetime.timedelta(minutes=1))
+# exec_task_on_date(clean_db_cons, [], when=datetime.datetime.now() + datetime.timedelta(minutes=1))
